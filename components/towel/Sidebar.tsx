@@ -15,7 +15,7 @@ export default function Sidebar() {
 
                 <li  className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
                     <LogIn></LogIn>
-                    <Link href="/login">登录</Link></li>
+                    <Link href="/account">登录</Link></li>
                 <li className="rounded-2xl bg-black text-xl h-9 w-[200px] text-white flex justify-center items-center 
                 hover:bg-black/80
                 "><Link href="/home/post">发布</Link></li>
