@@ -19,13 +19,21 @@ export default function PostCard({
     user_avatar,
     user_email,
     content,
+    like,
+    star,
+    reply,
+    share,
 }: {
     id: string,
     user_id: string,
     user_name: string,
     user_email: string,
     user_avatar: string,
-    content: string
+    content: string,
+    like?: string,
+    star?: string,
+    reply?: string,     
+    share?: string
 }) {
     return (
         <Card className='cursor-pointer hover:bg-gray-50'>
@@ -53,19 +61,19 @@ export default function PostCard({
                 <ul className='flex justify-between items-center w-full'>
                     <li className='flex gap-2'>
                         <Heart></Heart>
-                        0
+                        {like || 0}
                     </li>
                     <li className='flex gap-2'>
                         <MessageCircleMore />
-                        0
+                        {reply || 0}
                     </li>
                     <li className='flex gap-2'><div dangerouslySetInnerHTML={{ __html: content }} />
                         <Star />
-                        0
+                        {star || 0}
                     </li>
                     <li className='flex gap-2'>
                         <Share2 />
-                        0
+                        {share || 0}
                     </li>
                 </ul>
 

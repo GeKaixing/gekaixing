@@ -56,7 +56,7 @@ export default function PostDropdownMenu({ id, user_id }: { id: string, user_id:
                     onClick={deleteHandler}
                 >删除帖子</DropdownMenuItem>}
                 <DropdownMenuItem>关注用户</DropdownMenuItem>
-                <DropdownMenuItem>复制连接</DropdownMenuItem>z
+                <DropdownMenuItem>复制连接</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )
