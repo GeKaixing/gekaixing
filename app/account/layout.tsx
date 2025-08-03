@@ -1,4 +1,5 @@
 import Button from '@/components/towel/Button'
+import GoogleButton from '@/components/towel/GoogleButton'
 import { LoginFooter } from '@/components/towel/LoginFooter'
 import Password_resetDialog from '@/components/towel/Password_resetDialog'
 import RegistrationProtocol from '@/components/towel/RegistrationProtocol'
@@ -15,7 +16,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
                 <div className='flex gap-80 justify-center items-center'>
                     <Image src='/logo.png' alt="Towel logo" width={200} height={200}></Image>
                     <div className='flex flex-col justify-center items-center gap-6'>
-                        <Button className='text-black '>使用Google账号登录</Button>
+                        <GoogleButton></GoogleButton>
                         <Separator />
                         <RegistrationProtocol />
                         <strong className='mt-6'>已经有账户了吗？</strong>

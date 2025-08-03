@@ -5,7 +5,7 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, For
 import { Input } from '@/components/ui/input'
 import Button from './Button'
 import { useRouter } from 'next/navigation'
-
+import { toast } from "sonner"
 
 async function LoginFetch(email: string, password: string) {
     const result = await fetch('/api/login', {
@@ -40,6 +40,8 @@ export default function LoginForm() {
         const data = await result.json()
         if (data.success) {
             router.replace('/home')
+        } else {
+            toast.error(data.error || '登录失败，请重试')
         }
         
     }

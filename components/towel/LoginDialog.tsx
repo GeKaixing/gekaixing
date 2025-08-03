@@ -13,6 +13,7 @@ import LoginForm from "./LoginForm"
 import Link from "next/link"
 import { use, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import GoogleButton from "./GoogleButton"
 
 export default function LoginDialog() {
     const [open, setOpen] = useState(true)
@@ -33,7 +34,7 @@ export default function LoginDialog() {
                 <DialogHeader>
                     <DialogTitle>登入Towel</DialogTitle>
                     <DialogDescription className='flex flex-col justify-center items-center'>
-                        <Button className='text-black my-6'>使用Google账号登录</Button>
+                        <GoogleButton></GoogleButton>
                         <Separator className='mb-6' />
                         <LoginForm></LoginForm>
                         <Button className='text-black mt-6' onClick={()=>{router.push('/account/password_reset')}}>忘记密码</Button>

@@ -53,7 +53,7 @@ export default function SignupForm() {
     }
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit((values) => console.log(values))} className="space-y-4 ">
+            <form onSubmit={form.handleSubmit((values) => null)} className="space-y-4 ">
                 <FormField
                     control={form.control}
                     name="email"

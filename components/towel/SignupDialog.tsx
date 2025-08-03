@@ -12,6 +12,7 @@ import SignupForm from '@/components/towel/SignupForm'
 import Button from '@/components/towel/Button'
 import { Separator } from '@/components/ui/separator'
 import { useRouter } from 'next/navigation'
+import GoogleButton from './GoogleButton'
 
 
 export default function SignupDialog() {
@@ -33,7 +34,7 @@ export default function SignupDialog() {
                 <DialogHeader>
                     <DialogTitle>注册Towel</DialogTitle>
                     <DialogDescription className='flex flex-col justify-center items-center'>
-                        <Button className='text-black my-6'>使用Google账号登录</Button>
+                        <GoogleButton></GoogleButton>
                         <Separator className='mb-6' />
                         <SignupForm></SignupForm>
                     </DialogDescription>
