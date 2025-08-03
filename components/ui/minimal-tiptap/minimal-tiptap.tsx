@@ -13,6 +13,7 @@ import { SectionFive } from "./components/section/five"
 import { LinkBubbleMenu } from "./components/bubble-menu/link-bubble-menu"
 import { useMinimalTiptapEditor } from "./hooks/use-minimal-tiptap"
 import { MeasuredContainer } from "./components/measured-container"
+import Button from "@/components/towel/Button"
 
 export interface MinimalTiptapProps
   extends Omit<UseMinimalTiptapEditorProps, "onUpdate"> {
@@ -22,8 +23,10 @@ export interface MinimalTiptapProps
   editorContentClassName?: string
 }
 
-const Toolbar = ({ editor }: { editor: Editor }) => (
-  <div className="border-border flex h-12 shrink-0 overflow-x-auto border-b p-2">
+const Toolbar = ({ editor ,publish}: { editor: Editor,publish?:()=>void }) =>{
+  
+  return (
+  <div className="border-border flex justify-between  h-12 shrink-0  border-b p-2">
     <div className="flex w-max items-center gap-px">
       {/* <SectionOne editor={editor} activeLevels={[1, 2, 3, 4, 5, 6]} /> */}
 
@@ -62,16 +65,20 @@ const Toolbar = ({ editor }: { editor: Editor }) => (
         mainActionCount={0}
       />
     </div>
+    <Button onClick={publish}>发布</Button>
   </div>
-)
+)}
 
 export const MinimalTiptapEditor = ({
   value,
+  publish,
   onChange,
   className,
   editorContentClassName,
   ...props
-}: MinimalTiptapProps) => {
+}: MinimalTiptapProps&{
+  publish?: () => void
+} ) => {
   const editor = useMinimalTiptapEditor({
     value,
     onUpdate: onChange,
@@ -97,7 +104,7 @@ export const MinimalTiptapEditor = ({
         editor={editor}
         className={cn("minimal-tiptap-editor", editorContentClassName)}
       />
-      <Toolbar editor={editor} />
+      <Toolbar editor={editor} publish={publish}/>
       <LinkBubbleMenu editor={editor} />
     </MeasuredContainer>
   )

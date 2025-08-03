@@ -26,13 +26,52 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { userStore } from '@/store/user'
+
+async function publishPost({
+    user_id, // Replace with actual user ID
+    user_name, // Replace with actual user name
+    user_email, // Replace with actual user email
+    value,
+    user_avatar
+}: {
+
+    user_id: string,
+    user_name: string,
+    user_email: string,
+    value: string,
+    user_avatar: string
+}) {
+
+    const result = await fetch('/api/post', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            user_id: '123', // Replace with actual user ID
+            user_name: 'John Doe', // Replace with actual user name
+            user_email: '', // Replace with actual user email
+            content: value,
+            user_avatar: '' // Replace with actual user avatar URL
+        })
+    })
+    return result
+}
+
 export default function EditPost() {
     const [value, setValue] = useState<Content>("")
     const [isOpen, setIsOpen] = useState(false)
     const [isOpenAlertDialog, setIsOpenAlertDialog] = useState(false)
     const { poset_images } = post_imagesStore()
     const supabase = createClient()
+    const {
+        email,
+        id,
+        avatar, 
+        name } = userStore()
     const bucketName = 'post-image' // 替换为你的桶名
+
     useEffect(() => {
         if (isOpen === false) {
             if (poset_images.length !== 0) {
@@ -50,6 +89,19 @@ export default function EditPost() {
         }
 
     }, [isOpen])
+
+
+    async function publish() {
+        await publishPost(
+            {
+                user_id: id, // Replace with actual user ID
+                user_name: name||email, // Replace with actual user name
+                user_email: email, // Replace with actual user email
+                value: value as string,
+                user_avatar: avatar // Replace with actual user avatar URL
+            }
+        )
+    }
 
     return (
         <TooltipProvider>
@@ -81,9 +133,10 @@ export default function EditPost() {
                         </DialogDescription>
                     </DialogHeader>
                     <MinimalTiptapEditor
+                        publish={publish }
                         value={value}
                         onChange={setValue}
-                        className=" w-full"
+                        className="!max-w-[622px] w-full"
                         editorContentClassName="p-5  "
                         output="html"
                         placeholder="Enter your description..."
