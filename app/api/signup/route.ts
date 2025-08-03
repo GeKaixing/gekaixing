@@ -1,0 +1,22 @@
+
+import { createClient } from "@/utils/supabase/server"
+import { NextResponse } from "next/server"
+
+export async function POST(request: Request) {
+    const supabase = await createClient()
+    const { email, password } = await request.json()
+    console.log( email, password)
+    const { error } = await supabase.auth.signUp({
+        email, password, options: {
+            emailRedirectTo: `http://localhost:3000/auth/confirm`,
+        }
+    },
+
+    )
+
+    if (error) {
+        return NextResponse.json({ error: error.message }, { status: 401 })
+    }
+
+    return NextResponse.json({ success: true })
+}

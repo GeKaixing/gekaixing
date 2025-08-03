@@ -6,29 +6,53 @@ import { Input } from '@/components/ui/input'
 import Button from './Button'
 import { useRouter } from 'next/navigation'
 
+
+async function LoginFetch(email: string, password: string) {
+    const result = await fetch('/api/login', {
+        method: 'POST',
+        body: JSON.stringify({
+            email: email,
+            password: password
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    return result
+}
+
+
 export default function LoginForm() {
     const router = useRouter();
 
     const form = useForm({
         defaultValues: {
-            username: '',
+            email: '',
             password: '',
-            email: ''
+
         }
     })
-    function login() {
-        router.replace('/home')
+
+    async function login() {
+        const { email, password } = form.getValues();
+
+        const result = await LoginFetch(email, password)
+        const data = await result.json()
+        if (data.success) {
+            router.replace('/home')
+        }
+        
     }
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit((values) => console.log(values))} className="space-y-4">
+            <form onSubmit={form.handleSubmit((values) => null)} className="space-y-4" >
                 <FormField
                     control={form.control}
-                    name="username"
+                    name="email"
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <Input placeholder="请输入用户名" {...field} />
+                                <Input placeholder="请输入邮箱" {...field} type='email' />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
