@@ -49,11 +49,11 @@ async function publishPost({
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            user_id: '123', // Replace with actual user ID
-            user_name: 'John Doe', // Replace with actual user name
-            user_email: '', // Replace with actual user email
+            user_id: user_id, // Replace with actual user ID
+            user_name: user_name, // Replace with actual user name
+            user_email:user_email, // Replace with actual user email
             content: value,
-            user_avatar: '' // Replace with actual user avatar URL
+            user_avatar: user_avatar // Replace with actual user avatar URL
         })
     })
     return result

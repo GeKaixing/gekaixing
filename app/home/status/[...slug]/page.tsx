@@ -17,33 +17,52 @@ import PostRetreat from '@/components/towel/PostRetreat';
 
 
 export default function Page({ params }: { params: Promise<{ slug?: string[] }> }) {
-  const resolvedParams = use(params);
+    const resolvedParams = use(params);
 
 
     return (
         <React.Suspense fallback={<div>Loading...</div>}>
-           {(resolvedParams?.slug ?? [])[0] && <Post params={(resolvedParams?.slug ?? [])[0]} />}
+            {(resolvedParams?.slug ?? [])[0] && <Post params={(resolvedParams?.slug ?? [])[0]} />}
         </React.Suspense>
     )
 }
 
-function Post({ params }: { params: string }) {
 
-    return (
-        <div className='space-y-4'>
-            <PostRetreat></PostRetreat>
-            <PostCard />
-            <PublishReply></PublishReply>
-            {/* {
+async function Post({ params }: { params: string }) {
+    console.log(params)
+    const result = await fetch(`http://localhost:3000/api/post/?id=${params}`, {
+        method: 'GET',
+        cache: 'no-store',
+    });
+    const data = await result.json();
+    console.log(data.success)
+    if (data.success) {
+        console.log(213213)
+        console.log(data.content)
+        return (
+            <div className='space-y-4'>
+                <PostRetreat></PostRetreat>
+                <PostCard
+                    id={data.id}
+                    user_id={data.user_id}
+                    user_name={data.user_name}
+                    user_email={data.user_email}
+                    user_avatar={data.user_avatar}
+                    content={data.content}
+                />
+                <PublishReply></PublishReply>
+                {/* {
                 data.length !== 0 && data.map((item) => ( */}
-            <Reply
-            // key={item.id} item={item}
-            ></Reply>
-            {/* ))
+                <Reply
+                // key={item.id} item={item}
+                ></Reply>
+                {/* ))
             } */}
-        </div>
-
-    )
+            </div>
+        )
+    } else {
+        return null
+    }
 }
 
 

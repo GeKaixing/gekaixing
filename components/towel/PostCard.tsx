@@ -12,28 +12,41 @@ import { Heart, MessageCircleMore, Share2, Star } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import PostDropdownMenu from './PostDropdownMenu'
 import Link from 'next/link'
-export default function PostCard() {
+export default function PostCard({
+    id,
+    user_id,
+    user_name,
+    user_avatar,
+    user_email,
+    content,
+}: {
+    id: string,
+    user_id: string,
+    user_name: string,
+    user_email: string,
+    user_avatar: string,
+    content: string
+}) {
     return (
         <Card className='cursor-pointer hover:bg-gray-50'>
             <CardHeader>
                 <div className='flex items-center gap-2 '>
                     <CardTitle className='hover:bg-gray-100'>
                         <Avatar>
-                            <AvatarImage src="/logo.png" />
+                            <AvatarImage src={user_avatar} />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                     </CardTitle>
-                    <CardDescription className='hover:bg-gray-100'>用户名字</CardDescription>
+                    <CardDescription className='hover:bg-gray-100'>{user_name}</CardDescription>
                 </div>
 
                 <CardAction>
-                    <PostDropdownMenu></PostDropdownMenu>
-
+                    <PostDropdownMenu id={id} user_id={user_id}></PostDropdownMenu>
                 </CardAction>
             </CardHeader>
             <CardContent >
                 <Link href='/home/status/1'>
-                    Lorem ipsum dolor sit, amet consectetur adipisicingelit. Vitae veritatis porro laborum voluptates numquam voluptatem omnis fugit atque officia cupiditate distinctio aspernatur sunt accusamus quibusdam deserunt maxime, laudantium minima cum nobis magni nulla officiis necessitatibus nisi. Earum, mollitia repudiandae debitis recusandae ex dolore magni iure, odio facilis possimus ducimus magnam enim totam commodi itaque delectus fugit, beatae vel corrupti harum sed dolores quisquam sit hic. Assumenda voluptatibus dolorem reiciendis? A culpa laboriosam dignissimos quos beatae eum tempora nulla, magni corrupti ipsa sint sequi consequuntur, quaerat voluptatum velit debitis cumque ut? In repudiandae odit cupiditate dolores ipsa dignissimos, eaque reiciendis eligendi?
+                    <div dangerouslySetInnerHTML={{ __html: content }} />
                 </Link>
             </CardContent>
             <CardFooter>
@@ -46,7 +59,7 @@ export default function PostCard() {
                         <MessageCircleMore />
                         0
                     </li>
-                    <li className='flex gap-2'>
+                    <li className='flex gap-2'><div dangerouslySetInnerHTML={{ __html: content }} />
                         <Star />
                         0
                     </li>
