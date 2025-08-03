@@ -16,6 +16,7 @@ import {
 import { Ellipsis } from 'lucide-react'
 import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/utils/function/copyToClipboard";
+import EditPost from "./EditPost";
 export default function Sidebar() {
     const router = useRouter()
 
@@ -63,9 +64,11 @@ export default function Sidebar() {
                         <SidebarDropdownMenu></SidebarDropdownMenu>
                     </li>}
 
-                <li className="rounded-2xl bg-black text-xl h-9 w-[200px] text-white flex justify-center items-center 
+                {/* <li className="rounded-2xl bg-black text-xl h-9 w-[200px] text-white flex justify-center items-center 
                 hover:bg-black/80
-                "><Link href="/home/post">发布</Link></li>
+                ">
+                <Link href="/home/post">发布</Link></li> */}
+                <EditPost></EditPost>
             </ul>
         </nav>
     )
@@ -77,7 +80,7 @@ async function logoutfetch() {
 }
 
 export function SidebarDropdownMenu() {
-    const { email,id } = userStore((state) => state)
+    const { email, id } = userStore((state) => state)
 
     return (
         <DropdownMenu>
@@ -86,8 +89,8 @@ export function SidebarDropdownMenu() {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuItem onClick={logoutfetch}>登出 {email}</DropdownMenuItem>
-                <DropdownMenuItem>修改头像</DropdownMenuItem>
-                <DropdownMenuItem onClick={()=>copyToClipboard(`http://localhost:3000/home/user/${id}`)}>复制连接</DropdownMenuItem>
+                <DropdownMenuItem><Link href={`/home/user/${id}`}>个人信息</Link></DropdownMenuItem>
+                <DropdownMenuItem onClick={() => copyToClipboard(`http://localhost:3000/home/user/${id}`)}>复制连接</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )
