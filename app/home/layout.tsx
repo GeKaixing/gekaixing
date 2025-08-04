@@ -6,9 +6,11 @@ import { createClient } from "@/utils/supabase/server";
 
 export default async function RootLayout({
     children,
-}: Readonly<{
+    modal
+}: {
     children: React.ReactNode;
-}>) {
+    modal:React.ReactNode;
+}) {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
     return (
@@ -20,6 +22,7 @@ export default async function RootLayout({
                 </header>
                 <main className="flex-1  p-4">
                     {children}
+                    {modal}
                 </main>
                 <footer className="p-4">
                     <Footer />

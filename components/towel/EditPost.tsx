@@ -112,6 +112,7 @@ export default function EditPost() {
         const data = await reslut.json()
         if (data.success) {
             toast.success('发布成功');
+            
             setSaved(true);
             setStatus(false);
             setValue(" ");

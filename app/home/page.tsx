@@ -5,6 +5,7 @@ import PostCard from "@/components/towel/PostCard";
 export default async function Home() {
   const result = await fetch('http://localhost:3000/api/post', {
     method: 'GET',
+    next:{tags:['home']}
   });
   const data = await result.json();
   if (data.success) {

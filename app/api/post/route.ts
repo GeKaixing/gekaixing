@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -60,6 +61,6 @@ export async function DELETE(request: Request) {
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 401 });
   }
-
+  revalidateTag('home')
   return NextResponse.json({ data: data, success: true });
 }
