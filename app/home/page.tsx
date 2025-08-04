@@ -17,10 +17,10 @@ export default async function Home() {
           user_email: string,
           user_avatar: string,
           content: string
-          like: string,
-          star: string,
-          reply: string,
-          share: string
+          like: number,
+          star: number,
+          reply_count: number,
+          share: number
         }) => (
           <PostCard
             key={items.id}
@@ -32,7 +32,7 @@ export default async function Home() {
             content={items.content}
             like={items.like}
             star={items.star}
-            reply={items.reply}
+            reply={items.reply_count}
             share={items.share}
           />
         ))}

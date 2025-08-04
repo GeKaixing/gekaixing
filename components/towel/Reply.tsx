@@ -12,25 +12,28 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Link from 'next/link'
 import { Heart, MessageCircleMore, Share2, Star } from 'lucide-react'
+import PostDropdownMenu from './PostDropdownMenu'
 
-export default async function Reply({ post_id,type }: { post_id: string ,type:string}) {
+export default async function Reply({ post_id, type }: { post_id: string, type: string }) {
     const result = await fetch(`http://localhost:3000/api/reply/?id=${post_id}&type=${type}`, {
         next: {
             tags: [`reply:post_id:${post_id}`],
         },
     })
-    
+
     const data = await result.json()
     return (
         data.data.lenght !== 0 && data.data.map((items: {
             user_avatar: string,
             user_name: string,
+            user_id:string,
             content: string,
             like: string,
             reply: string,
             star: string,
             share: string,
-            id: string
+            id: string,
+            reply_count:string
         }) => {
             return <Card className='cursor-pointer hover:bg-gray-50' key={items.id}>
                 <CardHeader>
@@ -45,6 +48,7 @@ export default async function Reply({ post_id,type }: { post_id: string ,type:st
                     </div>
 
                     <CardAction>
+                        <PostDropdownMenu id={items.id} user_id={items.user_id}></PostDropdownMenu>
                     </CardAction>
                 </CardHeader>
                 <CardContent >
@@ -60,7 +64,7 @@ export default async function Reply({ post_id,type }: { post_id: string ,type:st
                         </li>
                         <li className='flex gap-2'>
                             <MessageCircleMore />
-                            {items.reply || 0}
+                            {items.reply_count || 0}
 
                         </li>
                         <li className='flex gap-2'>

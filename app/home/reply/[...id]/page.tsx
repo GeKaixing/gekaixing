@@ -6,7 +6,6 @@ import React from 'react'
 
 export default async function Page({ params }: { params: { id?: string[] } }) {
     const id = params.id?.[0] && params.id[0]
-
     const result = await fetch(`http://localhost:3000/api/reply/?id=${id}&type=id`, {
         next: {
             tags: [`reply:id:${id}`],
@@ -14,7 +13,6 @@ export default async function Page({ params }: { params: { id?: string[] } }) {
     })
 
     const data = await result.json()
-    console.log(data.data)
     return (
         <div className='space-y-4'>
             <PostRetreat></PostRetreat>
@@ -27,11 +25,11 @@ export default async function Page({ params }: { params: { id?: string[] } }) {
                 content={data.data[0].content}
                 like={data.data[0].like}
                 star={data.data[0].star}
-                reply={data.data[0].reply}
+                reply={data.data[0].reply_count}
                 share={data.data[0].share}
 
             />
-            <PublishReply post_id={data.data[0].id} reply_id={data.data[0].id} ></PublishReply>
+            <PublishReply post_id={data.data[0].post_id} reply_id={data.data[0].id} type={'reply'} ></PublishReply>
             <Reply post_id={data.data[0].id} type={'reply_id'} />
         </div >
     )

@@ -44,7 +44,7 @@ export default function Sidebar({ user }: { user: { email: string | null, id: st
                     <li className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 items-center cursor-pointer ">
 
                         <Avatar onClick={() => router.push('/home/user')}>
-                            <AvatarImage src={user?.user_metadata?.avatar||''} />
+                            <AvatarImage src={user?.user_metadata?.avatar || ''} />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
 
@@ -78,7 +78,7 @@ export function SidebarDropdownMenu() {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuItem onClick={logoutfetch}>登出 {email}</DropdownMenuItem>
-                <DropdownMenuItem><Link href={`/home/user/${id}`}>个人信息</Link></DropdownMenuItem>
+                <Link href={`/home/user/${id}`}><DropdownMenuItem>个人信息</DropdownMenuItem></Link>
                 <DropdownMenuItem onClick={() => copyToClipboard(`http://localhost:3000/home/user/${id}`)}>复制连接</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

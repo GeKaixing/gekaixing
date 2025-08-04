@@ -18,11 +18,11 @@ async function publishReply(
         user_avatar,
         reply_id,
     }: {
-        reply_id:string,
+        reply_id: string|number,
         user_id: string,
         user_name: string,
         user_email: string,
-        post_id: string,
+        post_id: string|number,
         content: string,
         user_avatar: string
     }) {
@@ -44,26 +44,40 @@ async function publishReply(
     return result;
 }
 
-export default function PublishReply({ post_id,reply_id }: { post_id: string,reply_id?:string }) {
+export default function PublishReply({ post_id, reply_id, type = 'post' }: { post_id: string, reply_id?: string, type: string }) {
     const [replyInput, setReplyInput] = useState<string>('');
     const { email,
         id,
         avatar,
         name, } = userStore()
     async function handleReply() {
-        const result = await publishReply({
-            user_id: id,
-            user_avatar: avatar,
-            user_name: name || email,
-            user_email: email,
-            post_id,
-            content: replyInput,
-            reply_id:reply_id||''
-        });
+        let result;
+        if (type === 'post') {
+            result = await publishReply({
+                user_id: id,
+                user_avatar: avatar,
+                user_name: name || email,
+                user_email: email,
+                post_id: post_id,
+                content: replyInput,
+                reply_id: 0
+            });
+        } else {
+            result = await publishReply({
+                user_id: id,
+                user_avatar: avatar,
+                user_name: name || email,
+                user_email: email,
+                post_id: post_id,
+                content: replyInput,
+                reply_id: reply_id || 0
+            });
+        }
+
         const data = await result.json();
         if (data.success) {
             setReplyInput(''); // Clear the input field after successful reply
-           
+
         } else {
             console.error('Failed to publish reply:', data.error);
         }

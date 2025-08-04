@@ -7,9 +7,9 @@ import Reply from '@/components/towel/Reply';
 
 
 export default async function Page({ params }: { params: { slug?: string[] } }) {
-    const id = params.slug?.[0] ? params.slug[0]:null
+    const id = params.slug?.[0] ? params.slug[0] : null
     return (
-        id ?<Post params={id} />:<div>发生错误</div>
+        id ? <Post params={id} /> : <div>发生错误</div>
     );
 }
 
@@ -30,11 +30,11 @@ async function Post({ params }: { params: string }) {
                     content={data.data[0].content}
                     like={data.data[0].like}
                     star={data.data[0].star}
-                    reply={data.data[0].reply}
+                    reply={data.data[0].reply_count}
                     share={data.data[0].share}
 
                 />
-                <PublishReply post_id={data.data[0].id}></PublishReply>
+                <PublishReply post_id={data.data[0].id} type={'post'} ></PublishReply>
                 <Reply post_id={data.data[0].id} type={'post_id'} />
 
             </div>
