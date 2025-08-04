@@ -16,39 +16,49 @@ import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/utils/function/copyToClipboard";
 import EditPost from "./EditPost";
 
-export default function Sidebar({ user }: { user: { email: string | null, id: string | null, user_metadata: { avatar: string | null } } | null }) {
+export default function Sidebar({ user }: { user: { email: string | null, id: string | null, user_metadata: { avatar: string | null, name: string | null, user_background_image: string|null,user_avatar:string|null } } | null }) {
     const router = useRouter()
 
     userStore.setState({
         email: user?.email || '',
         id: user?.id || '',
-        avatar: user?.user_metadata.avatar || ''
+        name: user?.user_metadata.name || '',
+        user_background_image: user?.user_metadata.user_background_image || '',
+        user_avatar:user?.user_metadata.user_avatar || ''
     })
 
 
     return (
         <nav className="w-[300px] h-screen flex justify-center  ">
             <ul className=" space-y-6">
-                <li className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
+                <Link href="/home" className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
                     <House />
-                    <Link href="/home">主页</Link></li>
+                    <span >主页</span>
+                </Link>
 
-                <li className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
+                <Link href="/home/settings" className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
                     <Settings></Settings>
-                    <Link href="/home/settings">设置</Link></li>
+                    <span>设置</span>
+                </Link>
 
-                {!user?.id ? <li className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
-                    <LogIn></LogIn>
-                    <Link href="/account">登录</Link>
-                </li> :
+                {!user?.id ?
+                    <Link href="/account" className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
+                        <LogIn></LogIn>
+                        <span>登录</span>
+                    </Link> :
                     <li className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 items-center cursor-pointer ">
 
                         <Avatar onClick={() => router.push('/home/user')}>
-                            <AvatarImage src={user?.user_metadata?.avatar || ''} />
+                            <AvatarImage src={user?.user_metadata?.user_avatar || ''} />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
+                        <div className="flex flex-col">
+                            {
+                                user?.user_metadata.name && <span className="text-[12px] text-gray-700" onClick={() => router.push(`/home/user/${user.id}`)}>  {user?.user_metadata.name}</span>
+                            }
+                            <span className="text-[12px] text-gray-400" onClick={() => router.push(`/home/user/${user.id}`)}>{user.email}</span>
 
-                        <span className="text-[12px] text-gray-400" onClick={() => router.push('/home/user')}>{user.email}</span>
+                        </div>
 
                         <SidebarDropdownMenu></SidebarDropdownMenu>
                     </li>}

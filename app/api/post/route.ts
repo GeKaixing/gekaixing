@@ -5,9 +5,20 @@ export async function GET(request: Request) {
   const supabase = await createClient();
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
+  const type = searchParams.get("type");
 
   if (id) {
-     const { data, error } = await supabase
+    if (type === "user_id") {
+      const { data, error } = await supabase
+        .from("post_with_top_reply_count")
+        .select("*")
+        .eq(type, id);
+      if (error) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+      }
+      return NextResponse.json({ data: data, success: true });
+    }
+    const { data, error } = await supabase
       .from("post_with_top_reply_count")
       .select("*")
       .eq("id", id);

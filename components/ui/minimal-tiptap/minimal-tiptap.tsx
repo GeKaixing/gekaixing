@@ -14,6 +14,8 @@ import { LinkBubbleMenu } from "./components/bubble-menu/link-bubble-menu"
 import { useMinimalTiptapEditor } from "./hooks/use-minimal-tiptap"
 import { MeasuredContainer } from "./components/measured-container"
 import Button from "@/components/towel/Button"
+import clsx from "clsx"
+import { useEffect } from "react"
 
 export interface MinimalTiptapProps
   extends Omit<UseMinimalTiptapEditorProps, "onUpdate"> {
@@ -23,33 +25,33 @@ export interface MinimalTiptapProps
   editorContentClassName?: string
 }
 
-const Toolbar = ({ editor ,publish}: { editor: Editor,publish?:()=>void }) =>{
-  
+const Toolbar = ({ editor, publish, value }: { editor: Editor, publish?: () => void, value: Content | undefined | string }) => {
+
   return (
-  <div className="border-border flex justify-between  h-12 shrink-0  border-b p-2">
-    <div className="flex w-max items-center gap-px">
-      {/* <SectionOne editor={editor} activeLevels={[1, 2, 3, 4, 5, 6]} /> */}
+    <div className="border-border flex justify-between  h-12 shrink-0  border-b p-2">
+      <div className="flex w-max items-center gap-px">
+        {/* <SectionOne editor={editor} activeLevels={[1, 2, 3, 4, 5, 6]} /> */}
 
-      {/* <Separator orientation="vertical" className="mx-2" /> */}
+        {/* <Separator orientation="vertical" className="mx-2" /> */}
 
-      <SectionTwo
-        editor={editor}
-        activeActions={[
-          "bold",
-          "italic",
-          "underline",
-          // "strikethrough",
-          // "code",
-          // "clearFormatting",
-        ]}
-        mainActionCount={3}
-      />
+        <SectionTwo
+          editor={editor}
+          activeActions={[
+            "bold",
+            "italic",
+            "underline",
+            // "strikethrough",
+            // "code",
+            // "clearFormatting",
+          ]}
+          mainActionCount={3}
+        />
 
-      {/* <Separator orientation="vertical" className="mx-2" />
+        {/* <Separator orientation="vertical" className="mx-2" />
 
       <SectionThree editor={editor} /> */}
 
-      {/* <Separator orientation="vertical" className="mx-2" />
+        {/* <Separator orientation="vertical" className="mx-2" />
 
       <SectionFour
         editor={editor}
@@ -59,15 +61,19 @@ const Toolbar = ({ editor ,publish}: { editor: Editor,publish?:()=>void }) =>{
 
       <Separator orientation="vertical" className="mx-2" /> */}
 
-      <SectionFive
-        editor={editor}
-        activeActions={["codeBlock", "blockquote", "horizontalRule"]}
-        mainActionCount={0}
-      />
+        <SectionFive
+          editor={editor}
+          activeActions={["codeBlock", "blockquote", "horizontalRule"]}
+          mainActionCount={0}
+        />
+      </div>
+      <Button onClick={publish} className={clsx({
+        '!bg-black': value?.length !== 0,
+        '!text-white': value?.length !== 0
+      })}>发布</Button>
     </div>
-    <Button onClick={publish}>发布</Button>
-  </div>
-)}
+  )
+}
 
 export const MinimalTiptapEditor = ({
   value,
@@ -76,9 +82,9 @@ export const MinimalTiptapEditor = ({
   className,
   editorContentClassName,
   ...props
-}: MinimalTiptapProps&{
+}: MinimalTiptapProps & {
   publish?: () => void
-} ) => {
+}) => {
   const editor = useMinimalTiptapEditor({
     value,
     onUpdate: onChange,
@@ -104,7 +110,7 @@ export const MinimalTiptapEditor = ({
         editor={editor}
         className={cn("minimal-tiptap-editor", editorContentClassName)}
       />
-      <Toolbar editor={editor} publish={publish}/>
+      <Toolbar editor={editor} publish={publish} value={value} />
       <LinkBubbleMenu editor={editor} />
     </MeasuredContainer>
   )

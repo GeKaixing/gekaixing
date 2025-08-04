@@ -1,26 +1,49 @@
+'use client'
 import ArrowLeftBack from '@/components/towel/ArrowLeftBack'
 import { AvatarFallback, Avatar, AvatarImage } from '@/components/ui/avatar'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import PostCard from '@/components/towel/PostCard'
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from '@/components/ui/input'
+import Image from 'next/image'
+import UserEditDialog from '@/components/towel/UserEditDialog'
+import { userStore } from '@/store/user'
 
-export default function page() {
+async function Postfetch(params: string) {
+    const result = await fetch(`http://localhost:3000/api/post/?id=${params}&type=user_id`);
+    return result;
+}
+
+export default function Page() {
+    const [data, setData] = useState([])
+    const { id, name, user_background_image,user_avatar } = userStore()
+
+    useEffect(() => {
+
+        Postfetch(id).then((result) => {
+            return result.json()
+        }).then((result) => {
+            if (result.success) {
+                setData(result.data)
+            }
+        }).catch((e) => {
+            console.log(e)
+        })
+    }, [])
     return (
         <div>
             <div className='h-8'> <ArrowLeftBack></ArrowLeftBack></div>
-            <div className='bg-gray-400 w-full h-[200px]'></div>
+            <div className='bg-gray-400 w-full h-[200px] relative'>
+                {user_background_image && <Image
+                    src={user_background_image}
+                    alt="User background"
+                    fill // 让图片填满父容器
+                    priority
+                    className='object-cover w-full'  ></Image>}
+            </div>
             <div>
                 <Avatar className="size-36 absolute  -translate-y-1/2 ">
-                    <AvatarImage src="/logo.png" />
+
+                    <AvatarImage src={user_avatar} />
                     <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
             </div>
@@ -31,40 +54,101 @@ export default function page() {
 
 
             <div className='w-full h-14'></div>
-            <div className='font-bold text-2xl'>NAME</div>
+            <div className='font-bold text-2xl'>{name}</div>
             <Tabs defaultValue="post" className="w-full">
                 <TabsList className='w-full'>
                     <TabsTrigger value="post">帖子</TabsTrigger>
                     <TabsTrigger value="reply">回复</TabsTrigger>
-                    <TabsTrigger value="article">文章</TabsTrigger>
+                    {/* <TabsTrigger value="article">文章</TabsTrigger>
                     <TabsTrigger value="media">媒体</TabsTrigger>
-                    <TabsTrigger value="like">喜欢</TabsTrigger>
+                    <TabsTrigger value="like">喜欢</TabsTrigger> */}
                 </TabsList>
-                <TabsContent value="post">
-                    <PostCard></PostCard>
+                <TabsContent value="post" className='flex flex-col gap-6'>
+                    {data.map((items: {
+                        id: string,
+                        user_id: string,
+                        user_name: string,
+                        user_email: string,
+                        user_avatar: string,
+                        content: string
+                        like: number,
+                        star: number,
+                        reply_count: number,
+                        share: number
+                    }) => (
+                        <PostCard
+                            key={items.id}
+                            id={items.id}
+                            user_id={items.user_id}
+                            user_name={items.user_name}
+                            user_email={items.user_email}
+                            user_avatar={items.user_avatar}
+                            content={items.content}
+                            like={items.like}
+                            star={items.star}
+                            reply={items.reply_count}
+                            share={items.share}
+                        />
+                    ))}
                 </TabsContent>
-                <TabsContent value="reply">    <PostCard></PostCard></TabsContent>
-                <TabsContent value="article">    <PostCard></PostCard></TabsContent>
-                <TabsContent value="media">    <PostCard></PostCard></TabsContent>
-                <TabsContent value="like">    <PostCard></PostCard></TabsContent>
+                <TabsContent value="reply" className='flex flex-col gap-6'>    <UserReplyCard /></TabsContent>
+                {/* <TabsContent value="article" className='flex flex-col gap-6'>    <PostCard></PostCard></TabsContent>
+                <TabsContent value="media" className='flex flex-col gap-6'>    <PostCard></PostCard></TabsContent>
+                <TabsContent value="like" className='flex flex-col gap-6'>    <PostCard></PostCard></TabsContent> */}
             </Tabs>
         </div>
 
     )
 }
-function UserEditDialog() {
-    return (<Dialog>
-        <DialogTrigger className='ml-auto!'>
-            <div className='border-1 border-gray-400 h-9 flex justify-center items-center rounded-2xl p-4 mt-4 hover:bg-gray-200 whitespace-nowrap'>编辑个人资料</div>
-        </DialogTrigger>
-        <DialogContent>
-            <DialogHeader>
-                <DialogTitle>
-                    编辑个人资料</DialogTitle>
-                <DialogDescription>
-                    <Input type='text' placeholder='名字'></Input>
-                </DialogDescription>
-            </DialogHeader>
-        </DialogContent>
-    </Dialog>)
+
+async function UserReply(id: string) {
+    const result = await fetch(`http://localhost:3000/api/reply/?id=${id}&type=user_id`)
+    return result;
 }
+
+function UserReplyCard() {
+    const { id } = userStore()
+    const [data, setData] = useState([])
+
+    useEffect(() => {
+
+        UserReply(id).then((result) => {
+            return result.json()
+        }).then((result) => {
+            if (result.success) {
+                setData(result.data)
+            }
+        }).catch((e) => {
+            console.log(e)
+        })
+    }, [])
+
+    return data.map((items: {
+        id: string,
+        user_id: string,
+        user_name: string,
+        user_email: string,
+        user_avatar: string,
+        content: string
+        like: number,
+        star: number,
+        reply_count: number,
+        share: number
+    }) => (
+        <PostCard
+            key={items.id}
+            id={items.id}
+            user_id={items.user_id}
+            user_name={items.user_name}
+            user_email={items.user_email}
+            user_avatar={items.user_avatar}
+            content={items.content}
+            like={items.like}
+            star={items.star}
+            reply={items.reply_count}
+            share={items.share}
+        />
+    ))
+}
+
+

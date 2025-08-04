@@ -3,14 +3,16 @@ import { create } from 'zustand'
 type Store = {
     email: string;
     id: string;
-    avatar: string;
     name:string;
+    user_background_image:string
+    user_avatar:string
 }
 
 export const userStore = create<Store>()((set) => ({
     email: '',
     id: '',
-    avatar: '',
     name:'',
+    user_background_image:'',
+    user_avatar:''
 }))
 

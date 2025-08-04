@@ -51,7 +51,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id"); // <-- 这里获取了查询参数
   const type = searchParams.get("type") as string;
-  
+
   if (id) {
     if (type === "post_id") {
       const { data, error } = await supabase
@@ -75,6 +75,16 @@ export async function GET(request: Request) {
 
       return NextResponse.json({ data: data, success: true });
     } else if (type === "id") {
+      const { data, error } = await supabase
+        .from("reply_with_reply_count")
+        .select("*")
+        .eq(type, id);
+      if (error) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+      }
+
+      return NextResponse.json({ data: data, success: true });
+    } else if (type === "user_id") {
       const { data, error } = await supabase
         .from("reply_with_reply_count")
         .select("*")

@@ -27,6 +27,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { userStore } from '@/store/user'
+import { toast } from 'sonner'
 
 async function publishPost({
     user_id, // Replace with actual user ID
@@ -51,7 +52,7 @@ async function publishPost({
         body: JSON.stringify({
             user_id: user_id, // Replace with actual user ID
             user_name: user_name, // Replace with actual user name
-            user_email:user_email, // Replace with actual user email
+            user_email: user_email, // Replace with actual user email
             content: value,
             user_avatar: user_avatar // Replace with actual user avatar URL
         })
@@ -65,25 +66,30 @@ export default function EditPost() {
     const [isOpenAlertDialog, setIsOpenAlertDialog] = useState(false)
     const { poset_images } = post_imagesStore()
     const supabase = createClient()
+    const [saved, setSaved] = useState(false)
+
     const {
         email,
         id,
-        avatar, 
+        user_avatar,
         name } = userStore()
     const bucketName = 'post-image' // 替换为你的桶名
 
     useEffect(() => {
         if (isOpen === false) {
             if (poset_images.length !== 0) {
-                poset_images.forEach((image) => {
-                    const filePath = image.split('/post-image/')[1]
-                    supabase.storage.from(bucketName).remove([filePath])
-                        .then((result) => {
-                            console.log(result)
-                        }).catch((error) => {
-                            console.error('删除图片失败:', error)
-                        })
-                })
+                if (!saved) {
+                    poset_images.forEach((image) => {
+                        const filePath = image.split('/post-image/')[1]
+                        supabase.storage.from(bucketName).remove([filePath])
+                            .then((result) => {
+                                console.log(result)
+                            }).catch((error) => {
+                                console.error('删除图片失败:', error)
+                            })
+                    })
+                }
+
             }
             setValue("")
         }
@@ -92,15 +98,23 @@ export default function EditPost() {
 
 
     async function publish() {
-        await publishPost(
+        const reslut = await publishPost(
             {
                 user_id: id, // Replace with actual user ID
-                user_name: name||email, // Replace with actual user name
+                user_name: name || email, // Replace with actual user name
                 user_email: email, // Replace with actual user email
                 value: value as string,
-                user_avatar: avatar // Replace with actual user avatar URL
+                user_avatar: user_avatar // Replace with actual user avatar URL
             }
         )
+        const data = await reslut.json()
+        if (data.success) {
+            toast.success('发布成功');
+            setSaved(true);
+            setValue(" ");
+        } else {
+            toast.success('发布失败')
+        }
     }
 
     return (
@@ -108,6 +122,7 @@ export default function EditPost() {
 
             <Dialog open={isOpen} onOpenChange={(e) => {
                 if (value !== '') {
+                    console.log(e)
                     if (e === false) {
                         setIsOpenAlertDialog(true)
                     } else {
@@ -121,7 +136,7 @@ export default function EditPost() {
                 <DialogTrigger asChild>
                     <div
                         className="rounded-2xl bg-black text-xl h-9 w-[200px] text-white flex justify-center items-center hover:bg-black/80 cursor-pointer"
-                        onClick={() => setIsOpen(true)}
+                        onClick={() => { setIsOpen(true); setSaved(false) }}
                     >
                         发布
                     </div>
@@ -133,7 +148,7 @@ export default function EditPost() {
                         </DialogDescription>
                     </DialogHeader>
                     <MinimalTiptapEditor
-                        publish={publish }
+                        publish={publish}
                         value={value}
                         onChange={setValue}
                         className="!max-w-[622px] w-full"
@@ -146,11 +161,11 @@ export default function EditPost() {
                     />
                 </DialogContent>
             </Dialog>
-            <EditAlertDialog isOpen={isOpenAlertDialog} setIsOpen={setIsOpenAlertDialog} setIsOpenDialog={setIsOpen} />
+          {  <EditAlertDialog  saved={saved} isOpen={isOpenAlertDialog} setIsOpen={setIsOpenAlertDialog} setIsOpenDialog={setIsOpen} />}
         </TooltipProvider>
     )
 }
-function EditAlertDialog({ isOpen, setIsOpen, setIsOpenDialog }: { setIsOpenDialog: (open: boolean) => void, isOpen: boolean, setIsOpen: (open: boolean) => void }) {
+function EditAlertDialog({ isOpen, setIsOpen, setIsOpenDialog,saved}: { saved:boolean;setIsOpenDialog: (open: boolean) => void, isOpen: boolean, setIsOpen: (open: boolean) => void }) {
     return (
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
 
@@ -158,7 +173,8 @@ function EditAlertDialog({ isOpen, setIsOpen, setIsOpenDialog }: { setIsOpenDial
                 <AlertDialogHeader>
                     <AlertDialogTitle>确认删除</AlertDialogTitle>
                     <AlertDialogDescription>
-                        确认删除所有未发布的内容吗？这将无法恢复。
+                      { saved ? '还有内容,还需要继续编写吗？':
+                        "确认删除所有未发布的内容吗？这将无法恢复。"}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
