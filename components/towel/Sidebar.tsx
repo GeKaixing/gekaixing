@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/utils/function/copyToClipboard";
 import EditPost from "./EditPost";
 
-export default function Sidebar({ user }: { user: { email: string | null, id: string | null, user_metadata: { avatar: string | null, name: string | null, user_background_image: string|null,user_avatar:string|null } } | null }) {
+export default function Sidebar({ user }: { user: { email: string | null, id: string | null, user_metadata: { avatar: string | null, name: string | null, user_background_image: string | null, user_avatar: string | null } } | null }) {
     const router = useRouter()
 
     userStore.setState({
@@ -24,7 +24,7 @@ export default function Sidebar({ user }: { user: { email: string | null, id: st
         id: user?.id || '',
         name: user?.user_metadata.name || '',
         user_background_image: user?.user_metadata.user_background_image || '',
-        user_avatar:user?.user_metadata.user_avatar || ''
+        user_avatar: user?.user_metadata.user_avatar || ''
     })
 
 
@@ -87,7 +87,7 @@ export function SidebarDropdownMenu() {
                 <Ellipsis />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <DropdownMenuItem onClick={logoutfetch}>登出 {email}</DropdownMenuItem>
+                <Link href="/account"><DropdownMenuItem onClick={logoutfetch}>登出 {email}</DropdownMenuItem></Link>
                 <Link href={`/home/user/${id}`}><DropdownMenuItem>个人信息</DropdownMenuItem></Link>
                 <DropdownMenuItem onClick={() => copyToClipboard(`http://localhost:3000/home/user/${id}`)}>复制连接</DropdownMenuItem>
             </DropdownMenuContent>

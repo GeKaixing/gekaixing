@@ -12,9 +12,13 @@ import { z } from "zod"
 import { userStore } from '@/store/user'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
-import { Button } from '@/components/ui/button'
 import UserBackgroundImage from '@/components/towel/UserBackgroundImage'
 import UserAvatar from "./UserAvatar"
+import Button from "./Button"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
+import Spin from "./Spin"
+import clsx from "clsx"
 
 
 const formSchema = z.object({
@@ -33,6 +37,8 @@ async function PATCHUser(name: string) {
 }
 
 export default function UserEditDialog() {
+    const [status, setStatus] = useState(false)
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -40,8 +46,20 @@ export default function UserEditDialog() {
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        PATCHUser(values.username)
+
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        if (values.username === '') return
+        setStatus(true)
+        const reslut = await PATCHUser(values.username)
+        const data = await reslut.json()
+        if (data.success) {
+            toast.success('修改成功')
+            setStatus(false)
+        } else {
+            toast.success('修改失败')
+            setStatus(false)
+        }
     }
 
     return (<Dialog>
@@ -54,8 +72,8 @@ export default function UserEditDialog() {
                 <DialogTitle>
                     编辑个人资料
                 </DialogTitle>
-                {/* <DialogDescription>
-                </DialogDescription> */}
+                <DialogDescription className="hidden">
+                </DialogDescription>
             </DialogHeader>
 
             <UserBackgroundImage></UserBackgroundImage>
@@ -73,7 +91,11 @@ export default function UserEditDialog() {
                             <FormItem>
                                 <FormLabel>名字</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="输入您的名字" {...field} />
+                                    <Input
+                                        disabled={status}
+                                        placeholder="输入您的名字"
+                                        {...field}
+                                    />
                                 </FormControl>
                                 {/* <FormDescription>
 
@@ -82,7 +104,11 @@ export default function UserEditDialog() {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit">提交</Button>
+                    <Button type="submit"
+                        disabled={status}
+                    >
+                        {status ? <Spin></Spin> : '提交'}
+                    </Button>
                 </form>
             </Form>
         </DialogContent>

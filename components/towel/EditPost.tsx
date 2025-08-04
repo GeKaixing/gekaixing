@@ -67,6 +67,7 @@ export default function EditPost() {
     const { poset_images } = post_imagesStore()
     const supabase = createClient()
     const [saved, setSaved] = useState(false)
+    const [status, setStatus] = useState(false)
 
     const {
         email,
@@ -98,6 +99,7 @@ export default function EditPost() {
 
 
     async function publish() {
+        setStatus(true)
         const reslut = await publishPost(
             {
                 user_id: id, // Replace with actual user ID
@@ -111,6 +113,7 @@ export default function EditPost() {
         if (data.success) {
             toast.success('发布成功');
             setSaved(true);
+            setStatus(false);
             setValue(" ");
         } else {
             toast.success('发布失败')
@@ -148,6 +151,7 @@ export default function EditPost() {
                         </DialogDescription>
                     </DialogHeader>
                     <MinimalTiptapEditor
+                        status={status}
                         publish={publish}
                         value={value}
                         onChange={setValue}
@@ -161,11 +165,11 @@ export default function EditPost() {
                     />
                 </DialogContent>
             </Dialog>
-          {  <EditAlertDialog  saved={saved} isOpen={isOpenAlertDialog} setIsOpen={setIsOpenAlertDialog} setIsOpenDialog={setIsOpen} />}
+            {<EditAlertDialog saved={saved} isOpen={isOpenAlertDialog} setIsOpen={setIsOpenAlertDialog} setIsOpenDialog={setIsOpen} />}
         </TooltipProvider>
     )
 }
-function EditAlertDialog({ isOpen, setIsOpen, setIsOpenDialog,saved}: { saved:boolean;setIsOpenDialog: (open: boolean) => void, isOpen: boolean, setIsOpen: (open: boolean) => void }) {
+function EditAlertDialog({ isOpen, setIsOpen, setIsOpenDialog, saved }: { saved: boolean; setIsOpenDialog: (open: boolean) => void, isOpen: boolean, setIsOpen: (open: boolean) => void }) {
     return (
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
 
@@ -173,8 +177,8 @@ function EditAlertDialog({ isOpen, setIsOpen, setIsOpenDialog,saved}: { saved:bo
                 <AlertDialogHeader>
                     <AlertDialogTitle>确认删除</AlertDialogTitle>
                     <AlertDialogDescription>
-                      { saved ? '还有内容,还需要继续编写吗？':
-                        "确认删除所有未发布的内容吗？这将无法恢复。"}
+                        {saved ? '还有内容,还需要继续编写吗？' :
+                            "确认删除所有未发布的内容吗？这将无法恢复。"}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

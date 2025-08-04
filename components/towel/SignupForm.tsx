@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import Button from './Button'
-import clsx from 'clsx'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -18,7 +17,18 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { useState } from 'react'
-
+import z from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { toast } from 'sonner'
+import Spin from './Spin'
+const formSchema = z.object({
+    email: z.string().email({
+        message: "请输入有效的电子邮件地址。",
+    }),
+    password: z.string().min(6, {
+        message: "密码必须至少包含6个字符。",
+    }),
+})
 async function SignupFetch(email: string, password: string) {
     const result = await fetch('/api/signup', {
         method: 'POST',
@@ -35,54 +45,73 @@ async function SignupFetch(email: string, password: string) {
 export default function SignupForm() {
     const [open, setOpen] = useState(false);
 
-    const form = useForm({
+    const [status, setStatus] = useState(false)
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
         defaultValues: {
+            email: "",
             password: '',
-            email: ''
-        }
+        },
     })
 
-    async function signup() {
 
-        const { password, email } = form.getValues();
-        const result = await SignupFetch(email, password)
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        setStatus(true)
+        const result = await SignupFetch(values.email, values.password)
         const data = await result.json()
         if (data.success) {
+            setStatus(false)
             setOpen(true);
+        } else {
+            setStatus(false)
+            toast.error('注册失败')
         }
     }
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit((values) => null)} className="space-y-4 ">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                     control={form.control}
                     name="email"
                     render={({ field }) => (
                         <FormItem>
+                            <FormLabel>邮箱</FormLabel>
                             <FormControl>
-                                <Input placeholder="请输入邮箱" {...field} type="email" />
+                                <Input
+                                    disabled={status}
+                                    placeholder="请输入邮箱"
+                                    type='email'
+                                    {...field}
+                                />
                             </FormControl>
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>密码</FormLabel>
+                                        <FormControl>
+                                            <Input   disabled={status} placeholder="请输入密码" {...field} type='password' />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormDescription className='hidden'>
 
+                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-                <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormControl>
-                                <Input placeholder="请输入密码" {...field} type='password' />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <Button
-                    onClick={signup}
-                    className={clsx('text-white bg-black')}>注册</Button>
+                <Button type="submit"
+                    className='bg-black text-white'
+                    disabled={status}
+                >
+                    {status ? <Spin></Spin> : '提交'}
+                </Button>
             </form>
+
             <EnterMsmAlertDialog
                 open={open}
                 setOpen={setOpen}

@@ -16,6 +16,7 @@ import { MeasuredContainer } from "./components/measured-container"
 import Button from "@/components/towel/Button"
 import clsx from "clsx"
 import { useEffect } from "react"
+import Spin from "@/components/towel/Spin"
 
 export interface MinimalTiptapProps
   extends Omit<UseMinimalTiptapEditorProps, "onUpdate"> {
@@ -78,12 +79,14 @@ const Toolbar = ({ editor, publish, value }: { editor: Editor, publish?: () => v
 export const MinimalTiptapEditor = ({
   value,
   publish,
+  status,
   onChange,
   className,
   editorContentClassName,
   ...props
 }: MinimalTiptapProps & {
   publish?: () => void
+  status: boolean
 }) => {
   const editor = useMinimalTiptapEditor({
     value,
@@ -110,7 +113,12 @@ export const MinimalTiptapEditor = ({
         editor={editor}
         className={cn("minimal-tiptap-editor", editorContentClassName)}
       />
-      <Toolbar editor={editor} publish={publish} value={value} />
+      {status ?
+        <div className="flex justify-center">
+          <Spin></Spin>
+        </div>
+        : <Toolbar editor={editor} publish={publish} value={value} />}
+
       <LinkBubbleMenu editor={editor} />
     </MeasuredContainer>
   )

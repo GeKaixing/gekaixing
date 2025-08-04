@@ -21,7 +21,6 @@ export default async function RootLayout({
                 <main className="flex-1  p-4">
                     {children}
                 </main>
-
                 <footer className="p-4">
                     <Footer />
                 </footer>

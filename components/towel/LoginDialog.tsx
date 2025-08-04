@@ -14,11 +14,13 @@ import Link from "next/link"
 import { use, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import GoogleButton from "./GoogleButton"
+import z from "zod"
 
 export default function LoginDialog() {
     const [open, setOpen] = useState(true)
-    const router=useRouter()
+    const router = useRouter()
 
+   
     useEffect(() => {
         if (open === false) {
             router.replace('/account')
@@ -37,7 +39,7 @@ export default function LoginDialog() {
                         <GoogleButton></GoogleButton>
                         <Separator className='mb-6' />
                         <LoginForm></LoginForm>
-                        <Button className='text-black mt-6' onClick={()=>{router.push('/account/password_reset')}}>忘记密码</Button>
+                        <Button className='text-black mt-6' onClick={() => { router.push('/account/password_reset') }}>忘记密码</Button>
                         <span className='mt-4'>还没有账户吗?
                             <Link href={'/account/signup'} className='text-blue-500 '>注册</Link>
                         </span>
