@@ -1,4 +1,4 @@
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 
 export const config = {
   runtime: "edge",
@@ -6,7 +6,7 @@ export const config = {
 };
 
 export default async function handler() {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   const res = await fetch(
     `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${process.env.NEXT_PUBLIC_NEWs_key}`

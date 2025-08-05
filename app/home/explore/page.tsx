@@ -15,7 +15,7 @@ async function ToutiaoHotGTE() {
     })
 }
 
-export default function Page() {
+export default function page() {
 
     return (
         <div>
@@ -72,7 +72,7 @@ function ExploreTabs() {
         </TabsContent>
     </Tabs>
 }
-export async function NEWsFetch(url: string) {
+ async function NEWsFetch(url: string) {
   return await fetch(url, {
     next: {
       revalidate: 60, // 以秒为单位，表示 60 秒内使用缓存
