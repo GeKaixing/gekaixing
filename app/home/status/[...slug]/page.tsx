@@ -15,7 +15,7 @@ export default async function Page({ params }: {   params: Promise<{ slug: strin
 
 
 async function Post({ params }: { params: string }) {
-    const result = await fetch(`  process.env.NEXT_PUBLIC_URL/api/post/?id=${params}`,);
+    const result = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/post/?id=${params}`,);
     const data = await result.json();
     if (data.success) {
         return (

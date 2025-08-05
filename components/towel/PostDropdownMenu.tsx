@@ -86,10 +86,10 @@ export default function PostDropdownMenu({ id, user_id, type = 'post', content }
 
     function CopyLink() {
         if (type === 'reply') {
-            copyToClipboard(`  process.env.NEXT_PUBLIC_URL/home/reply/${id}`)
+            copyToClipboard(`${process.env.NEXT_PUBLIC_URL}/home/reply/${id}`)
             return;
         }
-        copyToClipboard(`  process.env.NEXT_PUBLIC_URL/home/status/${id}`)
+        copyToClipboard(`${process.env.NEXT_PUBLIC_URL}/home/status/${id}`)
 
     }
 
