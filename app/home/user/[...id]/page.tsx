@@ -9,7 +9,7 @@ import UserEditDialog from '@/components/towel/UserEditDialog'
 import { userStore } from '@/store/user'
 
 async function Postfetch(params: string) {
-    const result = await fetch(`NEXT_PUBLIC_URL/api/post/?id=${params}&type=user_id`);
+    const result = await fetch(`  process.env.NEXT_PUBLIC_URL/api/post/?id=${params}&type=user_id`);
     return result;
 }
 
@@ -104,7 +104,7 @@ export default function Page() {
 }
 
 async function UserReply(id: string) {
-    const result = await fetch(`NEXT_PUBLIC_URL/api/reply/?id=${id}&type=user_id`)
+    const result = await fetch(`  process.env.NEXT_PUBLIC_URL/api/reply/?id=${id}&type=user_id`)
     return result;
 }
 

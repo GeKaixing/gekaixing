@@ -3,7 +3,7 @@ import PostCard from "@/components/towel/PostCard";
 
 
 export default async function Home() {
-  const result = await fetch('NEXT_PUBLIC_URL/api/post', {
+  const result = await fetch('  process.env.NEXT_PUBLIC_URL/api/post', {
     method: 'GET',
     next:{tags:['home']}
   });
