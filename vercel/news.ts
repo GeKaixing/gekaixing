@@ -14,7 +14,7 @@ export default async function handler() {
   const { articles } = await res.json();
 
   for (const article of articles) {
-    await supabase.from("news").insert({
+    await supabase.from("news-us").insert({
       title: article.title,
       url: article.url,
       publishedAt: article.publishedAt,
