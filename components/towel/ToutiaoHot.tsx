@@ -2,12 +2,15 @@
 import { ChartNoAxesColumn } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
+export async function ToutiaoHotGTE() {
+    return await fetch('https://dabenshi.cn/other/api/hot.php?type=toutiaoHot', {
+        method: 'GET',
+    })
+}
 
 export default async function ToutiaoHot() {
 
-    const res = await fetch('https://dabenshi.cn/other/api/hot.php?type=toutiaoHot', {
-        method: 'GET',
-    })
+    const res = await ToutiaoHotGTE()
     const data = await res.json()
 
     return (

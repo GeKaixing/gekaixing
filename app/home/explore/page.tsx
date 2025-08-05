@@ -1,5 +1,5 @@
 "use client"
-import { ToutiaoHotGET } from '@/components/towel/Footer'
+import { ToutiaoHotGTE } from '@/components/towel/ToutiaoHot'
 import { ChartNoAxesColumn } from 'lucide-react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
@@ -7,7 +7,9 @@ import React, { useEffect, useState } from 'react'
 export default function Page() {
     const [data, setData] = useState([])
     useEffect(() => {
-        ToutiaoHotGET().then((result) => {
+        ToutiaoHotGTE().then((result) => {
+            return result.json()
+        }).then((result) => {
             setData(result.data)
         }).catch(() => {
             setData([])

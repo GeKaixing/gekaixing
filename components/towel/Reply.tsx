@@ -48,7 +48,7 @@ export default async function Reply({ post_id, type }: { post_id: string, type: 
                     </div>
 
                     <CardAction>
-                        <PostDropdownMenu id={items.id} user_id={items.user_id}></PostDropdownMenu>
+                        <PostDropdownMenu id={items.id} user_id={items.user_id} content={items.content}></PostDropdownMenu>
                     </CardAction>
                 </CardHeader>
                 <CardContent >

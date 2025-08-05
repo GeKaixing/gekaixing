@@ -48,14 +48,14 @@ export default function PublishReply({ post_id, reply_id, type = 'post' }: { pos
     const [replyInput, setReplyInput] = useState<string>('');
     const { email,
         id,
-        avatar,
+        user_avatar,
         name, } = userStore()
     async function handleReply() {
         let result;
         if (type === 'post') {
             result = await publishReply({
                 user_id: id,
-                user_avatar: avatar,
+                user_avatar: user_avatar,
                 user_name: name || email,
                 user_email: email,
                 post_id: post_id,
@@ -65,7 +65,7 @@ export default function PublishReply({ post_id, reply_id, type = 'post' }: { pos
         } else {
             result = await publishReply({
                 user_id: id,
-                user_avatar: avatar,
+                user_avatar: user_avatar,
                 user_name: name || email,
                 user_email: email,
                 post_id: post_id,
