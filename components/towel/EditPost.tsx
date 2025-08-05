@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { userStore } from '@/store/user'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 async function publishPost({
     user_id, // Replace with actual user ID
@@ -62,12 +63,13 @@ async function publishPost({
 
 export default function EditPost() {
     const [value, setValue] = useState<Content>("")
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(true)
     const [isOpenAlertDialog, setIsOpenAlertDialog] = useState(false)
     const { poset_images } = post_imagesStore()
     const supabase = createClient()
     const [saved, setSaved] = useState(false)
     const [status, setStatus] = useState(false)
+    const router = useRouter()
 
     const {
         email,
@@ -92,6 +94,7 @@ export default function EditPost() {
                 }
 
             }
+            router.back()
             setValue("")
         }
 
@@ -111,11 +114,11 @@ export default function EditPost() {
         )
         const data = await reslut.json()
         if (data.success) {
-            toast.success('发布成功');
-            
             setSaved(true);
             setStatus(false);
             setValue(" ");
+            router.refresh()
+            toast.success('发布成功');
         } else {
             toast.success('发布失败')
         }
@@ -137,7 +140,7 @@ export default function EditPost() {
                 setIsOpen(e)
             }
             }>
-                <DialogTrigger asChild>
+                <DialogTrigger asChild className='hidden'>
                     <div
                         className="rounded-2xl bg-black text-xl h-9 w-[200px] text-white flex justify-center items-center hover:bg-black/80 cursor-pointer"
                         onClick={() => { setIsOpen(true); setSaved(false) }}

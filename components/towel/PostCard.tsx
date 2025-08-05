@@ -101,7 +101,7 @@ export default function PostCard({
                     </CardTitle>
                     <CardDescription className='hover:bg-gray-100'>{user_name}</CardDescription>
                 </div>
-
+        
                 <CardAction>
                     <PostDropdownMenu id={id} user_id={user_id}></PostDropdownMenu>
                 </CardAction>

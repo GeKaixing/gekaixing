@@ -15,17 +15,25 @@ import { Ellipsis } from 'lucide-react'
 import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/utils/function/copyToClipboard";
 import EditPost from "./EditPost";
+import { useEffect } from "react";
 
 export default function Sidebar({ user }: { user: { email: string | null, id: string | null, user_metadata: { avatar: string | null, name: string | null, user_background_image: string | null, user_avatar: string | null } } | null }) {
     const router = useRouter()
 
-    userStore.setState({
-        email: user?.email || '',
-        id: user?.id || '',
-        name: user?.user_metadata.name || '',
-        user_background_image: user?.user_metadata.user_background_image || '',
-        user_avatar: user?.user_metadata.user_avatar || ''
-    })
+  
+    // 使用 useEffect 在 user 发生变化时同步状态
+    useEffect(() => {
+        // 确保 user 对象存在，以避免在用户未登录时出现错误
+        if (user) {
+            userStore.setState({
+                email: user.email || '',
+                id: user.id || '',
+                name: user.user_metadata.name || '',
+                user_background_image: user.user_metadata.user_background_image || '',
+                user_avatar: user.user_metadata.user_avatar || ''
+            });
+        }
+    }, [user]); // 依赖数组，只有当 user 对象引用发生变化时才执行
 
 
     return (
@@ -35,7 +43,6 @@ export default function Sidebar({ user }: { user: { email: string | null, id: st
                     <House />
                     <span >主页</span>
                 </Link>
-
                 <Link href="/home/settings" className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
                     <Settings></Settings>
                     <span>设置</span>
@@ -63,11 +70,14 @@ export default function Sidebar({ user }: { user: { email: string | null, id: st
                         <SidebarDropdownMenu></SidebarDropdownMenu>
                     </li>}
 
-                {/* <li className="rounded-2xl bg-black text-xl h-9 w-[200px] text-white flex justify-center items-center 
-                hover:bg-black/80
-                ">
-                <Link href="/home/post">发布</Link></li> */}
-                <EditPost></EditPost>
+
+                <Link
+                    href={'/home/post'}
+                    className="rounded-2xl bg-black text-xl h-9 w-[200px] text-white flex justify-center items-center hover:bg-black/80 cursor-pointer"
+                >
+                    发布 
+                </Link>
+                {/* <EditPost></EditPost> */}
             </ul>
         </nav>
     )

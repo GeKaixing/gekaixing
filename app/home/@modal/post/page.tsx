@@ -3,6 +3,6 @@ import React from 'react'
 
 export default function PostModal() {
   return (
-    <div>dasdas</div>
+    <EditPost/>
   )
 }

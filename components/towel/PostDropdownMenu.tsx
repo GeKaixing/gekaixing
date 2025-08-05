@@ -23,6 +23,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { useRouter } from 'next/navigation'
 
 async function deletePost(id: string) {
     const result = await fetch(`/api/post`, {
@@ -49,6 +50,7 @@ export default function PostDropdownMenu({ id, user_id, type = 'post' }: { id: s
     const isCurrentUser = user.id === user_id; // Check if the post belongs to
     const [isopen, setOpen] = useState(false)
     const [AlertDialogOpen, setAlertDialogOpen] = useState(false)
+    const router=useRouter()
 
     async function deleteHandler() {
 
@@ -64,6 +66,7 @@ export default function PostDropdownMenu({ id, user_id, type = 'post' }: { id: s
 
         if (data.success) {
             toast.success('删除成功')
+            router.refresh()
         } else {
             toast.error('删除失败')
         }
