@@ -1,6 +1,9 @@
 
 "use server"
 import Footer from "@/components/towel/Footer";
+import MobileAdd from "@/components/towel/MobileAdd";
+import MobileFooter from "@/components/towel/MobileFooter";
+import MobileHeader from "@/components/towel/MobileHeader";
 import Sidebar from "@/components/towel/Sidebar";
 import { createClient } from "@/utils/supabase/server";
 
@@ -17,17 +20,19 @@ export default async function RootLayout({
     const { data: { user } } = await supabase.auth.getUser()
 
     return (
-        <div
-        >
-            <div className="flex justify-center  h-screen max-w-[80%]  mx-auto">
-                <header className="p-4">
+        <div>
+            <MobileAdd></MobileAdd>
+            <MobileHeader user={user}></MobileHeader>
+            <div className="flex justify-center  h-screen  sm:max-w-[80%]  mx-auto">
+                <header className="max-sm:hidden p-4 ">
                     <Sidebar user={user} />
                 </header>
-                <main className="flex-1  p-4">
+                <main className="flex-1 max-sm:px-4  sm:p-4">
                     {children}
                     {modal}
                 </main>
-                <footer className="p-4">
+                <MobileFooter id={user?.id}></MobileFooter>
+                <footer className="max-sm:hidden p-4 ">
                     <Footer />
                 </footer>
             </div>

@@ -68,7 +68,7 @@ const Toolbar = ({ editor, publish, value }: { editor: Editor, publish?: () => v
           mainActionCount={0}
         />
       </div>
-      <Button onClick={publish} className={clsx({
+      <Button onClick={publish} className={clsx('!w-16 !max-w-2xs',{
         '!bg-black': value?.length !== 0,
         '!text-white': value?.length !== 0
       })}>发布</Button>

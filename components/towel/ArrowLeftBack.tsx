@@ -3,10 +3,12 @@ import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
-export default function ArrowLeftBack() {
+export default function ArrowLeftBack({className}:{className?:string}) {
     const router = useRouter()
     return (
-        <ArrowLeft onClick={() => {
+        <ArrowLeft 
+        className={className}
+        onClick={() => {
             router.back()
         }} />
     )

@@ -90,7 +90,7 @@ export default function PostCard({
 
 
     return (
-        <Card className='cursor-pointer hover:bg-gray-50'>
+        <Card className='cursor-pointer hover:bg-gray-50 '>
             <CardHeader>
                 <div className='flex items-center gap-2 '>
                     <CardTitle className='hover:bg-gray-100'>

@@ -10,7 +10,7 @@ export default async function Home() {
   const data = await result.json();
   if (data.success) {
     return (
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 ">
         {data.data.map((items: {
           id: string,
           user_id: string,

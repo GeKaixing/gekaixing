@@ -1,7 +1,5 @@
-import Button from '@/components/towel/Button'
 import GoogleButton from '@/components/towel/GoogleButton'
 import { LoginFooter } from '@/components/towel/LoginFooter'
-import Password_resetDialog from '@/components/towel/Password_resetDialog'
 import RegistrationProtocol from '@/components/towel/RegistrationProtocol'
 import { Separator } from '@/components/ui/separator'
 import Image from 'next/image'
@@ -14,7 +12,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
 
             <div className="fixed inset-0 flex justify-center items-center min-h-screen ">
                 <div className='flex gap-80 justify-center items-center'>
-                    <Image src='/logo.png' alt="Towel logo" width={200} height={200}></Image>
+                    <Image className='max-sm:hidden'  src='/logo.png' alt="Towel logo" width={200} height={200}></Image>
                     <div className='flex flex-col justify-center items-center gap-6'>
                         <GoogleButton></GoogleButton>
                         <Separator />
