@@ -15,13 +15,13 @@ export default function Ablout() {
     return (
         <div className="flex flex-col h-5 items-center  text-[12px] text-gray-400  cursor-pointer ">
             <div className='flex space-x-4'>
-                <div>关于</div>
+                <Link href={'/about'}>关于</Link>
                 <Separator orientation="vertical" />
-                <div>服务条款</div>
+                <Link href={'/tos'}>服务条款</Link>
                 <Separator orientation="vertical" />
-                <div>隐私政策</div>
+                <Link href={'/privacy'}>隐私政策</Link>
                 <Separator orientation="vertical" />
-                <div>Cookie 使用政策</div>
+                <Link href={'/towel-cookies'}>Cookie 使用政策</Link>
             </div>
             <div className='flex space-x-4 '>
                 <div>

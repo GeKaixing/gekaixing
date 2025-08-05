@@ -20,7 +20,7 @@ import { useEffect } from "react";
 export default function Sidebar({ user }: { user: { email: string | null, id: string | null, user_metadata: { avatar: string | null, name: string | null, user_background_image: string | null, user_avatar: string | null } } | null }) {
     const router = useRouter()
 
-  
+
     // 使用 useEffect 在 user 发生变化时同步状态
     useEffect(() => {
         // 确保 user 对象存在，以避免在用户未登录时出现错误
@@ -43,10 +43,11 @@ export default function Sidebar({ user }: { user: { email: string | null, id: st
                     <House />
                     <span >主页</span>
                 </Link>
-                <Link href="/home/settings" className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
-                    <Settings></Settings>
-                    <span>设置</span>
-                </Link>
+                {user?.id &&
+                    <Link href="/home/settings" className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
+                        <Settings></Settings>
+                        <span>设置</span>
+                    </Link>}
 
                 {!user?.id ?
                     <Link href="/account" className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
@@ -70,13 +71,12 @@ export default function Sidebar({ user }: { user: { email: string | null, id: st
                         <SidebarDropdownMenu></SidebarDropdownMenu>
                     </li>}
 
-
-                <Link
+                {user?.id && <Link
                     href={'/home/post'}
                     className="rounded-2xl bg-black text-xl h-9 w-[200px] text-white flex justify-center items-center hover:bg-black/80 cursor-pointer"
                 >
-                    发布 
-                </Link>
+                    发布
+                </Link>}
                 {/* <EditPost></EditPost> */}
             </ul>
         </nav>

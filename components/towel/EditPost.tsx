@@ -29,6 +29,11 @@ import {
 import { userStore } from '@/store/user'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { findUnusedUrls } from '@/utils/function/findUnusedUrls'
+import { deleteUnusedImages } from '@/utils/function/deleteUnusedImages'
+
+
+
 
 async function publishPost({
     user_id, // Replace with actual user ID
@@ -113,6 +118,7 @@ export default function EditPost() {
             }
         )
         const data = await reslut.json()
+        const Unused_pictures = findUnusedUrls(value as string, poset_images)
         if (data.success) {
             setSaved(true);
             setStatus(false);
@@ -122,6 +128,11 @@ export default function EditPost() {
         } else {
             toast.success('发布失败')
         }
+        if (Unused_pictures.length !== 0) {
+            const { data: UnusedImagesData, error: UnusedImagesError } = await deleteUnusedImages('post-image', Unused_pictures)
+            console.log(UnusedImagesData, UnusedImagesError)
+        }
+
     }
 
     return (

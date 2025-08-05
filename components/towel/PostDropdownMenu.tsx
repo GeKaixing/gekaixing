@@ -13,7 +13,7 @@ import { userStore } from '@/store/user'
 import { toast } from 'sonner'
 import { copyToClipboard } from '@/utils/function/copyToClipboard'
 import {
-    AlertDialog,    
+    AlertDialog,
     AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
@@ -24,6 +24,9 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { useRouter } from 'next/navigation'
+import { deleteUnusedImages } from '@/utils/function/deleteUnusedImages'
+import { findUrls } from '@/utils/function/findUrls'
+
 
 async function deletePost(id: string) {
     const result = await fetch(`/api/post`, {
@@ -45,12 +48,12 @@ async function deleteReply(id: string) {
     });
     return result;
 }
-export default function PostDropdownMenu({ id, user_id, type = 'post' }: { id: string, user_id: string, type?: string }) {
+export default function PostDropdownMenu({ id, user_id, type = 'post', content }: { content: string; id: string, user_id: string, type?: string }) {
     const user = userStore()
     const isCurrentUser = user.id === user_id; // Check if the post belongs to
     const [isopen, setOpen] = useState(false)
     const [AlertDialogOpen, setAlertDialogOpen] = useState(false)
-    const router=useRouter()
+    const router = useRouter()
 
     async function deleteHandler() {
 
@@ -67,10 +70,14 @@ export default function PostDropdownMenu({ id, user_id, type = 'post' }: { id: s
         if (data.success) {
             toast.success('删除成功')
             router.refresh()
+            const UrlsArray = findUrls(content)
+            if (UrlsArray.length !== 0) {
+                const { data:UrlsArrayData, error:UrlsArrayError } = await deleteUnusedImages('post-image', UrlsArray)
+                console.log(UrlsArrayData, UrlsArrayError)
+            }
         } else {
             toast.error('删除失败')
         }
-
     }
 
     function report() {
