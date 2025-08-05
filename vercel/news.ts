@@ -9,7 +9,7 @@ export default async function handler() {
   const supabase = await createClient();
 
   const res = await fetch(
-    `https://newsapi.org/v2/top-headlines?category=sports&country=us&apiKey=${process.env.NEXT_PUBLIC_NEWs_key}`
+    `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${process.env.NEXT_PUBLIC_NEWs_key}`
   );
   const { articles } = await res.json();
 
