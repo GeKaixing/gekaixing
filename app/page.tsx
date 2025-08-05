@@ -1,3 +1,5 @@
+import Navbar from '@/components/towel/Navbar'
+import { Github } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -6,10 +8,11 @@ import React from 'react'
 export default function page() {
   return (
     <div className='bg-blue-500'>
+    <Navbar></Navbar>
       <div className='p-6 w-full h-screen flex items-center'>
         <footer className='w-full text-2xl  text-white  flex justify-between items-center'>
           <Image alt='logo' src='/logo.png' width={200} height={200} className='cursor-pointer '></Image>
-          <Link href={'/home'}  className='text-5xl font-bold cursor-pointer '>Just for fun!!!</Link>
+          <Link href={'/home'} className='text-5xl font-bold cursor-pointer '>Just for fun!!!</Link>
           <div className='flex flex-col gap-6'>
             <div className='text-black font-semibold'>Towel</div>
             <Link href={'/about'} className='cursor-pointer '>关于</Link>
