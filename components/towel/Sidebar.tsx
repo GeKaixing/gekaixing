@@ -85,7 +85,7 @@ export function SidebarDropdownMenu() {
             <DropdownMenuContent>
                 <Link href="/account"><DropdownMenuItem onClick={logoutfetch}>登出 {email}</DropdownMenuItem></Link>
                 <Link href={`/home/user/${id}`}><DropdownMenuItem>个人信息</DropdownMenuItem></Link>
-                <DropdownMenuItem onClick={() => copyToClipboard(`http://localhost:3000/home/user/${id}`)}>复制连接</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => copyToClipboard(`NEXT_PUBLIC_URL/home/user/${id}`)}>复制连接</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )

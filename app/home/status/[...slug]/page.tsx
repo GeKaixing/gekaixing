@@ -15,7 +15,7 @@ export default async function Page({ params }: {   params: Promise<{ slug: strin
 
 
 async function Post({ params }: { params: string }) {
-    const result = await fetch(`http://localhost:3000/api/post/?id=${params}`,);
+    const result = await fetch(`NEXT_PUBLIC_URL/api/post/?id=${params}`,);
     const data = await result.json();
     if (data.success) {
         return (

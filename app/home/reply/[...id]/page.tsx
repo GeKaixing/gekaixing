@@ -6,7 +6,7 @@ import React from 'react'
 
 export default async function Page({ params }: {   params: Promise<{ id: string }> }) {
     const { id } = await params
-    const result = await fetch(`http://localhost:3000/api/reply/?id=${id}&type=id`, {
+    const result = await fetch(`NEXT_PUBLIC_URL/api/reply/?id=${id}&type=id`, {
         next: {
             tags: [`reply:id:${id}`],
         },

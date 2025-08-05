@@ -50,7 +50,7 @@ export default function SettingEmail() {
                 email: values.email,
             },
             {
-                emailRedirectTo: "http://localhost:3000/home"
+                emailRedirectTo: "NEXT_PUBLIC_URL/home"
             }
         )
         if (data) {
