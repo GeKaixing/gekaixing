@@ -16,6 +16,7 @@ import { uploadImageToSupabase } from '@/utils/function/uploadImageToSupabase';
 import Spin from './Spin';
 import clsx from 'clsx';
 import { toast } from 'sonner';
+import { userStore } from '@/store/user';
 
 export default function Cropped({ open, onOpenChange, type, fetch, user_background_image, user_avatar }: {
     user_background_image?: string,
@@ -74,6 +75,17 @@ export default function Cropped({ open, onOpenChange, type, fetch, user_backgrou
         const data = await reslut.json()
         if (data.success) {
             toast.success('修改成功')
+            if (url) {
+                if (type === 'user-background-image') {
+                    userStore.setState({
+                        user_background_image: url
+                    })
+                } else {
+                    userStore.setState({
+                        user_avatar: url
+                    })
+                }
+            }
             setStatus(false)
         } else {
             toast.success('修改失败')

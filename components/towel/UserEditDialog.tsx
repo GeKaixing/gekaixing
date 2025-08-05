@@ -38,7 +38,6 @@ async function PATCHUser(name: string) {
 
 export default function UserEditDialog() {
     const [status, setStatus] = useState(false)
-
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -55,6 +54,9 @@ export default function UserEditDialog() {
         const data = await reslut.json()
         if (data.success) {
             toast.success('修改成功')
+            userStore.setState({
+                name: values.username
+            })
             setStatus(false)
         } else {
             toast.success('修改失败')
