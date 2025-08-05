@@ -6,10 +6,10 @@ import PublishReply from '@/components/towel/PublishReply'
 import Reply from '@/components/towel/Reply';
 
 
-export default async function Page({ params }: { params: { slug?: string[] } }) {
-    const id = params.slug?.[0] ? params.slug[0] : null
+export default async function Page({ params }: {   params: Promise<{ slug: string }> }) {
+      const { slug } = await params
     return (
-        id ? <Post params={id} /> : <div>发生错误</div>
+        slug ? <Post params={slug} /> : <div>发生错误</div>
     );
 }
 

@@ -4,8 +4,8 @@ import PublishReply from '@/components/towel/PublishReply'
 import Reply from '@/components/towel/Reply'
 import React from 'react'
 
-export default async function Page({ params }: { params: { id?: string[] } }) {
-    const id = params.id?.[0] && params.id[0]
+export default async function Page({ params }: {   params: Promise<{ id: string }> }) {
+    const { id } = await params
     const result = await fetch(`http://localhost:3000/api/reply/?id=${id}&type=id`, {
         next: {
             tags: [`reply:id:${id}`],
