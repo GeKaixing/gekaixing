@@ -9,10 +9,13 @@ export default async function RootLayout({
     modal
 }: {
     children: React.ReactNode;
-    modal:React.ReactNode;
+    modal: React.ReactNode;
 }) {
     const supabase = await createClient()
+
+
     const { data: { user } } = await supabase.auth.getUser()
+
     return (
         <div
         >

@@ -14,10 +14,10 @@ import {
 import { Ellipsis } from 'lucide-react'
 import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/utils/function/copyToClipboard";
-import EditPost from "./EditPost";
 import { useEffect } from "react";
+import { User } from '@supabase/supabase-js'
 
-export default function Sidebar({ user }: { user: { email: string | null, id: string | null, user_metadata: { avatar: string | null, name: string | null, user_background_image: string | null, user_avatar: string | null } } | null }) {
+export default function Sidebar({ user }: { user: User | null }) {
     const router = useRouter()
 
 
