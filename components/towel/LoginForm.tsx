@@ -19,7 +19,7 @@ const formSchema = z.object({
         message: "密码必须至少包含6个字符。",
     }),
 })
-async function LoginFetch(email: string, password: string) {
+export async function LoginFetch(email: string, password: string) {
     const result = await fetch('/api/login', {
         method: 'POST',
         body: JSON.stringify({

@@ -18,10 +18,10 @@ export default function UserAvatar() {
     const { user_avatar } = userStore()
     return (
         <div >
-            <Avatar className="size-36 absolute border-4 border-white -translate-y-1/2">
+            <Avatar className="size-36 absolute  border-white -translate-y-1/2">
                 <div className='relative'>
                     <AvatarImage src={user_avatar} />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarFallback className={'w-36 h-36'}>CN</AvatarFallback>
                     {/* ⚠️ 这里是修改的地方 */}
                     <div className=' absolute z-20 w-8 h-8 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center hover:bg-gray-700 rounded-full'
                         onClick={() => { setOpen(true) }}

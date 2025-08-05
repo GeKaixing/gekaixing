@@ -15,8 +15,8 @@ async function Postfetch(params: string) {
 
 export default function Page() {
     const [data, setData] = useState([])
-    const { id, name, user_background_image,user_avatar } = userStore()
-
+    const { id, name, user_background_image, user_avatar, brief_introduction } = userStore()
+    console.log(brief_introduction)
     useEffect(() => {
 
         Postfetch(id).then((result) => {
@@ -53,8 +53,10 @@ export default function Page() {
             </div>
 
 
-            <div className='w-full h-14'></div>
-            <div className='font-bold text-2xl'>{name}</div>
+            <div className='w-full h-10'></div>
+            <div className='font-bold text-2xl mb-2'>{name}</div>
+            {brief_introduction ? <div className='text-sm'>{brief_introduction}</div> : <div className='text-sm'>{"还没有介绍自己"}</div>}
+            <div className='w-full h-5'></div>
             <Tabs defaultValue="post" className="w-full">
                 <TabsList className='w-full'>
                     <TabsTrigger value="post">帖子</TabsTrigger>

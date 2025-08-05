@@ -24,45 +24,60 @@ import clsx from "clsx"
 const formSchema = z.object({
     username: z.string().min(2, {
         message: "Username must be at least 2 characters.",
+
+    }),
+    brief_introduction: z.string().min(1, {
+        message: "brief introduction must be at least 30 characters.",
+
     }),
 })
-async function PATCHUser(name: string) {
-    const result = await fetch('/api/user', {
+
+export async function PATCHUser(username: string, brief?: string) {
+    return fetch('/api/user', {
         method: 'PATCH',
         body: JSON.stringify({
-            name: name,
+            name: username,
+            brief_introduction: brief,
         }),
     })
-    return result;
 }
+
 
 export default function UserEditDialog() {
     const [status, setStatus] = useState(false)
+    const {name,brief_introduction}=userStore()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: "",
+            username: name||"",
+            brief_introduction: brief_introduction||""
         },
     })
 
 
-
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        if (values.username === '') return
+        // 没有要更新的字段就返回
+        if (values.username === '' && values.brief_introduction === '') return
+
         setStatus(true)
-        const reslut = await PATCHUser(values.username)
-        const data = await reslut.json()
-        if (data.success) {
-            toast.success('修改成功')
-            userStore.setState({
-                name: values.username
-            })
-            setStatus(false)
-        } else {
-            toast.success('修改失败')
+        try {
+            const res = await PATCHUser(values.username, values.brief_introduction)
+            const data = await res.json()
+
+            if (data.success) {
+                toast.success('修改成功')
+                userStore.setState({ name: values.username, brief_introduction: values.brief_introduction })
+            } else {
+                toast.error(data.error || '修改失败')
+            }
+        } catch (err) {
+            toast.error('网络错误或服务器错误')
+            console.error(err)
+        } finally {
             setStatus(false)
         }
     }
+
 
     return (<Dialog>
         <DialogTrigger className='ml-auto!'>
@@ -96,6 +111,26 @@ export default function UserEditDialog() {
                                     <Input
                                         disabled={status}
                                         placeholder="输入您的名字"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                {/* <FormDescription>
+
+                                </FormDescription> */}
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="brief_introduction"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>简介</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        disabled={status}
+                                        placeholder="输入您的简介"
                                         {...field}
                                     />
                                 </FormControl>

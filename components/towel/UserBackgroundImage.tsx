@@ -26,8 +26,8 @@ export default function UserBackgroundImage() {
                     <Pen></Pen>
 
                 </div>
-                <Image className='object-cover full' fill priority src={user_background_image} alt='user background image' />
-
+{               user_background_image&& <Image className='object-cover full' fill priority src={user_background_image} alt='user background image' />
+}
             </div >
             <Cropped
                 open={open}

@@ -1,6 +1,6 @@
 import 'react-advanced-cropper/dist/style.css';
 import React, { useEffect, useRef, useState } from 'react';
-import { CropperRef, Cropper, Priority, CircleStencil } from 'react-advanced-cropper';
+import { CropperRef, Cropper, CircleStencil } from 'react-advanced-cropper';
 import {
     Dialog,
     DialogContent,
@@ -17,6 +17,7 @@ import Spin from './Spin';
 import clsx from 'clsx';
 import { toast } from 'sonner';
 import { userStore } from '@/store/user';
+import { deleteUnusedImages } from '@/utils/function/deleteUnusedImages';
 
 export default function Cropped({ open, onOpenChange, type, fetch, user_background_image, user_avatar }: {
     user_background_image?: string,
@@ -77,13 +78,17 @@ export default function Cropped({ open, onOpenChange, type, fetch, user_backgrou
             toast.success('修改成功')
             if (url) {
                 if (type === 'user-background-image') {
+
                     userStore.setState({
                         user_background_image: url
                     })
+                    if (user_background_image) deleteUnusedImages('user-background-image', [user_background_image])
+
                 } else {
                     userStore.setState({
                         user_avatar: url
                     })
+                    if (user_avatar) deleteUnusedImages('use-avatar', [user_avatar])
                 }
             }
             setStatus(false)

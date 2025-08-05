@@ -2,7 +2,6 @@
 import { userStore } from "@/store/user";
 import { House, LogIn, Settings } from "lucide-react";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -16,9 +15,9 @@ import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/utils/function/copyToClipboard";
 import { useEffect } from "react";
 import { User } from '@supabase/supabase-js'
+import SidebarAvatar from "./SidebarAvatar";
 
 export default function Sidebar({ user }: { user: User | null }) {
-    const router = useRouter()
 
 
     // 使用 useEffect 在 user 发生变化时同步状态
@@ -30,7 +29,8 @@ export default function Sidebar({ user }: { user: User | null }) {
                 id: user.id || '',
                 name: user.user_metadata.name || '',
                 user_background_image: user.user_metadata.user_background_image || '',
-                user_avatar: user.user_metadata.user_avatar || ''
+                user_avatar: user.user_metadata.user_avatar || '',
+                brief_introduction: user.user_metadata.brief_introduction || ''
             });
         }
     }, [user]); // 依赖数组，只有当 user 对象引用发生变化时才执行
@@ -54,22 +54,8 @@ export default function Sidebar({ user }: { user: User | null }) {
                         <LogIn></LogIn>
                         <span>登录</span>
                     </Link> :
-                    <li className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 items-center cursor-pointer ">
-
-                        <Avatar onClick={() => router.push('/home/user')}>
-                            <AvatarImage src={user?.user_metadata?.user_avatar || ''} />
-                            <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
-                        <div className="flex flex-col">
-                            {
-                                user?.user_metadata.name && <span className="text-[12px] text-gray-700" onClick={() => router.push(`/home/user/${user.id}`)}>  {user?.user_metadata.name}</span>
-                            }
-                            <span className="text-[12px] text-gray-400" onClick={() => router.push(`/home/user/${user.id}`)}>{user.email}</span>
-
-                        </div>
-
-                        <SidebarDropdownMenu></SidebarDropdownMenu>
-                    </li>}
+                    <SidebarAvatar></SidebarAvatar>
+                }
 
                 {user?.id && <Link
                     href={'/home/post'}
