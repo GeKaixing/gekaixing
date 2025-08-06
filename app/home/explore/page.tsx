@@ -40,7 +40,7 @@ function ExploreTabs() {
         <TabsList className='w-full flex justify-between'>
             <TabsTrigger value="ToutiaoHot">今日头条</TabsTrigger>
             <TabsTrigger value="us">美国</TabsTrigger>
-            <TabsTrigger value="science">科技</TabsTrigger>
+            <TabsTrigger value="techcrunch">科技</TabsTrigger>
             <TabsTrigger value="sports">体育</TabsTrigger>
             <TabsTrigger value="entertainment">娱乐</TabsTrigger>
         </TabsList>
@@ -59,16 +59,16 @@ function ExploreTabs() {
             ))}
         </TabsContent>
         <TabsContent value="us">
-            <NEWs url={`https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${process.env.NEXT_PUBLIC_NEWs_key}`}></NEWs>
+            <NEWs url={`/api/news/news-us`}></NEWs>
         </TabsContent>
-        <TabsContent value="science">
-            <NEWs url={`https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=${process.env.NEXT_PUBLIC_NEWs_key}`}></NEWs>
+        <TabsContent value="techcrunch">
+            <NEWs url={`/api/news/news-techcrunch`}></NEWs>
         </TabsContent>
         <TabsContent value="sports">
-            <NEWs url={`https://newsapi.org/v2/top-headlines?category=sports&country=us&apiKey=${process.env.NEXT_PUBLIC_NEWs_key}`}></NEWs>
+            <NEWs url={`/api/news/news-sports`}></NEWs>
         </TabsContent>
         <TabsContent value="entertainment">
-            <NEWs url={`https://newsapi.org/v2/top-headlines?category=entertainment&country=us&apiKey=${process.env.NEXT_PUBLIC_NEWs_key}`}></NEWs>
+            <NEWs url={`/api/news/news-entertainment`}></NEWs>
         </TabsContent>
     </Tabs>
 }
@@ -86,17 +86,15 @@ function NEWs({ url }: { url: string }) {
         async function Fetchs() {
             const reslut = await NEWsFetch(url)
             const data = await reslut.json()
-            if (data.status === 'ok') {
-                setData(data.articles)
+            if (data.success) {
+                setData(data.data)
             }
         }
         Fetchs()
     }, [])
     return data.length !== 0 && data.map((item: {
         url: string;
-        source: {
-            name: string
-        };
+        source_name:string;
         author: string;
         title: string;
     }, index) => (
@@ -104,7 +102,7 @@ function NEWs({ url }: { url: string }) {
             href={item.url}
             key={index}
             className="flex py-1 flex-col justify-start hover:bg-gray-200 cursor-pointer rounded-2xl p-1"
-        >   <span className='text-xl font-semibold'>{item.source.name}</span>
+        >   <span className='text-xl font-semibold'>{item.source_name}</span>
             <span className='text-[16px] text-gray-500'>{item.author}</span>
             <span>{item.title}</span>
         </Link>

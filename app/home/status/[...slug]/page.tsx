@@ -9,7 +9,7 @@ import Reply from '@/components/towel/Reply';
 export default async function Page({ params }: {   params: Promise<{ slug: string }> }) {
       const { slug } = await params
     return (
-        slug ? <Post params={slug} /> : <div>发生错误</div>
+        slug ? <Post params={slug[0]} /> : <div>发生错误</div>
     );
 }
 
