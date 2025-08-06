@@ -6,18 +6,11 @@ import PublishReply from '@/components/towel/PublishReply'
 import Reply from '@/components/towel/Reply';
 
 
-export default async function Page({ params }: {   params: Promise<{ slug: string }> }) {
-      const { slug } = await params
-    return (
-        slug ? <Post params={slug[0]} /> : <div>发生错误</div>
-    );
-}
-
-
-async function Post({ params }: { params: string }) {
-    const result = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/post/?id=${params}`,);
-    const data = await result.json();
-    if (data.success) {
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+    try {
+        const { slug } = await params
+        const result = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/post/?id=${slug[0]}`);
+        const data = await result.json();
         return (
             <div className='space-y-4'>
                 <PostRetreat></PostRetreat>
@@ -36,12 +29,13 @@ async function Post({ params }: { params: string }) {
                 />
                 <PublishReply post_id={data.data[0].id} type={'post'} ></PublishReply>
                 <Reply post_id={data.data[0].id} type={'post_id'} />
-
             </div>
-        )
-    } else {
-        return null
+        );
+    } catch (e) {
+        console.error('加载帖子出错:', e)
+        return <div>加载失败</div>
     }
+
 }
 
 

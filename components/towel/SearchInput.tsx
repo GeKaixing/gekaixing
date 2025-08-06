@@ -16,7 +16,9 @@ export default function SearchInput() {
             onBlur={() => { setACtive(false) }}
         >
             <Search></Search>
-            <form onSubmit={(e) => {
+            <form 
+            className='w-full'
+            onSubmit={(e) => {
                 e.preventDefault(); // ✅ 阻止表单默认提交
                 if (v.trim() === '') return;
                 router.push(`/home/search/?query=${v}`);
@@ -24,7 +26,7 @@ export default function SearchInput() {
                 <input
                     type='text'
                     placeholder='搜索'
-                    className='border-0 focus:outline-none focus:ring-0 rounded-2xl'
+                    className='w-full border-0 focus:outline-none focus:ring-0 rounded-2xl'
                     value={v}
                     onChange={e => setV(e.target.value)}
                 />

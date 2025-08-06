@@ -15,7 +15,7 @@ import { Heart, MessageCircleMore, Share2, Star } from 'lucide-react'
 import PostDropdownMenu from './PostDropdownMenu'
 
 export default async function Reply({ post_id, type }: { post_id: string, type: string }) {
-    const result = await fetch(`  process.env.NEXT_PUBLIC_URL/api/reply/?id=${post_id}&type=${type}`, {
+    const result = await fetch(`${process.env.URL}/api/reply/?id=${post_id}&type=${type}`, {
         next: {
             tags: [`reply:post_id:${post_id}`],
         },

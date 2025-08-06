@@ -5,7 +5,6 @@ export async function GET(request: Request) {
   const supabase = await createClient();
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("query") || ""; // 用户输入关键词
-    console.log(query)
   if (!query.trim()) {
     return NextResponse.json({ data: [], success: true, message: "Empty query" });
   }
