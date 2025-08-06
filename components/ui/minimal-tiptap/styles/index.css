@@ -3,7 +3,6 @@
 @import "./partials/lists.css";
 @import "./partials/typography.css";
 @import "./partials/zoom.css";
-@reference "path-to-your-entry-point-tailwind.css";
 @reference "../../../global.css";
 
 :root {
