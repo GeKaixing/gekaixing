@@ -9,10 +9,8 @@ import { createClient } from "@/utils/supabase/server";
 
 export default async function RootLayout({
     children,
-    modal
 }: {
     children: React.ReactNode;
-    modal: React.ReactNode;
 }) {
     const supabase = await createClient()
 
@@ -29,7 +27,6 @@ export default async function RootLayout({
                 </header>
                 <main className="flex-1 max-sm:px-4  sm:p-4">
                     {children}
-                    {modal}
                 </main>
                 <MobileFooter id={user?.id}></MobileFooter>
                 <footer className="max-sm:hidden p-4 ">

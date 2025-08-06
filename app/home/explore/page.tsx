@@ -4,14 +4,21 @@ import { ChartNoAxesColumn } from 'lucide-react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
+async function NEWsFetch(url: string) {
+    return await fetch(url, {
+        next: {
+            revalidate: 60, // 以秒为单位，表示 60 秒内使用缓存
+        },
+        cache: 'force-cache', // 强制使用缓存（默认也可以不写）
+    })
+}
 async function ToutiaoHotGTE() {
     return await fetch('https://dabenshi.cn/other/api/hot.php?type=toutiaoHot', {
         method: 'GET',
-        next:{
-            revalidate:60
+        next: {
+            revalidate: 60
         },
-        cache:'force-cache'
+        cache: 'force-cache'
     })
 }
 
@@ -27,14 +34,14 @@ export default function page() {
 function ExploreTabs() {
     const [data, setData] = useState([])
     useEffect(() => {
-        async function fetch() {
+        async function fetchf() {
             const reslut = await ToutiaoHotGTE()
             const data = await reslut.json()
             if (data.success) {
                 setData(data.data)
             }
         }
-        fetch()
+        fetchf()
     }, [])
     return <Tabs defaultValue="ToutiaoHot" className="w-full mt-2">
         <TabsList className='w-full flex justify-between'>
@@ -72,14 +79,7 @@ function ExploreTabs() {
         </TabsContent>
     </Tabs>
 }
- async function NEWsFetch(url: string) {
-  return await fetch(url, {
-    next: {
-      revalidate: 60, // 以秒为单位，表示 60 秒内使用缓存
-    },
-    cache: 'force-cache', // 强制使用缓存（默认也可以不写）
-  })
-}
+
 function NEWs({ url }: { url: string }) {
     const [data, setData] = useState([])
     useEffect(() => {
@@ -94,7 +94,7 @@ function NEWs({ url }: { url: string }) {
     }, [])
     return data.length !== 0 && data.map((item: {
         url: string;
-        source_name:string;
+        source_name: string;
         author: string;
         title: string;
     }, index) => (
