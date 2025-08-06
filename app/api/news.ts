@@ -2,7 +2,6 @@ import { createClient } from "@/utils/supabase/client";
 
 export const config = {
   runtime: "edge",
-  schedule: "*/3 * * * *", // 每 3 分钟
 };
 
 export default async function handler() {
