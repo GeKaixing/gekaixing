@@ -28,9 +28,10 @@ import {
 } from "@/components/ui/alert-dialog"
 import { userStore } from '@/store/user'
 import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
+import { useParams, usePathname, useRouter } from 'next/navigation'
 import { findUnusedUrls } from '@/utils/function/findUnusedUrls'
 import { deleteUnusedImages } from '@/utils/function/deleteUnusedImages'
+import { postStore } from '@/store/post'
 
 
 
@@ -68,13 +69,14 @@ async function publishPost({
 
 export default function EditPost() {
     const [value, setValue] = useState<Content>("")
-    const [isOpen, setIsOpen] = useState(true)
+    const [isOpen, setIsOpen] = useState(false)
     const [isOpenAlertDialog, setIsOpenAlertDialog] = useState(false)
     const { poset_images } = post_imagesStore()
     const supabase = createClient()
     const [saved, setSaved] = useState(false)
     const [status, setStatus] = useState(false)
-    const router = useRouter()
+    const [isLogin, setLogin] = useState(false)
+    const Pathname = usePathname()
 
     const {
         email,
@@ -99,7 +101,7 @@ export default function EditPost() {
                 }
 
             }
-            router.back()
+            // router.back()    
             setValue("")
         }
 
@@ -107,7 +109,9 @@ export default function EditPost() {
 
 
     async function publish() {
+        if (!id) { setLogin(true); return };
         setStatus(true)
+
         const reslut = await publishPost(
             {
                 user_id: id, // Replace with actual user ID
@@ -120,10 +124,24 @@ export default function EditPost() {
         const data = await reslut.json()
         const Unused_pictures = findUnusedUrls(value as string, poset_images)
         if (data.success) {
-            setSaved(true);
+            if (Pathname === '/home') {
+                postStore.getState().addPost({
+                    id: data.data[0]['id'],
+                    user_id: id,
+                    user_name: name,
+                    user_email: email,
+                    user_avatar: user_avatar,
+                    content: value as string,
+                    like: 0,
+                    star: 0,
+                    reply_count: 0,
+                    share: 0,
+                })
+            }
+             setSaved(true);
             setStatus(false);
-            setValue(" ");
-            router.refresh()
+            setValue("");
+            setIsOpen(false)
             toast.success('发布成功');
         } else {
             toast.success('发布失败')
@@ -151,7 +169,7 @@ export default function EditPost() {
                 setIsOpen(e)
             }
             }>
-                <DialogTrigger asChild className='hidden'>
+                <DialogTrigger asChild >
                     <div
                         className="rounded-2xl bg-black text-xl h-9 w-[200px] text-white flex justify-center items-center hover:bg-black/80 cursor-pointer"
                         onClick={() => { setIsOpen(true); setSaved(false) }}
@@ -180,6 +198,7 @@ export default function EditPost() {
                     />
                 </DialogContent>
             </Dialog>
+            <LoginDialog isOpen={isLogin} setIsOpen={setLogin} ></LoginDialog>
             {<EditAlertDialog saved={saved} isOpen={isOpenAlertDialog} setIsOpen={setIsOpenAlertDialog} setIsOpenDialog={setIsOpen} />}
         </TooltipProvider>
     )
@@ -204,3 +223,24 @@ function EditAlertDialog({ isOpen, setIsOpen, setIsOpenDialog, saved }: { saved:
         </AlertDialog>
     )
 }
+
+function LoginDialog({ isOpen, setIsOpen, }: { isOpen: boolean, setIsOpen: (open: boolean) => void }) {
+    return (
+        <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>请登录</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        登录后才能发布哦。
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => { setIsOpen(true) }}>取消</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => { setIsOpen(false) }}>确认</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    )
+}
+

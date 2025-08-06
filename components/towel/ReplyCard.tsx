@@ -1,6 +1,4 @@
-"use client"
-
-import React, { useState } from 'react'
+import React from 'react'
 import {
     Card,
     CardAction,
@@ -10,18 +8,17 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Heart, MessageCircleMore, Share2, Star } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import PostDropdownMenu from './PostDropdownMenu'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Link from 'next/link'
-import { createClient } from '@/utils/supabase/client'
+import { Heart, MessageCircleMore, Share2, Star } from 'lucide-react'
+import PostDropdownMenu from './PostDropdownMenu'
+import { replyStore } from '@/store/reply'
 import { copyToClipboard } from '@/utils/function/copyToClipboard'
-import { postStore } from '@/store/post'
-
+import { createClient } from '@/utils/supabase/client'
 async function likePost(id: string, newLike: number) {
     const supabase = createClient()
     const { error } = await supabase
-        .from('post')
+        .from('reply')
         .update({ like: newLike })
         .eq('id', id)
 
@@ -31,7 +28,7 @@ async function likePost(id: string, newLike: number) {
 async function starPost(id: string, newStar: number) {
     const supabase = createClient()
     const { error } = await supabase
-        .from('post')
+        .from('reply')
         .update({ star: newStar })
         .eq('id', id)
 
@@ -41,15 +38,16 @@ async function starPost(id: string, newStar: number) {
 async function sharePost(id: string, newShare: number) {
     const supabase = createClient()
     const { error } = await supabase
-        .from('post')
+        .from('reply')
         .update({ share: newShare })
         .eq('id', id)
 
     return !error
 }
-
-export default function PostCard({
+export default function ReplyCard({
+    post_id,
     id,
+    reply_id:initialReply_id,
     user_id,
     user_name,
     user_email,
@@ -57,9 +55,11 @@ export default function PostCard({
     content,
     like: initialLike,
     star: initialStar,
-    reply:initialReply,
+    reply_count: initialReply_count,
     share: initialShare,
 }: {
+    reply_id:string|null
+    post_id: string,
     id: string,
     user_id: string,
     user_name: string,
@@ -68,15 +68,15 @@ export default function PostCard({
     content: string,
     like: number,
     star: number,
-    reply: number,
+    reply_count: number,
     share: number
 }) {
-    const post = postStore(state => state.posts.find(p => p.id === id))
-    const updatePost = postStore(state => state.updatePost)
+    const post = replyStore(state => state.replys.find(p => p.id === id))
+    const updatePost = replyStore(state => state.updateReply)
 
     if (!post) return null
 
-    const { like, star, share,reply_count } = post
+    const { like, star, share, reply_count,reply_id } = post
 
     const handleLike = async () => {
         updatePost(id, { like: like + 1 }) // 乐观更新
@@ -100,12 +100,11 @@ export default function PostCard({
         if (!success) {
             updatePost(id, { share })
         } else {
-            copyToClipboard('https://www.gekaixing.top/home/statua/' + id)
+            copyToClipboard('https://www.gekaixing.top/home/reply/' + id)
         }
     }
-
     return (
-        <Card className='cursor-pointer hover:bg-gray-50 '>
+        <Card className='cursor-pointer hover:bg-gray-50' key={id}>
             <CardHeader>
                 <div className='flex items-center gap-2 '>
                     <CardTitle className='hover:bg-gray-100'>
@@ -118,12 +117,19 @@ export default function PostCard({
                 </div>
 
                 <CardAction>
-                    <PostDropdownMenu  id={id} user_id={user_id} content={content}></PostDropdownMenu>
+                    <PostDropdownMenu
+                        reply_id={reply_id}
+                        type='reply'
+                        post_id={post_id}
+                        id={id}
+                        user_id={user_id}
+                        content={content}>
+                    </PostDropdownMenu>
                 </CardAction>
             </CardHeader>
             <CardContent >
-                <Link href={`/home/status/${id}`}>
-                    <div dangerouslySetInnerHTML={{ __html: content }} />
+                <Link href={`/home/reply/${id}`}>
+                    <div dangerouslySetInnerHTML={{ __html: content }}></div>
                 </Link>
             </CardContent>
             <CardFooter>
@@ -132,27 +138,28 @@ export default function PostCard({
                         <div className='w-7 h-7 flex justify-center items-center rounded-full hover:bg-blue-400/10'>
                             <Heart />
                         </div>
-                        {like||0}
+                        {like || 0}
                     </li>
-                    <Link href={`/home/status/${id}`} className='flex gap-2 hover:text-green-400'>
+                    <Link href={`/home/reply/${id}`} className='flex gap-2 hover:text-green-400'>
                         <div className='w-7 h-7 flex justify-center items-center rounded-full hover:bg-green-400/10'>
                             <MessageCircleMore />
                         </div>
-                        {reply_count||0}
+                        {reply_count || 0}
                     </Link>
                     <li className='flex gap-2 hover:text-red-400' onClick={handleStar}>
                         <div className='w-7 h-7 flex justify-center items-center rounded-full hover:bg-green-400/10'>
                             <Star />
                         </div>
-                        {star||0}
+                        {star || 0}
                     </li>
                     <li className='flex gap-2 hover:text-blue-400' onClick={handleShare}>
                         <div className='w-7 h-7 flex justify-center items-center rounded-full hover:bg-blue-400/10'>
                             <Share2 />
                         </div>
-                        {share||0}
+                        {share || 0}
                     </li>
                 </ul>
+
             </CardFooter>
         </Card>
     )

@@ -16,7 +16,6 @@ async function Postfetch(params: string) {
 export default function Page() {
     const [data, setData] = useState([])
     const { id, name, user_background_image, user_avatar, brief_introduction } = userStore()
-    console.log(brief_introduction)
     useEffect(() => {
 
         Postfetch(id).then((result) => {

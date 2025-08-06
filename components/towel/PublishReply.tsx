@@ -7,6 +7,9 @@ import { Input } from "../ui/input"
 import { useState } from "react"
 import { userStore } from "@/store/user"
 import Link from "next/link"
+import { replyStore } from "@/store/reply"
+import { postStore } from "@/store/post"
+import clsx from "clsx"
 
 async function publishReply(
     {
@@ -18,11 +21,11 @@ async function publishReply(
         user_avatar,
         reply_id,
     }: {
-        reply_id: string|number,
+        reply_id: string | number,
         user_id: string,
         user_name: string,
         user_email: string,
-        post_id: string|number,
+        post_id: string | number,
         content: string,
         user_avatar: string
     }) {
@@ -44,8 +47,10 @@ async function publishReply(
     return result;
 }
 
-export default function PublishReply({ post_id, reply_id, type = 'post' }: { post_id: string, reply_id?: string, type: string }) {
+export default function PublishReply({ id:ddd, post_id, reply_id, type = 'post' }: {id:string, post_id: string, reply_id?: string, type: string }) {
     const [replyInput, setReplyInput] = useState<string>('');
+    const { addReply } = replyStore()
+    
     const { email,
         id,
         user_avatar,
@@ -53,6 +58,7 @@ export default function PublishReply({ post_id, reply_id, type = 'post' }: { pos
     async function handleReply() {
         let result;
         if (type === 'post') {
+
             result = await publishReply({
                 user_id: id,
                 user_avatar: user_avatar,
@@ -75,10 +81,29 @@ export default function PublishReply({ post_id, reply_id, type = 'post' }: { pos
         }
 
         const data = await result.json();
+
         if (data.success) {
+            addReply({
+                id: data.data[0]['id'],
+                user_id: id,
+                user_avatar: user_avatar,
+                user_name: name,
+                user_email: email,
+                post_id:  data.data[0]['post_id'],
+                content: replyInput,
+                reply_id: reply_id||null,
+                like: 0,
+                star: 0,
+                reply_count: 0,
+                share: 0,
+            })
+           
+            postStore.getState().addReplyCount(ddd)
+         
             setReplyInput(''); // Clear the input field after successful reply
 
         } else {
+            replyStore.getState().deleteFirstReply()
             console.error('Failed to publish reply:', data.error);
         }
     }
@@ -88,11 +113,13 @@ export default function PublishReply({ post_id, reply_id, type = 'post' }: { pos
             {id ?
                 <>
                     <Avatar>
-                        <AvatarImage src="/logo.png" />
+                        <AvatarImage src={user_avatar} />
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <Input onChange={(e) => { setReplyInput(e.target.value) }} value={replyInput} id='replyInput' className='flex-1' placeholder={'发表你的回复'}></Input>
-                    <button onClick={handleReply} className='rounded-2xl font-bold bg-gray-500 text-white h-8 w-[60px]'>回复</button>   </> :
+                    <button onClick={handleReply} className={clsx('rounded-2xl font-bold bg-gray-500 text-white h-8 w-[60px]',{
+                       "!bg-black":replyInput!==""
+                    })}>回复</button>   </> :
                 <Link href={'/account'} className='rounded-2xl font-bold bg-gray-500 text-white h-8 flex justify-center items-center w-full'>请你登录后回复</Link>
             }
         </Card>

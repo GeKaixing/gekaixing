@@ -17,6 +17,7 @@ import Button from "@/components/towel/Button"
 import clsx from "clsx"
 import { useEffect } from "react"
 import Spin from "@/components/towel/Spin"
+import { Fragment } from "@tiptap/pm/model"
 
 export interface MinimalTiptapProps
   extends Omit<UseMinimalTiptapEditorProps, "onUpdate"> {
@@ -68,7 +69,7 @@ const Toolbar = ({ editor, publish, value }: { editor: Editor, publish?: () => v
           mainActionCount={0}
         />
       </div>
-      <Button onClick={publish} className={clsx('!w-16 !max-w-2xs',{
+      <Button onClick={publish} className={clsx('!w-16 !max-w-2xs', {
         '!bg-black': value?.length !== 0,
         '!text-white': value?.length !== 0
       })}>发布</Button>
@@ -93,10 +94,16 @@ export const MinimalTiptapEditor = ({
     onUpdate: onChange,
     ...props,
   })
-
+  // 👇 当外部 value 变化时，更新编辑器内容
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent('') // false: 不记录到历史记录中
+    }
+  }, [value, editor])
   if (!editor) {
     return null
   }
+
 
   return (
     <MeasuredContainer

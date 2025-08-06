@@ -16,6 +16,7 @@ import { copyToClipboard } from "@/utils/function/copyToClipboard";
 import { useEffect } from "react";
 import { User } from '@supabase/supabase-js'
 import SidebarAvatar from "./SidebarAvatar";
+import EditPost from "./EditPost";
 
 export default function Sidebar({ user }: { user: User | null }) {
 
@@ -57,13 +58,13 @@ export default function Sidebar({ user }: { user: User | null }) {
                     <SidebarAvatar></SidebarAvatar>
                 }
 
-                {user?.id && <Link
+                {/* {user?.id && <Link
                     href={'/home/post'}
                     className="rounded-2xl bg-black text-xl h-9 w-[200px] text-white flex justify-center items-center hover:bg-black/80 cursor-pointer"
                 >
                     发布
-                </Link>}
-                {/* <EditPost></EditPost> */}
+                </Link>} */}
+                {user?.id &&<EditPost></EditPost>}
             </ul>
         </nav>
     )

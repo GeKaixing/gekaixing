@@ -13,6 +13,7 @@ export async function GET(request: Request) {
       const { data, error } = await supabase
         .from("post_with_top_reply_count")
         .select("*")
+        .order("created_at", { ascending: false }) // 按时间倒序，最新的在前
         .eq(type, id);
       if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
@@ -22,6 +23,7 @@ export async function GET(request: Request) {
     const { data, error } = await supabase
       .from("post_with_top_reply_count")
       .select("*")
+      .order("created_at", { ascending: false }) // 按时间倒序，最新的在前
       .eq("id", id);
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -30,7 +32,8 @@ export async function GET(request: Request) {
   } else {
     const { data, error } = await supabase
       .from("post_with_top_reply_count")
-      .select("*");
+      .select("*")
+      .order("created_at", { ascending: false }); // 按时间倒序，最新的在前
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
@@ -61,6 +64,6 @@ export async function DELETE(request: Request) {
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 401 });
   }
-  revalidateTag('home')
+  revalidateTag("home");
   return NextResponse.json({ data: data, success: true });
 }
