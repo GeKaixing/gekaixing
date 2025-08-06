@@ -1,111 +1,11 @@
-"use client"
+import ExploreTabs from '@/components/towel/ExploreTabs'
 import SearchInput from '@/components/towel/SearchInput'
-import { ChartNoAxesColumn } from 'lucide-react'
-import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-async function NEWsFetch(url: string) {
-    return await fetch(url, {
-        next: {
-            revalidate: 60, // 以秒为单位，表示 60 秒内使用缓存
-        },
-        cache: 'force-cache', // 强制使用缓存（默认也可以不写）
-    })
-}
-async function ToutiaoHotGTE() {
-    return await fetch('https://dabenshi.cn/other/api/hot.php?type=toutiaoHot', {
-        method: 'GET',
-        next: {
-            revalidate: 60
-        },
-        cache: 'force-cache'
-    })
-}
 
 export default function page() {
-
     return (
         <div>
             <SearchInput></SearchInput>
             <ExploreTabs></ExploreTabs>
         </div>
     )
-}
-function ExploreTabs() {
-    const [data, setData] = useState([])
-    useEffect(() => {
-        async function fetchf() {
-            const reslut = await ToutiaoHotGTE()
-            const data = await reslut.json()
-            if (data.success) {
-                setData(data.data)
-            }
-        }
-        fetchf()
-    }, [])
-    return <Tabs defaultValue="ToutiaoHot" className="w-full mt-2">
-        <TabsList className='w-full flex justify-between'>
-            <TabsTrigger value="ToutiaoHot">今日头条</TabsTrigger>
-            <TabsTrigger value="us">美国</TabsTrigger>
-            <TabsTrigger value="techcrunch">科技</TabsTrigger>
-            <TabsTrigger value="sports">体育</TabsTrigger>
-            <TabsTrigger value="entertainment">娱乐</TabsTrigger>
-        </TabsList>
-        <TabsContent value="ToutiaoHot">
-            {data.length !== 0 && data.map((item: { url: string, title: string, hot_value: string }, idx: number) => (
-                <Link
-                    href={item.url}
-                    key={idx}
-                    className="flex py-1 flex-col justify-start hover:bg-gray-200 cursor-pointer rounded-2xl p-1"
-                >
-                    <span>{item.title}</span>
-                    <div className='flex '>
-                        <ChartNoAxesColumn /> <span>{item.hot_value}</span>
-                    </div>
-                </Link>
-            ))}
-        </TabsContent>
-        <TabsContent value="us">
-            <NEWs url={`/api/news/news-us`}></NEWs>
-        </TabsContent>
-        <TabsContent value="techcrunch">
-            <NEWs url={`/api/news/news-techcrunch`}></NEWs>
-        </TabsContent>
-        <TabsContent value="sports">
-            <NEWs url={`/api/news/news-sports`}></NEWs>
-        </TabsContent>
-        <TabsContent value="entertainment">
-            <NEWs url={`/api/news/news-entertainment`}></NEWs>
-        </TabsContent>
-    </Tabs>
-}
-
-function NEWs({ url }: { url: string }) {
-    const [data, setData] = useState([])
-    useEffect(() => {
-        async function Fetchs() {
-            const reslut = await NEWsFetch(url)
-            const data = await reslut.json()
-            if (data.success) {
-                setData(data.data)
-            }
-        }
-        Fetchs()
-    }, [])
-    return data.length !== 0 && data.map((item: {
-        url: string;
-        source_name: string;
-        author: string;
-        title: string;
-    }, index) => (
-        <Link
-            href={item.url}
-            key={index}
-            className="flex py-1 flex-col justify-start hover:bg-gray-200 cursor-pointer rounded-2xl p-1"
-        >   <span className='text-xl font-semibold'>{item.source_name}</span>
-            <span className='text-[16px] text-gray-500'>{item.author}</span>
-            <span>{item.title}</span>
-        </Link>
-    ))
-
 }
