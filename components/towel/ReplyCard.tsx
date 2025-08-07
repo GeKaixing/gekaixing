@@ -15,6 +15,7 @@ import PostDropdownMenu from './PostDropdownMenu'
 import { replyStore } from '@/store/reply'
 import { copyToClipboard } from '@/utils/function/copyToClipboard'
 import { createClient } from '@/utils/supabase/client'
+import { userStore } from '@/store/user'
 async function likePost(id: string, newLike: number) {
     const supabase = createClient()
     const { error } = await supabase
@@ -47,7 +48,7 @@ async function sharePost(id: string, newShare: number) {
 export default function ReplyCard({
     post_id,
     id,
-    reply_id:initialReply_id,
+    reply_id: initialReply_id,
     user_id,
     user_name,
     user_email,
@@ -58,7 +59,7 @@ export default function ReplyCard({
     reply_count: initialReply_count,
     share: initialShare,
 }: {
-    reply_id:string|null
+    reply_id: string | null
     post_id: string,
     id: string,
     user_id: string,
@@ -76,7 +77,7 @@ export default function ReplyCard({
 
     if (!post) return null
 
-    const { like, star, share, reply_count,reply_id } = post
+    const { like, star, share, reply_count, reply_id } = post
 
     const handleLike = async () => {
         updatePost(id, { like: like + 1 }) // 乐观更新
@@ -132,7 +133,7 @@ export default function ReplyCard({
                     <div dangerouslySetInnerHTML={{ __html: content }}></div>
                 </Link>
             </CardContent>
-            <CardFooter>
+            {userStore.getState().id && <CardFooter>
                 <ul className='flex justify-between items-center w-full'>
                     <li className='flex gap-2 hover:text-blue-400 ' onClick={handleLike}>
                         <div className='w-7 h-7 flex justify-center items-center rounded-full hover:bg-blue-400/10'>
@@ -160,7 +161,7 @@ export default function ReplyCard({
                     </li>
                 </ul>
 
-            </CardFooter>
+            </CardFooter>}
         </Card>
     )
 }

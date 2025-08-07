@@ -147,7 +147,7 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
                 {isCurrentUser && <DropdownMenuItem
                     onClick={() => setAlertDialogOpen(true)}
                 >删除帖子</DropdownMenuItem>}
-                <DropdownMenuItem>关注用户</DropdownMenuItem>
+                {userStore.getState().id && <DropdownMenuItem>关注用户</DropdownMenuItem>}
                 <DropdownMenuItem onClick={CopyLink}>复制连接</DropdownMenuItem>
             </DropdownMenuContent>
             <DeleteAlertDialog isopen={AlertDialogOpen} setOpen={setAlertDialogOpen} deleteHandler={deleteHandler}></DeleteAlertDialog>

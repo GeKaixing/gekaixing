@@ -17,6 +17,7 @@ import Link from 'next/link'
 import { createClient } from '@/utils/supabase/client'
 import { copyToClipboard } from '@/utils/function/copyToClipboard'
 import { postStore } from '@/store/post'
+import { userStore } from '@/store/user'
 
 async function likePost(id: string, newLike: number) {
     const supabase = createClient()
@@ -126,7 +127,7 @@ export default function PostCard({
                     <div dangerouslySetInnerHTML={{ __html: content }} />
                 </Link>
             </CardContent>
-            <CardFooter>
+        {userStore.getState().id&&  <CardFooter>
                 <ul className='flex justify-between items-center w-full'>
                     <li className='flex gap-2 hover:text-blue-400 ' onClick={handleLike}>
                         <div className='w-7 h-7 flex justify-center items-center rounded-full hover:bg-blue-400/10'>
@@ -153,7 +154,7 @@ export default function PostCard({
                         {share||0}
                     </li>
                 </ul>
-            </CardFooter>
+            </CardFooter>}
         </Card>
     )
 }
