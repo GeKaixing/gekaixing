@@ -1,3 +1,4 @@
+import CookieConsent from '@/components/towel/CookieConsent'
 import Navbar from '@/components/towel/Navbar'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -7,6 +8,7 @@ export default function page() {
   return (
     <div className='bg-blue-500'>
       <Navbar></Navbar>
+      <CookieConsent></CookieConsent>
       <div className='p-6 w-full h-screen flex items-center '>
         <footer className='w-full text-2xl  text-white  flex justify-between items-center max-sm:flex-col'>
           <Image alt='logo' src='/logo.png' width={200} height={200} className='cursor-pointer '></Image>
