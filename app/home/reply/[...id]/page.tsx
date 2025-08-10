@@ -1,8 +1,8 @@
-import PostCard from '@/components/towel/PostCard'
-import PostRetreat from '@/components/towel/PostRetreat'
-import PostStore from '@/components/towel/PostStore'
-import PublishReply from '@/components/towel/PublishReply'
-import Reply from '@/components/towel/Reply'
+import PostCard from '@/components/gekaixing/PostCard'
+import PostRetreat from '@/components/gekaixing/PostRetreat'
+import PostStore from '@/components/gekaixing/PostStore'
+import PublishReply from '@/components/gekaixing/PublishReply'
+import Reply from '@/components/gekaixing/Reply'
 import React from 'react'
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {

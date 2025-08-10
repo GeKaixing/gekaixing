@@ -1,10 +1,10 @@
 
 "use server"
-import Footer from "@/components/towel/Footer";
-import MobileAdd from "@/components/towel/MobileAdd";
-import MobileFooter from "@/components/towel/MobileFooter";
-import MobileHeader from "@/components/towel/MobileHeader";
-import Sidebar from "@/components/towel/Sidebar";
+import Footer from "@/components/gekaixing/Footer";
+import MobileAdd from "@/components/gekaixing/MobileAdd";
+import MobileFooter from "@/components/gekaixing/MobileFooter";
+import MobileHeader from "@/components/gekaixing/MobileHeader";
+import Sidebar from "@/components/gekaixing/Sidebar";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function RootLayout({

@@ -1,5 +1,5 @@
-import PostCard from '@/components/towel/PostCard'
-import SearchInput from '@/components/towel/SearchInput'
+import PostCard from '@/components/gekaixing/PostCard'
+import SearchInput from '@/components/gekaixing/SearchInput'
 import Link from 'next/link'
 import React from 'react'
 
@@ -9,7 +9,7 @@ export default async function Page({
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
     const { query = '' } = await searchParams
-    const reslut = await fetch(`${process.env.URL}/api/sreach?query=${query}`)
+    const reslut = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/sreach?query=${query}`)
     const data = await reslut.json()
 
     return (

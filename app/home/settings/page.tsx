@@ -1,6 +1,6 @@
 "use client"
-import ArrowLeftBack from '@/components/towel/ArrowLeftBack'
-import SettingLi from '@/components/towel/SettingLi'
+import ArrowLeftBack from '@/components/gekaixing/ArrowLeftBack'
+import SettingLi from '@/components/gekaixing/SettingLi'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { userStore } from '@/store/user'
 import { ChevronRight, SpadeIcon, User } from 'lucide-react'

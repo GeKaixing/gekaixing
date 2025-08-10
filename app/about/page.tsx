@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Head from 'next/head';
-import Navbar from '@/components/towel/Navbar';
+import Navbar from '@/components/gekaixing/Navbar';
 
 const CookiePolicy = () => {
   return (

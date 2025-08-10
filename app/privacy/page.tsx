@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Head from 'next/head';
-import Navbar from '@/components/towel/Navbar';
+import Navbar from '@/components/gekaixing/Navbar';
 
 const PrivacyPolicy = () => {
   return (
@@ -10,18 +10,18 @@ const PrivacyPolicy = () => {
       <Navbar></Navbar>
       <div className="container mx-auto p-4 md:p-8">
         <Head>
-          <title>隐私政策 | Towel</title>
-          <meta name="description" content="Towel 的隐私政策，说明我们如何收集、使用和保护您的个人信息。" />
+          <title>隐私政策 | Gekaixing</title>
+          <meta name="description" content="Gekaixing 的隐私政策，说明我们如何收集、使用和保护您的个人信息。" />
         </Head>
 
         <div className="prose max-w-none">
-          <h1 className="text-3xl font-bold mb-6">Towel 隐私政策</h1>
+          <h1 className="text-3xl font-bold mb-6">Gekaixing 隐私政策</h1>
           <p className="text-sm text-gray-500 mb-8">
             更新日期：2025年8月4日
           </p>
 
           <p className="mb-4">
-            我们重视您的隐私。本隐私政策旨在解释我们如何收集、使用、披露和保护您在使用我们的网站 <strong>Towel</strong>
+            我们重视您的隐私。本隐私政策旨在解释我们如何收集、使用、披露和保护您在使用我们的网站 <strong>Gekaixing</strong>
             时提供给我们的信息。通过访问或使用我们的网站，即表示您同意本政策的条款。
           </p>
 
@@ -65,7 +65,7 @@ const PrivacyPolicy = () => {
             <ul className="list-disc list-inside space-y-2">
               <li><strong>服务提供商</strong>：我们可能会与协助我们运营业务的第三方服务提供商共享您的信息，例如送货公司、支付处理商和营销服务。这些第三方仅在提供服务所需的范围内访问您的信息。</li>
               <li><strong>法律要求</strong>：如果法律要求、法院传票或政府调查需要，我们可能会披露您的信息。</li>
-              <li><strong>业务转让</strong>：如果 <strong>Towel</strong> 被收购或合并，您的信息可能会作为资产的一部分进行转让。</li>
+              <li><strong>业务转让</strong>：如果 <strong>Gekaixing</strong> 被收购或合并，您的信息可能会作为资产的一部分进行转让。</li>
             </ul>
           </section>
 
@@ -102,7 +102,7 @@ const PrivacyPolicy = () => {
             <h2 className="text-xl font-semibold mb-4">7. 联系我们</h2>
             <p>
               如果您对本隐私政策有任何疑问，请通过以下方式联系我们：<br />
-              电子邮件：<a href="mailto:privacy@towel.com" className="text-blue-500 hover:underline">privacy@towel.com</a>
+              电子邮件：<a href="mailto:privacy@Gekaixing.com" className="text-blue-500 hover:underline">privacy@Gekaixing.com</a>
             </p>
           </section>
         </div>

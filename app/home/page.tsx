@@ -1,5 +1,5 @@
 'use server';
-import PostStore from "@/components/towel/PostStore";
+import PostStore from "@/components/gekaixing/PostStore";
 
 
 export default async function Home() {

@@ -1,12 +1,12 @@
 "use client"
-import ArrowLeftBack from '@/components/towel/ArrowLeftBack'
-import SettingEmail from '@/components/towel/SettingEmail'
-import SettingAccountLi from '@/components/towel/SettingAccountLi'
+import ArrowLeftBack from '@/components/gekaixing/ArrowLeftBack'
+import SettingEmail from '@/components/gekaixing/SettingEmail'
+import SettingAccountLi from '@/components/gekaixing/SettingAccountLi'
 import { userStore } from '@/store/user'
 import { Mail, ShieldCheck } from 'lucide-react'
 import React from 'react'
-import SettingPassword from '@/components/towel/SettingPassword'
-import SettingDeleteAccount from '@/components/towel/SettingDeleteAccount'
+import SettingPassword from '@/components/gekaixing/SettingPassword'
+import SettingDeleteAccount from '@/components/gekaixing/SettingDeleteAccount'
 
 
 export default function page() {

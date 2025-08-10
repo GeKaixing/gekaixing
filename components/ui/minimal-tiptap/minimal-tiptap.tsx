@@ -13,10 +13,10 @@ import { SectionFive } from "./components/section/five"
 import { LinkBubbleMenu } from "./components/bubble-menu/link-bubble-menu"
 import { useMinimalTiptapEditor } from "./hooks/use-minimal-tiptap"
 import { MeasuredContainer } from "./components/measured-container"
-import Button from "@/components/towel/Button"
+import Button from "@/components/gekaixing/Button"
 import clsx from "clsx"
 import { useEffect } from "react"
-import Spin from "@/components/towel/Spin"
+import Spin from "@/components/gekaixing/Spin"
 import { Fragment } from "@tiptap/pm/model"
 
 export interface MinimalTiptapProps

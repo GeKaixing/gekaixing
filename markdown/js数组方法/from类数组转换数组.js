@@ -1,0 +1,1 @@
+console.log(Array.from('hello')); //返回新的数组实例

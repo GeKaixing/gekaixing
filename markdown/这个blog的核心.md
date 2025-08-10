@@ -1,0 +1,2 @@
+# 这个blog的核心  
+核心就是构建工具vite的**import.mate.glob()**这vite的api通过获取就目标文件夹的所有md文件，进行主页的文件目录展示。点击某一条再显示对应的markdown文件。通过对静态资源引入添加一些特殊的查询参数?raw，以字符串形式加载资源，再通过**marked.js**库进行解析为HTML设置到**v-html**中，最后使用ui库的文字排版功能对文章进行排版，例如@tailwindcss/typography，@antd/typography等。

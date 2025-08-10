@@ -1,4 +1,4 @@
-import SignupDialog from '@/components/towel/SignupDialog'
+import SignupDialog from '@/components/gekaixing/SignupDialog'
 import React from 'react'
 
 export default function page() {

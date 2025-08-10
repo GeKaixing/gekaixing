@@ -1,9 +1,9 @@
 'use server'
 import React from 'react'
-import PostRetreat from '@/components/towel/PostRetreat';
-import PublishReply from '@/components/towel/PublishReply'
-import Reply from '@/components/towel/Reply';
-import StatusStore from '@/components/towel/StatusStore';
+import PostRetreat from '@/components/gekaixing/PostRetreat';
+import PublishReply from '@/components/gekaixing/PublishReply'
+import Reply from '@/components/gekaixing/Reply';
+import StatusStore from '@/components/gekaixing/StatusStore';
 
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {

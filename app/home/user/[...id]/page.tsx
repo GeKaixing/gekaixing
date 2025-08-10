@@ -1,11 +1,11 @@
 'use client'
-import ArrowLeftBack from '@/components/towel/ArrowLeftBack'
+import ArrowLeftBack from '@/components/gekaixing/ArrowLeftBack'
 import { AvatarFallback, Avatar, AvatarImage } from '@/components/ui/avatar'
 import React, { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import PostCard from '@/components/towel/PostCard'
+import PostCard from '@/components/gekaixing/PostCard'
 import Image from 'next/image'
-import UserEditDialog from '@/components/towel/UserEditDialog'
+import UserEditDialog from '@/components/gekaixing/UserEditDialog'
 import { userStore } from '@/store/user'
 
 async function Postfetch(params: string) {

@@ -1,5 +1,5 @@
-import ExploreTabs from '@/components/towel/ExploreTabs'
-import SearchInput from '@/components/towel/SearchInput'
+import ExploreTabs from '@/components/gekaixing/ExploreTabs'
+import SearchInput from '@/components/gekaixing/SearchInput'
 
 export default function page() {
     return (

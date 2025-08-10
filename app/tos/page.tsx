@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Head from 'next/head';
-import Navbar from '@/components/towel/Navbar';
+import Navbar from '@/components/gekaixing/Navbar';
 
 const TermsOfService = () => {
   return (
@@ -10,12 +10,12 @@ const TermsOfService = () => {
       <Navbar></Navbar>
       <div className="container mx-auto p-4 md:p-8">
         <Head>
-          <title>服务条款 | Towel</title>
-          <meta name="description" content="Towel 网站的服务条款，包括使用协议、用户责任、知识产权等内容。" />
+          <title>服务条款 | Gekaixing</title>
+          <meta name="description" content="Gekaixing 网站的服务条款，包括使用协议、用户责任、知识产权等内容。" />
         </Head>
 
         <div className="prose max-w-none">
-          <h1 className="text-3xl font-bold mb-6">Towel 服务条款</h1>
+          <h1 className="text-3xl font-bold mb-6">Gekaixing 服务条款</h1>
           <p className="text-sm text-gray-500 mb-8">
             更新日期：2025年8月4日
           </p>
@@ -23,7 +23,7 @@ const TermsOfService = () => {
           <section className="mb-8">
             <h2 className="text-xl font-semibold mb-4">1. 协议接受</h2>
             <p className="mb-2">
-              欢迎使用 Towel！本服务条款（以下简称“本协议”）是您与 <strong>Towel</strong>
+              欢迎使用 Gekaixing！本服务条款（以下简称“本协议”）是您与 <strong>Gekaixing</strong>
               之间达成的法律协议，用于规范您对我们提供的所有服务、网站（以下简称“服务”）的使用。
               这些服务可能包括但不限于毛巾的展示、购买、评价以及相关内容。
               通过访问或使用我们的服务，即表示您已阅读、理解并同意遵守本协议的所有条款和条件。如果您不同意本协议的任何部分，请立即停止使用我们的服务。
@@ -51,7 +51,7 @@ const TermsOfService = () => {
           <section className="mb-8">
             <h2 className="text-xl font-semibold mb-4">4. 知识产权</h2>
             <p className="mb-2">
-              本服务及其所有内容（包括但不限于网站设计、毛巾图片、产品描述和软件）均受版权、商标和其他知识产权法的保护，归 <strong>Towel</strong> 或其许可方所有。未经我们事先书面许可，您不得以任何方式复制、修改、分发、出售或出租服务的任何部分。
+              本服务及其所有内容（包括但不限于网站设计、毛巾图片、产品描述和软件）均受版权、商标和其他知识产权法的保护，归 <strong>Gekaixing</strong> 或其许可方所有。未经我们事先书面许可，您不得以任何方式复制、修改、分发、出售或出租服务的任何部分。
             </p>
           </section>
 
@@ -73,7 +73,7 @@ const TermsOfService = () => {
             <h2 className="text-xl font-semibold mb-4">7. 联系我们</h2>
             <p>
               如果您对本服务条款有任何疑问，请通过以下方式联系我们：<br />
-              电子邮件：<a href="mailto:contact@towel.com" className="text-blue-500 hover:underline">contact@towel.com</a>
+              电子邮件：<a href="mailto:contact@Gekaixing.com" className="text-blue-500 hover:underline">contact@Gekaixing.com</a>
             </p>
           </section>
         </div>

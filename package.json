@@ -1,6 +1,6 @@
 {
-  "name": "towelv3",
-  "version": "0.1.0",
+  "name": "gekaixing",
+  "version": "1.0.8",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -44,6 +44,8 @@
     "input-otp": "^1.4.2",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.536.0",
+    "marked": "^16.1.2",
+    "motion": "^12.23.12",
     "next": "15.4.5",
     "next-themes": "^0.4.6",
     "prisma": "^6.13.0",
