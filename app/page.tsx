@@ -1,4 +1,4 @@
-import CookieConsent from '@/components/gekaixing/CookieConsent'
+  import CookieConsent from '@/components/gekaixing/CookieConsent'
 import Navbar from '@/components/gekaixing/Navbar'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
@@ -85,6 +85,7 @@ export default function page() {
           this website have
         </div>
         <div className='grid gap-6 grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 place-content-center'>
+          
           <div className="rounded-2xl w-[80%] sm:w-[316px]  p-4 border-2 border-gray-400 flex flex-col gap-2">
             <div className='w-full h-full'>
               <Image className='w-[278px] h-[217px]' src='/test.jpg' width={64} height={64} alt='text' ></Image>
