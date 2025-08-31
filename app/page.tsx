@@ -1,4 +1,4 @@
-  import CookieConsent from '@/components/gekaixing/CookieConsent'
+import CookieConsent from '@/components/gekaixing/CookieConsent'
 import Navbar from '@/components/gekaixing/Navbar'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
@@ -75,42 +75,25 @@ export default function page() {
         </div>
       </section>
       <section className='w-dvw flex flex-col justify-center items-center gap-6 mt-[120px] '>
-        <span className='text-4xl font-bold max-sm:hidden'>
-          What functions does this website have
-        </span>
-        <div className='sm:hidden text-4xl font-bold '>
-          What functions does
-        </div>
-        <div className='sm:hidden text-4xl font-bold '>
-          this website have
-        </div>
-        <div className='grid gap-6 grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 place-content-center'>
-          
+        <span className='text-4xl font-bold '>My portfolio</span>
+        <div className='grid gap-6  place-items-center'>
+
           <div className="rounded-2xl w-[80%] sm:w-[316px]  p-4 border-2 border-gray-400 flex flex-col gap-2">
-            <div className='w-full h-full'>
-              <Image className='w-[278px] h-[217px]' src='/test.jpg' width={64} height={64} alt='text' ></Image>
+            <div className="relative w-[278px] h-[217px]">
+              <Image
+                src="/mitate-x.png"
+                alt="Imitate the X"
+                fill
+                className="object-cover rounded-xl" 
+              />
             </div>
-            <span className='text-xl font-bold'>autority to login</span>
-            <span>The CURD login permission was completed using supabase</span>
+            <span data-value='title' className='text-xl font-bold'>Imitate X: A Social Platform with Supabase Auth & CURD</span>
+            <span data-value="description">A Twitter-like demo where CURD operations and login permissions are implemented using Supabase.</span>
           </div>
 
-          <div className="rounded-2xl w-[80%]  sm:w-[316px] p-4 border-2 border-gray-400 flex flex-col gap-2">
-            <div className='w-full h-full'>
-              <Image className='w-[278px] h-[217px]' src='/test.jpg' width={64} height={64} alt='text' ></Image>
-            </div>
-            <span className='text-xl font-bold'>First and second-level comments</span>
-            <span>Implement a comment system similar to X</span>
-          </div>
-
-          <div className="rounded-2xl w-[80%] sm:w-[316px] p-4 border-2 border-gray-400 flex flex-col gap-2">
-            <div className='w-full h-full'>
-              <Image className='w-[278px] h-[217px]' src='/test.jpg' width={64} height={64} alt='text' ></Image>
-            </div>
-            <span className='text-xl font-bold'>Completely open source</span>
-            <span>Go to github to view the code</span>
-          </div>
         </div>
       </section>
+
       <section className='w-dvw flex flex-col sm:flex-row gap-6 mt-[120px] mb-16 justify-center items-center '>
         <Image alt='logo' src='/logo.svg' width={200} height={200} className='cursor-pointer '></Image>
         <Link href={'/imitation-x'} className='text-5xl font-bold cursor-pointer '>Just for fun!!!</Link>
