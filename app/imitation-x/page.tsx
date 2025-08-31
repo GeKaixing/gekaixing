@@ -1,7 +1,7 @@
 'use server';
 import PostStore from "@/components/gekaixing/PostStore";
 
-
+console.log(process.env.NEXT_PUBLIC_URL)
 export default async function Page() {
   const result = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/post`, {
     method: 'GET',
