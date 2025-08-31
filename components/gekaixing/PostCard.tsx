@@ -101,7 +101,7 @@ export default function PostCard({
         if (!success) {
             updatePost(id, { share })
         } else {
-            copyToClipboard('https://www.gekaixing.top/home/statua/' + id)
+            copyToClipboard('https://www.gekaixing.top/imitation-x/statua/' + id)
         }
     }
 
@@ -123,7 +123,7 @@ export default function PostCard({
                 </CardAction>
             </CardHeader>
             <CardContent >
-                <Link href={`/home/status/${id}`}>
+                <Link href={`/imitation-x/status/${id}`}>
                     <div dangerouslySetInnerHTML={{ __html: content }} />
                 </Link>
             </CardContent>
@@ -135,7 +135,7 @@ export default function PostCard({
                         </div>
                         {like||0}
                     </li>
-                    <Link href={`/home/status/${id}`} className='flex gap-2 hover:text-green-400'>
+                    <Link href={`/imitation-x/status/${id}`} className='flex gap-2 hover:text-green-400'>
                         <div className='w-7 h-7 flex justify-center items-center rounded-full hover:bg-green-400/10'>
                             <MessageCircleMore />
                         </div>

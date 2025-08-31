@@ -40,12 +40,12 @@ export default function Sidebar({ user }: { user: User | null }) {
     return (
         <nav className="w-[300px] h-screen flex justify-center  ">
             <ul className=" space-y-6">
-                <Link href="/home" className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
+                <Link href="/imitation-x" className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
                     <House />
                     <span >主页</span>
                 </Link>
                 {user?.id &&
-                    <Link href="/home/settings" className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
+                    <Link href="/imitation-x/settings" className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
                         <Settings></Settings>
                         <span>设置</span>
                     </Link>}
@@ -59,7 +59,7 @@ export default function Sidebar({ user }: { user: User | null }) {
                 }
 
                 {/* {user?.id && <Link
-                    href={'/home/post'}
+                    href={'/imitation-x/post'}
                     className="rounded-2xl bg-black text-xl h-9 w-[200px] text-white flex justify-center items-center hover:bg-black/80 cursor-pointer"
                 >
                     发布
@@ -85,8 +85,8 @@ export function SidebarDropdownMenu() {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <Link href="/account"><DropdownMenuItem onClick={logoutfetch}>登出 {email}</DropdownMenuItem></Link>
-                <Link href={`/home/user/${id}`}><DropdownMenuItem>个人信息</DropdownMenuItem></Link>
-                <DropdownMenuItem onClick={() => copyToClipboard(`${process.env.NEXT_PUBLIC_URL}/home/user/${id}`)}>复制连接</DropdownMenuItem>
+                <Link href={`/imitation-x/user/${id}`}><DropdownMenuItem>个人信息</DropdownMenuItem></Link>
+                <DropdownMenuItem onClick={() => copyToClipboard(`${process.env.NEXT_PUBLIC_URL}/imitation-x/user/${id}`)}>复制连接</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )

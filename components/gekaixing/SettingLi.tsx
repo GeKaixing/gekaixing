@@ -16,7 +16,7 @@ export default function SettingLi({
 }) {
     return (
         <Link
-            href="/home/settings/account"
+            href="/imitation-x/settings/account"
             className={clsx(
                 "w-full px-6 py-2 hover:bg-gray-200 flex justify-between items-center",
                 className

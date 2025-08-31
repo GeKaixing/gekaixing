@@ -64,6 +64,6 @@ export async function DELETE(request: Request) {
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 401 });
   }
-  revalidateTag("home");
+  revalidateTag("imitation-x");
   return NextResponse.json({ data: data, success: true });
 }

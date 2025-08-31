@@ -50,7 +50,7 @@ export default function SettingEmail() {
                 email: values.email,
             },
             {
-                emailRedirectTo: `${process.env.NEXT_PUBLIC_URL}/home`
+                emailRedirectTo: `${process.env.NEXT_PUBLIC_URL}/imitation-x`
             }
         )
         if (data) {

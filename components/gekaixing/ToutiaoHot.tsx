@@ -29,7 +29,7 @@ export default async function ToutiaoHot() {
                 </Link>
             ))}
             {data.length !== 0 && <span className='text-blue-500'>
-                <Link href='/home/explore' >
+                <Link href='/imitation-x/explore' >
                     显示更多
                 </Link>
             </span>}

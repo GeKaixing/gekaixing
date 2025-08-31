@@ -11,15 +11,15 @@ export default function SidebarAvatar() {
     return (
         <li className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 items-center cursor-pointer ">
 
-            <Avatar onClick={() => router.push('/home/user')}>
+            <Avatar onClick={() => router.push('/imitation-x/user')}>
                 <AvatarImage src={user_avatar || ''} />
                 <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
                 {
-                   name && <span className="text-[12px] text-gray-700" onClick={() => router.push(`/home/user/${id}`)}>  {name}</span>
+                   name && <span className="text-[12px] text-gray-700" onClick={() => router.push(`/imitation-x/user/${id}`)}>  {name}</span>
                 }
-                <span className="text-[12px] text-gray-400" onClick={() => router.push(`/home/user/${id}`)}>{email}</span>
+                <span className="text-[12px] text-gray-400" onClick={() => router.push(`/imitation-x/user/${id}`)}>{email}</span>
 
             </div>
 

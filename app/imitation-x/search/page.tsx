@@ -18,7 +18,7 @@ export default async function Page({
             <div className='w-full mt-2'></div>
             {data?.data?.length === 0 ? <div className='flex flex-col gap-2 items-center'>
                 <span> 暂无内容</span>
-                <Link href={'/home/post'} className='text-blue-400'>发布</Link>
+                <Link href={'/imitation-x/post'} className='text-blue-400'>发布</Link>
             </div> :
                 <div className='flex flex-col gap-6'>
                     {data.data.map((items: {

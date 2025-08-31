@@ -42,7 +42,7 @@ export default async function Reply({ post_id, type }: { post_id: string, type: 
         //             </CardAction>
         //         </CardHeader>
         //         <CardContent >
-        //             <Link href={`/home/reply/${items.id}`}>
+        //             <Link href={`/imitation-x/reply/${items.id}`}>
         //                 <div dangerouslySetInnerHTML={{ __html: items.content }}></div>
         //             </Link>
         //         </CardContent>

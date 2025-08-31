@@ -101,7 +101,7 @@ export default function ReplyCard({
         if (!success) {
             updatePost(id, { share })
         } else {
-            copyToClipboard('https://www.gekaixing.top/home/reply/' + id)
+            copyToClipboard('https://www.gekaixing.top/imitation-x/reply/' + id)
         }
     }
     return (
@@ -129,7 +129,7 @@ export default function ReplyCard({
                 </CardAction>
             </CardHeader>
             <CardContent >
-                <Link href={`/home/reply/${id}`}>
+                <Link href={`/imitation-x/reply/${id}`}>
                     <div dangerouslySetInnerHTML={{ __html: content }}></div>
                 </Link>
             </CardContent>
@@ -141,7 +141,7 @@ export default function ReplyCard({
                         </div>
                         {like || 0}
                     </li>
-                    <Link href={`/home/reply/${id}`} className='flex gap-2 hover:text-green-400'>
+                    <Link href={`/imitation-x/reply/${id}`} className='flex gap-2 hover:text-green-400'>
                         <div className='w-7 h-7 flex justify-center items-center rounded-full hover:bg-green-400/10'>
                             <MessageCircleMore />
                         </div>

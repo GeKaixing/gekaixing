@@ -124,7 +124,7 @@ export default function EditPost() {
         const data = await reslut.json()
         const Unused_pictures = findUnusedUrls(value as string, poset_images)
         if (data.success) {
-            if (Pathname === '/home') {
+            if (Pathname === '/imitation-x') {
                 postStore.getState().addPost({
                     id: data.data[0]['id'],
                     user_id: id,

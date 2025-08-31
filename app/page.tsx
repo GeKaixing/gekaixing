@@ -112,7 +112,7 @@ export default function page() {
       </section>
       <section className='w-dvw flex flex-col sm:flex-row gap-6 mt-[120px] mb-16 justify-center items-center '>
         <Image alt='logo' src='/logo.svg' width={200} height={200} className='cursor-pointer '></Image>
-        <Link href={'/home'} className='text-5xl font-bold cursor-pointer '>Just for fun!!!</Link>
+        <Link href={'/imitation-x'} className='text-5xl font-bold cursor-pointer '>Just for fun!!!</Link>
       </section>
       <section className='w-full flex flex-col items-center gap-6'>
         <span className='text-4xl font-bold '>
@@ -129,7 +129,7 @@ export default function page() {
               </Card>
             </Link>
           ))}
-          <Link href={'/home'}>
+          <Link href={'/imitation-x'}>
             <Card>
               <CardContent>
                 <h2 className='text-xl font-bold'>添加博客</h2>

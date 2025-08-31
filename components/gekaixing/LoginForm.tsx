@@ -51,7 +51,7 @@ export default function LoginForm() {
         const data = await result.json()
         if (data.success) {
             setStatus(false)
-            router.replace('/home')
+            router.replace('/imitation-x')
         } else {
             setStatus(false)
             toast.error(data.error || '登录失败，请重试')
