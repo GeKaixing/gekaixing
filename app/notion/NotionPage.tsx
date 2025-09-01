@@ -38,7 +38,7 @@ const Modal = dynamic(
 )
 
 export default function NotionPage({ recordMap }: { recordMap: any, }) {
-  return <NotionRenderer
+  return<NotionRenderer
     recordMap={recordMap}
     fullPage={true}
     darkMode={false}

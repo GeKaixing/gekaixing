@@ -78,7 +78,7 @@ export default function page() {
         <span className='text-4xl font-bold '>My portfolio</span>
         <div className='grid gap-6  place-items-center'>
 
-          <div className="rounded-2xl w-[80%] sm:w-[316px]  p-4 border-2 border-gray-400 flex flex-col gap-2">
+          <Card className="rounded-2xl w-[80%] sm:w-[316px] hover:shadow-lg transition-shadow p-4  flex flex-col gap-2">
             <div className="relative w-[278px] h-[217px]">
               <Image
                 src="/mitate-x.png"
@@ -89,7 +89,7 @@ export default function page() {
             </div>
             <span data-value='title' className='text-xl font-bold'>Imitate X: A Social Platform with Supabase Auth & CURD</span>
             <span data-value="description">A Twitter-like demo where CURD operations and login permissions are implemented using Supabase.</span>
-          </div>
+          </Card>
 
         </div>
       </section>

@@ -9,14 +9,14 @@ const notion = new NotionAPI();
 export async function generateStaticParams() {
     const posts = await getDatabase(process.env.NOTION_DATABASE_ID!);
     return posts.map((post: any) => ({
-        slug: post.properties.title?.title[0]?.plain_text
+        slug: post.properties.title?.rich_text[0]?.plain_text
     }));
 }
 
 export default async function BlogPost({ params }: { params: { slug: string } }) {
     const posts = await getDatabase(process.env.NOTION_DATABASE_ID!);
     const post = posts.find(
-        (p: any) => p.properties.title?.title[0]?.plain_text === decodeURIComponent(params.slug)
+        (p: any) => p.properties.title?.rich_text[0]?.plain_text === decodeURIComponent(params.slug)
     );
 
     if (!post) return <div>文章未找到</div>;
