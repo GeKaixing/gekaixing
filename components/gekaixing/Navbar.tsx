@@ -43,7 +43,7 @@ export default function Navbar() {
                     <ArrowLeftBack className='text-black'></ArrowLeftBack>} */}
                 </div>
                 <div className='flex items-center gap-6 '>
-                    <Link className='text-black' href={'/account'}>登录</Link>
+                    <Link className='text-black' href={'/account'}>login</Link>
                     <Link href={'https://github.com/GeKaixing/towel'}>
                         <Github className='text-black' />
                     </Link>
