@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String?
+  avatar        String?
+  backgroundImage String?
+  briefIntroduction String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  posts         Post[]
+  replies       Reply[]
+}
+
+model Post {
+  id            String    @id @default(uuid())
+  userId        String
+  userIdSupabase String?
+  userName      String
+  userEmail     String
+  userAvatar    String
+  content       String
+  like          Int       @default(0)
+  star          Int       @default(0)
+  share         Int       @default(0)
+  replyCount    Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  replies       Reply[]
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Reply {
+  id            String    @id @default(uuid())
+  userId        String
+  userIdSupabase String?
+  userName      String
+  userEmail     String
+  userAvatar    String
+  content       String
+  postId        String
+  replyId       String?   @default("0")
+  replyCount    Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post          Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  parentReply   Reply?    @relation("ReplyToReply", fields: [replyId], references: [id], onDelete: Cascade)
+  childReplies  Reply[]   @relation("ReplyToReply")
+
+  @@index([postId])
+  @@index([replyId])
+  @@index([userId])
+  @@index([createdAt])
+}

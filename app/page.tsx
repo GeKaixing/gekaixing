@@ -91,7 +91,7 @@ export default function page() {
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-[80%]'>
           {getAllPosts().map(post => (
             <Link key={post.slug} href={'/blog/' + post.slug}>
-              <Card >
+              <Card suppressHydrationWarning>
                 <CardContent>
                   <h2 className='text-xl font-bold'>{post.slug}</h2>
                   <div className='line-clamp-3 h-full  max-h-[128px] overflow-hidden' dangerouslySetInnerHTML={{ __html: marked.parse(post.content) }}></div>
@@ -100,7 +100,7 @@ export default function page() {
             </Link>
           ))}
           <Link href={'/imitation-x'}>
-            <Card>
+            <Card suppressHydrationWarning>
               <CardContent>
                 <h2 className='text-xl font-bold'>添加博客</h2>
                 <div
