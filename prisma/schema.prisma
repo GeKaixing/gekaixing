@@ -1,69 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
 datasource db {
   provider  = "postgresql"
-  url      = env("DATABASE_URL")
+ 
 }
 
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  name          String?
-  avatar        String?
-  backgroundImage String?
+  id                String   @id @default(uuid())
+  email             String   @unique
+  name              String?
+  avatar            String?
+  backgroundImage   String?
   briefIntroduction String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
-  posts         Post[]
-  replies       Reply[]
+  // 用户发布的所有内容（包括主帖和回复）
+  posts Post[]
 }
 
 model Post {
-  id            String    @id @default(uuid())
-  userId        String
-  userIdSupabase String?
-  userName      String
-  userEmail     String
-  userAvatar    String
-  content       String
-  like          Int       @default(0)
-  star          Int       @default(0)
-  share         Int       @default(0)
-  replyCount    Int       @default(0)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  replies       Reply[]
+  // 作者关联
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
-  @@index([userId])
-  @@index([createdAt])
-}
+  // --- 递归关联优化 ---
+  parentId String?
+  parent   Post?   @relation("PostToPost", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  Post[]  @relation("PostToPost")
 
-model Reply {
-  id            String    @id @default(uuid())
-  userId        String
-  userIdSupabase String?
-  userName      String
-  userEmail     String
-  userAvatar    String
-  content       String
-  postId        String
-  replyId       String?   @default("0")
-  replyCount    Int       @default(0)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  // 根帖子 ID：方便一键查出某个话题下的所有讨论，无论嵌套多深
+  rootId String?
 
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post          Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-  parentReply   Reply?    @relation("ReplyToReply", fields: [replyId], references: [id], onDelete: Cascade)
-  childReplies  Reply[]   @relation("ReplyToReply")
+  // 简单的互动计数（可选，建议加上）
+  likeCount  Int @default(0)
+  replyCount Int @default(0)
 
-  @@index([postId])
-  @@index([replyId])
-  @@index([userId])
-  @@index([createdAt])
+  // 索引优化：显著提升 Supabase 查询性能
+  @@index([parentId])
+  @@index([rootId])
+  @@index([authorId])
 }
