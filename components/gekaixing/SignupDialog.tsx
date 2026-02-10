@@ -18,7 +18,7 @@ import GoogleButton from './GoogleButton'
 export default function SignupDialog() {
     const [open, setOpen] = useState(true)
     const router = useRouter()
-
+    
     useEffect(() => {
         if (open === false) {
             router.replace('/account')
@@ -28,7 +28,6 @@ export default function SignupDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}  >
             <DialogTrigger asChild>
-
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>

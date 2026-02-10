@@ -1,5 +1,12 @@
 {
   "HomePage": {
     "title": "Hello world!"
+  },
+  "AuthCodeError": {
+    "title": "Invalid Code",
+    "description": "The verification code you provided is invalid or has expired.",
+    "helpText": "Please go back and try again, or contact support for assistance.",
+    "backToAccount": "Back to Account",
+    "signUpAgain": "Sign Up Again"
   }
 }

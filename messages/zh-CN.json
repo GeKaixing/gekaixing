@@ -1,0 +1,12 @@
+{
+  "HomePage": {
+    "title": "你好世界!"
+  },
+  "AuthCodeError": {
+    "title": "验证码错误",
+    "description": "您提供的验证码无效或已过期",
+    "helpText": "请返回并重新尝试，或联系支持团队获取帮助。",
+    "backToAccount": "返回账户",
+    "signUpAgain": "重新注册"
+  }
+}
