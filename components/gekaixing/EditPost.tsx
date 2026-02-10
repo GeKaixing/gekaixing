@@ -23,7 +23,7 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
-    AlertDialogTitle, 
+    AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { userStore } from '@/store/user'
@@ -69,7 +69,7 @@ async function publishPost({
 
 export default function EditPost() {
     const [value, setValue] = useState<Content>("")
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(true)
     const [isOpenAlertDialog, setIsOpenAlertDialog] = useState(false)
     const { poset_images } = post_imagesStore()
     const supabase = createClient()
@@ -77,6 +77,7 @@ export default function EditPost() {
     const [status, setStatus] = useState(false)
     const [isLogin, setLogin] = useState(false)
     const Pathname = usePathname()
+    const router = useRouter()
 
     const {
         email,
@@ -86,6 +87,9 @@ export default function EditPost() {
     const bucketName = 'post-image' // 替换为你的桶名
 
     useEffect(() => {
+        if (Pathname !== '/imitation-x/post') {
+            setIsOpen(false)
+        }
         if (isOpen === false) {
             if (poset_images.length !== 0) {
                 if (!saved) {
@@ -106,7 +110,9 @@ export default function EditPost() {
         }
 
     }, [isOpen])
-
+    function handleClose() {
+        router.back()    // 返回上一页
+    }
 
     async function publish() {
         if (!id) { setLogin(true); return };
@@ -138,7 +144,7 @@ export default function EditPost() {
                     share: 0,
                 })
             }
-             setSaved(true);
+            setSaved(true);
             setStatus(false);
             setValue("");
             setIsOpen(false)
@@ -158,24 +164,20 @@ export default function EditPost() {
 
             <Dialog open={isOpen} onOpenChange={(e) => {
                 if (value !== '') {
-                    console.log(e)
                     if (e === false) {
                         setIsOpenAlertDialog(true)
                     } else {
+
                         setIsOpen(e)
                     }
                     return
                 }
-                setIsOpen(e)
+                setIsOpen(e);
+                handleClose();
             }
             }>
                 <DialogTrigger asChild >
-                    <div
-                        className="rounded-2xl bg-black text-xl h-9 w-[200px] text-white flex justify-center items-center hover:bg-black/80 cursor-pointer"
-                        onClick={() => { setIsOpen(true); setSaved(false) }}
-                    >
-                        发布
-                    </div>
+
                 </DialogTrigger>
                 <DialogContent className='!max-w-2xl !w-full'>
                     <DialogHeader>
