@@ -6,10 +6,9 @@ import Link from "next/link";
 
 export default function PostRetreat() {
     const { id } = userStore()
-    console.log(id)
     return (
         <div className='flex justify-between'>
-            {id ? <>
+            {id ? <div className="flex justify-between w-full items-center pr-4">
                 <ArrowLeftBack></ArrowLeftBack>
                 <button
                     className='rounded-2xl font-bold bg-gray-500 text-white h-8 w-[60px]'
@@ -23,7 +22,7 @@ export default function PostRetreat() {
                 >
                     回复
                 </button>
-            </> : <>
+            </div> : <>
                 <ArrowLeftBack></ArrowLeftBack>
                 <Link
                     href={'/account'}

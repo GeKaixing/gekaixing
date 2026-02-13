@@ -1,6 +1,7 @@
 'use client'
 import { userStore } from "@/store/user";
-import { House, LogIn, Settings } from "lucide-react";
+import { postModalStore } from "@/store/postModal";
+import { MessageSquare, House, LogIn, Settings, Users, Search, RailSymbol, CircleEllipsis, Heart, Bookmark, Feather } from "lucide-react";
 import Link from "next/link";
 import {
     DropdownMenu,
@@ -19,53 +20,121 @@ import SidebarAvatar from "./SidebarAvatar";
 import EditPost from "./EditPost";
 
 export default function Sidebar({ user }: { user: User | null }) {
+    const { openModal } = postModalStore()
 
-
-    // 使用 useEffect 在 user 发生变化时同步状态
     useEffect(() => {
-        // 确保 user 对象存在，以避免在用户未登录时出现错误
         if (user) {
             userStore.setState({
                 email: user.email || '',
                 id: user.id || '',
                 name: user.user_metadata.name || '',
                 user_background_image: user.user_metadata.user_background_image || '',
-                user_avatar: user.user_metadata.user_avatar || '',
+                user_avatar: user.user_metadata.user_avatar || user.user_metadata.avatar_url || '',
                 brief_introduction: user.user_metadata.brief_introduction || ''
             });
         }
-    }, [user]); // 依赖数组，只有当 user 对象引用发生变化时才执行
+    }, [user]);
 
 
     return (
-        <nav className="w-[300px] h-screen flex justify-center  ">
-            <ul className=" space-y-6">
-                <Link href="/imitation-x" className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
-                    <House />
-                    <span >主页</span>
-                </Link>
-                {user?.id &&
-                    <Link href="/imitation-x/settings" className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
-                        <Settings></Settings>
-                        <span>设置</span>
-                    </Link>}
+        <nav className="w-full h-screen flex justify-end px-2 lg:pr-4">
+            <div className="flex flex-col h-full w-full lg:w-[200px]">
+                <ul className="space-y-1 flex flex-col items-center lg:items-start">
+                    <li className="w-full">
+                        <Link href="/imitation-x" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                            <House className="w-7 h-7" />
+                            <span className="hidden lg:inline">主页</span>
+                        </Link>
+                    </li>
+                    <li className="w-full">
+                        <Link href="/imitation-x/chat" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                            <MessageSquare className="w-7 h-7" />
+                            <span className="hidden lg:inline">聊天</span>
+                        </Link>
+                    </li>
+                    <li className="w-full">
+                        <Link href="/imitation-x/connect_people" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                            <Users className="w-7 h-7" />
+                            <span className="hidden lg:inline">关注</span>
+                        </Link>
+                    </li>
+                    <li className="w-full">
+                        <Link href="/imitation-x/explore" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                            <Search className="w-7 h-7" />
+                            <span className="hidden lg:inline">探索</span>
+                        </Link>
+                    </li>
+                    <li className="w-full">
+                        <Link href="/imitation-x/gkx" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                            <RailSymbol className="w-7 h-7" />
+                            <span className="hidden lg:inline">GKX</span>
+                        </Link>
+                    </li>
 
-                {!user?.id ?
-                    <Link href="/account" className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-2xl p-2 ">
-                        <LogIn></LogIn>
-                        <span>登录</span>
-                    </Link> :
-                    <SidebarAvatar></SidebarAvatar>
-                }
+                    <li className="w-full">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full cursor-pointer">
+                                    <CircleEllipsis className="w-7 h-7" />
+                                    <span className="hidden lg:inline">更多</span>
+                                </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent side="right" align="start" className="w-48">
+                                <DropdownMenuItem asChild>
+                                    <Link href="/imitation-x/likes" className="flex items-center gap-2 cursor-pointer">
+                                        <Heart className="w-4 h-4" />
+                                        <span>喜欢</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Link href="/imitation-x/bookmarks" className="flex items-center gap-2 cursor-pointer">
+                                        <Bookmark className="w-4 h-4" />
+                                        <span>收藏</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </li>
 
-                {/* {user?.id && <Link
-                    href={'/imitation-x/post'}
-                    className="rounded-2xl bg-black text-xl h-9 w-[200px] text-white flex justify-center items-center hover:bg-black/80 cursor-pointer"
-                >
-                    发布
-                </Link>} */}
-                {user?.id &&<EditPost></EditPost>}
-            </ul>
+                    {user?.id && (
+                        <li className="w-full">
+                            <Link href="/imitation-x/settings" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                                <Settings className="w-7 h-7" />
+                                <span className="hidden lg:inline">设置</span>
+                            </Link>
+                        </li>
+                    )}
+
+                    {user?.id && (
+                        <li className="w-full mt-4">
+                            <button
+                                onClick={openModal}
+                                className="w-12 h-12 lg:w-full lg:h-auto lg:py-3 bg-black text-white rounded-full flex items-center justify-center hover:bg-black/90 transition-colors"
+                            >
+                                <Feather className="w-5 h-5 lg:hidden" />
+                                <span className="hidden lg:inline font-bold text-lg">发布</span>
+                            </button>
+                        </li>
+                    )}
+
+                    {!user?.id ? (
+                        <li className="w-full">
+                            <Link href="/account" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                                <LogIn className="w-7 h-7" />
+                                <span className="hidden lg:inline">登录</span>
+                            </Link>
+                        </li>
+                    ) : null}
+                </ul>
+
+                {user?.id && (
+                    <div className="mt-auto mb-4 w-full flex justify-center lg:justify-start">
+                        <SidebarAvatar />
+                    </div>
+                )}
+
+                {user?.id && <EditPost />}
+            </div>
         </nav>
     )
 }

@@ -31,7 +31,7 @@ export default function SignupDialog() {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>注册Towel</DialogTitle>
+                    <DialogTitle>注册Gekaixing</DialogTitle>
                     <DialogDescription className='flex flex-col justify-center items-center'>
                         <GoogleButton></GoogleButton>
                         <Separator className='mb-6' />

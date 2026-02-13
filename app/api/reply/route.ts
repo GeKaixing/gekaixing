@@ -82,11 +82,15 @@ export async function DELETE(request: Request) {
 
     const reply = await prisma.post.findUnique({
       where: { id },
-      select: { parentId: true },
+      select: { parentId: true, authorId: true },
     });
 
     if (!reply) {
       return NextResponse.json({ error: "Reply not found" }, { status: 404 });
+    }
+
+    if (reply.authorId !== user.id) {
+      return NextResponse.json({ error: "Forbidden: You can only delete your own replies" }, { status: 403 });
     }
 
     await prisma.post.delete({ where: { id } });

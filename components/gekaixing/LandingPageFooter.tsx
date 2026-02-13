@@ -11,6 +11,7 @@ export default function LandingPageFooter({ className }: { className?: string })
                 <Link href={'/about'} className='cursor-pointer '>about</Link>
                 <Link href={'/tos'} className='cursor-pointer '>terms of service</Link>
                 <Link href={'/privacy'} className='cursor-pointer '>privacy policy</Link>
+                <Link href={'/help'} className='cursor-pointer '>help center</Link>
                 <Link href={'/gekaixing-cookies'} className='cursor-pointer '>Cookie Usage Policy</Link>
             </div>
             <div className='flex flex-col gap-4 text-gray-400'>

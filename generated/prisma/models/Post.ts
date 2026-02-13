@@ -29,11 +29,13 @@ export type AggregatePost = {
 export type PostAvgAggregateOutputType = {
   likeCount: number | null
   replyCount: number | null
+  shareCount: number | null
 }
 
 export type PostSumAggregateOutputType = {
   likeCount: number | null
   replyCount: number | null
+  shareCount: number | null
 }
 
 export type PostMinAggregateOutputType = {
@@ -46,6 +48,7 @@ export type PostMinAggregateOutputType = {
   rootId: string | null
   likeCount: number | null
   replyCount: number | null
+  shareCount: number | null
 }
 
 export type PostMaxAggregateOutputType = {
@@ -58,6 +61,7 @@ export type PostMaxAggregateOutputType = {
   rootId: string | null
   likeCount: number | null
   replyCount: number | null
+  shareCount: number | null
 }
 
 export type PostCountAggregateOutputType = {
@@ -70,6 +74,7 @@ export type PostCountAggregateOutputType = {
   rootId: number
   likeCount: number
   replyCount: number
+  shareCount: number
   _all: number
 }
 
@@ -77,11 +82,13 @@ export type PostCountAggregateOutputType = {
 export type PostAvgAggregateInputType = {
   likeCount?: true
   replyCount?: true
+  shareCount?: true
 }
 
 export type PostSumAggregateInputType = {
   likeCount?: true
   replyCount?: true
+  shareCount?: true
 }
 
 export type PostMinAggregateInputType = {
@@ -94,6 +101,7 @@ export type PostMinAggregateInputType = {
   rootId?: true
   likeCount?: true
   replyCount?: true
+  shareCount?: true
 }
 
 export type PostMaxAggregateInputType = {
@@ -106,6 +114,7 @@ export type PostMaxAggregateInputType = {
   rootId?: true
   likeCount?: true
   replyCount?: true
+  shareCount?: true
 }
 
 export type PostCountAggregateInputType = {
@@ -118,6 +127,7 @@ export type PostCountAggregateInputType = {
   rootId?: true
   likeCount?: true
   replyCount?: true
+  shareCount?: true
   _all?: true
 }
 
@@ -217,6 +227,7 @@ export type PostGroupByOutputType = {
   rootId: string | null
   likeCount: number
   replyCount: number
+  shareCount: number
   _count: PostCountAggregateOutputType | null
   _avg: PostAvgAggregateOutputType | null
   _sum: PostSumAggregateOutputType | null
@@ -252,9 +263,13 @@ export type PostWhereInput = {
   rootId?: Prisma.StringNullableFilter<"Post"> | string | null
   likeCount?: Prisma.IntFilter<"Post"> | number
   replyCount?: Prisma.IntFilter<"Post"> | number
+  shareCount?: Prisma.IntFilter<"Post"> | number
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   parent?: Prisma.XOR<Prisma.PostNullableScalarRelationFilter, Prisma.PostWhereInput> | null
   replies?: Prisma.PostListRelationFilter
+  likes?: Prisma.LikeListRelationFilter
+  bookmarks?: Prisma.BookmarkListRelationFilter
+  shares?: Prisma.ShareListRelationFilter
 }
 
 export type PostOrderByWithRelationInput = {
@@ -267,9 +282,13 @@ export type PostOrderByWithRelationInput = {
   rootId?: Prisma.SortOrderInput | Prisma.SortOrder
   likeCount?: Prisma.SortOrder
   replyCount?: Prisma.SortOrder
+  shareCount?: Prisma.SortOrder
   author?: Prisma.UserOrderByWithRelationInput
   parent?: Prisma.PostOrderByWithRelationInput
   replies?: Prisma.PostOrderByRelationAggregateInput
+  likes?: Prisma.LikeOrderByRelationAggregateInput
+  bookmarks?: Prisma.BookmarkOrderByRelationAggregateInput
+  shares?: Prisma.ShareOrderByRelationAggregateInput
 }
 
 export type PostWhereUniqueInput = Prisma.AtLeast<{
@@ -285,9 +304,13 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   rootId?: Prisma.StringNullableFilter<"Post"> | string | null
   likeCount?: Prisma.IntFilter<"Post"> | number
   replyCount?: Prisma.IntFilter<"Post"> | number
+  shareCount?: Prisma.IntFilter<"Post"> | number
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   parent?: Prisma.XOR<Prisma.PostNullableScalarRelationFilter, Prisma.PostWhereInput> | null
   replies?: Prisma.PostListRelationFilter
+  likes?: Prisma.LikeListRelationFilter
+  bookmarks?: Prisma.BookmarkListRelationFilter
+  shares?: Prisma.ShareListRelationFilter
 }, "id">
 
 export type PostOrderByWithAggregationInput = {
@@ -300,6 +323,7 @@ export type PostOrderByWithAggregationInput = {
   rootId?: Prisma.SortOrderInput | Prisma.SortOrder
   likeCount?: Prisma.SortOrder
   replyCount?: Prisma.SortOrder
+  shareCount?: Prisma.SortOrder
   _count?: Prisma.PostCountOrderByAggregateInput
   _avg?: Prisma.PostAvgOrderByAggregateInput
   _max?: Prisma.PostMaxOrderByAggregateInput
@@ -320,6 +344,7 @@ export type PostScalarWhereWithAggregatesInput = {
   rootId?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
   likeCount?: Prisma.IntWithAggregatesFilter<"Post"> | number
   replyCount?: Prisma.IntWithAggregatesFilter<"Post"> | number
+  shareCount?: Prisma.IntWithAggregatesFilter<"Post"> | number
 }
 
 export type PostCreateInput = {
@@ -330,9 +355,13 @@ export type PostCreateInput = {
   rootId?: string | null
   likeCount?: number
   replyCount?: number
+  shareCount?: number
   author: Prisma.UserCreateNestedOneWithoutPostsInput
   parent?: Prisma.PostCreateNestedOneWithoutRepliesInput
   replies?: Prisma.PostCreateNestedManyWithoutParentInput
+  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
+  shares?: Prisma.ShareCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateInput = {
@@ -345,7 +374,11 @@ export type PostUncheckedCreateInput = {
   rootId?: string | null
   likeCount?: number
   replyCount?: number
+  shareCount?: number
   replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutPostInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostUpdateInput = {
@@ -356,9 +389,13 @@ export type PostUpdateInput = {
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   parent?: Prisma.PostUpdateOneWithoutRepliesNestedInput
   replies?: Prisma.PostUpdateManyWithoutParentNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateInput = {
@@ -371,7 +408,11 @@ export type PostUncheckedUpdateInput = {
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutPostNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateManyInput = {
@@ -384,6 +425,7 @@ export type PostCreateManyInput = {
   rootId?: string | null
   likeCount?: number
   replyCount?: number
+  shareCount?: number
 }
 
 export type PostUpdateManyMutationInput = {
@@ -394,6 +436,7 @@ export type PostUpdateManyMutationInput = {
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type PostUncheckedUpdateManyInput = {
@@ -406,6 +449,7 @@ export type PostUncheckedUpdateManyInput = {
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type PostListRelationFilter = {
@@ -433,11 +477,13 @@ export type PostCountOrderByAggregateInput = {
   rootId?: Prisma.SortOrder
   likeCount?: Prisma.SortOrder
   replyCount?: Prisma.SortOrder
+  shareCount?: Prisma.SortOrder
 }
 
 export type PostAvgOrderByAggregateInput = {
   likeCount?: Prisma.SortOrder
   replyCount?: Prisma.SortOrder
+  shareCount?: Prisma.SortOrder
 }
 
 export type PostMaxOrderByAggregateInput = {
@@ -450,6 +496,7 @@ export type PostMaxOrderByAggregateInput = {
   rootId?: Prisma.SortOrder
   likeCount?: Prisma.SortOrder
   replyCount?: Prisma.SortOrder
+  shareCount?: Prisma.SortOrder
 }
 
 export type PostMinOrderByAggregateInput = {
@@ -462,11 +509,18 @@ export type PostMinOrderByAggregateInput = {
   rootId?: Prisma.SortOrder
   likeCount?: Prisma.SortOrder
   replyCount?: Prisma.SortOrder
+  shareCount?: Prisma.SortOrder
 }
 
 export type PostSumOrderByAggregateInput = {
   likeCount?: Prisma.SortOrder
   replyCount?: Prisma.SortOrder
+  shareCount?: Prisma.SortOrder
+}
+
+export type PostScalarRelationFilter = {
+  is?: Prisma.PostWhereInput
+  isNot?: Prisma.PostWhereInput
 }
 
 export type PostCreateNestedManyWithoutAuthorInput = {
@@ -577,6 +631,48 @@ export type PostUncheckedUpdateManyWithoutParentNestedInput = {
   deleteMany?: Prisma.PostScalarWhereInput | Prisma.PostScalarWhereInput[]
 }
 
+export type PostCreateNestedOneWithoutLikesInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutLikesInput, Prisma.PostUncheckedCreateWithoutLikesInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutLikesInput
+  connect?: Prisma.PostWhereUniqueInput
+}
+
+export type PostUpdateOneRequiredWithoutLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutLikesInput, Prisma.PostUncheckedCreateWithoutLikesInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutLikesInput
+  upsert?: Prisma.PostUpsertWithoutLikesInput
+  connect?: Prisma.PostWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PostUpdateToOneWithWhereWithoutLikesInput, Prisma.PostUpdateWithoutLikesInput>, Prisma.PostUncheckedUpdateWithoutLikesInput>
+}
+
+export type PostCreateNestedOneWithoutBookmarksInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutBookmarksInput, Prisma.PostUncheckedCreateWithoutBookmarksInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutBookmarksInput
+  connect?: Prisma.PostWhereUniqueInput
+}
+
+export type PostUpdateOneRequiredWithoutBookmarksNestedInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutBookmarksInput, Prisma.PostUncheckedCreateWithoutBookmarksInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutBookmarksInput
+  upsert?: Prisma.PostUpsertWithoutBookmarksInput
+  connect?: Prisma.PostWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PostUpdateToOneWithWhereWithoutBookmarksInput, Prisma.PostUpdateWithoutBookmarksInput>, Prisma.PostUncheckedUpdateWithoutBookmarksInput>
+}
+
+export type PostCreateNestedOneWithoutSharesInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutSharesInput, Prisma.PostUncheckedCreateWithoutSharesInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutSharesInput
+  connect?: Prisma.PostWhereUniqueInput
+}
+
+export type PostUpdateOneRequiredWithoutSharesNestedInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutSharesInput, Prisma.PostUncheckedCreateWithoutSharesInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutSharesInput
+  upsert?: Prisma.PostUpsertWithoutSharesInput
+  connect?: Prisma.PostWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PostUpdateToOneWithWhereWithoutSharesInput, Prisma.PostUpdateWithoutSharesInput>, Prisma.PostUncheckedUpdateWithoutSharesInput>
+}
+
 export type PostCreateWithoutAuthorInput = {
   id?: string
   content: string
@@ -585,8 +681,12 @@ export type PostCreateWithoutAuthorInput = {
   rootId?: string | null
   likeCount?: number
   replyCount?: number
+  shareCount?: number
   parent?: Prisma.PostCreateNestedOneWithoutRepliesInput
   replies?: Prisma.PostCreateNestedManyWithoutParentInput
+  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
+  shares?: Prisma.ShareCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutAuthorInput = {
@@ -598,7 +698,11 @@ export type PostUncheckedCreateWithoutAuthorInput = {
   rootId?: string | null
   likeCount?: number
   replyCount?: number
+  shareCount?: number
   replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutPostInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutAuthorInput = {
@@ -640,6 +744,7 @@ export type PostScalarWhereInput = {
   rootId?: Prisma.StringNullableFilter<"Post"> | string | null
   likeCount?: Prisma.IntFilter<"Post"> | number
   replyCount?: Prisma.IntFilter<"Post"> | number
+  shareCount?: Prisma.IntFilter<"Post"> | number
 }
 
 export type PostCreateWithoutRepliesInput = {
@@ -650,8 +755,12 @@ export type PostCreateWithoutRepliesInput = {
   rootId?: string | null
   likeCount?: number
   replyCount?: number
+  shareCount?: number
   author: Prisma.UserCreateNestedOneWithoutPostsInput
   parent?: Prisma.PostCreateNestedOneWithoutRepliesInput
+  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
+  shares?: Prisma.ShareCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutRepliesInput = {
@@ -664,6 +773,10 @@ export type PostUncheckedCreateWithoutRepliesInput = {
   rootId?: string | null
   likeCount?: number
   replyCount?: number
+  shareCount?: number
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutPostInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutRepliesInput = {
@@ -679,8 +792,12 @@ export type PostCreateWithoutParentInput = {
   rootId?: string | null
   likeCount?: number
   replyCount?: number
+  shareCount?: number
   author: Prisma.UserCreateNestedOneWithoutPostsInput
   replies?: Prisma.PostCreateNestedManyWithoutParentInput
+  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
+  shares?: Prisma.ShareCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutParentInput = {
@@ -692,7 +809,11 @@ export type PostUncheckedCreateWithoutParentInput = {
   rootId?: string | null
   likeCount?: number
   replyCount?: number
+  shareCount?: number
   replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutPostInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutParentInput = {
@@ -724,8 +845,12 @@ export type PostUpdateWithoutRepliesInput = {
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   parent?: Prisma.PostUpdateOneWithoutRepliesNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutRepliesInput = {
@@ -738,6 +863,10 @@ export type PostUncheckedUpdateWithoutRepliesInput = {
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutPostNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostUpsertWithWhereUniqueWithoutParentInput = {
@@ -756,6 +885,246 @@ export type PostUpdateManyWithWhereWithoutParentInput = {
   data: Prisma.XOR<Prisma.PostUpdateManyMutationInput, Prisma.PostUncheckedUpdateManyWithoutParentInput>
 }
 
+export type PostCreateWithoutLikesInput = {
+  id?: string
+  content: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  rootId?: string | null
+  likeCount?: number
+  replyCount?: number
+  shareCount?: number
+  author: Prisma.UserCreateNestedOneWithoutPostsInput
+  parent?: Prisma.PostCreateNestedOneWithoutRepliesInput
+  replies?: Prisma.PostCreateNestedManyWithoutParentInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
+  shares?: Prisma.ShareCreateNestedManyWithoutPostInput
+}
+
+export type PostUncheckedCreateWithoutLikesInput = {
+  id?: string
+  content: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  authorId: string
+  parentId?: string | null
+  rootId?: string | null
+  likeCount?: number
+  replyCount?: number
+  shareCount?: number
+  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutPostInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutPostInput
+}
+
+export type PostCreateOrConnectWithoutLikesInput = {
+  where: Prisma.PostWhereUniqueInput
+  create: Prisma.XOR<Prisma.PostCreateWithoutLikesInput, Prisma.PostUncheckedCreateWithoutLikesInput>
+}
+
+export type PostUpsertWithoutLikesInput = {
+  update: Prisma.XOR<Prisma.PostUpdateWithoutLikesInput, Prisma.PostUncheckedUpdateWithoutLikesInput>
+  create: Prisma.XOR<Prisma.PostCreateWithoutLikesInput, Prisma.PostUncheckedCreateWithoutLikesInput>
+  where?: Prisma.PostWhereInput
+}
+
+export type PostUpdateToOneWithWhereWithoutLikesInput = {
+  where?: Prisma.PostWhereInput
+  data: Prisma.XOR<Prisma.PostUpdateWithoutLikesInput, Prisma.PostUncheckedUpdateWithoutLikesInput>
+}
+
+export type PostUpdateWithoutLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
+  author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
+  parent?: Prisma.PostUpdateOneWithoutRepliesNestedInput
+  replies?: Prisma.PostUpdateManyWithoutParentNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutPostNestedInput
+}
+
+export type PostUncheckedUpdateWithoutLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
+  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutPostNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutPostNestedInput
+}
+
+export type PostCreateWithoutBookmarksInput = {
+  id?: string
+  content: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  rootId?: string | null
+  likeCount?: number
+  replyCount?: number
+  shareCount?: number
+  author: Prisma.UserCreateNestedOneWithoutPostsInput
+  parent?: Prisma.PostCreateNestedOneWithoutRepliesInput
+  replies?: Prisma.PostCreateNestedManyWithoutParentInput
+  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
+  shares?: Prisma.ShareCreateNestedManyWithoutPostInput
+}
+
+export type PostUncheckedCreateWithoutBookmarksInput = {
+  id?: string
+  content: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  authorId: string
+  parentId?: string | null
+  rootId?: string | null
+  likeCount?: number
+  replyCount?: number
+  shareCount?: number
+  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutPostInput
+}
+
+export type PostCreateOrConnectWithoutBookmarksInput = {
+  where: Prisma.PostWhereUniqueInput
+  create: Prisma.XOR<Prisma.PostCreateWithoutBookmarksInput, Prisma.PostUncheckedCreateWithoutBookmarksInput>
+}
+
+export type PostUpsertWithoutBookmarksInput = {
+  update: Prisma.XOR<Prisma.PostUpdateWithoutBookmarksInput, Prisma.PostUncheckedUpdateWithoutBookmarksInput>
+  create: Prisma.XOR<Prisma.PostCreateWithoutBookmarksInput, Prisma.PostUncheckedCreateWithoutBookmarksInput>
+  where?: Prisma.PostWhereInput
+}
+
+export type PostUpdateToOneWithWhereWithoutBookmarksInput = {
+  where?: Prisma.PostWhereInput
+  data: Prisma.XOR<Prisma.PostUpdateWithoutBookmarksInput, Prisma.PostUncheckedUpdateWithoutBookmarksInput>
+}
+
+export type PostUpdateWithoutBookmarksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
+  author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
+  parent?: Prisma.PostUpdateOneWithoutRepliesNestedInput
+  replies?: Prisma.PostUpdateManyWithoutParentNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutPostNestedInput
+}
+
+export type PostUncheckedUpdateWithoutBookmarksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
+  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutPostNestedInput
+}
+
+export type PostCreateWithoutSharesInput = {
+  id?: string
+  content: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  rootId?: string | null
+  likeCount?: number
+  replyCount?: number
+  shareCount?: number
+  author: Prisma.UserCreateNestedOneWithoutPostsInput
+  parent?: Prisma.PostCreateNestedOneWithoutRepliesInput
+  replies?: Prisma.PostCreateNestedManyWithoutParentInput
+  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
+}
+
+export type PostUncheckedCreateWithoutSharesInput = {
+  id?: string
+  content: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  authorId: string
+  parentId?: string | null
+  rootId?: string | null
+  likeCount?: number
+  replyCount?: number
+  shareCount?: number
+  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutPostInput
+}
+
+export type PostCreateOrConnectWithoutSharesInput = {
+  where: Prisma.PostWhereUniqueInput
+  create: Prisma.XOR<Prisma.PostCreateWithoutSharesInput, Prisma.PostUncheckedCreateWithoutSharesInput>
+}
+
+export type PostUpsertWithoutSharesInput = {
+  update: Prisma.XOR<Prisma.PostUpdateWithoutSharesInput, Prisma.PostUncheckedUpdateWithoutSharesInput>
+  create: Prisma.XOR<Prisma.PostCreateWithoutSharesInput, Prisma.PostUncheckedCreateWithoutSharesInput>
+  where?: Prisma.PostWhereInput
+}
+
+export type PostUpdateToOneWithWhereWithoutSharesInput = {
+  where?: Prisma.PostWhereInput
+  data: Prisma.XOR<Prisma.PostUpdateWithoutSharesInput, Prisma.PostUncheckedUpdateWithoutSharesInput>
+}
+
+export type PostUpdateWithoutSharesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
+  author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
+  parent?: Prisma.PostUpdateOneWithoutRepliesNestedInput
+  replies?: Prisma.PostUpdateManyWithoutParentNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
+}
+
+export type PostUncheckedUpdateWithoutSharesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
+  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutPostNestedInput
+}
+
 export type PostCreateManyAuthorInput = {
   id?: string
   content: string
@@ -765,6 +1134,7 @@ export type PostCreateManyAuthorInput = {
   rootId?: string | null
   likeCount?: number
   replyCount?: number
+  shareCount?: number
 }
 
 export type PostUpdateWithoutAuthorInput = {
@@ -775,8 +1145,12 @@ export type PostUpdateWithoutAuthorInput = {
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   parent?: Prisma.PostUpdateOneWithoutRepliesNestedInput
   replies?: Prisma.PostUpdateManyWithoutParentNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutAuthorInput = {
@@ -788,7 +1162,11 @@ export type PostUncheckedUpdateWithoutAuthorInput = {
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutPostNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateManyWithoutAuthorInput = {
@@ -800,6 +1178,7 @@ export type PostUncheckedUpdateManyWithoutAuthorInput = {
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type PostCreateManyParentInput = {
@@ -811,6 +1190,7 @@ export type PostCreateManyParentInput = {
   rootId?: string | null
   likeCount?: number
   replyCount?: number
+  shareCount?: number
 }
 
 export type PostUpdateWithoutParentInput = {
@@ -821,8 +1201,12 @@ export type PostUpdateWithoutParentInput = {
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   replies?: Prisma.PostUpdateManyWithoutParentNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutParentInput = {
@@ -834,7 +1218,11 @@ export type PostUncheckedUpdateWithoutParentInput = {
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutPostNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateManyWithoutParentInput = {
@@ -846,6 +1234,7 @@ export type PostUncheckedUpdateManyWithoutParentInput = {
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
+  shareCount?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -855,10 +1244,16 @@ export type PostUncheckedUpdateManyWithoutParentInput = {
 
 export type PostCountOutputType = {
   replies: number
+  likes: number
+  bookmarks: number
+  shares: number
 }
 
 export type PostCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   replies?: boolean | PostCountOutputTypeCountRepliesArgs
+  likes?: boolean | PostCountOutputTypeCountLikesArgs
+  bookmarks?: boolean | PostCountOutputTypeCountBookmarksArgs
+  shares?: boolean | PostCountOutputTypeCountSharesArgs
 }
 
 /**
@@ -878,6 +1273,27 @@ export type PostCountOutputTypeCountRepliesArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.PostWhereInput
 }
 
+/**
+ * PostCountOutputType without action
+ */
+export type PostCountOutputTypeCountLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LikeWhereInput
+}
+
+/**
+ * PostCountOutputType without action
+ */
+export type PostCountOutputTypeCountBookmarksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BookmarkWhereInput
+}
+
+/**
+ * PostCountOutputType without action
+ */
+export type PostCountOutputTypeCountSharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ShareWhereInput
+}
+
 
 export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -889,9 +1305,13 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   rootId?: boolean
   likeCount?: boolean
   replyCount?: boolean
+  shareCount?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.Post$parentArgs<ExtArgs>
   replies?: boolean | Prisma.Post$repliesArgs<ExtArgs>
+  likes?: boolean | Prisma.Post$likesArgs<ExtArgs>
+  bookmarks?: boolean | Prisma.Post$bookmarksArgs<ExtArgs>
+  shares?: boolean | Prisma.Post$sharesArgs<ExtArgs>
   _count?: boolean | Prisma.PostCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
 
@@ -905,6 +1325,7 @@ export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   rootId?: boolean
   likeCount?: boolean
   replyCount?: boolean
+  shareCount?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.Post$parentArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
@@ -919,6 +1340,7 @@ export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   rootId?: boolean
   likeCount?: boolean
   replyCount?: boolean
+  shareCount?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.Post$parentArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
@@ -933,13 +1355,17 @@ export type PostSelectScalar = {
   rootId?: boolean
   likeCount?: boolean
   replyCount?: boolean
+  shareCount?: boolean
 }
 
-export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "createdAt" | "updatedAt" | "authorId" | "parentId" | "rootId" | "likeCount" | "replyCount", ExtArgs["result"]["post"]>
+export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "createdAt" | "updatedAt" | "authorId" | "parentId" | "rootId" | "likeCount" | "replyCount" | "shareCount", ExtArgs["result"]["post"]>
 export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.Post$parentArgs<ExtArgs>
   replies?: boolean | Prisma.Post$repliesArgs<ExtArgs>
+  likes?: boolean | Prisma.Post$likesArgs<ExtArgs>
+  bookmarks?: boolean | Prisma.Post$bookmarksArgs<ExtArgs>
+  shares?: boolean | Prisma.Post$sharesArgs<ExtArgs>
   _count?: boolean | Prisma.PostCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PostIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -957,6 +1383,9 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     author: Prisma.$UserPayload<ExtArgs>
     parent: Prisma.$PostPayload<ExtArgs> | null
     replies: Prisma.$PostPayload<ExtArgs>[]
+    likes: Prisma.$LikePayload<ExtArgs>[]
+    bookmarks: Prisma.$BookmarkPayload<ExtArgs>[]
+    shares: Prisma.$SharePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -968,6 +1397,7 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     rootId: string | null
     likeCount: number
     replyCount: number
+    shareCount: number
   }, ExtArgs["result"]["post"]>
   composites: {}
 }
@@ -1365,6 +1795,9 @@ export interface Prisma__PostClient<T, Null = never, ExtArgs extends runtime.Typ
   author<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   parent<T extends Prisma.Post$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$parentArgs<ExtArgs>>): Prisma.Prisma__PostClient<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   replies<T extends Prisma.Post$repliesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  likes<T extends Prisma.Post$likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bookmarks<T extends Prisma.Post$bookmarksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  shares<T extends Prisma.Post$sharesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$sharesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1403,6 +1836,7 @@ export interface PostFieldRefs {
   readonly rootId: Prisma.FieldRef<"Post", 'String'>
   readonly likeCount: Prisma.FieldRef<"Post", 'Int'>
   readonly replyCount: Prisma.FieldRef<"Post", 'Int'>
+  readonly shareCount: Prisma.FieldRef<"Post", 'Int'>
 }
     
 
@@ -1839,6 +2273,78 @@ export type Post$repliesArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.PostScalarFieldEnum | Prisma.PostScalarFieldEnum[]
+}
+
+/**
+ * Post.likes
+ */
+export type Post$likesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Like
+   */
+  select?: Prisma.LikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Like
+   */
+  omit?: Prisma.LikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LikeInclude<ExtArgs> | null
+  where?: Prisma.LikeWhereInput
+  orderBy?: Prisma.LikeOrderByWithRelationInput | Prisma.LikeOrderByWithRelationInput[]
+  cursor?: Prisma.LikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LikeScalarFieldEnum | Prisma.LikeScalarFieldEnum[]
+}
+
+/**
+ * Post.bookmarks
+ */
+export type Post$bookmarksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Bookmark
+   */
+  select?: Prisma.BookmarkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Bookmark
+   */
+  omit?: Prisma.BookmarkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BookmarkInclude<ExtArgs> | null
+  where?: Prisma.BookmarkWhereInput
+  orderBy?: Prisma.BookmarkOrderByWithRelationInput | Prisma.BookmarkOrderByWithRelationInput[]
+  cursor?: Prisma.BookmarkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BookmarkScalarFieldEnum | Prisma.BookmarkScalarFieldEnum[]
+}
+
+/**
+ * Post.shares
+ */
+export type Post$sharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Share
+   */
+  select?: Prisma.ShareSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Share
+   */
+  omit?: Prisma.ShareOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ShareInclude<ExtArgs> | null
+  where?: Prisma.ShareWhereInput
+  orderBy?: Prisma.ShareOrderByWithRelationInput | Prisma.ShareOrderByWithRelationInput[]
+  cursor?: Prisma.ShareWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ShareScalarFieldEnum | Prisma.ShareScalarFieldEnum[]
 }
 
 /**

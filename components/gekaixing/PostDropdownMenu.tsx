@@ -27,6 +27,7 @@ import { deleteUnusedImages } from '@/utils/function/deleteUnusedImages'
 import { findUrls } from '@/utils/function/findUrls'
 import { postStore } from '@/store/post'
 import { replyStore } from '@/store/reply'
+import { usePathname, useRouter } from 'next/navigation'
 
 
 async function deletePost(id: string) {
@@ -54,13 +55,13 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
     const isCurrentUser = user.id === user_id; // Check if the post belongs to
     const [isopen, setOpen] = useState(false)
     const [AlertDialogOpen, setAlertDialogOpen] = useState(false)
-
+    const pathName = usePathname()
+    const router = useRouter()
+    console.log(pathName)
     async function deleteHandler() {
         let result
 
         if (type === 'reply') {
-            result = await deleteReply(id)
-
             // 🔁 1. 找到被删的那一项（用于失败回滚）
             const deletedPost = replyStore.getState().replys.find(post => post.id === id)
 
@@ -113,6 +114,10 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
                     const { data: UrlsArrayData, error: UrlsArrayError } = await deleteUnusedImages('post-image', UrlsArray)
                     console.log(UrlsArrayData, UrlsArrayError)
                 }
+                if (pathName.includes('/imitation-x/status')) {
+                    router.replace("/imitation-x")
+                }
+
             } else {
                 // ❗️4. 删除失败，回滚 UI
                 if (deletedPost) {

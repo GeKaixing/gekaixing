@@ -3,20 +3,33 @@ import { replyStore } from '@/store/reply'
 import React, { useEffect } from 'react'
 import ReplyList from './ReplyList'
 
-type Reply = {
-    id: string,
-    user_id: string,
-    user_name: string,
-    user_email: string,
-    user_avatar: string,
-    post_id:string;
-    content: string
-    like: number,
-    star: number,
-    reply_count: number,
-    share: number
-    reply_id: string | null
+
+export interface Author {
+  id: string
+  email: string
+  name: string | null
+  avatar: string | null
+  backgroundImage: string | null
+  briefIntroduction: string | null
+  createdAt: string
+  updatedAt: string
 }
+
+export interface Reply {
+  id: string
+  content: string
+  createdAt: string
+  updatedAt: string
+  authorId: string
+  parentId: string | null
+  rootId: string | null
+  likeCount: number
+  replyCount: number
+  shareCount: number
+  author: Author
+}
+
+
 export default function ReplyStore({ data }: { data: Reply[] }) {
     useEffect(() => {
         replyStore.getState().setPosts(data)

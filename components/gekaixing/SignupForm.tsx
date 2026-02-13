@@ -34,7 +34,9 @@ async function SignupFetch(email: string, password: string) {
         method: 'POST',
         body: JSON.stringify({
             email: email,
-            password: password
+            password: password,
+            name: null,
+            avatar: null
         }),
         headers: {
             'Content-Type': 'application/json'
@@ -91,7 +93,7 @@ export default function SignupForm() {
                                     <FormItem>
                                         <FormLabel>密码</FormLabel>
                                         <FormControl>
-                                            <Input   disabled={status} placeholder="请输入密码" {...field} type='password' />
+                                            <Input disabled={status} placeholder="请输入密码" {...field} type='password' />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

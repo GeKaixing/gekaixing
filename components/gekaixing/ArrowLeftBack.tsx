@@ -1,15 +1,31 @@
 "use client"
 import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import React from 'react'
 
-export default function ArrowLeftBack({className}:{className?:string}) {
+export default function ArrowLeftBack({ className, children, name='返回' }: {
+    name?: string,
+    className?: string,
+    children?: React.ReactNode
+}) {
     const router = useRouter()
     return (
-        <ArrowLeft 
-        className={className}
-        onClick={() => {
-            router.back()
-        }} />
+        <div className="flex items-center gap-4 px-4 py-3">
+            <div
+
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+                <ArrowLeft
+                    className={className}
+                    onClick={() => {
+                        router.replace('/imitation-x')
+                    }} />
+                {/* <ArrowLeft className="w-5 h-5" /> */}
+            </div>
+            <div>
+                <h1 className="text-xl font-bold">{name}</h1>
+                {children}
+            </div>
+        </div>
+
     )
 }

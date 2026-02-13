@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from 'next/link'
 import { ChartNoAxesColumn } from 'lucide-react'
 import NEWs from './NEWs'
-async function ToutiaoHotGTE() {
+export async function ToutiaoHotGTE() {
     return await fetch('https://dabenshi.cn/other/api/hot.php?type=toutiaoHot', {
         method: 'GET',
         next: {
@@ -21,7 +21,6 @@ export default
         async function fetchf() {
             try {
                 const reslut = await ToutiaoHotGTE()
-                console.log(reslut)
                 const data = await reslut.json()
                 if (data.success) {
                     setData(data.data)

@@ -5,7 +5,7 @@ import Link from "next/link"
 
 export async function ToutiaoHotGTE() {
   try {
-    return await fetch("https://corsproxy.io/?https://dabenshi.cn/other/api/hot.php?type=toutiaoHot", {
+    return await fetch("https://dabenshi.cn/other/api/hot.php?type=toutiaoHot", {
       method: "GET",
       cache: "no-store",
     })
@@ -22,42 +22,41 @@ type HotItem = {
 }
 
 export default async function ToutiaoHot() {
-  const res = await ToutiaoHotGTE()
+//   const res = await ToutiaoHotGTE()
+//   // ❌ 请求失败
+//   if (!res || !res.ok) {
+//     return (
+//       <div className="border p-2 rounded-2xl text-gray-500">
+//         今日头条加载失败
+//       </div>
+//     )
+//   }
 
-  // ❌ 请求失败
-  if (!res || !res.ok) {
-    return (
-      <div className="border p-2 rounded-2xl text-gray-500">
-        今日头条加载失败
-      </div>
-    )
-  }
+//   let json: any
+//   try {
+//     json = await res.json()
+//   } catch {
+//     return (
+//       <div className="border p-2 rounded-2xl text-gray-500">
+//         数据解析失败
+//       </div>
+//     )
+//   }
 
-  let json: any
-  try {
-    json = await res.json()
-  } catch {
-    return (
-      <div className="border p-2 rounded-2xl text-gray-500">
-        数据解析失败
-      </div>
-    )
-  }
+//   const list: HotItem[] = Array.isArray(json?.data) ? json.data : []
 
-  const list: HotItem[] = Array.isArray(json?.data) ? json.data : []
-
-  // ❌ 没有数据
-  if (list.length === 0) {
-    return (
-      <div className="border p-2 rounded-2xl text-gray-500">
-        暂无今日头条数据
-      </div>
-    )
-  }
+//   // ❌ 没有数据
+//   if (list.length === 0) {
+//     return (
+//       <div className="border p-2 rounded-2xl text-gray-500">
+//         暂无今日头条数据
+//       </div>
+//     )
+//   }
 
   return (
     <div className="border p-2 rounded-2xl">
-      <span className="font-semibold">今日头条</span>
+      {/* <span className="font-semibold">今日头条</span>
 
       {list.slice(1, 6).map((item, idx) => (
         <Link
@@ -80,7 +79,7 @@ export default async function ToutiaoHot() {
         className="text-blue-500 block mt-2 hover:underline"
       >
         显示更多
-      </Link>
+      </Link> */}
     </div>
   )
 }

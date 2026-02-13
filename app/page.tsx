@@ -12,6 +12,8 @@ import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { marked } from 'marked'
 import { Plus } from 'lucide-react'
 import { ExampleMarquee } from '@/components/kibo-ui/marquee'
+import { createClient } from '@/utils/supabase/server'
+
 function getAllPosts() {
   const markdownDir = path.join(process.cwd(), 'markdown')
   const files = fs.readdirSync(markdownDir)
@@ -26,10 +28,13 @@ function getAllPosts() {
       })
   return data.slice(0, 5)
 }
-export default function page() {
+export default async function page() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   return (
     <div className='bg-[#e9e9e9] px-6 flex flex-col justify-center items-center'>
-      <Navbar></Navbar>
+      <Navbar user={user} />
       <CookieConsent></CookieConsent>
       <section className='w-dvw h-dvh flex flex-col justify-center items-center space-y-12'>
         <h1 className='flex flex-row whitespace-nowrap  text-5xl font-bold max-sm:hidden'> This website <div className='text-blue-400'>&nbsp;is&nbsp;</div> used for job hunting </h1>

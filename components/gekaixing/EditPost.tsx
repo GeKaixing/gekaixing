@@ -55,7 +55,7 @@ interface EditPostProps {
 export default function EditPost({ onClose }: EditPostProps) {
     const [value, setValue] = useState<Content>("")
 
-    const { isOpen, openModal:setIsOpen} = postModalStore()
+    const { isOpen, openModal:setIsOpen,closeModal} = postModalStore()
     const [isOpenAlertDialog, setIsOpenAlertDialog] = useState(false)
     const [isLogin, setLogin] = useState(false)
     const [saved, setSaved] = useState(false)
@@ -63,7 +63,6 @@ export default function EditPost({ onClose }: EditPostProps) {
 
     const { poset_images } = post_imagesStore()
     const supabase = createClient()
-    const { closeModal } = postModalStore()
     const { email, id, user_avatar, name } = userStore()
 
     const bucketName = 'post-image'
@@ -127,7 +126,7 @@ export default function EditPost({ onClose }: EditPostProps) {
             setSaved(true)
             setStatus(false)
             setValue("")
-            setIsOpen()
+            closeModal()
             toast.success('发布成功')
         } else {
             setStatus(false)

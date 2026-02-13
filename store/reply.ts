@@ -1,25 +1,10 @@
+import { Reply } from "@/components/gekaixing/ReplyStore";
 import { create } from "zustand";
-
-export type replys = {
-  id: string;
-  user_id: string;
-  user_name: string;
-  user_email: string;
-  user_avatar: string;
-  content: string;
-  post_id: string;
-  like: number;
-  star: number;
-  reply_count: number;
-  share: number;
-  reply_id: string | null;
-};
-
 type Store = {
-  replys: replys[];
-  setPosts: (posts: replys[]) => void;
-  updateReply: (id: string, newData: Partial<replys>) => void;
-  addReply: (newPost: replys) => void;
+  replys: Reply[];
+  setPosts: (posts: Reply[]) => void;
+  updateReply: (id: string, newData: Partial<Reply>) => void;
+  addReply: (newPost: Reply) => void;
   deleteReply: (id: string) => void;
   deleteFirstReply: () => void;
 };

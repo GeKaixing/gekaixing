@@ -12,7 +12,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
 
             <div className="fixed inset-0 flex justify-center items-center min-h-screen ">
                 <div className='flex gap-80 justify-center items-center'>
-                    <Image className='max-sm:hidden'  src='/logo.svg' alt="Towel logo" width={200} height={200}></Image>
+                    <Image className='max-sm:hidden'  src='/logo.svg' alt="Gekaixing logo" width={200} height={200}></Image>
                     <div className='flex flex-col justify-center items-center gap-6'>
                         <GoogleButton></GoogleButton>
                         <Separator />

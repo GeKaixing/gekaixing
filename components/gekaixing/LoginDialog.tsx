@@ -34,7 +34,7 @@ export default function LoginDialog() {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>登入Towel</DialogTitle>
+                    <DialogTitle>登入Gekaixing</DialogTitle>
                     <DialogDescription className='flex flex-col justify-center items-center'>
                         <GoogleButton></GoogleButton>
                         <Separator className='mb-6' />

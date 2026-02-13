@@ -9,6 +9,7 @@ import Link from "next/link"
 import { replyStore } from "@/store/reply"
 import { postStore } from "@/store/post"
 import clsx from "clsx"
+import { Loader2 } from "lucide-react"
 
 async function publishReply(payload: {
     user_id: string
@@ -43,6 +44,7 @@ export default function PublishReply({
     type = 'post',
 }: Props) {
     const [replyInput, setReplyInput] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
     const { addReply } = replyStore()
 
     const {
@@ -53,40 +55,47 @@ export default function PublishReply({
     } = userStore()
 
     async function handleReply() {
-        if (!replyInput.trim()) return
+        if (!replyInput.trim() || isLoading) return
 
-        const data = await publishReply({
-            user_id: userId,
-            user_avatar,
-            user_name: name || email,
-            user_email: email,
-            post_id: postId,
-            content: replyInput,
-            reply_id: type === 'reply' ? replyId ?? null : null,
-        })
-
-        if (data?.success && data?.data?.[0]) {
-            const reply = data.data[0]
-
-            addReply({
-                id: reply.id,
+        setIsLoading(true)
+        try {
+            const data = await publishReply({
                 user_id: userId,
                 user_avatar,
                 user_name: name || email,
                 user_email: email,
-                post_id: reply.post_id,
+                post_id: postId,
                 content: replyInput,
-                reply_id: replyId ?? null,
-                like: 0,
-                star: 0,
-                reply_count: 0,
-                share: 0,
+                reply_id: type === 'reply' ? replyId ?? null : null,
             })
 
-            postStore.getState().addReplyCount(postId)
-            setReplyInput('')
-        } else {
-            console.error('Failed to publish reply:', data?.error)
+            if (data?.success && data?.data) {
+                const reply = data.data
+
+                addReply({
+                    id: reply.id,
+                    user_id: reply.authorId,
+                    user_avatar: reply.author?.avatar || '',
+                    user_name: reply.author?.name || reply.author?.email || '',
+                    user_email: reply.author?.email || '',
+                    post_id: reply.rootId || postId,
+                    content: reply.content,
+                    reply_id: reply.parentId || null,
+                    like: 0,
+                    star: 0,
+                    reply_count: 0,
+                    share: 0,
+                })
+
+                postStore.getState().addReplyCount(postId)
+                setReplyInput('')
+            } else {
+                console.error('Failed to publish reply:', data?.error)
+            }
+        } catch (error) {
+            console.error('Error publishing reply:', error)
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -108,13 +117,17 @@ export default function PublishReply({
 
                     <button
                         onClick={handleReply}
-                        disabled={!replyInput.trim()}
+                        disabled={!replyInput.trim() || isLoading}
                         className={clsx(
-                            'rounded-2xl font-bold h-8 w-[60px] text-white bg-gray-400',
-                            { '!bg-black': replyInput.trim() }
+                            'rounded-2xl font-bold h-8 w-[60px] text-white bg-gray-400 flex justify-center items-center',
+                            { '!bg-black': replyInput.trim() && !isLoading }
                         )}
                     >
-                        回复
+                        {isLoading ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                            '回复'
+                        )}
                     </button>
                 </>
             ) : (

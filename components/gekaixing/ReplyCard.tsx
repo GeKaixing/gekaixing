@@ -74,7 +74,7 @@ export default function ReplyCard({
 }) {
     const post = replyStore(state => state.replys.find(p => p.id === id))
     const updatePost = replyStore(state => state.updateReply)
-
+    console.log(user_id)
     if (!post) return null
 
     const { like, star, share, reply_count, reply_id } = post

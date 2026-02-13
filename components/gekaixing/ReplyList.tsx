@@ -2,6 +2,7 @@
 
 import { replyStore } from "@/store/reply"
 import ReplyCard from "./ReplyCard"
+import { Reply } from "./ReplyStore"
 
 export default function ReplyList() {
 
@@ -9,34 +10,21 @@ export default function ReplyList() {
 
     return (
         <div className="flex flex-col gap-6">
-            {data.map((items: {
-                id: string,
-                user_id: string,
-                user_name: string,
-                user_email: string,
-                user_avatar: string,
-                content: string
-                like: number,
-                star: number,
-                reply_count: number,
-                share: number,
-                post_id: string
-                reply_id: string | null
-            }) =>
+            {data.map((items: Reply) =>
                 <ReplyCard
-                    reply_id={items.reply_id}
+                    reply_id={items.id}
                     key={items.id}
-                    post_id={items.post_id}
+                    post_id={items.parentId}
                     id={items.id}
-                    user_id={items.user_id}
-                    user_name={items.user_name}
-                    user_email={items.user_email}
-                    user_avatar={items.user_avatar}
+                    user_id={items.author.id}
+                    user_name={items.author.name}
+                    user_email={items.author.email}
+                    user_avatar={items.author.avatar}
                     content={items.content}
-                    like={items.like}
-                    star={items.star}
-                    reply_count={items.reply_count}
-                    share={items.share}
+                    like={items.likeCount}
+                    star={items.shareCount}
+                    reply_count={items.replyCount}
+                    share={items.shareCount}
                 />
 
             )}

@@ -25,8 +25,9 @@ export interface PostNode {
     rootId: string | null
     likeCount: number
     replyCount: number
+    shareCount: number
     author: Author
-    replies: PostNode[]   // 🌳 递归结构
+    replies: PostNode[]
 }
 export interface ApiResponse<T> {
     data: T
@@ -37,18 +38,22 @@ export type PostDetailResponse = ApiResponse<PostNode>
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
     try {
         const { slug } = await params
-        const result = await fetch(`http://localhost:3000/api/post/?id=${slug[0]}`);
+        const result = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/post/?id=${slug[0]}`, { cache: 'no-cache' });
         const data: PostDetailResponse = await result.json();
-        console.log(data)
         return (
-            <div className='space-y-4'>
+            <div className='space-y-4  pt-4'>
                 {/* 头部 */}
                 <PostRetreat></PostRetreat>
-                {/* post卡片 */}
-                <StatusStore data={data.data}></StatusStore>
-                {/* reply回复 */}
-                <PublishReply postId={data.data.id} reply_id={data.data.id} id={data.data.id} post_id={data.data.id} type={'post'} ></PublishReply>
-               <Reply post_id={data.data.id} type={'reply_id'} />
+                <div className='px-4'>
+                    {/* post卡片 */}
+                    <StatusStore data={data.data}></StatusStore>
+                    <div className='h-4'></div>
+                    {/* reply回复输入框 */}
+                    <PublishReply postId={data.data.id} reply_id={data.data.id} id={data.data.id} post_id={data.data.id} type={'post'} ></PublishReply>
+                    <div className='h-4'></div>
+                    {/* reply回复列表 */}
+                    <Reply post_id={data.data.id} type={'reply_id'} />
+                </div>
             </div>
         );
     } catch (e) {

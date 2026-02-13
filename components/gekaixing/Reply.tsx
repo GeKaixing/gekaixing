@@ -20,6 +20,6 @@ export default async function Reply({ post_id, type }: Props) {
   }
 
   const data = await res.json()
-
+  console.log(data.data)
   return <ReplyStore data={data?.data ?? []} />
 }

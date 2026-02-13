@@ -2,6 +2,21 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
+function transformPost(post: any) {
+  return {
+    id: post.id,
+    user_id: post.authorId,
+    user_name: post.author?.name || "",
+    user_email: post.author?.email || "",
+    user_avatar: post.author?.avatar || "",
+    content: post.content,
+    like: post.likeCount || 0,
+    star: 0,
+    reply_count: post.replyCount || post._count?.replies || 0,
+    share: post.shareCount || 0,
+  };
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
@@ -25,7 +40,8 @@ export async function GET(request: Request) {
         },
       });
 
-      return NextResponse.json({ data: posts, success: true });
+      const transformedPosts = posts.map(transformPost);
+      return NextResponse.json({ data: transformedPosts, success: true });
     }
 
     if (id) {
@@ -40,7 +56,28 @@ export async function GET(request: Request) {
         },
       });
 
-      return NextResponse.json({ data: post, success: true });
+      if (!post) {
+        return NextResponse.json({ error: "Post not found" }, { status: 404 });
+      }
+
+      return NextResponse.json({
+        data: {
+          ...transformPost(post),
+          replies: post.replies?.map((reply: any) => ({
+            id: reply.id,
+            user_id: reply.authorId,
+            user_name: reply.author?.name || "",
+            user_email: reply.author?.email || "",
+            user_avatar: reply.author?.avatar || "",
+            content: reply.content,
+            like: 0,
+            star: 0,
+            reply_count: 0,
+            share: 0,
+          })),
+        },
+        success: true,
+      });
     }
 
     const posts = await prisma.post.findMany({
@@ -58,7 +95,8 @@ export async function GET(request: Request) {
       },
     });
 
-    return NextResponse.json({ data: posts, success: true });
+    const transformedPosts = posts.map(transformPost);
+    return NextResponse.json({ data: transformedPosts, success: true });
   } catch (error: any) {
     return NextResponse.json(
       { error: error.message },
@@ -85,7 +123,7 @@ export async function POST(request: Request) {
 
     revalidatePath("/imitation-x");
 
-    return NextResponse.json({ data: [post], success: true });
+    return NextResponse.json({ data: [transformPost(post)], success: true });
   } catch (error: any) {
     return NextResponse.json(
       { error: error.message },

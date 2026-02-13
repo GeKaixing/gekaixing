@@ -8,18 +8,7 @@ export default function PostList() {
     return (
         <div className="flex flex-col gap-6">
             {
-                posts.map((items: {
-                    id: string,
-                    user_id: string,
-                    user_name: string,
-                    user_email: string,
-                    user_avatar: string,
-                    content: string
-                    like: number,
-                    star: number,
-                    reply_count: number,
-                    share: number
-                }) => (
+                posts.map((items) => (
                     <PostCard
                         key={items.id}
                         id={items.id}

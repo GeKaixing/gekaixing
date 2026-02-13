@@ -40,20 +40,18 @@ export default function MobileHeader({ user }: { user: User | null }) {
     )
 }
 function MobileDrawer({ user }: { user: User | null }) {
-    // 使用 useEffect 在 user 发生变化时同步状态
     useEffect(() => {
-        // 确保 user 对象存在，以避免在用户未登录时出现错误
         if (user) {
             userStore.setState({
                 email: user.email || '',
                 id: user.id || '',
                 name: user.user_metadata.name || '',
                 user_background_image: user.user_metadata.user_background_image || '',
-                user_avatar: user.user_metadata.user_avatar || '',
+                user_avatar: user.user_metadata.user_avatar || user.user_metadata.avatar_url || '',
                 brief_introduction: user.user_metadata.brief_introduction || ''
             });
         }
-    }, [user]); // 依赖数组，只有当 user 对象引用发生变化时才执行
+    }, [user]);
 
 
     return (
@@ -67,8 +65,8 @@ function MobileDrawer({ user }: { user: User | null }) {
                         {user?.id &&
                             <Link href={`/imitation-x/user/${user.id}`}>
                                 <Avatar>
-                                    <AvatarImage src={user?.user_metadata.user_avatar} />
-                                    <AvatarFallback>CN</AvatarFallback>
+                                    <AvatarImage src={user?.user_metadata.user_avatar || user?.user_metadata.avatar_url || ''} />
+                                    <AvatarFallback>{user.user_metadata.name?.charAt(0)?.toUpperCase() || 'U'}</AvatarFallback>
                                 </Avatar>
                                 <div>{user.user_metadata.name}</div>
                                 <div>{user.email}</div>

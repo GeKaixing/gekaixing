@@ -16,22 +16,22 @@ export default async function RootLayout({
     const { data: { user } } = await supabase.auth.getUser();
 
     return (
-        <div>
-            <MobileAdd />
+        <div className="min-h-screen">
+            {/* <MobileAdd /> */}
             <MobileHeader user={user} />
-            <div className="flex justify-center h-screen sm:max-w-[80%] mx-auto">
-                <header className="max-sm:hidden p-4">
+            <div className="flex justify-center w-full mx-auto min-h-screen">
+                <header className="hidden sm:flex w-[88px] lg:w-[275px] shrink-0 sticky top-0 h-screen transition-all duration-200">
                     <Sidebar user={user} />
                 </header>
-                <main className="flex-1 max-sm:px-4 sm:p-4">
+                <main className="flex-1 w-full max-w-[600px] border-x border-border sm:border-x">
                     {children}
-                    <PostModal />
+                    {/* <PostModal /> */}
                 </main>
-                <MobileFooter id={user?.id} />
-                <footer className="max-sm:hidden p-4">
+                <footer className="hidden xl:flex w-[350px] shrink-0 pl-8 py-4 sticky top-0 h-screen overflow-y-auto">
                     <Footer />
                 </footer>
             </div>
+            <MobileFooter id={user?.id} />
         </div>
     );
 }

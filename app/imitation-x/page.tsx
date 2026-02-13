@@ -10,7 +10,9 @@ export default async function Page() {
     const data = await result.json();
     if (data.success) {
       return (
-        <PostStore data={data.data} />
+        <div className="px-4 pt-4">
+          <PostStore data={data.data} />
+        </div>
       );
     } else { return null }
   }

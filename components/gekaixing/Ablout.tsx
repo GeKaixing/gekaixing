@@ -21,6 +21,8 @@ export default function Ablout() {
                 <Separator orientation="vertical" />
                 <Link href={'/privacy'}>隐私政策</Link>
                 <Separator orientation="vertical" />
+                <Link href={'/help'}>帮助中心</Link>
+                <Separator orientation="vertical" />
                 <Link href={'/gekaixing-cookies'}>Cookie 使用政策</Link>
             </div>
             <div className='flex space-x-4 '>
