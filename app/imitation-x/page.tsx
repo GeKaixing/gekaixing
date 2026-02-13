@@ -12,8 +12,7 @@ export default async function Page() {
       return (
         <PostStore data={data.data} />
       );
-    }
-    return null
+    } else { return null }
   }
   return null
 }
