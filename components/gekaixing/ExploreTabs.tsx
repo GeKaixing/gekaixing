@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from 'next/link'
 import { ChartNoAxesColumn } from 'lucide-react'
@@ -19,10 +19,16 @@ export default
     const [data, setData] = useState([])
     useEffect(() => {
         async function fetchf() {
-            const reslut = await ToutiaoHotGTE()
-            const data = await reslut.json()
-            if (data.success) {
-                setData(data.data)
+            try {
+                const reslut = await ToutiaoHotGTE()
+                console.log(reslut)
+                const data = await reslut.json()
+                if (data.success) {
+                    setData(data.data)
+                }
+            } catch (error){
+                console.log(error)
+                setData([])
             }
         }
         fetchf()

@@ -47,17 +47,29 @@ export default function LoginForm() {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setStatus(true)
+        console.log(values.email, values.password)
         const result = await LoginFetch(values.email, values.password)
-        const data = await result.json()
-        if (data.success) {
+        console.log(result)
+        const text = await result.text()
+        console.log(text)
+        let data;
+        try {
+            data = JSON.parse(text)
+        } catch {
+            toast.error("服务器返回异常，请查看控制台")
+            console.error("Non-JSON response:", text)
             setStatus(false)
-            router.replace('/imitation-x')
-        } else {
-            setStatus(false)
-            toast.error(data.error || '登录失败，请重试')
+            return
         }
 
+        if (data.success) {
+            router.replace("/imitation-x")
+        } else {
+            toast.error(data.error || "登录失败")
+        }
+        setStatus(false)
     }
+
     return (
 
         <Form {...form}>
@@ -83,7 +95,7 @@ export default function LoginForm() {
                                     <FormItem>
                                         <FormLabel>密码</FormLabel>
                                         <FormControl>
-                                            <Input  disabled={status} placeholder="请输入密码" {...field} type='password' />
+                                            <Input disabled={status} placeholder="请输入密码" {...field} type='password' />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
