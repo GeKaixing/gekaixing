@@ -1,10 +1,12 @@
 import { createClient } from "@/utils/supabase/server";
+import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
-  const { email, password } = await request.json();
-  const { error } = await supabase.auth.signUp({
+  const { email, password, name, avatar } = await request.json();
+
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -12,9 +14,19 @@ export async function POST(request: Request) {
     },
   });
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 401 });
+  if (error || !data.user) {
+    return NextResponse.json({ error: error?.message }, { status: 401 });
   }
+
+  // ✅ 同步写入 Prisma User 表（用 Supabase user.id）
+  await prisma.user.create({
+    data: {
+      id: data.user.id,
+      email,
+      name: name ?? null,
+      avatar: avatar ?? null,
+    },
+  });
 
   return NextResponse.json({ success: true });
 }

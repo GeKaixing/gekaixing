@@ -1,16 +1,22 @@
+// app/api/login/route.ts
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+
 export async function POST(request: Request) {
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient();
   const { email, password } = await request.json();
-
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-
+  console.log(email, password);
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+  console.log(error);
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 401 });
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 401 },
+    );
   }
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ success: true, user: data.user });
 }
