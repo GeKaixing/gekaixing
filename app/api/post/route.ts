@@ -1,69 +1,114 @@
-import { createClient } from "@/utils/supabase/server";
-import { revalidateTag } from "next/cache";
+import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  const supabase = await createClient();
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
   const type = searchParams.get("type");
 
-  if (id) {
-    if (type === "user_id") {
-      const { data, error } = await supabase
-        .from("post_with_top_reply_count")
-        .select("*")
-        .order("created_at", { ascending: false }) // 按时间倒序，最新的在前
-        .eq(type, id);
-      if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
-      }
-      return NextResponse.json({ data: data, success: true });
-    }
-    const { data, error } = await supabase
-      .from("post_with_top_reply_count")
-      .select("*")
-      .order("created_at", { ascending: false }) // 按时间倒序，最新的在前
-      .eq("id", id);
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-    return NextResponse.json({ data: data, success: true });
-  } else {
-    const { data, error } = await supabase
-      .from("post_with_top_reply_count")
-      .select("*")
-      .order("created_at", { ascending: false }); // 按时间倒序，最新的在前
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+  try {
+    if (id && type === "user_id") {
+      const posts = await prisma.post.findMany({
+        where: {
+          authorId: id,
+          parentId: null,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          author: true,
+          _count: {
+            select: { replies: true },
+          },
+        },
+      });
+
+      return NextResponse.json({ data: posts, success: true });
     }
 
-    return NextResponse.json({ data: data, success: true });
+    if (id) {
+      const post = await prisma.post.findUnique({
+        where: { id },
+        include: {
+          author: true,
+          replies: {
+            orderBy: { createdAt: "asc" },
+            include: { author: true },
+          },
+        },
+      });
+
+      return NextResponse.json({ data: post, success: true });
+    }
+
+    const posts = await prisma.post.findMany({
+      where: {
+        parentId: null,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        author: true,
+        _count: {
+          select: { replies: true },
+        },
+      },
+    });
+
+    return NextResponse.json({ data: posts, success: true });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(request: Request) {
-  const supabase = await createClient();
-  const { user_id, user_name, user_email, content, user_avatar } =
-    await request.json();
-  const { data, error } = await supabase
-    .from("post")
-    .insert([{ user_id, user_name, user_email, content, user_avatar }])
-    .select();
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 401 });
-  }
+  try {
+    const { user_id, content, parentId, rootId } = await request.json();
 
-  return NextResponse.json({ data: data, success: true });
+    const post = await prisma.post.create({
+      data: {
+        content,
+        authorId: user_id,
+        parentId: parentId ?? null,
+        rootId: rootId ?? null,
+      },
+      include: {
+        author: true,
+      },
+    });
+
+    revalidatePath("/imitation-x");
+
+    return NextResponse.json({ data: [post], success: true });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 401 }
+    );
+  }
 }
-export async function DELETE(request: Request) {
-  const supabase = await createClient();
-  const { id } = await request.json();
-  const { data, error } = await supabase.from("post").delete().eq("id", id);
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 401 });
+export async function DELETE(request: Request) {
+  try {
+    const { id } = await request.json();
+
+    const deleted = await prisma.post.delete({
+      where: { id },
+    });
+
+    revalidatePath("/imitation-x");
+
+    return NextResponse.json({ data: deleted, success: true });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 401 }
+    );
   }
-  revalidateTag("imitation-x");
-  return NextResponse.json({ data: data, success: true });
 }
