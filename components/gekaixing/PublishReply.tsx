@@ -1,7 +1,6 @@
 'use client'
-import {
-    Card,
-} from "@/components/ui/card"
+
+import { Card } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from "../ui/input"
 import { useState } from "react"
@@ -11,117 +10,121 @@ import { replyStore } from "@/store/reply"
 import { postStore } from "@/store/post"
 import clsx from "clsx"
 
-async function publishReply(
-    {
-        user_id,
-        user_name,
-        user_email,
-        post_id,
-        content,
-        user_avatar,
-        reply_id,
-    }: {
-        reply_id: string | number,
-        user_id: string,
-        user_name: string,
-        user_email: string,
-        post_id: string | number,
-        content: string,
-        user_avatar: string
-    }) {
-    const result = await fetch('/api/reply', {
+async function publishReply(payload: {
+    user_id: string
+    user_name: string
+    user_email: string
+    post_id: string
+    content: string
+    user_avatar: string
+    reply_id?: string | null
+}) {
+    const res = await fetch('/api/reply', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            reply_id,
-            user_id,
-            user_name,
-            user_email,
-            post_id,
-            content,
-            user_avatar
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
     })
-    return result;
+
+    return res.json()
 }
 
-export default function PublishReply({ id:ddd, post_id, reply_id, type = 'post' }: {id:string, post_id: string, reply_id?: string, type: string }) {
-    const [replyInput, setReplyInput] = useState<string>('');
+type Props = {
+    id: string
+    postId: string
+    post_id: string
+    replyId?: string
+    reply_id:string
+    type?: 'post' | 'reply'
+}
+
+export default function PublishReply({
+    postId,
+    replyId,
+    type = 'post',
+}: Props) {
+    const [replyInput, setReplyInput] = useState('')
     const { addReply } = replyStore()
-    
-    const { email,
-        id,
+
+    const {
+        email,
+        id: userId,
         user_avatar,
-        name, } = userStore()
+        name,
+    } = userStore()
+
     async function handleReply() {
-        let result;
-        if (type === 'post') {
+        if (!replyInput.trim()) return
 
-            result = await publishReply({
-                user_id: id,
-                user_avatar: user_avatar,
-                user_name: name || email,
-                user_email: email,
-                post_id: post_id,
-                content: replyInput,
-                reply_id: 0
-            });
-        } else {
-            result = await publishReply({
-                user_id: id,
-                user_avatar: user_avatar,
-                user_name: name || email,
-                user_email: email,
-                post_id: post_id,
-                content: replyInput,
-                reply_id: reply_id || 0
-            });
-        }
+        const data = await publishReply({
+            user_id: userId,
+            user_avatar,
+            user_name: name || email,
+            user_email: email,
+            post_id: postId,
+            content: replyInput,
+            reply_id: type === 'reply' ? replyId ?? null : null,
+        })
 
-        const data = await result.json();
+        if (data?.success && data?.data?.[0]) {
+            const reply = data.data[0]
 
-        if (data.success) {
             addReply({
-                id: data.data[0]['id'],
-                user_id: id,
-                user_avatar: user_avatar,
-                user_name: name,
+                id: reply.id,
+                user_id: userId,
+                user_avatar,
+                user_name: name || email,
                 user_email: email,
-                post_id:  data.data[0]['post_id'],
+                post_id: reply.post_id,
                 content: replyInput,
-                reply_id: reply_id||null,
+                reply_id: replyId ?? null,
                 like: 0,
                 star: 0,
                 reply_count: 0,
                 share: 0,
             })
-           
-            postStore.getState().addReplyCount(ddd)
-         
-            setReplyInput(''); // Clear the input field after successful reply
 
+            postStore.getState().addReplyCount(postId)
+            setReplyInput('')
         } else {
-            replyStore.getState().deleteFirstReply()
-            console.error('Failed to publish reply:', data.error);
+            console.error('Failed to publish reply:', data?.error)
         }
     }
 
     return (
-        <Card className='cursor-pointer hover:bg-gray-50 flex w-full flex-row p-2'>
-            {id ?
+        <Card className="flex w-full flex-row p-2 hover:bg-gray-50">
+            {userId ? (
                 <>
                     <Avatar>
                         <AvatarImage src={user_avatar} />
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
-                    <Input onChange={(e) => { setReplyInput(e.target.value) }} value={replyInput} id='replyInput' className='flex-1' placeholder={'发表你的回复'}></Input>
-                    <button onClick={handleReply} className={clsx('rounded-2xl font-bold bg-gray-500 text-white h-8 w-[60px]',{
-                       "!bg-black":replyInput!==""
-                    })}>回复</button>   </> :
-                <Link href={'/account'} className='rounded-2xl font-bold bg-gray-500 text-white h-8 flex justify-center items-center w-full'>请你登录后回复</Link>
-            }
+
+                    <Input
+                        value={replyInput}
+                        onChange={(e) => setReplyInput(e.target.value)}
+                        className="flex-1"
+                        placeholder="发表你的回复"
+                    />
+
+                    <button
+                        onClick={handleReply}
+                        disabled={!replyInput.trim()}
+                        className={clsx(
+                            'rounded-2xl font-bold h-8 w-[60px] text-white bg-gray-400',
+                            { '!bg-black': replyInput.trim() }
+                        )}
+                    >
+                        回复
+                    </button>
+                </>
+            ) : (
+                <Link
+                    href="/account"
+                    className="rounded-2xl font-bold bg-gray-500 text-white h-8 flex justify-center items-center w-full"
+                >
+                    请你登录后回复
+                </Link>
+            )}
         </Card>
     )
 }

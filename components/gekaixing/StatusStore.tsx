@@ -2,23 +2,13 @@
 import { postStore } from '@/store/post'
 import { useEffect } from 'react'
 import PostList from './PostList'
-type Post = {
-    id: string,
-    user_id: string,
-    user_name: string,
-    user_email: string,
-    user_avatar: string,
-    content: string
-    like: number,
-    star: number,
-    reply_count: number,
-    share: number
-    reply_id:string|null
-}
-export default function StatusStore({ data }: { data: Post[] }) {
+import { PostNode } from '@/app/imitation-x/status/[...slug]/page'
 
+export default function StatusStore({ data }: { data: PostNode }) {
+
+    const i=[data]
     useEffect(() => {
-        postStore.getState().setPosts(data)
+        postStore.getState().setPosts(i)
     }, [data])
 
     return (
