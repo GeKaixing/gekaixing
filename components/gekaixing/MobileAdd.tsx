@@ -1,13 +1,17 @@
+"use client";
+
 import { Plus } from 'lucide-react'
-import Link from 'next/link'
 import React from 'react'
+import { postModalStore } from '@/store/postModal'
 
 export default function MobileAdd() {
+    const { openModal } = postModalStore()
+
     return (
-        <Link
-            href={'/imitation-x/post'}
-            className='w-16 h-16 rounded-2xl fixed bottom-16 right-16 text-white bg-blue-400 flex justify-center items-center'>
+        <button
+            onClick={openModal}
+            className='w-16 h-16 rounded-2xl fixed bottom-16 right-16 text-white bg-blue-400 flex justify-center items-center cursor-pointer'>
             <Plus className='font-bold ' />
-        </Link>
+        </button>
     )
 }

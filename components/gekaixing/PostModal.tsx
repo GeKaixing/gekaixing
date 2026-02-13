@@ -1,19 +1,10 @@
-'use client'
+"use client"
 
-import { useSearchParams, useRouter, usePathname } from 'next/navigation'
-import { Suspense } from 'react'
+import { postModalStore } from '@/store/postModal'
 import EditPost from './EditPost'
 
-function PostModalInner() {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const pathname = usePathname()
-  
-  const isOpen = searchParams.get('new') === 'post'
-
-  const closeModal = () => {
-    router.replace(pathname, { scroll: false })
-  }
+export default function PostModal() {
+  const { isOpen, closeModal } = postModalStore()
 
   if (!isOpen) return null
 
@@ -26,13 +17,5 @@ function PostModalInner() {
         </div>
       </div>
     </>
-  )
-}
-
-export default function PostModal() {
-  return (
-    <Suspense fallback={null}>
-      <PostModalInner />
-    </Suspense>
   )
 }
