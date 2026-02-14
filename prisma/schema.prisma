@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -13,70 +7,9 @@ datasource db {
   provider = "postgresql"
 }
 
-//会话表
-model Conversation {
-  id        String   @id @default(uuid())
-  isGroup   Boolean  @default(false)
-  name      String?
-  avatar    String? // 群头像
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  participants ConversationParticipant[]
-  messages     Message[]
-  readStates   ConversationRead[]
-
-  // 用于优化聊天列表查询
-  lastMessage   String?
-  lastMessageAt DateTime?
-
-  @@index([lastMessageAt])
-}
-
-// 参与者表
-model ConversationParticipant {
-  id             String   @id @default(uuid())
-  conversationId String
-  userId         String
-  joinedAt       DateTime @default(now())
-
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([conversationId, userId])
-  @@index([userId])
-  @@index([conversationId])
-}
-
-//消息表
-
-model Message {
-  id             String   @id @default(cuid())
-  conversationId String
-  senderId       String
-  content        String   @db.Text
-  createdAt      DateTime @default(now())
-
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  sender       User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
-
-  @@index([conversationId, createdAt])
-  @@index([senderId])
-}
-
-//未读记录表
-model ConversationRead {
-  id             String   @id @default(uuid())
-  conversationId String
-  userId         String
-  lastReadAt     DateTime @default(now())
-
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([conversationId, userId])
-  @@index([userId])
-}
+//////////////////////////////////////////////////////
+// 用户
+//////////////////////////////////////////////////////
 
 model User {
   id                String   @id @default(uuid())
@@ -88,18 +21,23 @@ model User {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  // 用户发布的所有内容（包括主帖和回复）
+  // 发布内容
   posts Post[]
 
-  // 用户互动
-  likes                    Like[]
-  bookmarks                Bookmark[]
-  shares                   Share[]
+  // 互动
+  likes     Like[]
+  bookmarks Bookmark[]
+  shares    Share[]
+
+  // 聊天
   conversationParticipants ConversationParticipant[]
   conversationReads        ConversationRead[]
-
-  messages Message[] @relation("SentMessages")
+  messages                 Message[] @relation("SentMessages")
 }
+
+//////////////////////////////////////////////////////
+// 帖子（支持递归评论）
+//////////////////////////////////////////////////////
 
 model Post {
   id        String   @id @default(cuid())
@@ -107,35 +45,38 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // 作者关联
   authorId String
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
-  // --- 递归关联优化 ---
+  // 递归评论结构
   parentId String?
-  parent   Post?   @relation("PostToPost", fields: [parentId], references: [id], onDelete: Cascade)
-  replies  Post[]  @relation("PostToPost")
+  parent   Post?  @relation("PostToPost", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  Post[] @relation("PostToPost")
 
-  // 根帖子 ID：方便一键查出某个话题下的所有讨论，无论嵌套多深
+  // 根帖 id（话题聚合）
   rootId String?
 
-  // 互动计数
+  // 冗余计数（高性能）
   likeCount  Int @default(0)
   replyCount Int @default(0)
   shareCount Int @default(0)
+  starCount  Int @default(0)
 
-  // 用户互动关系
+  // 互动关系
   likes     Like[]
   bookmarks Bookmark[]
   shares    Share[]
 
-  // 索引优化：显著提升 Supabase 查询性能
+  // 索引优化
   @@index([parentId])
-  @@index([rootId])
+  @@index([rootId, createdAt])
   @@index([authorId])
 }
 
-// 用户喜欢帖子关系表
+//////////////////////////////////////////////////////
+// 点赞
+//////////////////////////////////////////////////////
+
 model Like {
   id        String   @id @default(cuid())
   userId    String
@@ -150,7 +91,10 @@ model Like {
   @@index([postId])
 }
 
-// 用户收藏帖子关系表
+//////////////////////////////////////////////////////
+// 收藏
+//////////////////////////////////////////////////////
+
 model Bookmark {
   id        String   @id @default(cuid())
   userId    String
@@ -165,7 +109,10 @@ model Bookmark {
   @@index([postId])
 }
 
-// 分享记录表
+//////////////////////////////////////////////////////
+// 分享
+//////////////////////////////////////////////////////
+
 model Share {
   id        String   @id @default(cuid())
   userId    String
@@ -175,6 +122,91 @@ model Share {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
+  // 如果不允许重复分享就保留
+  @@unique([userId, postId])
+
   @@index([userId])
   @@index([postId])
+}
+
+//////////////////////////////////////////////////////
+// 会话（支持私聊 & 群聊）
+//////////////////////////////////////////////////////
+
+model Conversation {
+  id        String   @id @default(uuid())
+  isGroup   Boolean  @default(false)
+  name      String?
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 聊天优化字段
+  lastMessage       String?
+  lastMessageAt     DateTime?
+  messageCount      Int       @default(0)   // 🔥 用于 unread O(1)
+
+  participants ConversationParticipant[]
+  messages     Message[]
+  readStates   ConversationRead[]
+
+  @@index([lastMessageAt])
+}
+
+//////////////////////////////////////////////////////
+// 会话参与者
+//////////////////////////////////////////////////////
+
+model ConversationParticipant {
+  id             String   @id @default(uuid())
+  conversationId String
+  userId         String
+  joinedAt       DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+  @@index([conversationId])
+}
+
+//////////////////////////////////////////////////////
+// 消息
+//////////////////////////////////////////////////////
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  senderId       String
+
+  type           String   @default("text") // text | image | file | system
+  content        String?  @db.Text
+
+  createdAt DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+  @@index([senderId])
+}
+
+//////////////////////////////////////////////////////
+// 未读状态（O(1) 未读计算）
+//////////////////////////////////////////////////////
+
+model ConversationRead {
+  id             String   @id @default(uuid())
+  conversationId String
+  userId         String
+
+  lastReadMessageCount Int @default(0)  // 🔥 关键优化
+  updatedAt            DateTime @updatedAt
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
 }

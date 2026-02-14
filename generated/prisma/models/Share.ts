@@ -189,6 +189,7 @@ export type ShareOrderByWithRelationInput = {
 
 export type ShareWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  userId_postId?: Prisma.ShareUserIdPostIdCompoundUniqueInput
   AND?: Prisma.ShareWhereInput | Prisma.ShareWhereInput[]
   OR?: Prisma.ShareWhereInput[]
   NOT?: Prisma.ShareWhereInput | Prisma.ShareWhereInput[]
@@ -197,7 +198,7 @@ export type ShareWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Share"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
-}, "id">
+}, "id" | "userId_postId">
 
 export type ShareOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -274,6 +275,11 @@ export type ShareListRelationFilter = {
 
 export type ShareOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ShareUserIdPostIdCompoundUniqueInput = {
+  userId: string
+  postId: string
 }
 
 export type ShareCountOrderByAggregateInput = {

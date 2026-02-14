@@ -55,7 +55,11 @@ export const ModelName = {
   Post: 'Post',
   Like: 'Like',
   Bookmark: 'Bookmark',
-  Share: 'Share'
+  Share: 'Share',
+  Conversation: 'Conversation',
+  ConversationParticipant: 'ConversationParticipant',
+  Message: 'Message',
+  ConversationRead: 'ConversationRead'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -98,7 +102,8 @@ export const PostScalarFieldEnum = {
   rootId: 'rootId',
   likeCount: 'likeCount',
   replyCount: 'replyCount',
-  shareCount: 'shareCount'
+  shareCount: 'shareCount',
+  starCount: 'starCount'
 } as const
 
 export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
@@ -132,6 +137,54 @@ export const ShareScalarFieldEnum = {
 } as const
 
 export type ShareScalarFieldEnum = (typeof ShareScalarFieldEnum)[keyof typeof ShareScalarFieldEnum]
+
+
+export const ConversationScalarFieldEnum = {
+  id: 'id',
+  isGroup: 'isGroup',
+  name: 'name',
+  avatar: 'avatar',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  lastMessage: 'lastMessage',
+  lastMessageAt: 'lastMessageAt',
+  messageCount: 'messageCount'
+} as const
+
+export type ConversationScalarFieldEnum = (typeof ConversationScalarFieldEnum)[keyof typeof ConversationScalarFieldEnum]
+
+
+export const ConversationParticipantScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  userId: 'userId',
+  joinedAt: 'joinedAt'
+} as const
+
+export type ConversationParticipantScalarFieldEnum = (typeof ConversationParticipantScalarFieldEnum)[keyof typeof ConversationParticipantScalarFieldEnum]
+
+
+export const MessageScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  senderId: 'senderId',
+  type: 'type',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const ConversationReadScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  userId: 'userId',
+  lastReadMessageCount: 'lastReadMessageCount',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ConversationReadScalarFieldEnum = (typeof ConversationReadScalarFieldEnum)[keyof typeof ConversationReadScalarFieldEnum]
 
 
 export const SortOrder = {
