@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { Send, ChevronLeft, ChevronRight } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import ArrowLeftBack from "@/components/gekaixing/ArrowLeftBack";
+import { useSearchParams } from "next/navigation";
 
 interface Contact {
   id: string;
@@ -68,14 +69,28 @@ const initialMessages: Record<string, Message[]> = {
 };
 
 export default function ChatPage() {
-  const [selectedContactId, setSelectedContactId] = useState<string>("1");
+  const searchParams = useSearchParams();
+  const userIdFromQuery = searchParams.get("userId");
+  
+  const [selectedContactId, setSelectedContactId] = useState<string>(userIdFromQuery || "1");
   const [messages, setMessages] = useState<Record<string, Message[]>>(initialMessages);
   const [inputMessage, setInputMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const contactsScrollRef = useRef<HTMLDivElement>(null);
   const supabase = useRef(createClient()).current;
 
-  const selectedContact = mockContacts.find((c) => c.id === selectedContactId);
+  const allContacts = React.useMemo(() => {
+    if (userIdFromQuery && !mockContacts.find(c => c.id === userIdFromQuery)) {
+      return [...mockContacts, { 
+        id: userIdFromQuery, 
+        name: `用户 ${userIdFromQuery.slice(0, 8)}...`, 
+        isOnline: false 
+      }];
+    }
+    return mockContacts;
+  }, [userIdFromQuery]);
+
+  const selectedContact = allContacts.find((c) => c.id === selectedContactId);
   const currentMessages = messages[selectedContactId] || [];
 
   const scrollToBottom = useCallback(() => {
@@ -200,7 +215,7 @@ export default function ChatPage() {
             }}
           >
             <div className="flex gap-3 px-1">
-              {mockContacts.map((contact) => (
+              {allContacts.map((contact) => (
                 <button
                   key={contact.id}
                   onClick={() => setSelectedContactId(contact.id)}

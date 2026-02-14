@@ -152,6 +152,11 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
                 {isCurrentUser && <DropdownMenuItem
                     onClick={() => setAlertDialogOpen(true)}
                 >删除帖子</DropdownMenuItem>}
+                {userStore.getState().id && userStore.getState().id !== user_id && (
+                    <DropdownMenuItem onClick={() => router.push(`/imitation-x/chat?userId=${user_id}`)}>
+                        私聊用户
+                    </DropdownMenuItem>
+                )}
                 {userStore.getState().id && <DropdownMenuItem>关注用户</DropdownMenuItem>}
                 <DropdownMenuItem onClick={CopyLink}>复制连接</DropdownMenuItem>
             </DropdownMenuContent>
