@@ -14,13 +14,22 @@ type Post = {
     reply_count: number,
     share: number
 }
-export default function PostStore({ data }: { data: Post[] }) {
 
+export default function PostStore({ data }: { data: Post[] }) {
+    useEffect(() => {
+        async function ff() {
+            const res = await fetch("/api/post/feed")
+            const feed = await res.json()
+            console.log(feed,11111)
+        }
+        ff()
+
+    },[])
     useEffect(() => {
         postStore.getState().setPosts(data)
     }, [data])
 
     return (
-        <PostList/>
+        <PostList />
     )
 }

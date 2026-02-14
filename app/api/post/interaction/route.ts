@@ -1,27 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { createClient } from '@supabase/supabase-js'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(req: NextRequest) {
   try {
     const postId = req.nextUrl.searchParams.get('postId')
+    const userId = req.nextUrl.searchParams.get('userId') // 前端传
+
     if (!postId) {
-      return NextResponse.json({ success: false }, { status: 400 })
+      return NextResponse.json(
+        { success: false, message: 'Missing postId' },
+        { status: 400 }
+      )
     }
 
-    // 获取当前用户（Supabase Auth）
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
-    const userId = user?.id
-
-    // 并行查询
     const [post, like, bookmark] = await Promise.all([
       prisma.post.findUnique({
         where: { id: postId },
@@ -40,6 +31,7 @@ export async function GET(req: NextRequest) {
                 postId,
               },
             },
+            select: { id: true },
           })
         : null,
 
@@ -51,16 +43,24 @@ export async function GET(req: NextRequest) {
                 postId,
               },
             },
+            select: { id: true },
           })
         : null,
     ])
 
+    if (!post) {
+      return NextResponse.json(
+        { success: false, message: 'Post not found' },
+        { status: 404 }
+      )
+    }
+
     return NextResponse.json({
       success: true,
       data: {
-        likeCount: post?.likeCount ?? 0,
-        shareCount: post?.shareCount ?? 0,
-        bookmarkCount: post?.starCount ?? 0,
+        likeCount: post.likeCount,
+        shareCount: post.shareCount,
+        bookmarkCount: post.starCount,
         isLiked: !!like,
         isBookmarked: !!bookmark,
       },

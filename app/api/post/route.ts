@@ -32,6 +32,7 @@ export async function GET(request: Request) {
         orderBy: {
           createdAt: "desc",
         },
+        take: 50,
         include: {
           author: true,
           _count: {
@@ -87,6 +88,7 @@ export async function GET(request: Request) {
       orderBy: {
         createdAt: "desc",
       },
+      take: 50,
       include: {
         author: true,
         _count: {
@@ -98,6 +100,7 @@ export async function GET(request: Request) {
     const transformedPosts = posts.map(transformPost);
     return NextResponse.json({ data: transformedPosts, success: true });
   } catch (error: any) {
+    console.log(error)
     return NextResponse.json(
       { error: error.message },
       { status: 500 }
