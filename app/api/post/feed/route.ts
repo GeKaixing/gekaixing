@@ -77,9 +77,9 @@ export async function GET(req: NextRequest) {
       shareCount: post._count.shares,
       repliesCount: post._count.replies,
 
-      likedByMe: post.likes.length > 0,
-      bookmarkedByMe: post.bookmarks.length > 0,
-      sharedByMe: post.shares.length > 0,
+      likedByMe: post.likes?.length > 0,
+      bookmarkedByMe: post.bookmarks?.length > 0,
+      sharedByMe: post.shares?.length > 0,
     }));
 
     return NextResponse.json(result);

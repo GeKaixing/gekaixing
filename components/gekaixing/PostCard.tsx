@@ -172,12 +172,17 @@ export default function PostCard({
         if (isLoading) return
         setIsLoading(true)
 
+        const previousStar = star
         const previousIsBookmarked = isBookmarked
+        const newStarCount = isBookmarked ? star - 1 : star + 1
+
+        updatePost(id, { star: newStarCount })
         setIsBookmarked(!isBookmarked)
 
         const success = await toggleBookmark(id, previousIsBookmarked)
 
         if (!success) {
+            updatePost(id, { star: previousStar })
             setIsBookmarked(previousIsBookmarked)
         }
 
@@ -253,6 +258,7 @@ export default function PostCard({
                             <div className={`w-7 h-7 flex justify-center items-center rounded-full hover:bg-red-400/10 ${isLoading ? 'opacity-50' : ''}`}>
                                 <Star className={isBookmarked ? 'fill-current' : ''} />
                             </div>
+                            {star || 0}
                         </li>
                         <li className="flex gap-2 hover:text-blue-400" onClick={handleShare}>
                             <div className={`w-7 h-7 flex justify-center items-center rounded-full hover:bg-blue-400/10 ${isLoading ? 'opacity-50' : ''}`}>
