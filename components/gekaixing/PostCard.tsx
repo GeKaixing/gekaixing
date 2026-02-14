@@ -125,7 +125,9 @@ export default function PostCard({
 
     const [isLiked, setIsLiked] = useState(initialIsLiked)
     const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked)
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLikeLoading, setIsLikeLoading] = useState(false)
+    const [isBookmarkLoading, setIsBookmarkLoading] = useState(false)
+    const [isShareLoading, setIsShareLoading] = useState(false)
 
     useEffect(() => {
         const currentUser = userStore.getState()
@@ -146,8 +148,8 @@ export default function PostCard({
     const { like, star, share, reply_count } = post
 
     const handleLike = async () => {
-        if (isLoading) return
-        setIsLoading(true)
+        if (isLikeLoading) return
+        setIsLikeLoading(true)
 
         const previousLike = like
         const previousIsLiked = isLiked
@@ -165,12 +167,12 @@ export default function PostCard({
             updatePost(id, { like: result.likeCount })
         }
 
-        setIsLoading(false)
+        setIsLikeLoading(false)
     }
 
     const handleBookmark = async () => {
-        if (isLoading) return
-        setIsLoading(true)
+        if (isBookmarkLoading) return
+        setIsBookmarkLoading(true)
 
         const previousStar = star
         const previousIsBookmarked = isBookmarked
@@ -186,12 +188,12 @@ export default function PostCard({
             setIsBookmarked(previousIsBookmarked)
         }
 
-        setIsLoading(false)
+        setIsBookmarkLoading(false)
     }
 
     const handleShare = async () => {
-        if (isLoading) return
-        setIsLoading(true)
+        if (isShareLoading) return
+        setIsShareLoading(true)
 
         const previousShare = share
         const newShareCount = share + 1
@@ -209,7 +211,7 @@ export default function PostCard({
         }
 
         copyToClipboard(`https://www.gekaixing.top/imitation-x/status/${id}`)
-        setIsLoading(false)
+        setIsShareLoading(false)
     }
 
     return (
@@ -240,7 +242,7 @@ export default function PostCard({
                             className={`flex gap-2 hover:text-blue-400 ${isLiked ? 'text-blue-400' : ''}`}
                             onClick={handleLike}
                         >
-                            <div className={`w-7 h-7 flex justify-center items-center rounded-full hover:bg-blue-400/10 ${isLoading ? 'opacity-50' : ''}`}>
+                            <div className={`w-7 h-7 flex justify-center items-center rounded-full hover:bg-blue-400/10 ${isLikeLoading ? 'opacity-50' : ''}`}>
                                 <Heart className={isLiked ? 'fill-current' : ''} />
                             </div>
                             {like || 0}
@@ -255,13 +257,13 @@ export default function PostCard({
                             className={`flex gap-2 hover:text-red-400 ${isBookmarked ? 'text-red-400' : ''}`}
                             onClick={handleBookmark}
                         >
-                            <div className={`w-7 h-7 flex justify-center items-center rounded-full hover:bg-red-400/10 ${isLoading ? 'opacity-50' : ''}`}>
+                            <div className={`w-7 h-7 flex justify-center items-center rounded-full hover:bg-red-400/10 ${isBookmarkLoading ? 'opacity-50' : ''}`}>
                                 <Star className={isBookmarked ? 'fill-current' : ''} />
                             </div>
                             {star || 0}
                         </li>
                         <li className="flex gap-2 hover:text-blue-400" onClick={handleShare}>
-                            <div className={`w-7 h-7 flex justify-center items-center rounded-full hover:bg-blue-400/10 ${isLoading ? 'opacity-50' : ''}`}>
+                            <div className={`w-7 h-7 flex justify-center items-center rounded-full hover:bg-blue-400/10 ${isShareLoading ? 'opacity-50' : ''}`}>
                                 <Share2 />
                             </div>
                             {share || 0}

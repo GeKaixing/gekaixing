@@ -36,12 +36,23 @@ export async function GET(request: Request) {
         include: {
           author: true,
           _count: {
-            select: { replies: true },
+            select: { likes: true, bookmarks: true, shares: true, replies: true },
           },
         },
       });
 
-      const transformedPosts = posts.map(transformPost);
+      const transformedPosts = posts.map((post) => ({
+        id: post.id,
+        user_id: post.authorId,
+        user_name: post.author?.name || "",
+        user_email: post.author?.email || "",
+        user_avatar: post.author?.avatar || "",
+        content: post.content,
+        like: post._count?.likes || 0,
+        star: post._count?.bookmarks || 0,
+        reply_count: post._count?.replies || 0,
+        share: post._count?.shares || 0,
+      }));
       return NextResponse.json({ data: transformedPosts, success: true });
     }
 
@@ -50,9 +61,17 @@ export async function GET(request: Request) {
         where: { id },
         include: {
           author: true,
+          _count: {
+            select: { likes: true, bookmarks: true, shares: true, replies: true },
+          },
           replies: {
             orderBy: { createdAt: "asc" },
-            include: { author: true },
+            include: { 
+              author: true,
+              _count: {
+                select: { likes: true, bookmarks: true, shares: true, replies: true },
+              },
+            },
           },
         },
       });
@@ -63,7 +82,16 @@ export async function GET(request: Request) {
 
       return NextResponse.json({
         data: {
-          ...transformPost(post),
+          id: post.id,
+          user_id: post.authorId,
+          user_name: post.author?.name || "",
+          user_email: post.author?.email || "",
+          user_avatar: post.author?.avatar || "",
+          content: post.content,
+          like: post._count?.likes || 0,
+          star: post._count?.bookmarks || 0,
+          reply_count: post._count?.replies || 0,
+          share: post._count?.shares || 0,
           replies: post.replies?.map((reply: any) => ({
             id: reply.id,
             user_id: reply.authorId,
@@ -71,10 +99,10 @@ export async function GET(request: Request) {
             user_email: reply.author?.email || "",
             user_avatar: reply.author?.avatar || "",
             content: reply.content,
-            like: 0,
-            star: 0,
-            reply_count: 0,
-            share: 0,
+            like: reply._count?.likes || 0,
+            star: reply._count?.bookmarks || 0,
+            reply_count: reply._count?.replies || 0,
+            share: reply._count?.shares || 0,
           })),
         },
         success: true,
@@ -92,12 +120,23 @@ export async function GET(request: Request) {
       include: {
         author: true,
         _count: {
-          select: { replies: true },
+          select: { likes: true, bookmarks: true, shares: true, replies: true },
         },
       },
     });
 
-    const transformedPosts = posts.map(transformPost);
+    const transformedPosts = posts.map((post) => ({
+      id: post.id,
+      user_id: post.authorId,
+      user_name: post.author?.name || "",
+      user_email: post.author?.email || "",
+      user_avatar: post.author?.avatar || "",
+      content: post.content,
+      like: post._count?.likes || 0,
+      star: post._count?.bookmarks || 0,
+      reply_count: post._count?.replies || 0,
+      share: post._count?.shares || 0,
+    }));
     return NextResponse.json({ data: transformedPosts, success: true });
   } catch (error: any) {
     console.log(error)

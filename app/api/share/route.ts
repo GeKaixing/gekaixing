@@ -21,8 +21,15 @@ export async function POST(request: Request) {
     });
 
     if (user) {
-      await prisma.share.create({
-        data: {
+      await prisma.share.upsert({
+        where: {
+          userId_postId: {
+            userId: user.id,
+            postId: postId,
+          },
+        },
+        update: {},
+        create: {
           userId: user.id,
           postId: postId,
         },
