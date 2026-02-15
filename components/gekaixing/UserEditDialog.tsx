@@ -26,17 +26,23 @@ const formSchema = z.object({
         message: "Username must be at least 2 characters.",
 
     }),
-    brief_introduction: z.string().min(1, {
-        message: "brief introduction must be at least 30 characters.",
+    userid: z.string().min(3, {
+        message: "User ID must be at least 3 characters.",
 
+    }).max(20, {
+        message: "User ID must be at most 20 characters.",
+    }).regex(/^[a-zA-Z0-9_]+$/, {
+        message: "User ID can only contain letters, numbers and underscores.",
     }),
+    brief_introduction: z.string().optional(),
 })
 
-export async function PATCHUser(username: string, brief?: string) {
+export async function PATCHUser(username: string, userid: string, brief?: string) {
     return fetch('/api/user', {
         method: 'PATCH',
         body: JSON.stringify({
             name: username,
+            userid: userid,
             brief_introduction: brief,
         }),
     })
@@ -45,28 +51,28 @@ export async function PATCHUser(username: string, brief?: string) {
 
 export default function UserEditDialog() {
     const [status, setStatus] = useState(false)
-    const {name,brief_introduction}=userStore()
+    const {name, userid, brief_introduction}=userStore()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             username: name||"",
+            userid: userid||"",
             brief_introduction: brief_introduction||""
         },
     })
 
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        // 没有要更新的字段就返回
-        if (values.username === '' && values.brief_introduction === '') return
+        if (values.username === '' && values.userid === '' && values.brief_introduction === '') return
 
         setStatus(true)
         try {
-            const res = await PATCHUser(values.username, values.brief_introduction)
+            const res = await PATCHUser(values.username, values.userid, values.brief_introduction)
             const data = await res.json()
 
             if (data.success) {
                 toast.success('修改成功')
-                userStore.setState({ name: values.username, brief_introduction: values.brief_introduction })
+                userStore.setState({ name: values.username, userid: values.userid, brief_introduction: values.brief_introduction })
             } else {
                 toast.error(data.error || '修改失败')
             }
@@ -114,9 +120,23 @@ export default function UserEditDialog() {
                                         {...field}
                                     />
                                 </FormControl>
-                                {/* <FormDescription>
-
-                                </FormDescription> */}
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="userid"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>用户ID</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        disabled={status}
+                                        placeholder="输入您的用户ID"
+                                        {...field}
+                                    />
+                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -134,9 +154,6 @@ export default function UserEditDialog() {
                                         {...field}
                                     />
                                 </FormControl>
-                                {/* <FormDescription>
-
-                                </FormDescription> */}
                                 <FormMessage />
                             </FormItem>
                         )}
