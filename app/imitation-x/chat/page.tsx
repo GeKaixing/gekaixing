@@ -227,8 +227,8 @@ export default function ChatPage() {
         }
       )
       .subscribe((status) => {
-        if (status !== "SUBSCRIBED") {
-          console.error("Failed to subscribe to chat messages:", status);
+        if (status === "CHANNEL_ERROR") {
+          console.error("Chat channel error occurred");
         }
       });
 
