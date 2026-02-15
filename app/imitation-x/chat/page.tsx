@@ -66,6 +66,7 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const contactsScrollRef = useRef<HTMLDivElement>(null);
   const supabase = useRef(createClient()).current;
+  const creatingConversationRef = useRef<Set<string>>(new Set());
 
   const selectedContact = contacts.find((c) => c.id === selectedContactId);
 
@@ -78,13 +79,18 @@ export default function ChatPage() {
   }, [supabase]);
 
   const createConversation = useCallback(async (targetUserId: string) => {
+    if (creatingConversationRef.current.has(targetUserId)) {
+      return;
+    }
+    creatingConversationRef.current.add(targetUserId);
+
     try {
       const response = await fetch("/api/chat/conversations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ targetUserId }),
       });
-      
+
       const result = await response.json();
       if (result.success && result.data) {
         const newContact: Contact = {
@@ -95,11 +101,17 @@ export default function ChatPage() {
           unreadCount: 0,
           participantId: result.data.participantId,
         };
-        setContacts((prev) => [newContact, ...prev]);
+        setContacts((prev) => {
+          const exists = prev.some((c) => c.id === newContact.id);
+          if (exists) return prev;
+          return [newContact, ...prev];
+        });
         setSelectedContactId(result.data.id);
       }
     } catch (error) {
       console.error("Failed to create conversation:", error);
+    } finally {
+      creatingConversationRef.current.delete(targetUserId);
     }
   }, []);
 
@@ -107,7 +119,7 @@ export default function ChatPage() {
     try {
       const response = await fetch("/api/chat/conversations");
       const result = await response.json();
-      
+
       if (result.success && result.data) {
         const formattedContacts = (result.data as ConversationResponse[]).map((conv) => ({
           id: conv.id,
@@ -118,8 +130,11 @@ export default function ChatPage() {
           participantId: conv.participantId,
           lastMessage: conv.lastMessage,
         }));
-        setContacts(formattedContacts);
-        
+        const uniqueContacts = formattedContacts.filter((contact, index, self) =>
+          index === self.findIndex((c) => c.id === contact.id)
+        );
+        setContacts(uniqueContacts);
+
         if (userIdFromQuery) {
           const existingConv = formattedContacts.find(
             (c) => c.participantId === userIdFromQuery
