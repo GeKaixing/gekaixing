@@ -14,8 +14,10 @@ export async function GET(req: NextRequest) {
 
     const userId = user?.id;
 
-    // ✅ 3. 高性能查询
     const posts = await prisma.post.findMany({
+      where: {
+        parentId: null,
+      },
       orderBy: {
         createdAt: "desc",
       },

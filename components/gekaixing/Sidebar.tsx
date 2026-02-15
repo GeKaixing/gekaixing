@@ -106,7 +106,7 @@ export default function Sidebar({ user }: { user: User | null }) {
                     )}
 
                     {user?.id && (
-                        <li className="w-full mt-4">
+                        <li className="w-full mt-4 flex justify-center items-center">
                             <button
                                 onClick={openModal}
                                 className="w-12 h-12 lg:w-full lg:h-auto lg:py-3 bg-black text-white rounded-full flex items-center justify-center hover:bg-black/90 transition-colors"

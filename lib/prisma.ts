@@ -4,7 +4,13 @@ import { PrismaClient } from '../generated/prisma/client'
 
 const connectionString = `${process.env.DATABASE_URL}`
 
-const adapter = new PrismaPg({ connectionString })
+const adapter = new PrismaPg({
+  connectionString,
+  max: 20,
+  idle_timeout: 20,
+  connect_timeout: 10,
+})
+
 const prisma = new PrismaClient({
   adapter,
   log: ['error', 'warn'],

@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
 import { createClient } from "@/utils/supabase/server";
 
 
@@ -56,8 +55,6 @@ export async function POST(request: Request) {
       where: { id: parentId },
       data: { replyCount: { increment: 1 } },
     });
-
-    revalidateTag(`reply:post_id:${post_id}`, "page");
 
     return NextResponse.json({ data: reply, success: true });
   } catch (error: any) {

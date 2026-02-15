@@ -74,17 +74,25 @@ export default function PublishReply({
 
                 addReply({
                     id: reply.id,
-                    user_id: reply.authorId,
-                    user_avatar: reply.author?.avatar || '',
-                    user_name: reply.author?.name || reply.author?.email || '',
-                    user_email: reply.author?.email || '',
-                    post_id: reply.rootId || postId,
                     content: reply.content,
-                    reply_id: reply.parentId || null,
-                    like: 0,
-                    star: 0,
-                    reply_count: 0,
-                    share: 0,
+                    createdAt: reply.createdAt,
+                    updatedAt: reply.updatedAt,
+                    authorId: reply.authorId,
+                    parentId: reply.parentId,
+                    rootId: reply.rootId,
+                    likeCount: 0,
+                    replyCount: 0,
+                    shareCount: 0,
+                    author: reply.author || {
+                        id: reply.authorId,
+                        email: '',
+                        name: null,
+                        avatar: null,
+                        backgroundImage: null,
+                        briefIntroduction: null,
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString(),
+                    },
                 })
 
                 postStore.getState().addReplyCount(postId)
@@ -105,7 +113,7 @@ export default function PublishReply({
                 <>
                     <Avatar>
                         <AvatarImage src={user_avatar} />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarFallback>{name?.charAt(0)?.toUpperCase() || email?.charAt(0)?.toUpperCase() || 'U'}</AvatarFallback>
                     </Avatar>
 
                     <Input
