@@ -424,7 +424,10 @@ export default function ChatPage() {
                 >
                   <div className="relative">
                     <Avatar className="size-12">
-                      <AvatarImage src={contact.avatar} />
+                      <AvatarImage 
+                        src={contact.avatar || "/default-avatar.png"} 
+                        alt={contact.name}
+                      />
                       <AvatarFallback className="bg-primary/10 text-primary text-sm">
                         {contact.name.slice(0, 2)}
                       </AvatarFallback>
@@ -469,7 +472,10 @@ export default function ChatPage() {
           <>
             <div className="h-14 border-b flex items-center px-4 gap-3 bg-background shrink-0">
               <Avatar className="size-9">
-                <AvatarImage src={selectedContact.avatar} />
+                <AvatarImage 
+                  src={selectedContact.avatar || "/default-avatar.png"} 
+                  alt={selectedContact.name}
+                />
                 <AvatarFallback className="bg-primary/10 text-primary text-sm">
                   {selectedContact.name.slice(0, 2)}
                 </AvatarFallback>
@@ -500,7 +506,8 @@ export default function ChatPage() {
                   >
                     <Avatar className="size-7 shrink-0">
                       <AvatarImage
-                        src={message.isMe ? undefined : (message.senderAvatar || selectedContact.avatar)}
+                        src={message.isMe ? "/default-avatar.png" : (message.senderAvatar || selectedContact.avatar || "/default-avatar.png")}
+                        alt={message.isMe ? "我" : (message.senderName || selectedContact.name)}
                       />
                       <AvatarFallback className="bg-primary/10 text-primary text-[10px]">
                         {message.isMe
