@@ -173,33 +173,31 @@ export default function ChatPage() {
   }, [messages, scrollToBottom]);
 
   useEffect(() => {
+    if (!currentUser?.id) return;
+
     const channel = supabase
-      .channel("chat-messages")
+      .channel(`chat-room-${selectedContactId || "global"}`)
       .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "Message",
-        },
+        "broadcast",
+        { event: "new-message" },
         (payload) => {
-          const newMessage = payload.new as RealtimeMessage;
-          
+          const newMessage = payload.payload as RealtimeMessage;
+
           if (newMessage.conversationId === selectedContactId) {
             setMessages((prev) => {
               if (prev.some((m) => m.id === newMessage.id)) {
                 return prev;
               }
-              
+
               const formattedMessage: Message = {
                 id: newMessage.id,
                 senderId: newMessage.senderId,
                 conversationId: newMessage.conversationId,
                 content: newMessage.content,
                 createdAt: newMessage.createdAt,
-                isMe: newMessage.senderId === currentUser?.id,
+                isMe: newMessage.senderId === currentUser.id,
               };
-              
+
               return [...prev, formattedMessage];
             });
           } else {
@@ -213,10 +211,14 @@ export default function ChatPage() {
           }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status !== "SUBSCRIBED") {
+          console.error("Failed to subscribe to chat messages:", status);
+        }
+      });
 
     return () => {
-      supabase.removeChannel(channel);
+      channel.unsubscribe();
     };
   }, [supabase, selectedContactId, currentUser?.id]);
 
@@ -247,12 +249,13 @@ export default function ChatPage() {
       });
 
       const result = await response.json();
-      
+
       if (result.success) {
+        const savedMessage = result.data as Message;
         setMessages((prev) =>
-          prev.map((m) => (m.id === tempId ? result.data : m))
+          prev.map((m) => (m.id === tempId ? savedMessage : m))
         );
-        
+
         setContacts((prev) =>
           prev.map((c) =>
             c.id === selectedContactId
@@ -260,6 +263,20 @@ export default function ChatPage() {
               : c
           )
         );
+
+        await supabase
+          .channel(`chat-room-${selectedContactId}`)
+          .send({
+            type: "broadcast",
+            event: "new-message",
+            payload: {
+              id: savedMessage.id,
+              senderId: savedMessage.senderId,
+              conversationId: savedMessage.conversationId,
+              content: savedMessage.content,
+              createdAt: savedMessage.createdAt,
+            },
+          });
       } else {
         setMessages((prev) => prev.filter((m) => m.id !== tempId));
       }
