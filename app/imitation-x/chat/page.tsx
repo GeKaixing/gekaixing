@@ -237,6 +237,53 @@ export default function ChatPage() {
     };
   }, [supabase, selectedContactId, currentUser?.id]);
 
+  useEffect(() => {
+    if (!currentUser?.id) return;
+
+    const presenceChannel = supabase
+      .channel("online-users", {
+        config: {
+          presence: {
+            key: currentUser.id,
+          },
+        },
+      })
+      .on("presence", { event: "sync" }, () => {
+        const state = presenceChannel.presenceState();
+        const onlineUserIds = new Set(Object.keys(state));
+
+        setContacts((prev) =>
+          prev.map((contact) => ({
+            ...contact,
+            isOnline: contact.participantId ? onlineUserIds.has(contact.participantId) : false,
+          }))
+        );
+      })
+      .on("presence", { event: "join" }, ({ key }) => {
+        setContacts((prev) =>
+          prev.map((contact) =>
+            contact.participantId === key ? { ...contact, isOnline: true } : contact
+          )
+        );
+      })
+      .on("presence", { event: "leave" }, ({ key }) => {
+        setContacts((prev) =>
+          prev.map((contact) =>
+            contact.participantId === key ? { ...contact, isOnline: false } : contact
+          )
+        );
+      })
+      .subscribe(async (status) => {
+        if (status === "SUBSCRIBED") {
+          await presenceChannel.track({ online_at: new Date().toISOString() });
+        }
+      });
+
+    return () => {
+      presenceChannel.unsubscribe();
+    };
+  }, [supabase, currentUser?.id]);
+
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || !selectedContactId) return;
 
