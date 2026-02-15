@@ -12,7 +12,7 @@ export default function SidebarAvatar() {
     const fallbackInitial = name?.charAt(0)?.toUpperCase() || email?.charAt(0)?.toUpperCase() || 'U'
 
     return (
-        <li className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-full p-2 items-center cursor-pointer w-full">
+        <li className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-full p-2 items-center justify-center cursor-pointer w-full">
             <Avatar onClick={() => router.push('/imitation-x/user')} className="w-10 h-10 shrink-0">
                 <AvatarImage src={avatarUrl} />
                 <AvatarFallback>{fallbackInitial}</AvatarFallback>

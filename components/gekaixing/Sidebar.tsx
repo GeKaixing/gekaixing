@@ -128,7 +128,7 @@ export default function Sidebar({ user }: { user: User | null }) {
                 </ul>
 
                 {user?.id && (
-                    <div className="mt-auto mb-4 w-full flex justify-center lg:justify-start">
+                    <div className="mt-auto mb-4 w-full flex justify-center  items-center ">
                         <SidebarAvatar />
                     </div>
                 )}
