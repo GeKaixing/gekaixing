@@ -77,42 +77,7 @@ export default function ChatPage() {
     getUser();
   }, [supabase]);
 
-  const fetchConversations = useCallback(async () => {
-    try {
-      const response = await fetch("/api/chat/conversations");
-      const result = await response.json();
-      
-      if (result.success && result.data) {
-        const formattedContacts = (result.data as ConversationResponse[]).map((conv) => ({
-          id: conv.id,
-          name: conv.name,
-          avatar: conv.avatar,
-          isOnline: false,
-          unreadCount: conv.unreadCount,
-          participantId: conv.participantId,
-          lastMessage: conv.lastMessage,
-        }));
-        setContacts(formattedContacts);
-        
-        if (userIdFromQuery && formattedContacts.length > 0) {
-          const existingConv = formattedContacts.find(
-            (c) => c.participantId === userIdFromQuery
-          );
-          if (existingConv) {
-            setSelectedContactId(existingConv.id);
-          } else {
-            await createConversation(userIdFromQuery);
-          }
-        } else if (formattedContacts.length > 0 && !selectedContactId) {
-          setSelectedContactId(formattedContacts[0].id);
-        }
-      }
-    } catch (error) {
-      console.error("Failed to fetch conversations:", error);
-    }
-  }, [userIdFromQuery, selectedContactId]);
-
-  const createConversation = async (targetUserId: string) => {
+  const createConversation = useCallback(async (targetUserId: string) => {
     try {
       const response = await fetch("/api/chat/conversations", {
         method: "POST",
@@ -136,7 +101,44 @@ export default function ChatPage() {
     } catch (error) {
       console.error("Failed to create conversation:", error);
     }
-  };
+  }, []);
+
+  const fetchConversations = useCallback(async () => {
+    try {
+      const response = await fetch("/api/chat/conversations");
+      const result = await response.json();
+      
+      if (result.success && result.data) {
+        const formattedContacts = (result.data as ConversationResponse[]).map((conv) => ({
+          id: conv.id,
+          name: conv.name,
+          avatar: conv.avatar,
+          isOnline: false,
+          unreadCount: conv.unreadCount,
+          participantId: conv.participantId,
+          lastMessage: conv.lastMessage,
+        }));
+        setContacts(formattedContacts);
+        
+        if (userIdFromQuery) {
+          const existingConv = formattedContacts.find(
+            (c) => c.participantId === userIdFromQuery
+          );
+          if (existingConv) {
+            setSelectedContactId(existingConv.id);
+          } else {
+            await createConversation(userIdFromQuery);
+          }
+        } else if (formattedContacts.length > 0 && !selectedContactId) {
+          setSelectedContactId(formattedContacts[0].id);
+        }
+      } else if (userIdFromQuery) {
+        await createConversation(userIdFromQuery);
+      }
+    } catch (error) {
+      console.error("Failed to fetch conversations:", error);
+    }
+  }, [userIdFromQuery, selectedContactId, createConversation]);
 
   const fetchMessages = useCallback(async (conversationId: string) => {
     try {
