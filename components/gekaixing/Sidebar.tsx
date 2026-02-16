@@ -1,7 +1,7 @@
 'use client'
 import { userStore } from "@/store/user";
 import { postModalStore } from "@/store/postModal";
-import { MessageSquare, House, LogIn, Settings, Users, Search, RailSymbol, CircleEllipsis, Heart, Bookmark, Feather } from "lucide-react";
+import { MessageSquare, House, LogIn, Settings, Users, Search, RailSymbol, CircleEllipsis, Heart, Bookmark, Feather, User as UserIcon  } from "lucide-react";
 import Link from "next/link";
 import {
     DropdownMenu,
@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import { User } from '@supabase/supabase-js'
 import SidebarAvatar from "./SidebarAvatar";
 import EditPost from "./EditPost";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Sidebar({ user }: { user: User | null }) {
     const { openModal } = postModalStore()
@@ -28,7 +29,7 @@ export default function Sidebar({ user }: { user: User | null }) {
                 try {
                     const res = await fetch('/api/user', { method: 'GET' })
                     const data = await res.json()
-                    
+
                     userStore.setState({
                         email: user.email || '',
                         id: user.id || '',
@@ -53,7 +54,7 @@ export default function Sidebar({ user }: { user: User | null }) {
         fetchUserData()
     }, [user]);
 
-
+    const supabase=createClient()
     return (
         <nav className="w-full h-screen flex justify-end px-2 lg:pr-4">
             <div className="flex flex-col h-full w-full lg:w-[200px]">
@@ -119,6 +120,14 @@ export default function Sidebar({ user }: { user: User | null }) {
                             <Link href="/imitation-x/settings" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
                                 <Settings className="w-7 h-7" />
                                 <span className="hidden lg:inline">设置</span>
+                            </Link>
+                        </li>
+                    )}
+                    {user?.id && (
+                        <li className="w-full">
+                            <Link href={`/imitation-x/user/${user?.id}`} className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                                <UserIcon className="w-7 h-7" />
+                                <span className="hidden lg:inline">个人信息</span>
                             </Link>
                         </li>
                     )}

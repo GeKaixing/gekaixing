@@ -14,7 +14,6 @@ export default async function RootLayout({
 }) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-
     return (
         <div className="min-h-screen">
             {/* <MobileAdd /> */}

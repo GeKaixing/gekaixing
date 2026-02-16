@@ -24,8 +24,7 @@ export type Post = {
   sharedByMe: boolean
 }
 
-
-async function getFeed(): Promise<Post[]> {
+ async function getFeed(): Promise<Post[]> {
   const supabase = await createClient();
 
   const {
