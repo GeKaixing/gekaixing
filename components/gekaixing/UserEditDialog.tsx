@@ -52,13 +52,13 @@ export async function PATCHUser(username: string, userid: string, brief?: string
 
 export default function UserEditDialog() {
     const [status, setStatus] = useState(false)
-    const {name, userid, brief_introduction}=userStore()
+    const { name, userid, brief_introduction } = userStore()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: name||"",
-            userid: userid||"",
-            brief_introduction: brief_introduction||""
+            username: name || "",
+            userid: userid || "",
+            brief_introduction: brief_introduction || ""
         },
     })
 
@@ -86,86 +86,87 @@ export default function UserEditDialog() {
     }
 
 
-    return (<Dialog>
-        <DialogTrigger className='ml-auto!'>
-            <div className='border-1 border-gray-400 h-9 flex justify-center items-center rounded-2xl p-4 mt-4 hover:bg-gray-200 whitespace-nowrap'>编辑个人资料</div>
-        </DialogTrigger>
-        <DialogContent>
+    return (
+        <Dialog>
+            <DialogTrigger className='ml-auto!'>
+                <div className='border-1 border-gray-400 h-9 flex justify-center items-center rounded-2xl p-4 mt-4 hover:bg-gray-200 whitespace-nowrap'>编辑个人资料</div>
+            </DialogTrigger>
+            <DialogContent>
 
-            <DialogHeader>
-                <DialogTitle>
-                    编辑个人资料
-                </DialogTitle>
-                <DialogDescription className="hidden">
-                </DialogDescription>
-            </DialogHeader>
+                <DialogHeader>
+                    <DialogTitle>
+                        编辑个人资料
+                    </DialogTitle>
+                    <DialogDescription className="hidden">
+                    </DialogDescription>
+                </DialogHeader>
 
-            <UserBackgroundImage></UserBackgroundImage>
+                <UserBackgroundImage></UserBackgroundImage>
 
 
-            <UserAvatar></UserAvatar>
+                <UserAvatar></UserAvatar>
 
-            <div className='w-full h-14'></div>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <FormField
-                        control={form.control}
-                        name="username"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>名字</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        disabled={status}
-                                        placeholder="输入您的名字"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="userid"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>用户ID</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        disabled={status}
-                                        placeholder="输入您的用户ID"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="brief_introduction"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>简介</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        disabled={status}
-                                        placeholder="输入您的简介"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <Button type="submit"
-                        disabled={status}
-                    >
-                        {status ? <Spin></Spin> : '提交'}
-                    </Button>
-                </form>
-            </Form>
-        </DialogContent>
-    </Dialog>)
+                <div className='w-full h-14'></div>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <FormField
+                            control={form.control}
+                            name="username"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>名字</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            disabled={status}
+                                            placeholder="输入您的名字"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="userid"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>用户ID</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            disabled={status}
+                                            placeholder="输入您的用户ID"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="brief_introduction"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>简介</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            disabled={status}
+                                            placeholder="输入您的简介"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <Button type="submit"
+                            disabled={status}
+                        >
+                            {status ? <Spin></Spin> : '提交'}
+                        </Button>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>)
 }

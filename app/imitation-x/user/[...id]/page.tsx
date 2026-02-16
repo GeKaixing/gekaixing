@@ -1,10 +1,6 @@
 'use server'
 import ArrowLeftBack from '@/components/gekaixing/ArrowLeftBack'
-import { AvatarFallback, Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import Image from 'next/image'
-import UserEditDialog from '@/components/gekaixing/UserEditDialog'
-import { userStore } from '@/store/user'
 import { prisma } from '@/lib/prisma'
 import { createClient } from '@/utils/supabase/server'
 import { Post } from '../../page'
@@ -12,17 +8,11 @@ import PostStore from '@/components/gekaixing/PostStore'
 import User_background_image from '@/components/gekaixing/User_background_image'
 import User_background_bio from '@/components/gekaixing/User_background_bio'
 
-async function getFeed(): Promise<Post[]> {
-    const supabase = await createClient();
-
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
-
-    const userId = user?.id;
+async function getFeed(userId: string): Promise<Post[]> {
     const posts = await prisma.post.findMany({
         where: {
             authorId: userId,
+            parentId: null,
         },
         orderBy: {
             createdAt: "desc",
@@ -98,30 +88,315 @@ async function getFeed(): Promise<Post[]> {
 
 }
 
+async function getUserReplies(userId: string): Promise<Post[]> {
 
-export default async function Page() {
-    const posts = await getFeed();
+    const replies = await prisma.post.findMany({
+        where: {
+            authorId: userId,
+            parentId: {
+                not: null,
+            },
+        },
+        orderBy: {
+            createdAt: "desc",
+        },
+        include: {
+            author: {
+                select: {
+                    id: true,
+                    userid: true,
+                    name: true,
+                    avatar: true,
+                },
+            },
+            parent: {
+                select: {
+                    id: true,
+                    content: true,
+                },
+            },
+            _count: {
+                select: {
+                    likes: true,
+                    bookmarks: true,
+                    shares: true,
+                    replies: true,
+                },
+            },
+            // ✅ 只查当前用户是否点赞
+            likes: userId
+                ? {
+                    where: { userId },
+                    select: { id: true },
+                }
+                : false,
+
+            bookmarks: userId
+                ? {
+                    where: { userId },
+                    select: { id: true },
+                }
+                : false,
+
+            shares: userId
+                ? {
+                    where: { userId },
+                    select: { id: true },
+                }
+                : false,
+        },
+    });
+
+    return replies.map((post) => ({
+        id: post.id,
+        content: post.content,
+        createdAt: post.createdAt,
+
+        user_id: post.author.id,
+        user_name: post.author.name,
+        user_avatar: post.author.avatar,
+        user_userid: post.author.userid,
+
+        like: post._count.likes,
+        star: post._count.bookmarks,
+        share: post._count.shares,
+        reply: post._count.replies,
+
+        likedByMe: post.likes?.length > 0,
+        bookmarkedByMe: post.bookmarks?.length > 0,
+        sharedByMe: post.shares?.length > 0,
+
+        parentContent: post.parent?.content, // 👈 可以显示“回复了谁”
+    }));
+}
+
+async function getLikedPosts(userId: string): Promise<Post[]> {
+
+    const replies = await prisma.post.findMany({
+        where: {
+            parentId: null, // ✅ 只查主帖
+            likes: {
+                some: {
+                    userId: userId, // ✅ 用户点赞过
+                },
+            },
+        },
+        orderBy: {
+            createdAt: "desc",
+        },
+        include: {
+            author: {
+                select: {
+                    id: true,
+                    userid: true,
+                    name: true,
+                    avatar: true,
+                },
+            },
+            parent: {
+                select: {
+                    id: true,
+                    content: true,
+                },
+            },
+            _count: {
+                select: {
+                    likes: true,
+                    bookmarks: true,
+                    shares: true,
+                    replies: true,
+                },
+            },
+            // ✅ 只查当前用户是否点赞
+            likes: userId
+                ? {
+                    where: { userId },
+                    select: { id: true },
+                }
+                : false,
+
+            bookmarks: userId
+                ? {
+                    where: { userId },
+                    select: { id: true },
+                }
+                : false,
+
+            shares: userId
+                ? {
+                    where: { userId },
+                    select: { id: true },
+                }
+                : false,
+        },
+    });
+
+    return replies.map((post) => ({
+        id: post.id,
+        content: post.content,
+        createdAt: post.createdAt,
+
+        user_id: post.author.id,
+        user_name: post.author.name,
+        user_avatar: post.author.avatar,
+        user_userid: post.author.userid,
+
+        like: post._count.likes,
+        star: post._count.bookmarks,
+        share: post._count.shares,
+        reply: post._count.replies,
+
+        likedByMe: post.likes?.length > 0,
+        bookmarkedByMe: post.bookmarks?.length > 0,
+        sharedByMe: post.shares?.length > 0,
+
+        parentContent: post.parent?.content, // 👈 可以显示“回复了谁”
+    }));
+}
+
+async function getBookmarkPosts(userId: string): Promise<Post[]> {
+
+
+    const replies = await prisma.post.findMany({
+        where: {
+            parentId: null, // ✅ 只查主帖
+            bookmarks: {
+                some: {
+                    userId: userId, // ✅ 用户点赞过
+                },
+            },
+        },
+        orderBy: {
+            createdAt: "desc",
+        },
+        include: {
+            author: {
+                select: {
+                    id: true,
+                    userid: true,
+                    name: true,
+                    avatar: true,
+                },
+            },
+            parent: {
+                select: {
+                    id: true,
+                    content: true,
+                },
+            },
+            _count: {
+                select: {
+                    likes: true,
+                    bookmarks: true,
+                    shares: true,
+                    replies: true,
+                },
+            },
+            // ✅ 只查当前用户是否点赞
+            likes: userId
+                ? {
+                    where: { userId },
+                    select: { id: true },
+                }
+                : false,
+
+            bookmarks: userId
+                ? {
+                    where: { userId },
+                    select: { id: true },
+                }
+                : false,
+
+            shares: userId
+                ? {
+                    where: { userId },
+                    select: { id: true },
+                }
+                : false,
+        },
+    });
+
+    return replies.map((post) => ({
+        id: post.id,
+        content: post.content,
+        createdAt: post.createdAt,
+
+        user_id: post.author.id,
+        user_name: post.author.name,
+        user_avatar: post.author.avatar,
+        user_userid: post.author.userid,
+
+        like: post._count.likes,
+        star: post._count.bookmarks,
+        share: post._count.shares,
+        reply: post._count.replies,
+
+        likedByMe: post.likes?.length > 0,
+        bookmarkedByMe: post.bookmarks?.length > 0,
+        sharedByMe: post.shares?.length > 0,
+
+        parentContent: post.parent?.content, // 👈 可以显示“回复了谁”
+    }));
+}
+
+
+
+async function getUserInfo(userId: string) {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: userId,
+        },
+    })
+    return user
+}
+
+
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params
+    const userId = id[0]
+
+    const posts = await getFeed(userId);
+
+    const replies = await getUserReplies(userId);
+
+    const liked = await getLikedPosts(userId);
+
+    const bookmark = await getBookmarkPosts(userId);
+
+    const user = await getUserInfo(userId)
+
     return (
         <div >
             <div className='h-16'> <ArrowLeftBack></ArrowLeftBack></div>
-            <User_background_image />
+            <User_background_image backgroundImage={user?.backgroundImage} />
             <div className='px-4'>
-                <User_background_bio />
+
+                <User_background_bio
+                    name={user?.name}
+                    avatar={user?.avatar}
+                    briefIntroduction={user?.briefIntroduction}
+                    userId={user.id}
+                />
+
                 <Tabs defaultValue="post" className="w-full">
                     <TabsList className='w-full'>
                         <TabsTrigger value="post">帖子</TabsTrigger>
                         <TabsTrigger value="reply">回复</TabsTrigger>
-                        {/* <TabsTrigger value="article">文章</TabsTrigger>
-                    <TabsTrigger value="media">媒体</TabsTrigger>
-                    <TabsTrigger value="like">喜欢</TabsTrigger> */}
+                        {/* <TabsTrigger value="article">文章</TabsTrigger>*/}
+                        <TabsTrigger value="like">喜欢</TabsTrigger>
+                        <TabsTrigger value="bookmark">收藏</TabsTrigger>
                     </TabsList>
                     <TabsContent value="post" className='flex flex-col gap-6'>
                         <PostStore data={posts} />
                     </TabsContent>
-                    <TabsContent value="reply" className='flex flex-col gap-6'><PostStore data={posts} /></TabsContent>
-                    {/* <TabsContent value="article" className='flex flex-col gap-6'>    <PostCard></PostCard></TabsContent>
-                <TabsContent value="media" className='flex flex-col gap-6'>    <PostCard></PostCard></TabsContent>
-                <TabsContent value="like" className='flex flex-col gap-6'>    <PostCard></PostCard></TabsContent> */}
+                    <TabsContent value="reply" className='flex flex-col gap-6'>
+                        <PostStore data={replies} />
+                    </TabsContent>
+                    {/* <TabsContent value="article" className='flex flex-col gap-6'>    <PostCard></PostCard></TabsContent>*/}
+                    <TabsContent value="like" className='flex flex-col gap-6'>
+                        <PostStore data={liked} />
+                    </TabsContent>
+                    <TabsContent value="bookmark" className='flex flex-col gap-6'>    <PostStore data={bookmark} /></TabsContent>
                 </Tabs>
             </div>
         </div>

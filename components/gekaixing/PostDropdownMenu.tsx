@@ -28,6 +28,7 @@ import { findUrls } from '@/utils/function/findUrls'
 import { postStore } from '@/store/post'
 import { replyStore } from '@/store/reply'
 import { usePathname, useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 
 async function deletePost(id: string) {
@@ -158,6 +159,9 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
                 )}
                 {userStore.getState().id && <DropdownMenuItem>关注用户</DropdownMenuItem>}
                 <DropdownMenuItem onClick={CopyLink}>复制连接</DropdownMenuItem>
+                <DropdownMenuItem >
+                    <Link href={`/imitation-x/user/${user_id}`}>查看用户</Link>
+                </DropdownMenuItem>
             </DropdownMenuContent>
             <DeleteAlertDialog isopen={AlertDialogOpen} setOpen={setAlertDialogOpen} deleteHandler={deleteHandler}></DeleteAlertDialog>
 

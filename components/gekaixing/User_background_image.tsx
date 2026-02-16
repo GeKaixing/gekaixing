@@ -1,14 +1,12 @@
 "use client"
 import { userStore } from '@/store/user'
 import Image from 'next/image'
-import React from 'react'
 
-export default function User_background_image() {
-    const { user_background_image } = userStore()
+export default function User_background_image({ backgroundImage }: { backgroundImage: string | null|undefined }) {
     return (
         <div className='bg-gray-400 w-full h-[200px] relative'>
-            {user_background_image && <Image
-                src={user_background_image}
+            {backgroundImage && <Image
+                src={backgroundImage}
                 alt="User background"
                 fill // 让图片填满父容器
                 priority
