@@ -17,7 +17,7 @@ async function publishReply(payload: {
     user_email: string
     post_id: string
     content: string
-    user_avatar: string
+    user_avatar: string | null
     reply_id?: string | null
 }) {
     const res = await fetch('/api/reply', {
@@ -30,34 +30,65 @@ async function publishReply(payload: {
 }
 
 type Props = {
-    id: string
     postId: string
-    post_id: string
     replyId?: string
-    reply_id:string
+    userId: string | undefined
     type?: 'post' | 'reply'
 }
 
 export default function PublishReply({
     postId,
     replyId,
+    userId,
     type = 'post',
 }: Props) {
+
     const [replyInput, setReplyInput] = useState('')
     const [isLoading, setIsLoading] = useState(false)
-    const { addReply } = replyStore()
+
+    const { addReply, replaceReply, removeReply } = replyStore()
+    const { addReplyCount, subReplyCount } = postStore()
 
     const {
         email,
-        id: userId,
         user_avatar,
         name,
     } = userStore()
 
     async function handleReply() {
-        if (!replyInput.trim() || isLoading) return
+        if (!replyInput.trim() || isLoading || !userId) return
 
+        const tempId = 'temp-' + Date.now()
+
+        const optimisticReply = {
+            id: tempId,
+            content: replyInput,
+            createdAt: new Date(),
+
+            user_id: userId,
+            user_name: name || email,
+            user_avatar,
+            user_userid: userId,
+
+            like: 0,
+            star: 0,
+            share: 0,
+            reply: 0,
+
+            likedByMe: false,
+            bookmarkedByMe: false,
+            sharedByMe: false,
+        }
+
+        // 🔥 reply 归 replyStore 管
+        addReply(optimisticReply)
+
+        // 🔥 post 归 postStore 管
+        addReplyCount(postId)
+
+        setReplyInput('')
         setIsLoading(true)
+
         try {
             const data = await publishReply({
                 user_id: userId,
@@ -65,55 +96,42 @@ export default function PublishReply({
                 user_name: name || email,
                 user_email: email,
                 post_id: postId,
-                content: replyInput,
+                content: optimisticReply.content,
                 reply_id: type === 'reply' ? replyId ?? null : null,
             })
 
             if (data?.success && data?.data) {
-                const reply = data.data
+                const real = data.data
 
-                addReply({
-                    id: reply.id,
-                    content: reply.content,
-                    createdAt: reply.createdAt,
-                    updatedAt: reply.updatedAt,
-                    authorId: reply.authorId,
-                    parentId: reply.parentId,
-                    rootId: reply.rootId,
-                    likeCount: 0,
-                    replyCount: 0,
-                    shareCount: 0,
-                    author: reply.author || {
-                        id: reply.authorId,
-                        email: '',
-                        name: null,
-                        avatar: null,
-                        backgroundImage: null,
-                        briefIntroduction: null,
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                    },
+                replaceReply(tempId, {
+                    ...optimisticReply,
+                    id: real.id,
+                    createdAt: new Date(real.createdAt),
                 })
-
-                postStore.getState().addReplyCount(postId)
-                setReplyInput('')
             } else {
-                console.error('Failed to publish reply:', data?.error)
+                throw new Error('Publish failed')
             }
+
         } catch (error) {
-            console.error('Error publishing reply:', error)
+            // 回滚
+            removeReply(tempId)
+            subReplyCount(postId)
         } finally {
             setIsLoading(false)
         }
     }
 
     return (
-        <Card className="flex w-full flex-row p-2 hover:bg-gray-50">
+        <Card className="flex w-full flex-row gap-2 p-2 hover:bg-gray-50">
             {userId ? (
                 <>
                     <Avatar>
-                        <AvatarImage src={user_avatar} />
-                        <AvatarFallback>{name?.charAt(0)?.toUpperCase() || email?.charAt(0)?.toUpperCase() || 'U'}</AvatarFallback>
+                        <AvatarImage src={user_avatar ?? undefined} />
+                        <AvatarFallback>
+                            {name?.charAt(0)?.toUpperCase()
+                                || email?.charAt(0)?.toUpperCase()
+                                || 'U'}
+                        </AvatarFallback>
                     </Avatar>
 
                     <Input
@@ -131,11 +149,9 @@ export default function PublishReply({
                             { '!bg-black': replyInput.trim() && !isLoading }
                         )}
                     >
-                        {isLoading ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                            '回复'
-                        )}
+                        {isLoading
+                            ? <Loader2 className="h-4 w-4 animate-spin" />
+                            : '回复'}
                     </button>
                 </>
             ) : (

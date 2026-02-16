@@ -27,6 +27,7 @@ export default async function Page({
                         user_name: string,
                         user_email: string,
                         user_avatar: string,
+                        user_userid: string,
                         content: string
                         like: number,
                         star: number,
@@ -38,13 +39,15 @@ export default async function Page({
                             id={items.id}
                             user_id={items.user_id}
                             user_name={items.user_name}
-                            user_email={items.user_email}
                             user_avatar={items.user_avatar}
+                            user_userid={items.user_userid}
                             content={items.content}
                             like={items.like}
                             star={items.star}
                             reply={items.reply_count}
                             share={items.share}
+                            isLiked={false}
+                            isBookmarked={false}
                         ></PostCard>
                     })}
                 </div>

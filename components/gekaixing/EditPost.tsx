@@ -63,7 +63,7 @@ export default function EditPost({ onClose }: EditPostProps) {
 
     const { poset_images } = post_imagesStore()
     const supabase = createClient()
-    const { email, id, user_avatar, name } = userStore()
+    const { email, id, user_avatar, name, userid } = userStore()
 
     const bucketName = 'post-image'
 
@@ -116,6 +116,7 @@ export default function EditPost({ onClose }: EditPostProps) {
                 user_name: name,
                 user_email: email,
                 user_avatar: user_avatar,
+                user_userid: userid,
                 content: value as string,
                 like: 0,
                 star: 0,

@@ -1,39 +1,52 @@
-import { Reply } from "@/components/gekaixing/ReplyStore";
-import { create } from "zustand";
-type Store = {
-  replys: Reply[];
-  setPosts: (posts: Reply[]) => void;
-  updateReply: (id: string, newData: Partial<Reply>) => void;
-  addReply: (newPost: Reply) => void;
-  deleteReply: (id: string) => void;
-  deleteFirstReply: () => void;
-};
+import { create } from 'zustand'
 
-export const replyStore = create<Store>((set) => ({
-  replys: [],
-  setPosts: (replys) => set({ replys }),
+export type ReplyItem = {
+  id: string
+  content: string
+  createdAt: Date
 
-  // ✅ 添加新的帖子到最前面
-  addReply: (newPost) =>
+  user_id: string
+  user_name: string | null
+  user_avatar: string | null
+  user_userid: string
+
+  like: number
+  star: number
+  share: number
+  reply: number
+
+  likedByMe: boolean
+  bookmarkedByMe: boolean
+  sharedByMe: boolean
+}
+
+type ReplyState = {
+  replies: ReplyItem[]
+  setReplies: (replies: ReplyItem[]) => void
+  addReply: (reply: ReplyItem) => void
+  replaceReply: (tempId: string, realReply: ReplyItem) => void
+  removeReply: (id: string) => void
+}
+
+export const replyStore = create<ReplyState>((set) => ({
+  replies: [],
+
+  setReplies: (replies) => set({ replies }),
+
+  addReply: (reply) =>
     set((state) => ({
-      replys: [newPost, ...state.replys],
+      replies: [reply, ...state.replies],
     })),
 
-  // ✅ 删除指定 id 的帖子
-  deleteReply: (id) =>
+  replaceReply: (tempId, realReply) =>
     set((state) => ({
-      replys: state.replys.filter((post) => post.id !== id),
-    })),
-
-  // ✅ 更新已有帖子字段
-  updateReply: (id, newData) =>
-    set((state) => ({
-      replys: state.replys.map((post) =>
-        post.id === id ? { ...post, ...newData } : post
+      replies: state.replies.map((r) =>
+        r.id === tempId ? realReply : r
       ),
     })),
-  deleteFirstReply: () =>
+
+  removeReply: (id) =>
     set((state) => ({
-      replys: state.replys.slice(1), // ✅ 删除第一个元素
+      replies: state.replies.filter((r) => r.id !== id),
     })),
-}));
+}))

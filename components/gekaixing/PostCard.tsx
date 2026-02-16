@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from "react"
 import {
     Card,
     CardAction,
@@ -10,267 +10,205 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Heart, MessageCircleMore, Share2, Star } from 'lucide-react'
+import { Heart, MessageCircleMore, Share2, Star } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import PostDropdownMenu from './PostDropdownMenu'
-import Link from 'next/link'
-import { copyToClipboard } from '@/utils/function/copyToClipboard'
-import { postStore } from '@/store/post'
-import { userStore } from '@/store/user'
-
-async function toggleLike(postId: string, isLiked: boolean): Promise<{ success: boolean; likeCount?: number }> {
-    try {
-        const url = `/api/like?postId=${postId}`
-        const response = await fetch(url, {
-            method: isLiked ? 'DELETE' : 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: isLiked ? undefined : JSON.stringify({ postId }),
-        })
-        const data = await response.json()
-        if (data.success) {
-            return { success: true, likeCount: data.data.likeCount }
-        }
-        return { success: false }
-    } catch {
-        return { success: false }
-    }
-}
-
-async function toggleBookmark(postId: string, isBookmarked: boolean): Promise<boolean> {
-    try {
-        const url = `/api/bookmark?postId=${postId}`
-        const response = await fetch(url, {
-            method: isBookmarked ? 'DELETE' : 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: isBookmarked ? undefined : JSON.stringify({ postId }),
-        })
-        const data = await response.json()
-        return data.success
-    } catch {
-        return false
-    }
-}
-
-async function recordShare(postId: string): Promise<{ success: boolean; shareCount?: number }> {
-    try {
-        const response = await fetch('/api/share', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ postId }),
-        })
-        const data = await response.json()
-        if (data.success) {
-            return { success: true, shareCount: data.data.shareCount }
-        }
-        return { success: false }
-    } catch {
-        return { success: false }
-    }
-}
-
-async function fetchInteractionStatus(postId: string): Promise<{ isLiked: boolean; isBookmarked: boolean; likeCount: number; shareCount: number }> {
-    try {
-        const [likeRes, bookmarkRes, shareRes] = await Promise.all([
-            fetch(`/api/like?postId=${postId}`),
-            fetch(`/api/bookmark?postId=${postId}`),
-            fetch(`/api/share?postId=${postId}`),
-        ])
-
-        const [likeData, bookmarkData, shareData] = await Promise.all([
-            likeRes.json(),
-            bookmarkRes.json(),
-            shareRes.json(),
-        ])
-
-        return {
-            isLiked: likeData.data?.isLiked || false,
-            isBookmarked: bookmarkData.data?.isBookmarked || false,
-            likeCount: likeData.data?.likeCount || 0,
-            shareCount: shareData.data?.shareCount || 0,
-        }
-    } catch {
-        return { isLiked: false, isBookmarked: false, likeCount: 0, shareCount: 0 }
-    }
-}
+import PostDropdownMenu from "./PostDropdownMenu"
+import Link from "next/link"
+import { Post } from "@/app/imitation-x/page"
 
 export default function PostCard({
     id,
     user_id,
     user_name,
-    user_email,
     user_avatar,
+    user_userid,
     content,
-    like: initialLike,
-    star: initialStar,
-    reply: initialReply,
-    share: initialShare,
-    isLiked: initialIsLiked = false,
-    isBookmarked: initialIsBookmarked = false,
-}: {
-    id: string
-    user_id: string
-    user_name: string
-    user_email: string
-    user_avatar: string
-    content: string
-    like: number
-    star: number
-    reply: number
-    share: number
-    isLiked?: boolean
-    isBookmarked?: boolean
-}) {
-    const post = postStore(state => state.posts.find(p => p.id === id))
-    const updatePost = postStore(state => state.updatePost)
+    like,
+    star,
+    reply,
+    share,
+    likedByMe,
+    bookmarkedByMe
+}: Post) {
+    const [liked, setLiked] = useState(likedByMe)
+    const [bookmarked, setBookmarked] = useState(bookmarkedByMe)
+    const [likeCount, setLikeCount] = useState(like)
+    const [starCount, setStarCount] = useState(star)
+    const [shareCount, setShareCount] = useState(share)
 
-    const [isLiked, setIsLiked] = useState(initialIsLiked)
-    const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked)
-    const [isLikeLoading, setIsLikeLoading] = useState(false)
-    const [isBookmarkLoading, setIsBookmarkLoading] = useState(false)
-    const [isShareLoading, setIsShareLoading] = useState(false)
+    const [likeLoading, setLikeLoading] = useState(false)
+    const [bookmarkLoading, setBookmarkLoading] = useState(false)
+    const [shareLoading, setShareLoading] = useState(false)
 
-    useEffect(() => {
-        const currentUser = userStore.getState()
-        if (currentUser.id) {
-            fetchInteractionStatus(id).then(status => {
-                setIsLiked(status.isLiked)
-                setIsBookmarked(status.isBookmarked)
-                updatePost(id, {
-                    like: status.likeCount,
-                    share: status.shareCount,
-                })
-            })
-        }
-    }, [id, updatePost])
-
-    if (!post) return null
-
-    const { like, star, share, reply_count } = post
-
+    // =========================
+    // ❤️ 点赞
+    // =========================
     const handleLike = async () => {
-        if (isLikeLoading) return
-        setIsLikeLoading(true)
+        if (likeLoading) return
+        setLikeLoading(true)
 
-        const previousLike = like
-        const previousIsLiked = isLiked
-        const newLikeCount = isLiked ? like - 1 : like + 1
+        const prevLiked = liked
+        const prevCount = likeCount
 
-        updatePost(id, { like: newLikeCount })
-        setIsLiked(!isLiked)
+        // 乐观更新
+        setLiked(!prevLiked)
+        setLikeCount(prevLiked ? likeCount - 1 : likeCount + 1)
 
-        const result = await toggleLike(id, previousIsLiked)
+        const res = await fetch(`/api/like?postId=${id}`, {
+            method: prevLiked ? "DELETE" : "POST",
+            headers: { "Content-Type": "application/json" },
+            body: prevLiked ? undefined : JSON.stringify({ postId: id }),
+        })
 
-        if (!result.success) {
-            updatePost(id, { like: previousLike })
-            setIsLiked(previousIsLiked)
-        } else if (result.likeCount !== undefined) {
-            updatePost(id, { like: result.likeCount })
-        }
+        const data = await res.json()
 
-        setIsLikeLoading(false)
-    }
-
-    const handleBookmark = async () => {
-        if (isBookmarkLoading) return
-        setIsBookmarkLoading(true)
-
-        const previousStar = star
-        const previousIsBookmarked = isBookmarked
-        const newStarCount = isBookmarked ? star - 1 : star + 1
-
-        updatePost(id, { star: newStarCount })
-        setIsBookmarked(!isBookmarked)
-
-        const success = await toggleBookmark(id, previousIsBookmarked)
-
-        if (!success) {
-            updatePost(id, { star: previousStar })
-            setIsBookmarked(previousIsBookmarked)
-        }
-
-        setIsBookmarkLoading(false)
-    }
-
-    const handleShare = async () => {
-        if (isShareLoading) return
-        setIsShareLoading(true)
-
-        const previousShare = share
-        const newShareCount = share + 1
-
-        updatePost(id, { share: newShareCount })
-
-        const result = await recordShare(id)
-
-        if (!result.success) {
-            updatePost(id, { share: previousShare })
-        } else if (result.shareCount !== undefined) {
-            updatePost(id, { share: result.shareCount })
+        if (!data.success) {
+            // 回滚
+            setLiked(prevLiked)
+            setLikeCount(prevCount)
         } else {
-            updatePost(id, { share: newShareCount })
+            setLikeCount(data.data.likeCount)
         }
 
-        copyToClipboard(`https://www.gekaixing.top/imitation-x/status/${id}`)
-        setIsShareLoading(false)
+        setLikeLoading(false)
+    }
+
+    // =========================
+    // ⭐ 收藏
+    // =========================
+    const handleBookmark = async () => {
+        if (bookmarkLoading) return
+        setBookmarkLoading(true)
+
+        const prevBookmarked = bookmarked
+        const prevStar = starCount
+
+        setBookmarked(!prevBookmarked)
+        setStarCount(prevBookmarked ? starCount - 1 : starCount + 1)
+
+        const res = await fetch(`/api/bookmark?postId=${id}`, {
+            method: prevBookmarked ? "DELETE" : "POST",
+            headers: { "Content-Type": "application/json" },
+            body: prevBookmarked ? undefined : JSON.stringify({ postId: id }),
+        })
+
+        const data = await res.json()
+
+        if (!data.success) {
+            setBookmarked(prevBookmarked)
+            setStarCount(prevStar)
+        }
+
+        setBookmarkLoading(false)
+    }
+
+    // =========================
+    // 🔄 分享
+    // =========================
+    const handleShare = async () => {
+        if (shareLoading) return
+        setShareLoading(true)
+
+        const prevShare = shareCount
+        setShareCount(prevShare + 1)
+
+        const res = await fetch("/api/share", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ postId: id }),
+        })
+
+        const data = await res.json()
+
+        if (!data.success) {
+            setShareCount(prevShare)
+        } else {
+            setShareCount(data.data.shareCount)
+        }
+
+        await navigator.clipboard.writeText(
+            `${window.location.origin}/imitation-x/status/${id}`
+        )
+
+        setShareLoading(false)
     }
 
     return (
-        <Card className="cursor-pointer hover:bg-gray-50">
+        <Card className="cursor-pointer hover:bg-gray-50 transition">
             <CardHeader>
-                <div className="flex items-center gap-2">
-                    <CardTitle className="hover:bg-gray-100">
+                <div className="flex items-center gap-3">
+                    <CardTitle>
                         <Avatar>
-                            <AvatarImage src={user_avatar} />
-                            <AvatarFallback>CN</AvatarFallback>
+                            <AvatarImage src={user_avatar||''} />
+                            <AvatarFallback>
+                                {user_name?.[0]?.toUpperCase()}
+                            </AvatarFallback>
                         </Avatar>
                     </CardTitle>
-                    <CardDescription className="hover:bg-gray-100">{user_name}</CardDescription>
+
+                    <div className="flex flex-col">
+                        <CardDescription className="font-semibold text-foreground">
+                            {user_name}
+                        </CardDescription>
+                        <span className="text-sm text-muted-foreground">
+                            @{user_userid}
+                        </span>
+                    </div>
                 </div>
+
                 <CardAction>
                     <PostDropdownMenu id={id} user_id={user_id} content={content} />
                 </CardAction>
             </CardHeader>
+
             <CardContent>
                 <Link href={`/imitation-x/status/${id}`}>
                     <div dangerouslySetInnerHTML={{ __html: content }} />
                 </Link>
             </CardContent>
-            {userStore.getState().id && (
-                <CardFooter>
-                    <ul className="flex justify-between items-center w-full">
-                        <li
-                            className={`flex gap-2 hover:text-blue-400 ${isLiked ? 'text-blue-400' : ''}`}
-                            onClick={handleLike}
-                        >
-                            <div className={`w-7 h-7 flex justify-center items-center rounded-full hover:bg-blue-400/10 ${isLikeLoading ? 'opacity-50' : ''}`}>
-                                <Heart className={isLiked ? 'fill-current' : ''} />
-                            </div>
-                            {like || 0}
-                        </li>
-                        <Link href={`/imitation-x/status/${id}`} className="flex gap-2 hover:text-green-400">
-                            <div className="w-7 h-7 flex justify-center items-center rounded-full hover:bg-green-400/10">
-                                <MessageCircleMore />
-                            </div>
-                            {reply_count || 0}
-                        </Link>
-                        <li
-                            className={`flex gap-2 hover:text-red-400 ${isBookmarked ? 'text-red-400' : ''}`}
-                            onClick={handleBookmark}
-                        >
-                            <div className={`w-7 h-7 flex justify-center items-center rounded-full hover:bg-red-400/10 ${isBookmarkLoading ? 'opacity-50' : ''}`}>
-                                <Star className={isBookmarked ? 'fill-current' : ''} />
-                            </div>
-                            {star || 0}
-                        </li>
-                        <li className="flex gap-2 hover:text-blue-400" onClick={handleShare}>
-                            <div className={`w-7 h-7 flex justify-center items-center rounded-full hover:bg-blue-400/10 ${isShareLoading ? 'opacity-50' : ''}`}>
-                                <Share2 />
-                            </div>
-                            {share || 0}
-                        </li>
-                    </ul>
-                </CardFooter>
-            )}
+
+            <CardFooter>
+                <ul className="flex justify-between items-center w-full">
+                    {/* ❤️ 点赞 */}
+                    <li
+                        onClick={handleLike}
+                        className={`flex gap-2 items-center cursor-pointer hover:text-red-500 ${liked ? "text-red-500" : ""
+                            } ${likeLoading ? "opacity-50" : ""}`}
+                    >
+                        <Heart className={liked ? "fill-current" : ""} />
+                        {likeCount}
+                    </li>
+
+                    {/* 💬 回复 */}
+                    <Link
+                        href={`/imitation-x/status/${id}`}
+                        className="flex gap-2 items-center hover:text-green-500"
+                    >
+                        <MessageCircleMore />
+                        {reply}
+                    </Link>
+
+                    {/* ⭐ 收藏 */}
+                    <li
+                        onClick={handleBookmark}
+                        className={`flex gap-2 items-center cursor-pointer hover:text-yellow-500 ${bookmarked ? "text-yellow-500" : ""
+                            } ${bookmarkLoading ? "opacity-50" : ""}`}
+                    >
+                        <Star className={bookmarked ? "fill-current" : ""} />
+                        {starCount}
+                    </li>
+
+                    {/* 🔄 分享 */}
+                    <li
+                        onClick={handleShare}
+                        className={`flex gap-2 items-center cursor-pointer hover:text-blue-500 ${shareLoading ? "opacity-50" : ""
+                            }`}
+                    >
+                        <Share2 />
+                        {shareCount}
+                    </li>
+                </ul>
+            </CardFooter>
         </Card>
     )
 }

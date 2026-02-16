@@ -1,18 +1,23 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
 
 export async function GET(req: NextRequest) {
   try {
-    // ✅ 1. 创建 Supabase Server Client
     const supabase = await createClient();
-
-    // ✅ 2. 获取当前用户
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    const userId = user?.id;
+    const cookie=await cookies()
+    console.log(cookie)
+    let userId: string | undefined;
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      userId = user?.id;
+    } catch {
+      userId = undefined;
+    }
 
     const posts = await prisma.post.findMany({
       where: {
@@ -27,6 +32,7 @@ export async function GET(req: NextRequest) {
         author: {
           select: {
             id: true,
+            userid: true,
             name: true,
             avatar: true,
           },
@@ -66,18 +72,21 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    // ✅ 4. 格式化输出
+    // 格式化输出
     const result = posts.map((post) => ({
       id: post.id,
       content: post.content,
       createdAt: post.createdAt,
 
-      author: post.author,
+      user_id: post.author.id,
+      user_name: post.author.name,
+      user_avatar: post.author.avatar,
+      user_userid: post.author.userid,
 
-      likeCount: post._count.likes,
-      bookmarkCount: post._count.bookmarks,
-      shareCount: post._count.shares,
-      repliesCount: post._count.replies,
+      like: post._count.likes,
+      star: post._count.bookmarks,
+      share: post._count.shares,
+      reply: post._count.replies,
 
       likedByMe: post.likes?.length > 0,
       bookmarkedByMe: post.bookmarks?.length > 0,

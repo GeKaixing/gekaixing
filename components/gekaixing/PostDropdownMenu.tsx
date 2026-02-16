@@ -57,7 +57,6 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
     const [AlertDialogOpen, setAlertDialogOpen] = useState(false)
     const pathName = usePathname()
     const router = useRouter()
-    console.log(pathName)
     async function deleteHandler() {
         let result
 

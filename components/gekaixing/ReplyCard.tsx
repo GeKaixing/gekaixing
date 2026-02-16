@@ -98,6 +98,7 @@ export default function ReplyCard({
     user_name,
     user_email,
     user_avatar,
+    user_userid,
     content,
     like: initialLike,
     star: initialStar,
@@ -111,6 +112,7 @@ export default function ReplyCard({
     user_name: string,
     user_email: string,
     user_avatar: string,
+    user_userid: string,
     content: string,
     like: number,
     star: number,
@@ -215,7 +217,10 @@ export default function ReplyCard({
                             <AvatarFallback>{user_name?.charAt(0)?.toUpperCase() || 'U'}</AvatarFallback>
                         </Avatar>
                     </CardTitle>
-                    <CardDescription className='hover:bg-gray-100'>{user_name}</CardDescription>
+                    <div className="flex flex-col">
+                        <CardDescription className="hover:bg-gray-100 font-semibold text-foreground">{user_name}</CardDescription>
+                        <span className="text-sm text-muted-foreground">@{user_userid}</span>
+                    </div>
                 </div>
 
                 <CardAction>

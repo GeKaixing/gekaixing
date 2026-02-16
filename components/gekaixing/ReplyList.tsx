@@ -1,32 +1,33 @@
 "use client"
 
 import { replyStore } from "@/store/reply"
-import ReplyCard from "./ReplyCard"
-import { Reply } from "./ReplyStore"
+import { Post } from "@/app/imitation-x/page"
+import PostCard from "./PostCard"
 
 export default function ReplyList() {
 
-    const data = replyStore(state => state.replys)
+    const data = replyStore(state => state.replies)
 
     return (
         <div className="flex flex-col gap-6">
-            {data.map((items: Reply) =>
-                <ReplyCard
-                    reply_id={items.id}
+            {data.map((items: Post) =>
+                <PostCard
                     key={items.id}
-                    post_id={items.parentId || ''}
                     id={items.id}
-                    user_id={items.author?.id || items.authorId}
-                    user_name={items.author?.name || '未知用户'}
-                    user_email={items.author?.email || ''}
-                    user_avatar={items.author?.avatar || ''}
+                    createdAt={items.createdAt}
+                    user_id={items.user_id}
+                    user_name={items.user_name || ''}
+                    user_avatar={items.user_avatar || ''}
+                    user_userid={items.user_userid}
                     content={items.content}
-                    like={items.likeCount}
-                    star={items.shareCount}
-                    reply_count={items.replyCount}
-                    share={items.shareCount}
+                    like={items.like}
+                    star={items.star}
+                    reply={items.reply}
+                    share={items.share}
+                    likedByMe={!!items.likedByMe}
+                    bookmarkedByMe={!!items.bookmarkedByMe}
+                    sharedByMe={!!items.sharedByMe}
                 />
-
             )}
 
         </div>

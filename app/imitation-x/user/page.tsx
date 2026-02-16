@@ -67,8 +67,8 @@ export default function Page() {
                             id: string,
                             user_id: string,
                             user_name: string,
-                            user_email: string,
                             user_avatar: string,
+                            user_userid: string,
                             content: string
                             like: number,
                             star: number,
@@ -80,13 +80,15 @@ export default function Page() {
                                 id={items.id}
                                 user_id={items.user_id}
                                 user_name={items.user_name}
-                                user_email={items.user_email}
                                 user_avatar={items.user_avatar}
+                                user_userid={items.user_userid}
                                 content={items.content}
                                 like={items.like}
                                 star={items.star}
                                 reply={items.reply_count}
                                 share={items.share}
+                                isLiked={false}
+                                isBookmarked={false}
                             />
                         ))}
                     </TabsContent>
@@ -120,30 +122,21 @@ function UserReplyCard() {
         })
     }, [id])
 
-    return data.map((items: {
-        id: string,
-        user_id: string,
-        user_name: string,
-        user_email: string,
-        user_avatar: string,
-        content: string
-        like: number,
-        star: number,
-        reply_count: number,
-        share: number
-    }) => (
+    return data.map((items: any) => (
         <PostCard
             key={items.id}
             id={items.id}
-            user_id={items.user_id}
-            user_name={items.user_name}
-            user_email={items.user_email}
-            user_avatar={items.user_avatar}
+            user_id={items.authorId}
+            user_name={items.author?.name || ''}
+            user_avatar={items.author?.avatar || ''}
+            user_userid={items.author?.userid || ''}
             content={items.content}
-            like={items.like}
-            star={items.star}
-            reply={items.reply_count}
-            share={items.share}
+            like={0}
+            star={0}
+            reply={0}
+            share={0}
+            isLiked={false}
+            isBookmarked={false}
         />
     ))
 }

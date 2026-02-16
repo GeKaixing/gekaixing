@@ -23,16 +23,34 @@ export default function Sidebar({ user }: { user: User | null }) {
     const { openModal } = postModalStore()
 
     useEffect(() => {
-        if (user) {
-            userStore.setState({
-                email: user.email || '',
-                id: user.id || '',
-                name: user.user_metadata.name || '',
-                user_background_image: user.user_metadata.user_background_image || '',
-                user_avatar: user.user_metadata.user_avatar || user.user_metadata.avatar_url || '',
-                brief_introduction: user.user_metadata.brief_introduction || ''
-            });
+        async function fetchUserData() {
+            if (user) {
+                try {
+                    const res = await fetch('/api/user', { method: 'GET' })
+                    const data = await res.json()
+                    
+                    userStore.setState({
+                        email: user.email || '',
+                        id: user.id || '',
+                        name: user.user_metadata.name || '',
+                        user_background_image: user.user_metadata.user_background_image || '',
+                        user_avatar: user.user_metadata.user_avatar || user.user_metadata.avatar_url || '',
+                        brief_introduction: user.user_metadata.brief_introduction || '',
+                        userid: data.userid || '',
+                    });
+                } catch (error) {
+                    userStore.setState({
+                        email: user.email || '',
+                        id: user.id || '',
+                        name: user.user_metadata.name || '',
+                        user_background_image: user.user_metadata.user_background_image || '',
+                        user_avatar: user.user_metadata.user_avatar || user.user_metadata.avatar_url || '',
+                        brief_introduction: user.user_metadata.brief_introduction || '',
+                    });
+                }
+            }
         }
+        fetchUserData()
     }, [user]);
 
 

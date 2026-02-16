@@ -1,31 +1,20 @@
 "use client"
-import { postStore, Post } from '@/store/post'
-import { useEffect } from 'react'
+import { postStore } from '@/store/post'
+import { useEffect, useState } from 'react'
 import PostList from './PostList'
-import { PostNode } from '@/app/imitation-x/status/[...slug]/page'
+import { Post } from '@/app/imitation-x/page'
 
-function transformPostNode(node: PostNode): Post {
-  return {
-    id: node.id,
-    user_id: node.user_id,
-    user_name: node.user_name || "",
-    user_email: node.user_email || "",
-    user_avatar: node.user_avatar || "",
-    content: node.content,
-    like: node.like || 0,
-    star: node.star,
-    reply_count: node.reply_count || 0,
-    share:node.share,
-  };
-}
 
-export default function StatusStore({ data }: { data: PostNode }) {
-  const transformedData = transformPostNode(data);
-  const postsArray = [transformedData];
-
+export default function StatusStore({ data }: { data: Post[] }) {
+  const [isReady, setIsReady] = useState(false)
   useEffect(() => {
-    postStore.getState().setPosts(postsArray);
+    postStore.getState().setPosts(data);
+    setIsReady(true)
   }, [data]);
+
+  if (!isReady) {
+    return <div className="p-4">Loading...</div>
+  }
 
   return (
     <PostList />
