@@ -16,26 +16,23 @@ import { useForm } from 'react-hook-form'
 import UserBackgroundImage from '@/components/gekaixing/UserBackgroundImage'
 import UserAvatar from "./UserAvatar"
 import Button from "./Button"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { toast } from "sonner"
 import Spin from "./Spin"
-import clsx from "clsx"
 
 
 const formSchema = z.object({
-    username: z.string().min(2, {
-        message: "Username must be at least 2 characters.",
-
-    }),
-    userid: z.string().min(3, {
-        message: "User ID must be at least 3 characters.",
-
-    }).max(20, {
-        message: "User ID must be at most 20 characters.",
-    }).regex(/^[a-zA-Z0-9_]+$/, {
-        message: "User ID can only contain letters, numbers and underscores.",
-    }),
-    brief_introduction: z.string().optional(),
+    userid: z
+        .string()
+        .min(3)
+        .max(36)
+        .regex(/^[a-zA-Z0-9]+([_-]?[a-zA-Z0-9]+)*$/, {
+            message: "User ID format is invalid.",
+        }),
+    brief_introduction: z
+        .string()
+        .max(200)
+        .optional(),
 })
 
 export async function PATCHUser(username: string, userid: string, brief?: string) {

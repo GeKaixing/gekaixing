@@ -8,7 +8,7 @@ type d = {
     name?: null | string
     avatar?: null | string
     briefIntroduction?: null | string
-    userId: string
+    userId: string|null|undefined
 }
 
 export default function User_background_bio({ name, avatar, briefIntroduction, userId }: d) {

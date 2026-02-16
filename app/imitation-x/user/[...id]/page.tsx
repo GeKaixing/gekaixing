@@ -2,7 +2,6 @@
 import ArrowLeftBack from '@/components/gekaixing/ArrowLeftBack'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { prisma } from '@/lib/prisma'
-import { createClient } from '@/utils/supabase/server'
 import { Post } from '../../page'
 import PostStore from '@/components/gekaixing/PostStore'
 import User_background_image from '@/components/gekaixing/User_background_image'
@@ -365,6 +364,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
     const user = await getUserInfo(userId)
 
+    console.log(user)
+
     return (
         <div >
             <div className='h-16'> <ArrowLeftBack></ArrowLeftBack></div>
@@ -375,7 +376,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                     name={user?.name}
                     avatar={user?.avatar}
                     briefIntroduction={user?.briefIntroduction}
-                    userId={user.id}
+                    userId={user?.id}
                 />
 
                 <Tabs defaultValue="post" className="w-full">
