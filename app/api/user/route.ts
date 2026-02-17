@@ -35,9 +35,8 @@ export async function PATCH(request: Request) {
   const supabase = await createClient()
   const body = await request.json()
 
-  const { name, user_background_image, user_avatar, brief_introduction, userid } = body
+  const { name, backgroundImage, avatar, briefIntroduction, userid } = body
 
-  // 1. 获取当前登录用户
   const {
     data: { user },
     error: userError,
@@ -47,17 +46,16 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  // 2. 构建要更新的字段对象（只包含传入的字段）
-  const updateData: Record<string, string> = {}
-  if (name) updateData.name = name
-  if (user_background_image) updateData.user_background_image = user_background_image
-  if (user_avatar) updateData.user_avatar = user_avatar
-  if (brief_introduction) updateData.brief_introduction = brief_introduction
+  const updateData: Record<string, string | null> = {}
+  if (name !== undefined) updateData.name = name
+  if (backgroundImage !== undefined) updateData.backgroundImage = backgroundImage
+  if (avatar !== undefined) updateData.avatar = avatar
+  if (briefIntroduction !== undefined) updateData.briefIntroduction = briefIntroduction
 
-  // 3. 更新 Prisma 中的 userid（如果提供）
-  if (userid) {
+  const hasFieldsToUpdate = Object.keys(updateData).length > 0
+
+  if (userid !== undefined && userid !== '') {
     try {
-      // 检查 userid 是否已被其他用户使用
       const existingUser = await prisma.user.findUnique({
         where: { userid },
       })
@@ -76,28 +74,30 @@ export async function PATCH(request: Request) {
     }
   }
 
-  // 4. 没有任何字段要更新
-  if (Object.keys(updateData).length === 0 && !userid) {
+  if (!hasFieldsToUpdate && userid === undefined) {
     return NextResponse.json({ error: 'No valid fields provided' }, { status: 400 })
   }
 
-  // 5. 更新 Supabase Auth 用户
-  const { data, error } = await supabase.auth.updateUser({
-    data: updateData,
-  })
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 })
+  if (hasFieldsToUpdate) {
+    try {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: updateData,
+      })
+    } catch (error) {
+      console.error('Failed to update user in Prisma:', error)
+      return NextResponse.json({ error: '更新用户信息失败' }, { status: 500 })
+    }
   }
 
-  return NextResponse.json({ data, success: true })
+  return NextResponse.json({ success: true })
 }
 
 
 export async function DELETE(req: Request) {
   const supabaseAdmin = createClientROLE(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!, // 你的 Supabase URL
-    process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE! // ❗必须是 service_role key
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE!
   );
   const body = await req.json();
   const { userId } = body;

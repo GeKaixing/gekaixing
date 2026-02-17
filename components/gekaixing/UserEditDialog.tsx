@@ -19,19 +19,24 @@ import Button from "./Button"
 import { useState } from "react"
 import { toast } from "sonner"
 import Spin from "./Spin"
+import { useRouter } from "next/navigation"
 
 
 const formSchema = z.object({
+    name: z
+        .string()
+        .min(3, "名字不能为空")
+        .max(50, "名字不能超过50个字符"),
     userid: z
         .string()
-        .min(3)
-        .max(36)
+        .min(3, "用户ID至少3个字符")
+        .max(36, "用户ID不能超过36个字符")
         .regex(/^[a-zA-Z0-9]+([_-]?[a-zA-Z0-9]+)*$/, {
-            message: "User ID format is invalid.",
+            message: "用户ID只能包含字母、数字、下划线和连字符",
         }),
     brief_introduction: z
         .string()
-        .max(200)
+        .max(200, "简介不能超过200个字符")
         .optional(),
 })
 
@@ -41,7 +46,7 @@ export async function PATCHUser(username: string, userid: string, brief?: string
         body: JSON.stringify({
             name: username,
             userid: userid,
-            brief_introduction: brief,
+            briefIntroduction: brief,
         }),
     })
 }
@@ -50,10 +55,12 @@ export async function PATCHUser(username: string, userid: string, brief?: string
 export default function UserEditDialog() {
     const [status, setStatus] = useState(false)
     const { name, userid, brief_introduction } = userStore()
+    const router = useRouter()
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: name || "",
+            name: name || "",
             userid: userid || "",
             brief_introduction: brief_introduction || ""
         },
@@ -61,16 +68,16 @@ export default function UserEditDialog() {
 
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        if (values.username === '' && values.userid === '' && values.brief_introduction === '') return
+        if (values.name === '' && values.userid === '' && values.brief_introduction === '') return
 
         setStatus(true)
         try {
-            const res = await PATCHUser(values.username, values.userid, values.brief_introduction)
+            const res = await PATCHUser(values.name, values.userid, values.brief_introduction)
             const data = await res.json()
-
             if (data.success) {
                 toast.success('修改成功')
-                userStore.setState({ name: values.username, userid: values.userid, brief_introduction: values.brief_introduction })
+                userStore.setState({ name: values.name, userid: values.userid, brief_introduction: values.brief_introduction })
+                router.refresh()
             } else {
                 toast.error(data.error || '修改失败')
             }
@@ -108,7 +115,7 @@ export default function UserEditDialog() {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
                             control={form.control}
-                            name="username"
+                            name="name"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>名字</FormLabel>

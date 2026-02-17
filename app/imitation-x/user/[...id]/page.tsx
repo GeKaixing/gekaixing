@@ -6,6 +6,7 @@ import { Post } from '../../page'
 import PostStore from '@/components/gekaixing/PostStore'
 import User_background_image from '@/components/gekaixing/User_background_image'
 import User_background_bio from '@/components/gekaixing/User_background_bio'
+import { revalidatePath } from 'next/cache'
 
 async function getFeed(userId: string): Promise<Post[]> {
     const posts = await prisma.post.findMany({

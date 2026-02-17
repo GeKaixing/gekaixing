@@ -1,7 +1,7 @@
 'use client'
 import { userStore } from "@/store/user";
 import { postModalStore } from "@/store/postModal";
-import { MessageSquare, House, LogIn, Settings, Users, Search, RailSymbol, CircleEllipsis, Heart, Bookmark, Feather, User as UserIcon  } from "lucide-react";
+import { MessageSquare, House, LogIn, Settings, Users, Search, RailSymbol, CircleEllipsis, Heart, Bookmark, Feather, User as UserIcon } from "lucide-react";
 import Link from "next/link";
 import {
     DropdownMenu,
@@ -12,49 +12,23 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Ellipsis } from 'lucide-react'
-import { useRouter } from "next/navigation";
 import { copyToClipboard } from "@/utils/function/copyToClipboard";
-import { useEffect } from "react";
-import { User } from '@supabase/supabase-js'
 import SidebarAvatar from "./SidebarAvatar";
 import EditPost from "./EditPost";
-import { createClient } from "@/utils/supabase/client";
+import { userResult } from "@/app/imitation-x/layout";
 
-export default function Sidebar({ user }: { user: User | null }) {
+export default function Sidebar({ user }: { user: userResult | null }) {
     const { openModal } = postModalStore()
+    userStore.setState({
+        email: user?.email || '',
+        id: user?.id || '',
+        name: user?.name || '',
+        user_background_image: user?.backgroundImage || '',
+        user_avatar: user?.avatar || '',
+        brief_introduction: user?.briefIntroduction || '',
+        userid: user?.userid || '',
+    });
 
-    useEffect(() => {
-        async function fetchUserData() {
-            if (user) {
-                try {
-                    const res = await fetch('/api/user', { method: 'GET' })
-                    const data = await res.json()
-
-                    userStore.setState({
-                        email: user.email || '',
-                        id: user.id || '',
-                        name: user.user_metadata.name || '',
-                        user_background_image: user.user_metadata.user_background_image || '',
-                        user_avatar: user.user_metadata.user_avatar || user.user_metadata.avatar_url || '',
-                        brief_introduction: user.user_metadata.brief_introduction || '',
-                        userid: data.userid || '',
-                    });
-                } catch (error) {
-                    userStore.setState({
-                        email: user.email || '',
-                        id: user.id || '',
-                        name: user.user_metadata.name || '',
-                        user_background_image: user.user_metadata.user_background_image || '',
-                        user_avatar: user.user_metadata.user_avatar || user.user_metadata.avatar_url || '',
-                        brief_introduction: user.user_metadata.brief_introduction || '',
-                    });
-                }
-            }
-        }
-        fetchUserData()
-    }, [user]);
-
-    const supabase=createClient()
     return (
         <nav className="w-full h-screen flex justify-end px-2 lg:pr-4">
             <div className="flex flex-col h-full w-full lg:w-[200px]">

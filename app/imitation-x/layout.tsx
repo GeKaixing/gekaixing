@@ -1,11 +1,23 @@
 // app/layout.tsx
 import Footer from "@/components/gekaixing/Footer";
-import MobileAdd from "@/components/gekaixing/MobileAdd";
 import MobileFooter from "@/components/gekaixing/MobileFooter";
 import MobileHeader from "@/components/gekaixing/MobileHeader";
-import PostModal from "@/components/gekaixing/PostModal";
 import Sidebar from "@/components/gekaixing/Sidebar";
+import { prisma } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
+
+export interface userResult {
+    name: string | null;
+    id: string;
+    userid: string;
+    email: string;
+    avatar: string | null;
+    backgroundImage: string | null;
+    briefIntroduction: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 
 export default async function RootLayout({
     children,
@@ -14,13 +26,18 @@ export default async function RootLayout({
 }) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
+    const UserResult: userResult | null = await prisma.user.findUnique({
+        where: {
+            id: user?.id || '',
+        }
+    })
     return (
         <div className="min-h-screen">
             {/* <MobileAdd /> */}
             <MobileHeader user={user} />
             <div className="flex justify-center w-full mx-auto min-h-screen">
                 <header className="hidden sm:flex w-[88px] lg:w-[275px] shrink-0 sticky top-0 h-screen transition-all duration-200">
-                    <Sidebar user={user} />
+                    <Sidebar user={UserResult} />
                 </header>
                 <main className="flex-1 w-full max-w-[600px] border-x border-border sm:border-x">
                     {children}
