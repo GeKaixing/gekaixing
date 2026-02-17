@@ -22,7 +22,7 @@ export default function Sidebar({ user }: { user: userResult | null }) {
     userStore.setState({
         email: user?.email || '',
         id: user?.id || '',
-        name: user?.name || '',
+        name: user?.name || 'anonymity',
         user_background_image: user?.backgroundImage || '',
         user_avatar: user?.avatar || '',
         brief_introduction: user?.briefIntroduction || '',
