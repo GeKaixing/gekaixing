@@ -45,6 +45,12 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
+ * Model Follow
+ * ///////////////////////////////////////////////////
+ * ///////////////////////////////////////////////////
+ */
+export type Follow = Prisma.FollowModel
+/**
  * Model Post
  * 
  */

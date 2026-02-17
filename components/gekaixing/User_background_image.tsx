@@ -1,16 +1,19 @@
 "use client"
-import { userStore } from '@/store/user'
-import Image from 'next/image'
 
-export default function User_background_image({ backgroundImage }: { backgroundImage: string | null|undefined }) {
-    return (
-        <div className='bg-gray-400 w-full h-[200px] relative'>
-            {backgroundImage && <Image
-                src={backgroundImage}
-                alt="User background"
-                fill // 让图片填满父容器
-                priority
-                className='object-cover w-full'  ></Image>}
-        </div>
-    )
+export default function User_background_image({
+  backgroundImage,
+}: {
+  backgroundImage: string | null | undefined
+}) {
+  return (
+    <div className="relative w-full h-[200px] bg-gray-400 overflow-hidden">
+      {backgroundImage && (
+        <img
+          src={backgroundImage}
+          alt="User background"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
+    </div>
+  )
 }

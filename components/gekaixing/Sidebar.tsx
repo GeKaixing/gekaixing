@@ -1,7 +1,7 @@
 'use client'
 import { userStore } from "@/store/user";
 import { postModalStore } from "@/store/postModal";
-import { MessageSquare, House, LogIn, Settings, Users, Search, RailSymbol, CircleEllipsis, Heart, Bookmark, Feather, User as UserIcon } from "lucide-react";
+import { MessageSquare, House, LogIn, Settings, Users, Search, RailSymbol, CircleEllipsis, Heart, Bookmark, Feather, User as UserIcon, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import {
     DropdownMenu,
@@ -27,6 +27,8 @@ export default function Sidebar({ user }: { user: userResult | null }) {
         user_avatar: user?.avatar || '',
         brief_introduction: user?.briefIntroduction || '',
         userid: user?.userid || '',
+        followers: user?._count.followers, // 被关注数
+        following: user?._count.following, // 关注数
     });
 
     return (
@@ -61,6 +63,12 @@ export default function Sidebar({ user }: { user: userResult | null }) {
                         <Link href="/imitation-x/gkx" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
                             <RailSymbol className="w-7 h-7" />
                             <span className="hidden lg:inline">GKX</span>
+                        </Link>
+                    </li>
+                    <li className="w-full">
+                        <Link href="/imitation-x/premium" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                            <ShieldCheck className="w-7 h-7" />
+                            <span className="hidden lg:inline">premium</span>
                         </Link>
                     </li>
 

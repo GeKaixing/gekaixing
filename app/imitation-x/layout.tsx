@@ -16,6 +16,10 @@ export interface userResult {
     briefIntroduction: string | null;
     createdAt: Date;
     updatedAt: Date;
+    _count: {
+        followers: number, // 被关注数
+        following: number, // 关注数
+    }
 }
 
 
@@ -29,12 +33,20 @@ export default async function RootLayout({
     const UserResult: userResult | null = await prisma.user.findUnique({
         where: {
             id: user?.id || '',
-        }
+        },
+        include: {
+            _count: {
+                select: {
+                    followers: true, // 被关注数
+                    following: true, // 关注数
+                },
+            },
+        },
     })
     return (
         <div className="min-h-screen">
             {/* <MobileAdd /> */}
-            <MobileHeader user={user} />
+            <MobileHeader user={UserResult} />
             <div className="flex justify-center w-full mx-auto min-h-screen">
                 <header className="hidden sm:flex w-[88px] lg:w-[275px] shrink-0 sticky top-0 h-screen transition-all duration-200">
                     <Sidebar user={UserResult} />

@@ -33,7 +33,37 @@ model User {
   // 聊天
   conversationParticipants ConversationParticipant[]
   conversationReads        ConversationRead[]
-  messages                 Message[] @relation("SentMessages")
+  messages                 Message[]                 @relation("SentMessages")
+
+  // ⭐ 关注系统
+  following Follow[] @relation("Following") // 我关注的人
+  followers Follow[] @relation("Followers") // 关注我的人
+}
+
+//////////////////////////////////////////////////////
+// 关注 ✓ 已关注 ✓ 回关 ✓ 互相关注
+//////////////////////////////////////////////////////
+model Follow {
+  id String @id @default(uuid())
+
+  followerId  String
+  followingId String
+
+  status FollowStatus @default(FOLLOWING)
+  muted  Boolean      @default(false)
+
+  createdAt DateTime @default(now())
+
+  follower  User @relation("Following", fields: [followerId], references: [id])
+  following User @relation("Followers", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
+}
+
+enum FollowStatus {
+  FOLLOWING
+  BLOCKED
+  REQUESTED
 }
 
 //////////////////////////////////////////////////////
@@ -51,8 +81,8 @@ model Post {
 
   // 递归评论结构
   parentId String?
-  parent   Post?  @relation("PostToPost", fields: [parentId], references: [id], onDelete: Cascade)
-  replies  Post[] @relation("PostToPost")
+  parent   Post?   @relation("PostToPost", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  Post[]  @relation("PostToPost")
 
   // 根帖 id（话题聚合）
   rootId String?
@@ -125,7 +155,6 @@ model Share {
 
   // 如果不允许重复分享就保留
   @@unique([userId, postId])
-
   @@index([userId])
   @@index([postId])
 }
@@ -143,9 +172,9 @@ model Conversation {
   updatedAt DateTime @updatedAt
 
   // 聊天优化字段
-  lastMessage       String?
-  lastMessageAt     DateTime?
-  messageCount      Int       @default(0)   // 🔥 用于 unread O(1)
+  lastMessage   String?
+  lastMessageAt DateTime?
+  messageCount  Int       @default(0) // 🔥 用于 unread O(1)
 
   participants ConversationParticipant[]
   messages     Message[]
@@ -177,12 +206,12 @@ model ConversationParticipant {
 //////////////////////////////////////////////////////
 
 model Message {
-  id             String   @id @default(cuid())
+  id             String @id @default(cuid())
   conversationId String
   senderId       String
 
-  type           String   @default("text") // text | image | file | system
-  content        String?  @db.Text
+  type    String  @default("text") // text | image | file | system
+  content String? @db.Text
 
   createdAt DateTime @default(now())
 
@@ -198,11 +227,11 @@ model Message {
 //////////////////////////////////////////////////////
 
 model ConversationRead {
-  id             String   @id @default(uuid())
+  id             String @id @default(uuid())
   conversationId String
   userId         String
 
-  lastReadMessageCount Int @default(0)  // 🔥 关键优化
+  lastReadMessageCount Int      @default(0) // 🔥 关键优化
   updatedAt            DateTime @updatedAt
 
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)

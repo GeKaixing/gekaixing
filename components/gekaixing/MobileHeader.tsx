@@ -2,7 +2,7 @@
 import { AlignJustify, House, LogIn, Search, Settings } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
     Sheet,
     SheetContent,
@@ -12,11 +12,10 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import SidebarAvatar from './SidebarAvatar'
-import { userStore } from '@/store/user'
-import { User } from '@supabase/supabase-js'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { userResult } from '@/app/imitation-x/layout'
 
-export default function MobileHeader({ user }: { user: User | null }) {
+export default function MobileHeader({ user }: { user: userResult | null }) {
     const [scrolled, setScrolled] = useState(false)
 
     useEffect(() => {
@@ -39,37 +38,8 @@ export default function MobileHeader({ user }: { user: User | null }) {
 
     )
 }
-function MobileDrawer({ user }: { user: User | null }) {
-    useEffect(() => {
-        async function fetchUserData() {
-            if (user) {
-                try {
-                    const res = await fetch('/api/user', { method: 'GET' })
-                    const data = await res.json()
-                    
-                    userStore.setState({
-                        email: user.email || '',
-                        id: user.id || '',
-                        name: user.user_metadata.name || '',
-                        user_background_image: user.user_metadata.user_background_image || '',
-                        user_avatar: user.user_metadata.user_avatar || user.user_metadata.avatar_url || '',
-                        brief_introduction: user.user_metadata.brief_introduction || '',
-                        userid: data.userid || '',
-                    });
-                } catch (error) {
-                    userStore.setState({
-                        email: user.email || '',
-                        id: user.id || '',
-                        name: user.user_metadata.name || '',
-                        user_background_image: user.user_metadata.user_background_image || '',
-                        user_avatar: user.user_metadata.user_avatar || user.user_metadata.avatar_url || '',
-                        brief_introduction: user.user_metadata.brief_introduction || '',
-                    });
-                }
-            }
-        }
-        fetchUserData()
-    }, [user]);
+
+function MobileDrawer({ user }: { user: userResult | null }) {
 
 
     return (
@@ -83,10 +53,10 @@ function MobileDrawer({ user }: { user: User | null }) {
                         {user?.id &&
                             <Link href={`/imitation-x/user/${user.id}`}>
                                 <Avatar>
-                                    <AvatarImage src={user?.user_metadata.user_avatar || user?.user_metadata.avatar_url || ''} />
-                                    <AvatarFallback>{user.user_metadata.name?.charAt(0)?.toUpperCase() || 'U'}</AvatarFallback>
+                                    <AvatarImage src={user?.avatar || user.avatar || ''} />
+                                    <AvatarFallback>{user.name?.charAt(0)?.toUpperCase() || 'U'}</AvatarFallback>
                                 </Avatar>
-                                <div>{user.user_metadata.name}</div>
+                                <div>{user.name}</div>
                                 <div>{user.email}</div>
                             </Link>
                         }

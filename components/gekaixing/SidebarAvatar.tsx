@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { SidebarDropdownMenu } from './Sidebar'
 import { userStore } from '@/store/user'
@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation'
 export default function SidebarAvatar() {
     const router = useRouter()
     const { user_avatar, name, email, id } = userStore()
-
     const avatarUrl = user_avatar || ''
     const fallbackInitial = name?.charAt(0)?.toUpperCase() || email?.charAt(0)?.toUpperCase() || 'U'
 

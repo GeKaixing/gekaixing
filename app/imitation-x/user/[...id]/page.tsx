@@ -353,6 +353,7 @@ async function getUserInfo(userId: string) {
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
+
     const userId = id[0]
 
     const posts = await getFeed(userId);
@@ -365,7 +366,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
     const user = await getUserInfo(userId)
 
-    console.log(user)
 
     return (
         <div >

@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     remotePatterns: [
+       {
+        protocol: "https",
+        hostname: "dlfxwtoaauuoithhcpcz.supabase.co",
+      },
       {
         protocol: "https",
         hostname: "**", // 允许所有 https 域名
