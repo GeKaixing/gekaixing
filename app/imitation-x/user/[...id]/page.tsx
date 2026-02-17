@@ -26,6 +26,7 @@ async function getFeed(userId: string): Promise<Post[]> {
                     userid: true,
                     name: true,
                     avatar: true,
+                    isPremium: true,
                 },
             },
 
@@ -73,7 +74,8 @@ async function getFeed(userId: string): Promise<Post[]> {
         user_name: post.author.name,
         user_avatar: post.author.avatar,
         user_userid: post.author.userid,
-
+        isPremium: post.author.isPremium,
+        
         like: post._count.likes,
         star: post._count.bookmarks,
         share: post._count.shares,
@@ -107,6 +109,7 @@ async function getUserReplies(userId: string): Promise<Post[]> {
                     userid: true,
                     name: true,
                     avatar: true,
+                    isPremium: true,
                 },
             },
             parent: {
@@ -156,6 +159,7 @@ async function getUserReplies(userId: string): Promise<Post[]> {
         user_name: post.author.name,
         user_avatar: post.author.avatar,
         user_userid: post.author.userid,
+        isPremium: post.author.isPremium,
 
         like: post._count.likes,
         star: post._count.bookmarks,
@@ -191,6 +195,7 @@ async function getLikedPosts(userId: string): Promise<Post[]> {
                     userid: true,
                     name: true,
                     avatar: true,
+                    isPremium: true,
                 },
             },
             parent: {
@@ -240,6 +245,7 @@ async function getLikedPosts(userId: string): Promise<Post[]> {
         user_name: post.author.name,
         user_avatar: post.author.avatar,
         user_userid: post.author.userid,
+        isPremium: post.author.isPremium,
 
         like: post._count.likes,
         star: post._count.bookmarks,
@@ -276,6 +282,7 @@ async function getBookmarkPosts(userId: string): Promise<Post[]> {
                     userid: true,
                     name: true,
                     avatar: true,
+                    isPremium: true,
                 },
             },
             parent: {
@@ -325,6 +332,7 @@ async function getBookmarkPosts(userId: string): Promise<Post[]> {
         user_name: post.author.name,
         user_avatar: post.author.avatar,
         user_userid: post.author.userid,
+        isPremium: post.author.isPremium,
 
         like: post._count.likes,
         star: post._count.bookmarks,
@@ -378,6 +386,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                     avatar={user?.avatar}
                     briefIntroduction={user?.briefIntroduction}
                     userId={user?.id}
+                    isPremium={user?.isPremium || false}
                 />
 
                 <Tabs defaultValue="post" className="w-full">

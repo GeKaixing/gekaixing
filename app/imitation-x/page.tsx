@@ -13,6 +13,7 @@ export type Post = {
   user_name: string | null
   user_avatar: string | null
   user_userid: string
+  isPremium:boolean
 
   like: number
   star: number
@@ -48,6 +49,7 @@ export type Post = {
           userid: true,
           name: true,
           avatar: true,
+          isPremium:true,
         },
       },
 
@@ -95,6 +97,7 @@ export type Post = {
     user_name: post.author.name,
     user_avatar: post.author.avatar,
     user_userid: post.author.userid,
+    isPremium:post.author.isPremium,
 
     like: post._count.likes,
     star: post._count.bookmarks,

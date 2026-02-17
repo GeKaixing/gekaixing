@@ -436,10 +436,6 @@ export type EnumFollowStatusFieldUpdateOperationsInput = {
   set?: $Enums.FollowStatus
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type FollowCreateWithoutFollowerInput = {
   id?: string
   status?: $Enums.FollowStatus

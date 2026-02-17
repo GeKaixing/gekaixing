@@ -4,18 +4,21 @@ import { userStore } from "@/store/user"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import UserEditDialog from "./UserEditDialog"
 import Link from "next/link"
+import { ShieldCheck } from "lucide-react"
 
 type d = {
     name?: null | string
     avatar?: null | string
     briefIntroduction?: null | string
     userId: string | null | undefined
+    isPremium:boolean
 }
 
-export default function User_background_bio({ name, avatar, briefIntroduction, userId }: d) {
+export default function User_background_bio({ isPremium,name, avatar, briefIntroduction, userId }: d) {
     const { userid,
         followers, // 被关注数
-        following } = userStore()
+        following ,
+    } = userStore()
     return (
         <>
             <div>
@@ -31,7 +34,9 @@ export default function User_background_bio({ name, avatar, briefIntroduction, u
 
             </div>
             <div className='w-full h-10'></div>
-            <div className='font-bold text-2xl mb-2'>{name}</div>
+            <div className='font-bold text-2xl mb-2 flex items-center'>{name}
+                <div>{isPremium&&<ShieldCheck className="w-4 h-4 text-blue-500" />}</div>
+            </div>
             {briefIntroduction ? <div className='text-sm'>{briefIntroduction}</div> : <div className='text-sm'>{"还没有介绍自己"}</div>}
             <div className="flex gap-2 text-sm cursor-pointer">
                 <Link href={`/imitation-x/following/${userid}`} className="flex hover:underline">

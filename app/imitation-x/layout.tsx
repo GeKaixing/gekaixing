@@ -15,6 +15,7 @@ export interface userResult {
     backgroundImage: string | null;
     briefIntroduction: string | null;
     createdAt: Date;
+    isPremium:boolean;
     updatedAt: Date;
     _count: {
         followers: number, // 被关注数

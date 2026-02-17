@@ -1201,7 +1201,10 @@ export const UserScalarFieldEnum = {
   backgroundImage: 'backgroundImage',
   briefIntroduction: 'briefIntroduction',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isPremium: 'isPremium',
+  stripeCustomerId: 'stripeCustomerId',
+  stripeSubId: 'stripeSubId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1373,6 +1376,13 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'FollowStatus'
  */
 export type EnumFollowStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FollowStatus'>
@@ -1383,13 +1393,6 @@ export type EnumFollowStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'FollowStatus[]'
  */
 export type ListEnumFollowStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FollowStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 

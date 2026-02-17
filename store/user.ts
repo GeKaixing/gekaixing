@@ -7,6 +7,7 @@ type Store = {
   name: string;
   user_background_image: string;
   user_avatar: string;
+  isPremium:boolean;
   brief_introduction: string;
   followers: number; // 被关注数
   following: number; // 关注数
@@ -16,6 +17,7 @@ export const userStore = create<Store>()((set) => ({
   email: "",
   id: "",
   userid: "",
+  isPremium:false,
   brief_introduction: "",
   name: "",
   user_background_image: "",

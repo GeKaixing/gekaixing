@@ -10,7 +10,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Heart, MessageCircleMore, Share2, Star } from "lucide-react"
+import { Heart, MessageCircleMore, Share2, ShieldCheck, Star } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import PostDropdownMenu from "./PostDropdownMenu"
 import Link from "next/link"
@@ -28,7 +28,8 @@ export default function PostCard({
     reply,
     share,
     likedByMe,
-    bookmarkedByMe
+    bookmarkedByMe,
+    isPremium
 }: Post) {
     const [liked, setLiked] = useState(likedByMe)
     const [bookmarked, setBookmarked] = useState(bookmarkedByMe)
@@ -139,7 +140,7 @@ export default function PostCard({
                 <div className="flex items-center gap-3">
                     <CardTitle>
                         <Avatar>
-                            <AvatarImage src={user_avatar||''} />
+                            <AvatarImage src={user_avatar || ''} />
                             <AvatarFallback>
                                 {user_name?.[0]?.toUpperCase()}
                             </AvatarFallback>
@@ -147,8 +148,9 @@ export default function PostCard({
                     </CardTitle>
 
                     <div className="flex flex-col">
-                        <CardDescription className="font-semibold text-foreground">
+                        <CardDescription className="font-semibold text-foreground flex items-center">
                             {user_name}
+                            {isPremium && <ShieldCheck className="w-4 h-4 text-blue-500" />}
                         </CardDescription>
                         <span className="text-sm text-muted-foreground">
                             @{user_userid}

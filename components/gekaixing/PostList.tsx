@@ -9,6 +9,7 @@ export default function PostList() {
             {
                 posts.map((items) => (
                     <PostCard
+                        isPremium={items.isPremium}
                         key={items.id}
                         id={items.id}
                         createdAt={items.createdAt}
