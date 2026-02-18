@@ -26,6 +26,7 @@ export default function Sidebar({ user }: { user: userResult | null }) {
         user_background_image: user?.backgroundImage || '',
         user_avatar: user?.avatar || '',
         brief_introduction: user?.briefIntroduction || '',
+        isPremium:user?.isPremium || false,
         userid: user?.userid || '',
         followers: user?._count.followers, // 被关注数
         following: user?._count.following, // 关注数
