@@ -11,6 +11,7 @@ export type Post = {
 
   user_id: string
   user_name: string | null
+  user_email?: string | null
   user_avatar: string | null
   user_userid: string
   isPremium:boolean
@@ -25,7 +26,7 @@ export type Post = {
   sharedByMe: boolean
 }
 
- async function getFeed(): Promise<Post[]> {
+async function getFeed(): Promise<Post[]> {
   const supabase = await createClient();
 
   const {
@@ -33,13 +34,11 @@ export type Post = {
   } = await supabase.auth.getUser();
 
   const userId = user?.id;
+  const isLogin = !!userId;
+
   const posts = await prisma.post.findMany({
-    where: {
-      parentId: null,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
+    where: { parentId: null },
+    orderBy: { createdAt: "desc" },
     take: 20,
 
     include: {
@@ -49,11 +48,10 @@ export type Post = {
           userid: true,
           name: true,
           avatar: true,
-          isPremium:true,
+          isPremium: true,
         },
       },
 
-      // ✅ 统计数量（数据库 count）
       _count: {
         select: {
           likes: true,
@@ -63,32 +61,21 @@ export type Post = {
         },
       },
 
-      // ✅ 只查当前用户是否点赞
-      likes: userId
-        ? {
-          where: { userId },
-          select: { id: true },
-        }
-        : false,
+      likes: isLogin
+        ? { where: { userId }, select: { id: true } }
+        : undefined,
 
-      bookmarks: userId
-        ? {
-          where: { userId },
-          select: { id: true },
-        }
-        : false,
+      bookmarks: isLogin
+        ? { where: { userId }, select: { id: true } }
+        : undefined,
 
-      shares: userId
-        ? {
-          where: { userId },
-          select: { id: true },
-        }
-        : false,
+      shares: isLogin
+        ? { where: { userId }, select: { id: true } }
+        : undefined,
     },
   });
 
-  // 格式化输出
-  const result = posts.map((post) => ({
+  return posts.map((post) => ({
     id: post.id,
     content: post.content,
     createdAt: post.createdAt,
@@ -97,21 +84,19 @@ export type Post = {
     user_name: post.author.name,
     user_avatar: post.author.avatar,
     user_userid: post.author.userid,
-    isPremium:post.author.isPremium,
+    isPremium: post.author.isPremium,
 
     like: post._count.likes,
     star: post._count.bookmarks,
     share: post._count.shares,
     reply: post._count.replies,
 
-    likedByMe: post.likes?.length > 0,
-    bookmarkedByMe: post.bookmarks?.length > 0,
-    sharedByMe: post.shares?.length > 0,
+    likedByMe: !!post.likes?.length,
+    bookmarkedByMe: !!post.bookmarks?.length,
+    sharedByMe: !!post.shares?.length,
   }));
-
-  return result;
-
 }
+
 
 export default async function Page() {
   const posts = await getFeed();
