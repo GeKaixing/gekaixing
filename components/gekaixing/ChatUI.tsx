@@ -32,6 +32,19 @@ export default function ChatUI({
 
   const router = useRouter()
 
+  function mergeMessages(
+    historyMessages: Message[],
+    localMessages: Message[]
+  ): Message[] {
+    if (localMessages.length === 0) return historyMessages
+    if (historyMessages.length === 0) return localMessages
+
+    const historyIds = new Set(historyMessages.map((msg) => msg.id))
+    const appendedLocal = localMessages.filter((msg) => !historyIds.has(msg.id))
+
+    return [...historyMessages, ...appendedLocal]
+  }
+
   const historyLoadedRef = useRef<string | null>(null)
   /**
  * ⭐ 加载 session 历史消息
@@ -53,10 +66,21 @@ useEffect(() => {
       if (!res.ok) throw new Error("加载历史失败")
 
       const data = await res.json()
-  console.log(data)
       // 服务器返回格式：
       // [{ id, role, content }]
-      setMessages(data || [])
+      const historyMessages = (data || []) as Message[]
+
+      setMessages((prev) => {
+        if (prev.length > 0 && historyMessages.length === 0) {
+          return prev
+        }
+
+        if (prev.length > 0) {
+          return mergeMessages(historyMessages, prev)
+        }
+
+        return historyMessages
+      })
     } catch (err) {
       console.error("加载历史消息失败", err)
     }
@@ -190,8 +214,23 @@ useEffect(() => {
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
-      sendMessage()
+      handleSend()
     }
+  }
+
+  function handleSend() {
+    const text = input.trim()
+    if (!text || loading) return
+
+    if (!initialSessionId) {
+      const newSessionId = crypto.randomUUID()
+      router.push(
+        `/imitation-x/gkx/${newSessionId}?input=${encodeURIComponent(text)}`
+      )
+      return
+    }
+
+    sendMessage(text)
   }
 
   return (
@@ -230,20 +269,7 @@ useEffect(() => {
           />
 
           <button
-            onClick={() => {
-              // 没 session → 创建 session + 跳转
-              if (!initialSessionId) {
-                const newSessionId = crypto.randomUUID()
-
-                router.push(
-                  `/imitation-x/gkx/${newSessionId}?input=${encodeURIComponent(
-                    input
-                  )}`
-                )
-              } else {
-                sendMessage()
-              }
-            }}
+            onClick={handleSend}
             disabled={loading}
             className="px-5 rounded-xl bg-primary text-primary-foreground disabled:opacity-50"
           >
