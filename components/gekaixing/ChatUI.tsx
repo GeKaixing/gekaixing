@@ -32,6 +32,40 @@ export default function ChatUI({
 
   const router = useRouter()
 
+  const historyLoadedRef = useRef<string | null>(null)
+  /**
+ * ⭐ 加载 session 历史消息
+ */
+useEffect(() => {
+  if (!initialSessionId) return
+
+  // 已加载过该 session → 不再请求
+  if (historyLoadedRef.current === initialSessionId) return
+
+  historyLoadedRef.current = initialSessionId
+
+  async function loadHistory() {
+    try {
+      const res = await fetch(
+        `/api/chat/history?sessionId=${initialSessionId}`
+      )
+
+      if (!res.ok) throw new Error("加载历史失败")
+
+      const data = await res.json()
+  console.log(data)
+      // 服务器返回格式：
+      // [{ id, role, content }]
+      setMessages(data || [])
+    } catch (err) {
+      console.error("加载历史消息失败", err)
+    }
+  }
+
+  loadHistory()
+}, [initialSessionId])
+
+
   /**
    * ⭐ 首次进入自动发送 ?input=xxx
    */
