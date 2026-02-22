@@ -38,7 +38,7 @@ export async function PATCH(request: Request) {
   const body = await request.json();
 
   const { name, backgroundImage, avatar, briefIntroduction, userid } = body;
-  console.log(backgroundImage);
+
   const {
     data: { user },
     error: userError,

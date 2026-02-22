@@ -7,7 +7,6 @@ export async function POST(request: Request) {
   const supabase = await createClient();
 
   const { priceId } = await request.json();
-  console.log(priceId);
 
   const {
     data: { user },

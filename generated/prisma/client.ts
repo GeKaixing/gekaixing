@@ -90,3 +90,13 @@ export type Message = Prisma.MessageModel
  * 
  */
 export type ConversationRead = Prisma.ConversationReadModel
+/**
+ * Model ChatAISession
+ * 
+ */
+export type ChatAISession = Prisma.ChatAISessionModel
+/**
+ * Model ChatAIMessage
+ * 
+ */
+export type ChatAIMessage = Prisma.ChatAIMessageModel

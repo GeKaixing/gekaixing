@@ -83,7 +83,7 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
                 const UrlsArray = findUrls(content)
                 if (UrlsArray.length !== 0) {
                     const { data: UrlsArrayData, error: UrlsArrayError } = await deleteUnusedImages('post-image', UrlsArray)
-                    console.log(UrlsArrayData, UrlsArrayError)
+                    
                 }
             } else {
                 // ❗️4. 删除失败，回滚 UI
@@ -112,7 +112,7 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
                 const UrlsArray = findUrls(content)
                 if (UrlsArray.length !== 0) {
                     const { data: UrlsArrayData, error: UrlsArrayError } = await deleteUnusedImages('post-image', UrlsArray)
-                    console.log(UrlsArrayData, UrlsArrayError)
+                  
                 }
                 if (pathName.includes('/imitation-x/status')) {
                     router.replace("/imitation-x")

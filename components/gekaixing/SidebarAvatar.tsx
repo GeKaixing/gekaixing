@@ -10,7 +10,6 @@ export default function SidebarAvatar() {
     const { user_avatar, name, email, id, isPremium } = userStore()
     const avatarUrl = user_avatar || ''
     const fallbackInitial = name?.charAt(0)?.toUpperCase() || email?.charAt(0)?.toUpperCase() || 'U'
-    console.log(isPremium)
     return (
         <li className="flex gap-2 text-xl font-bold hover:bg-gray-50 rounded-full p-2 items-center justify-center cursor-pointer w-full">
             <Avatar onClick={() => router.push('/imitation-x/user')} className="w-10 h-10 shrink-0">

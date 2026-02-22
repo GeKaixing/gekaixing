@@ -60,7 +60,9 @@ export const ModelName = {
   Conversation: 'Conversation',
   ConversationParticipant: 'ConversationParticipant',
   Message: 'Message',
-  ConversationRead: 'ConversationRead'
+  ConversationRead: 'ConversationRead',
+  ChatAISession: 'ChatAISession',
+  ChatAIMessage: 'ChatAIMessage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -202,6 +204,30 @@ export const ConversationReadScalarFieldEnum = {
 } as const
 
 export type ConversationReadScalarFieldEnum = (typeof ConversationReadScalarFieldEnum)[keyof typeof ConversationReadScalarFieldEnum]
+
+
+export const ChatAISessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  tokenUsed: 'tokenUsed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChatAISessionScalarFieldEnum = (typeof ChatAISessionScalarFieldEnum)[keyof typeof ChatAISessionScalarFieldEnum]
+
+
+export const ChatAIMessageScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  role: 'role',
+  content: 'content',
+  tokens: 'tokens',
+  createdAt: 'createdAt'
+} as const
+
+export type ChatAIMessageScalarFieldEnum = (typeof ChatAIMessageScalarFieldEnum)[keyof typeof ChatAIMessageScalarFieldEnum]
 
 
 export const SortOrder = {

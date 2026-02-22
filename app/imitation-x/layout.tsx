@@ -5,6 +5,7 @@ import MobileHeader from "@/components/gekaixing/MobileHeader";
 import Sidebar from "@/components/gekaixing/Sidebar";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
+import "highlight.js/styles/github-dark.css"
 
 export interface userResult {
     name: string | null;

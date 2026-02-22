@@ -8,7 +8,6 @@ export async function GET(req: NextRequest) {
   try {
     const supabase = await createClient();
     const cookie=await cookies()
-    console.log(cookie)
     let userId: string | undefined;
     try {
       const {

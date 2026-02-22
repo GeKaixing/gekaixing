@@ -245,3 +245,31 @@ model ConversationRead {
   @@unique([conversationId, userId])
   @@index([userId])
 }
+
+model ChatAISession {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String   @default("新对话")
+  tokenUsed Int      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages ChatAIMessage[]
+
+  @@index([userId])
+}
+
+model ChatAIMessage {
+  id        String   @id @default(cuid())
+  sessionId String
+  role      String
+  content   String   @db.Text
+  tokens    Int      @default(0)
+
+  createdAt DateTime @default(now())
+
+  session ChatAISession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+}

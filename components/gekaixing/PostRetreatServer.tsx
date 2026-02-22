@@ -11,7 +11,7 @@ export default async function PostRetreatServer() {
     const {
         data: { user },
     } = await supabase.auth.getUser()
-    console.log(user?.id)
+
     const id = user?.id
     return (
         <div className='sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/40'>

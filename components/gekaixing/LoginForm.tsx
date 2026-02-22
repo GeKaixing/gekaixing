@@ -47,11 +47,11 @@ export default function LoginForm() {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setStatus(true)
-        console.log(values.email, values.password)
+
         const result = await LoginFetch(values.email, values.password)
-        console.log(result)
+    
         const text = await result.text()
-        console.log(text)
+
         let data;
         try {
             data = JSON.parse(text)
