@@ -3,6 +3,7 @@
 import { Post } from "@/app/imitation-x/page"
 import { postStore } from "@/store/post"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useTranslations } from "next-intl"
 import PostCard from "./PostCard"
 import { usePathname } from "next/navigation"
 
@@ -54,6 +55,7 @@ export default function PostList({
   initialHasMore = false,
   feedQuery,
 }: PostListProps) {
+  const t = useTranslations("ImitationX.Feed")
   const posts = postStore((state) => state.posts)
   const pathName=usePathname()
 
@@ -272,12 +274,12 @@ export default function PostList({
       <div style={{ height: bottomSpacerHeight }} aria-hidden />
 
       {isLoading ? (
-        <div className="py-4 text-center text-sm text-muted-foreground">加载中...</div>
+        <div className="py-4 text-center text-sm text-muted-foreground">{t("loading")}</div>
       ) : null}
 
       {!hasMore && posts.length > 0 ? (
         pathName.includes('/imitation-x/status')? null : (
-        <div className="py-4 text-center text-sm text-muted-foreground">已显示全部内容</div>)
+        <div className="py-4 text-center text-sm text-muted-foreground">{t("allLoaded")}</div>)
       ) : null}
 
       {errorMessage ? (

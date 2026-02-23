@@ -176,6 +176,10 @@
     "Explore": {
       "title": "Explore"
     },
+    "Feed": {
+      "loading": "Loading...",
+      "allLoaded": "You've reached the end"
+    },
     "Hot": {
       "title": "Trending",
       "loading": "Loading trends...",

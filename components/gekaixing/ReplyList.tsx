@@ -3,6 +3,7 @@
 import { Post } from "@/app/imitation-x/page"
 import { replyStore } from "@/store/reply"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useTranslations } from "next-intl"
 import PostCard from "./PostCard"
 
 type ReplyListProps = {
@@ -49,6 +50,7 @@ function findItemIndexByOffset(offsets: number[], target: number): number {
 }
 
 export default function ReplyList({ initialNextCursor = null, initialHasMore = false, feedQuery }: ReplyListProps) {
+  const t = useTranslations("ImitationX.Feed")
   const replies = replyStore((state) => state.replies)
 
   const [nextCursor, setNextCursor] = useState<string | null>(initialNextCursor)
@@ -268,11 +270,11 @@ export default function ReplyList({ initialNextCursor = null, initialHasMore = f
       <div style={{ height: bottomSpacerHeight }} aria-hidden />
 
       {isLoading ? (
-        <div className="py-4 text-center text-sm text-muted-foreground">加载中...</div>
+        <div className="py-4 text-center text-sm text-muted-foreground">{t("loading")}</div>
       ) : null}
 
       {!hasMore && replies.length > 0 ? (
-        <div className="py-4 text-center text-sm text-muted-foreground">已显示全部内容</div>
+        <div className="py-4 text-center text-sm text-muted-foreground">{t("allLoaded")}</div>
       ) : null}
 
       {errorMessage ? (

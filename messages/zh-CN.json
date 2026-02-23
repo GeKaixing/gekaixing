@@ -176,6 +176,10 @@
     "Explore": {
       "title": "探索"
     },
+    "Feed": {
+      "loading": "加载中...",
+      "allLoaded": "已显示全部内容"
+    },
     "Hot": {
       "title": "今日头条",
       "loading": "正在加载头条...",
