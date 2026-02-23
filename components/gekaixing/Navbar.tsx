@@ -8,6 +8,8 @@ import { usePathname } from 'next/navigation'
 import { User } from '@supabase/supabase-js'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
+import LanguageSwitcher from './LanguageSwitcher'
 
 interface NavbarProps {
     user?: User | null;
@@ -18,6 +20,7 @@ export default function Navbar({ user }: NavbarProps) {
     const [isActive, setACtive] = useState(false)
     const pathname = usePathname()
     const router = useRouter()
+    const t = useTranslations('Navbar')
 
     useEffect(() => {
         if (pathname !== '/') {
@@ -45,7 +48,7 @@ export default function Navbar({ user }: NavbarProps) {
     return (
         <>
             <div
-                className={`fixed top-0 w-full h-20 z-50 transition-colors duration-300 px-6 py-2 flex justify-between items-center ${scrolled ? 'bg-white shadow text-black' : 'bg-transparent text-black'
+                className={`fixed top-0 w-full h-20 z-50 transition-colors duration-300 px-6 py-2 flex justify-between items-center ${scrolled ? 'bg-background/95 backdrop-blur shadow text-foreground border-b border-border' : 'bg-transparent text-foreground'
                     }`}
             >
                 <div className='flex items-center gap-6'>
@@ -54,22 +57,23 @@ export default function Navbar({ user }: NavbarProps) {
                     </Link>
                 </div>
                 <div className='flex items-center gap-6 '>
+                    <LanguageSwitcher />
                     {!user?.id ? (
-                        <Link className='text-black' href={'/account'}>login</Link>
+                        <Link className='text-foreground' href={'/account'}>{t('login')}</Link>
                     ) : (
                         <div 
-                            className='flex items-center gap-2 cursor-pointer hover:bg-gray-100 rounded-full px-2 py-1 transition-colors'
+                            className='flex items-center gap-2 cursor-pointer hover:bg-muted/70 rounded-full px-2 py-1 transition-colors'
                             onClick={() => router.push(`/imitation-x/user/${userId}`)}
                         >
                             <Avatar className='w-8 h-8'>
                                 <AvatarImage src={avatarUrl} />
                                 <AvatarFallback>{fallbackInitial}</AvatarFallback>
                             </Avatar>
-                            <span className='text-sm font-medium text-black'>{userName || userEmail}</span>
+                            <span className='text-sm font-medium text-foreground'>{userName || userEmail}</span>
                         </div>
                     )}
                     <Link href={'https://github.com/GeKaixing/towel'}>
-                        <Github className='text-black' />
+                        <Github className='text-foreground' />
                     </Link>
                 </div>
             </div>

@@ -135,7 +135,7 @@ export default function PostCard({
     }
 
     return (
-        <Card className="cursor-pointer hover:bg-gray-50 transition">
+        <Card className="cursor-pointer hover:bg-muted/60 transition-colors">
             <CardHeader>
                 <div className="flex items-center gap-3">
                     <CardTitle>

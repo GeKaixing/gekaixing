@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import { ArrowLeft, Search, UserPlus, UserCheck, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -34,7 +34,7 @@ export default function Page({
     const router = useRouter();
 
     // ===== 获取用户列表 =====
-    const fetchUsers = async (tab: TabType) => {
+    const fetchUsers = useCallback(async (tab: TabType) => {
         setLoading(true);
 
         try {
@@ -52,12 +52,12 @@ export default function Page({
         } finally {
             setLoading(false);
         }
-    };
+    }, [profileId]);
 
     // tab 变化时请求
     useEffect(() => {
         fetchUsers(activeTab);
-    }, [activeTab]);
+    }, [activeTab, fetchUsers]);
 
     // ===== 关注 / 取消关注 =====
     const handleFollow = async (targetId: string) => {
@@ -105,20 +105,20 @@ export default function Page({
     ];
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen bg-background text-foreground">
             {/* header */}
-            <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b">
+            <div className="sticky top-0 z-10 bg-background/90 backdrop-blur-md border-b border-border">
                 <div className="flex items-center gap-4 px-4 py-3">
                     <div
                         onClick={() => router.back()}
-                        className="p-2 hover:bg-gray-100 rounded-full"
+                        className="p-2 hover:bg-muted/70 rounded-full transition-colors"
                     >
                         <ArrowLeft className="w-5 h-5" />
                     </div>
 
                     <div>
                         <h1 className="text-xl font-bold">用户关系</h1>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-muted-foreground">
                             {users.length} 位用户
                         </p>
                     </div>
@@ -127,14 +127,14 @@ export default function Page({
                 {/* search */}
                 <div className="px-4 py-2">
                     <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
 
                         <input
                             type="text"
                             placeholder="搜索用户"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-10 py-2 bg-gray-100 rounded-full"
+                            className="w-full pl-10 pr-10 py-2 bg-muted rounded-full text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
 
                         {searchQuery && (
@@ -149,7 +149,7 @@ export default function Page({
                 </div>
 
                 {/* tabs */}
-                <div className="flex border-b">
+                <div className="flex border-b border-border">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
@@ -157,8 +157,8 @@ export default function Page({
                             className={cn(
                                 "flex-1 py-3 text-sm font-medium",
                                 activeTab === tab.id
-                                    ? "text-black"
-                                    : "text-gray-500"
+                                    ? "text-foreground"
+                                    : "text-muted-foreground"
                             )}
                         >
                             {tab.label}
@@ -168,13 +168,13 @@ export default function Page({
             </div>
 
             {/* list */}
-            <div className="divide-y">
+            <div className="divide-y divide-border">
                 {loading ? (
-                    <div className="p-8 text-center">加载中...</div>
+                    <div className="p-8 text-center text-muted-foreground">加载中...</div>
                 ) : filteredUsers.map((user) => (
                     <div
                         key={user.id}
-                        className="flex gap-3 px-4 py-3 hover:bg-gray-50"
+                        className="flex gap-3 px-4 py-3 hover:bg-muted/60 transition-colors"
                     >
                         <Avatar className="w-12 h-12">
                             <AvatarImage src={user.avatar} />
@@ -187,7 +187,7 @@ export default function Page({
                             <div className="flex justify-between">
                                 <div>
                                     <p className="font-bold">{user.name}</p>
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm text-muted-foreground">
                                         {user.handle}
                                     </p>
                                 </div>

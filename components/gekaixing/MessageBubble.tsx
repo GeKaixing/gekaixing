@@ -1,9 +1,13 @@
 "use client"
 
 import React from "react"
+import { Check, Copy } from "lucide-react"
 import { cn } from "@/lib/utils"
 import ReactMarkdown from "react-markdown"
+import rehypeHighlight from "rehype-highlight"
 import remarkGfm from "remark-gfm"
+import { toast } from "sonner"
+import { useTranslations } from "next-intl"
 
 type MessageRole = "user" | "assistant" | "system"
 
@@ -18,18 +22,35 @@ export function MessageBubble({
   content,
   loading = false,
 }: MessageBubbleProps) {
+  const t = useTranslations("ImitationX.Gkx")
+  const [copied, setCopied] = React.useState(false)
   const isUser = role === "user"
+
+  async function handleCopy(): Promise<void> {
+    if (!content.trim()) return
+
+    try {
+      await navigator.clipboard.writeText(content)
+      setCopied(true)
+      toast.success(t("copySuccess"))
+      window.setTimeout(() => setCopied(false), 1200)
+    } catch (error) {
+      console.error(t("copyFailed"), error)
+      toast.error(t("copyFailed"))
+    }
+  }
 
   return (
     <div
       className={cn(
-        "flex w-full mb-4",
+        "group flex w-full mb-4",
         isUser ? "justify-end" : "justify-start"
       )}
     >
       <div
         className={cn(
           "max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed break-words",
+          "relative",
           "transition-all duration-200",
           isUser
             ? "bg-primary text-primary-foreground"
@@ -38,6 +59,23 @@ export function MessageBubble({
       >
         {/* loading 状态 */}
         {loading ? <TypingIndicator /> : <MarkdownContent content={content} />}
+
+        {!loading && content.trim() && (
+          <button
+            type="button"
+            onClick={handleCopy}
+            aria-label={t("copyMessage")}
+            className={cn(
+              "absolute -bottom-3 right-2 inline-flex h-6 w-6 items-center justify-center rounded-full border shadow-sm",
+              "opacity-0 group-hover:opacity-100 transition-opacity",
+              isUser
+                ? "bg-primary text-primary-foreground border-primary-foreground/30"
+                : "bg-background text-foreground border-border"
+            )}
+          >
+            {copied ? <Check size={14} /> : <Copy size={14} />}
+          </button>
+        )}
       </div>
     </div>
   )
@@ -53,6 +91,7 @@ function MarkdownContent({ content }: { content: string }) {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
+      rehypePlugins={[rehypeHighlight]}
       components={{
         code(props) {
           const { className, children } = props
@@ -68,7 +107,7 @@ function MarkdownContent({ content }: { content: string }) {
 
           return (
             <pre className="p-3 rounded-lg overflow-x-auto bg-black/90 text-white text-xs">
-              <code>{children}</code>
+              <code className={cn(className, "hljs")}>{children}</code>
             </pre>
           )
         },

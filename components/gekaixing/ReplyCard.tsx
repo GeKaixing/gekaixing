@@ -208,17 +208,17 @@ export default function ReplyCard({
     }
 
     return (
-        <Card className='cursor-pointer hover:bg-gray-50' key={id}>
+        <Card className='cursor-pointer hover:bg-muted/60 transition-colors' key={id}>
             <CardHeader>
                 <div className='flex items-center gap-2 '>
-                    <CardTitle className='hover:bg-gray-100'>
+                    <CardTitle className='hover:bg-muted/70 rounded-full transition-colors'>
                         <Avatar>
                             <AvatarImage src={user_avatar} />
                             <AvatarFallback>{user_name?.charAt(0)?.toUpperCase() || 'U'}</AvatarFallback>
                         </Avatar>
                     </CardTitle>
                     <div className="flex flex-col">
-                        <CardDescription className="hover:bg-gray-100 font-semibold text-foreground">{user_name}</CardDescription>
+                        <CardDescription className="hover:bg-muted/70 rounded-md font-semibold text-foreground transition-colors">{user_name}</CardDescription>
                         <span className="text-sm text-muted-foreground">@{user_userid}</span>
                     </div>
                 </div>

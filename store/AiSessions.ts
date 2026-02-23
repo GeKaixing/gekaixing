@@ -15,6 +15,7 @@ interface AiSessionsStore {
   sessions: AiSession[];
   setSessions: (sessions: AiSession[]) => void;
   addSession: (session: AiSession) => void;
+  updateSessionTitle: (id: string, title: string) => void;
   removeSession: (id: string) => void;
 }
 
@@ -25,7 +26,23 @@ export const useAiSessions = create<AiSessionsStore>((set) => ({
   setSessions: (sessions) => set({ sessions }),
   addSession: (session) =>
     set((state) => ({
-      sessions: [...state.sessions, session],
+      sessions: state.sessions.some((item) => item.id === session.id)
+        ? state.sessions.map((item) =>
+          item.id === session.id ? { ...item, ...session } : item
+        )
+        : [...state.sessions, session],
+    })),
+  updateSessionTitle: (id, title) =>
+    set((state) => ({
+      sessions: state.sessions.map((session) =>
+        session.id === id
+          ? {
+            ...session,
+            title,
+            updatedAt: new Date(),
+          }
+          : session
+      ),
     })),
   removeSession: (id) =>
     set((state) => ({

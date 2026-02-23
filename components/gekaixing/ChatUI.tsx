@@ -1,10 +1,11 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import MessageBubble from "./MessageBubble"
 import { cn } from "@/lib/utils"
 import { useRouter } from "next/navigation"
 import { useAiSessions } from "@/store/AiSessions"
+import { useTranslations } from "next-intl"
 
 type Message = {
   id: string
@@ -20,17 +21,24 @@ export default function ChatUI({
   sessionId?: string
   userId: string
 }) {
+  const t = useTranslations("ImitationX.Gkx")
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
 
-  const { addSession } = useAiSessions()
+  const { addSession, updateSessionTitle } = useAiSessions()
 
   const bottomRef = useRef<HTMLDivElement>(null)
   const autoSentRef = useRef(false)
   const historyAddedRef = useRef(false) // ⭐ 防止重复加入历史
 
   const router = useRouter()
+
+  const buildFallbackTitle = useCallback((text: string): string => {
+    const normalized = text.replace(/\s+/g, " ").trim()
+    if (!normalized) return t("newChat")
+    return normalized.slice(0, 20)
+  }, [t])
 
   function mergeMessages(
     historyMessages: Message[],
@@ -63,7 +71,7 @@ useEffect(() => {
         `/api/chat/history?sessionId=${initialSessionId}`
       )
 
-      if (!res.ok) throw new Error("加载历史失败")
+      if (!res.ok) throw new Error(t("loadHistoryFailed"))
 
       const data = await res.json()
       // 服务器返回格式：
@@ -82,34 +90,13 @@ useEffect(() => {
         return historyMessages
       })
     } catch (err) {
-      console.error("加载历史消息失败", err)
+      console.error(t("loadHistoryFailed"), err)
     }
   }
 
   loadHistory()
-}, [initialSessionId])
+}, [initialSessionId, t])
 
-
-  /**
-   * ⭐ 首次进入自动发送 ?input=xxx
-   */
-  useEffect(() => {
-    if (!initialSessionId) return
-    if (autoSentRef.current) return
-
-    const params = new URLSearchParams(window.location.search)
-    const inputParam = params.get("input")
-
-    if (!inputParam) return
-
-    autoSentRef.current = true
-
-    setTimeout(() => {
-      sendMessage(inputParam)
-    }, 0)
-
-    window.history.replaceState({}, "", window.location.pathname)
-  }, [initialSessionId])
 
   /**
    * 自动滚动
@@ -121,7 +108,36 @@ useEffect(() => {
   /**
    * ⭐ 发送消息
    */
-  async function sendMessage(textOverride?: string) {
+  const generateSessionTitle = useCallback(async (
+    sessionId: string,
+    text: string,
+    fallbackTitle: string
+  ): Promise<void> => {
+    try {
+      const res = await fetch("/api/chat/title", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId,
+          text,
+        }),
+      })
+
+      if (!res.ok) {
+        updateSessionTitle(sessionId, fallbackTitle)
+        return
+      }
+
+      const data = (await res.json()) as { title?: string }
+      const nextTitle = data.title?.trim() || fallbackTitle
+      updateSessionTitle(sessionId, nextTitle)
+    } catch (error) {
+      console.error(t("generateTitleFailed"), error)
+      updateSessionTitle(sessionId, fallbackTitle)
+    }
+  }, [t, updateSessionTitle])
+
+  const sendMessage = useCallback(async (textOverride?: string) => {
     const text = textOverride ?? input
     if (!text.trim() || loading) return
 
@@ -183,30 +199,64 @@ useEffect(() => {
        */
       if (initialSessionId && !historyAddedRef.current) {
         historyAddedRef.current = true
+        const fallbackTitle = buildFallbackTitle(text)
 
         addSession({
           id: initialSessionId,
-          title: text.slice(0, 20) || "新对话",
+          title: fallbackTitle,
           userId,
           tokenUsed: fullText.length,
           createdAt: new Date(),
           updatedAt: new Date(),
         })
+
+        generateSessionTitle(initialSessionId, text, fallbackTitle)
       }
     } catch (error) {
       console.error(error)
 
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.id === assistantId
-            ? { ...msg, content: "出错了，请重试" }
+            msg.id === assistantId
+            ? { ...msg, content: t("errorRetry") }
             : msg
         )
       )
     } finally {
       setLoading(false)
     }
-  }
+  }, [
+    addSession,
+    buildFallbackTitle,
+    generateSessionTitle,
+    initialSessionId,
+    input,
+    loading,
+    messages,
+    t,
+    userId,
+  ])
+
+  /**
+   * ⭐ 首次进入自动发送 ?input=xxx
+   */
+  useEffect(() => {
+    if (!initialSessionId) return
+    if (autoSentRef.current) return
+
+    const params = new URLSearchParams(window.location.search)
+    const inputParam = params.get("input")
+
+    if (!inputParam) return
+
+    autoSentRef.current = true
+
+    setTimeout(() => {
+      sendMessage(inputParam)
+    }, 0)
+
+    window.history.replaceState({}, "", window.location.pathname)
+  }, [initialSessionId, sendMessage])
 
   /**
    * Enter 发送
@@ -236,11 +286,11 @@ useEffect(() => {
   return (
     <div className="flex flex-col h-full w-full">
       <div className="border-b px-6 py-4 font-semibold">
-        AI Assistant
+        {t("assistantTitle")}
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-6">
-        {messages.length === 0 && <EmptyState />}
+        {messages.length === 0 && <EmptyState text={t("emptyState")} />}
 
         {messages.map((msg) => (
           <MessageBubble
@@ -260,7 +310,7 @@ useEffect(() => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="输入消息..."
+            placeholder={t("inputPlaceholder")}
             rows={1}
             className={cn(
               "flex-1 resize-none rounded-xl border px-4 py-3 text-sm",
@@ -273,7 +323,7 @@ useEffect(() => {
             disabled={loading}
             className="px-5 rounded-xl bg-primary text-primary-foreground disabled:opacity-50"
           >
-            发送
+            {t("send")}
           </button>
         </div>
       </div>
@@ -281,10 +331,10 @@ useEffect(() => {
   )
 }
 
-function EmptyState() {
+function EmptyState({ text }: { text: string }) {
   return (
     <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
-      开始和 AI 对话吧 🚀
+      {text}
     </div>
   )
 }

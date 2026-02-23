@@ -7,8 +7,10 @@ import StatusStore from '@/components/gekaixing/StatusStore'
 import { prisma } from '@/lib/prisma'
 import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 import type { Post } from '../../page'
 import PostRetreatServer from '@/components/gekaixing/PostRetreatServer'
+import { getLocale } from 'next-intl/server'
 
 /* =======================
    类型定义
@@ -16,6 +18,109 @@ import PostRetreatServer from '@/components/gekaixing/PostRetreatServer'
 
 export type FeedPost = Post & {
     replies: Post[]
+}
+
+function buildExcerpt(text: string): string {
+    const plainText = text.replace(/\s+/g, ' ').trim()
+    return plainText.slice(0, 120)
+}
+
+function getStatusCopy(locale: string) {
+    if (locale === "zh-CN") {
+        return {
+            pageTitle: "帖子详情 | Gekaixing",
+            pageDescription: "查看 Gekaixing 平台上的帖子详情与回复。",
+            notFoundTitle: "帖子不存在 | Gekaixing",
+            notFoundDescription: "该帖子可能已被删除或不可见。",
+            fallbackDescription: "查看这条帖子内容与评论讨论。",
+            titleTemplate: (authorName: string) => `${authorName} 的帖子 | Gekaixing`,
+        }
+    }
+
+    return {
+        pageTitle: "Post Detail | Gekaixing",
+        pageDescription: "View post details and replies on Gekaixing.",
+        notFoundTitle: "Post Not Found | Gekaixing",
+        notFoundDescription: "This post may have been removed or is not available.",
+        fallbackDescription: "Read this post and discussion replies.",
+        titleTemplate: (authorName: string) => `${authorName}'s post | Gekaixing`,
+    }
+}
+
+function getSiteUrl(): string {
+    const envUrl = process.env.NEXT_PUBLIC_URL
+    if (envUrl && envUrl.startsWith('http')) {
+        return envUrl
+    }
+    return 'https://www.gekaixing.top'
+}
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ slug: string[] }>
+}): Promise<Metadata> {
+    const locale = await getLocale()
+    const copy = getStatusCopy(locale)
+    const { slug } = await params
+    const postId = slug?.[0]
+    const siteUrl = getSiteUrl()
+
+    if (!postId) {
+        return {
+            title: copy.pageTitle,
+            description: copy.pageDescription,
+        }
+    }
+
+    const post = await prisma.post.findUnique({
+        where: { id: postId },
+        select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            author: {
+                select: {
+                    name: true,
+                    userid: true,
+                },
+            },
+        },
+    })
+
+    if (!post) {
+        return {
+            title: copy.notFoundTitle,
+            description: copy.notFoundDescription,
+        }
+    }
+
+    const authorName = post.author.name || `@${post.author.userid}`
+    const excerpt = buildExcerpt(post.content)
+    const title = copy.titleTemplate(authorName)
+    const description = excerpt || copy.fallbackDescription
+    const url = `${siteUrl}/imitation-x/status/${post.id}`
+
+    return {
+        title,
+        description,
+        alternates: {
+            canonical: url,
+        },
+        openGraph: {
+            title,
+            description,
+            url,
+            type: 'article',
+            publishedTime: post.createdAt.toISOString(),
+            siteName: 'Gekaixing',
+        },
+        twitter: {
+            card: 'summary',
+            title,
+            description,
+        },
+    }
 }
 
 /* =======================
@@ -152,7 +257,7 @@ const getPost = async (id: string): Promise<FeedPost | null> => {
    页面组件
 ======================= */
 
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+export default async function Page({ params }: { params: Promise<{ slug: string[] }> }) {
 
     const { slug } = await params
     const id = slug[0]

@@ -7,6 +7,117 @@ import PostStore from '@/components/gekaixing/PostStore'
 import User_background_image from '@/components/gekaixing/User_background_image'
 import User_background_bio from '@/components/gekaixing/User_background_bio'
 import { revalidatePath } from 'next/cache'
+import type { Metadata } from 'next'
+import { getLocale, getTranslations } from 'next-intl/server'
+
+function getSiteUrl(): string {
+    const envUrl = process.env.NEXT_PUBLIC_URL
+    if (envUrl && envUrl.startsWith('http')) {
+        return envUrl
+    }
+    return 'https://www.gekaixing.top'
+}
+
+function buildBioDescription(text: string | null): string {
+    const normalized = (text || '').replace(/\s+/g, ' ').trim()
+    if (!normalized) {
+        return '查看该用户的帖子、回复与收藏内容。'
+    }
+    return normalized.slice(0, 120)
+}
+
+function getProfileCopy(locale: string) {
+    if (locale === "zh-CN") {
+        return {
+            defaultDescription: "查看该用户的帖子、回复与收藏内容。",
+            pageTitle: "个人主页 | Gekaixing",
+            pageDescription: "查看用户主页、帖子和互动记录。",
+            notFoundTitle: "用户不存在 | Gekaixing",
+            notFoundDescription: "该用户可能已被删除或不可见。",
+            titleTemplate: (displayName: string) => `${displayName} 的个人主页 | Gekaixing`,
+        }
+    }
+
+    return {
+        defaultDescription: "View this user's posts, replies and bookmarks.",
+        pageTitle: "Profile | Gekaixing",
+        pageDescription: "Browse the user's profile, posts and interactions.",
+        notFoundTitle: "User Not Found | Gekaixing",
+        notFoundDescription: "This user may have been removed or is not available.",
+        titleTemplate: (displayName: string) => `${displayName}'s profile | Gekaixing`,
+    }
+}
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ id: string[] }>
+}): Promise<Metadata> {
+    const locale = await getLocale()
+    const copy = getProfileCopy(locale)
+    const { id } = await params
+    const userId = id?.[0]
+    const siteUrl = getSiteUrl()
+
+    if (!userId) {
+        return {
+            title: copy.pageTitle,
+            description: copy.pageDescription,
+        }
+    }
+
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+            id: true,
+            name: true,
+            userid: true,
+            briefIntroduction: true,
+            avatar: true,
+        },
+    })
+
+    if (!user) {
+        return {
+            title: copy.notFoundTitle,
+            description: copy.notFoundDescription,
+        }
+    }
+
+    const displayName = user.name || `@${user.userid}`
+    const title = copy.titleTemplate(displayName)
+    const description = buildBioDescription(user.briefIntroduction) || copy.defaultDescription
+    const url = `${siteUrl}/imitation-x/user/${user.id}`
+
+    return {
+        title,
+        description,
+        alternates: {
+            canonical: url,
+        },
+        openGraph: {
+            title,
+            description,
+            url,
+            type: 'profile',
+            siteName: 'Gekaixing',
+            images: user.avatar
+                ? [
+                    {
+                        url: user.avatar,
+                        alt: `${displayName} avatar`,
+                    },
+                ]
+                : undefined,
+        },
+        twitter: {
+            card: 'summary',
+            title,
+            description,
+            images: user.avatar ? [user.avatar] : undefined,
+        },
+    }
+}
 
 async function getFeed(userId: string): Promise<Post[]> {
     const posts = await prisma.post.findMany({
@@ -359,7 +470,8 @@ async function getUserInfo(userId: string) {
 }
 
 
-export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+export default async function Page({ params }: { params: Promise<{ id: string[] }> }) {
+    const t = await getTranslations("ImitationX.Profile")
     const { id } = await params
 
     const userId = id[0]
@@ -391,11 +503,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
                 <Tabs defaultValue="post" className="w-full">
                     <TabsList className='w-full'>
-                        <TabsTrigger value="post">帖子</TabsTrigger>
-                        <TabsTrigger value="reply">回复</TabsTrigger>
+                        <TabsTrigger value="post">{t("tabs.posts")}</TabsTrigger>
+                        <TabsTrigger value="reply">{t("tabs.replies")}</TabsTrigger>
                         {/* <TabsTrigger value="article">文章</TabsTrigger>*/}
-                        <TabsTrigger value="like">喜欢</TabsTrigger>
-                        <TabsTrigger value="bookmark">收藏</TabsTrigger>
+                        <TabsTrigger value="like">{t("tabs.likes")}</TabsTrigger>
+                        <TabsTrigger value="bookmark">{t("tabs.bookmarks")}</TabsTrigger>
                     </TabsList>
                     <TabsContent value="post" className='flex flex-col gap-6'>
                         <PostStore data={posts} />
@@ -413,6 +525,4 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         </div>
     )
 }
-
-
 

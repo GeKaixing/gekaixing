@@ -2,12 +2,14 @@ import PostCard from '@/components/gekaixing/PostCard'
 import SearchInput from '@/components/gekaixing/SearchInput'
 import Link from 'next/link'
 import React from 'react'
+import { getTranslations } from 'next-intl/server'
 
 export default async function Page({
     searchParams,
 }: {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
+    const t = await getTranslations("ImitationX.SearchPage")
     const { query = '' } = await searchParams
     const reslut = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/sreach?query=${query}`)
     const data = await reslut.json()
@@ -17,8 +19,8 @@ export default async function Page({
             <SearchInput></SearchInput>
             <div className='w-full mt-2'></div>
             {data?.data?.length === 0 ? <div className='flex flex-col gap-2 items-center'>
-                <span> 暂无内容</span>
-                <Link href={'/imitation-x/post'} className='text-blue-400'>发布</Link>
+                <span>{t("empty")}</span>
+                <Link href={'/imitation-x/post'} className='text-blue-400'>{t("publish")}</Link>
             </div> :
                 <div className='flex flex-col gap-6'>
                     {data.data.map((items: {

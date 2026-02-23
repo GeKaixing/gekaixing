@@ -12,7 +12,7 @@ export default function ArrowLeftBack({ className, children, name='返回' }: {
         <div className="flex items-center gap-4 px-4 py-3">
             <div
 
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-2 hover:bg-muted/70 rounded-full transition-colors"
             >
                 <ArrowLeft
                     className={className}

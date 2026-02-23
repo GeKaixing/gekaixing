@@ -16,8 +16,10 @@ import { copyToClipboard } from "@/utils/function/copyToClipboard";
 import SidebarAvatar from "./SidebarAvatar";
 import EditPost from "./EditPost";
 import { userResult } from "@/app/imitation-x/layout";
+import { useTranslations } from "next-intl";
 
 export default function Sidebar({ user }: { user: userResult | null }) {
+    const t = useTranslations("ImitationX.Sidebar");
     const { openModal } = postModalStore()
     userStore.setState({
         email: user?.email || '',
@@ -37,61 +39,61 @@ export default function Sidebar({ user }: { user: userResult | null }) {
             <div className="flex flex-col h-full w-full lg:w-[200px]">
                 <ul className="space-y-1 flex flex-col items-center lg:items-start">
                     <li className="w-full">
-                        <Link href="/imitation-x" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                        <Link href="/imitation-x" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                             <House className="w-7 h-7" />
-                            <span className="hidden lg:inline">主页</span>
+                            <span className="hidden lg:inline">{t("home")}</span>
                         </Link>
                     </li>
                     <li className="w-full">
-                        <Link href="/imitation-x/chat" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                        <Link href="/imitation-x/chat" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                             <MessageSquare className="w-7 h-7" />
-                            <span className="hidden lg:inline">聊天</span>
+                            <span className="hidden lg:inline">{t("chat")}</span>
                         </Link>
                     </li>
                     <li className="w-full">
-                        <Link href="/imitation-x/connect_people" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                        <Link href="/imitation-x/connect_people" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                             <Users className="w-7 h-7" />
-                            <span className="hidden lg:inline">关注</span>
+                            <span className="hidden lg:inline">{t("connect")}</span>
                         </Link>
                     </li>
                     <li className="w-full">
-                        <Link href="/imitation-x/explore" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                        <Link href="/imitation-x/explore" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                             <Search className="w-7 h-7" />
-                            <span className="hidden lg:inline">探索</span>
+                            <span className="hidden lg:inline">{t("explore")}</span>
                         </Link>
                     </li>
                     <li className="w-full">
-                        <Link href="/imitation-x/gkx" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                        <Link href="/imitation-x/gkx" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                             <RailSymbol className="w-7 h-7" />
                             <span className="hidden lg:inline">GKX</span>
                         </Link>
                     </li>
                     <li className="w-full">
-                        <Link href="/imitation-x/premium" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                        <Link href="/imitation-x/premium" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                             <ShieldCheck className="w-7 h-7" />
-                            <span className="hidden lg:inline">premium</span>
+                            <span className="hidden lg:inline">{t("premium")}</span>
                         </Link>
                     </li>
 
                     <li className="w-full">
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <button className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full cursor-pointer">
+                                <button className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full cursor-pointer transition-colors">
                                     <CircleEllipsis className="w-7 h-7" />
-                                    <span className="hidden lg:inline">更多</span>
+                                    <span className="hidden lg:inline">{t("more")}</span>
                                 </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent side="right" align="start" className="w-48">
                                 <DropdownMenuItem asChild>
                                     <Link href="/imitation-x/likes" className="flex items-center gap-2 cursor-pointer">
                                         <Heart className="w-4 h-4" />
-                                        <span>喜欢</span>
+                                        <span>{t("likes")}</span>
                                     </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem asChild>
                                     <Link href="/imitation-x/bookmarks" className="flex items-center gap-2 cursor-pointer">
                                         <Bookmark className="w-4 h-4" />
-                                        <span>收藏</span>
+                                        <span>{t("bookmarks")}</span>
                                     </Link>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -100,17 +102,17 @@ export default function Sidebar({ user }: { user: userResult | null }) {
 
                     {user?.id && (
                         <li className="w-full">
-                            <Link href="/imitation-x/settings" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                            <Link href="/imitation-x/settings" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                                 <Settings className="w-7 h-7" />
-                                <span className="hidden lg:inline">设置</span>
+                                <span className="hidden lg:inline">{t("settings")}</span>
                             </Link>
                         </li>
                     )}
                     {user?.id && (
                         <li className="w-full">
-                            <Link href={`/imitation-x/user/${user?.id}`} className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                            <Link href={`/imitation-x/user/${user?.id}`} className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                                 <UserIcon className="w-7 h-7" />
-                                <span className="hidden lg:inline">个人信息</span>
+                                <span className="hidden lg:inline">{t("profile")}</span>
                             </Link>
                         </li>
                     )}
@@ -119,19 +121,19 @@ export default function Sidebar({ user }: { user: userResult | null }) {
                         <li className="w-full mt-4 flex justify-center items-center">
                             <button
                                 onClick={openModal}
-                                className="w-12 h-12 lg:w-full lg:h-auto lg:py-3 bg-black text-white rounded-full flex items-center justify-center hover:bg-black/90 transition-colors"
+                                className="w-12 h-12 lg:w-full lg:h-auto lg:py-3 bg-primary text-primary-foreground rounded-full flex items-center justify-center hover:opacity-90 transition-colors"
                             >
                                 <Feather className="w-5 h-5 lg:hidden" />
-                                <span className="hidden lg:inline font-bold text-lg">发布</span>
+                                <span className="hidden lg:inline font-bold text-lg">{t("publish")}</span>
                             </button>
                         </li>
                     )}
 
                     {!user?.id ? (
                         <li className="w-full">
-                            <Link href="/account" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-gray-50 rounded-full p-3 w-full">
+                            <Link href="/account" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                                 <LogIn className="w-7 h-7" />
-                                <span className="hidden lg:inline">登录</span>
+                                <span className="hidden lg:inline">{t("login")}</span>
                             </Link>
                         </li>
                     ) : null}

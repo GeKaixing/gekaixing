@@ -1,19 +1,22 @@
 "use client"
 
 import Link from "next/link"
-import { MessageSquare, Plus } from "lucide-react"
+import { MessageSquare, Plus, Trash2 } from "lucide-react"
 import { AiSession, useAiSessions } from "@/store/AiSessions"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { toast } from "sonner"
+import { useTranslations } from "next-intl"
 
 export default function GkxAiSidebar({
   sessions,
-  userId,
+  userId: _userId,
 }: {
   sessions: AiSession[]
   userId: string
 }) {
+  const t = useTranslations("ImitationX.Gkx")
   const router = useRouter()
   const pathname = usePathname()
 
@@ -26,8 +29,9 @@ export default function GkxAiSidebar({
   const {
     sessions: storeSessions,
     setSessions,
-    addSession,
+    removeSession,
   } = useAiSessions()
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   // 同步 sessions 到 store
   useEffect(() => {
@@ -38,28 +42,59 @@ export default function GkxAiSidebar({
     router.push(`/imitation-x/gkx`)
   }
 
+  async function handleDeleteSession(sessionId: string): Promise<void> {
+    if (deletingId) return
+    setDeletingId(sessionId)
+
+    try {
+      const res = await fetch("/api/chat/delete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sessionId }),
+      })
+
+      if (!res.ok) {
+        throw new Error(t("deleteFailed"))
+      }
+
+      removeSession(sessionId)
+      toast.success(t("deleteSuccess"))
+
+      if (isActiveSession(sessionId)) {
+        router.push("/imitation-x/gkx")
+      }
+    } catch (error) {
+      console.error(t("deleteFailed"), error)
+      toast.error(t("deleteFailedRetry"))
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   return (
-    <div className="flex flex-col h-full bg-[#f9f9f9] dark:bg-[#0d0d0d] w-64 border-r border-border">
+    <div className="border border-border rounded-2xl bg-background">
       {/* 新对话按钮 */}
-      <div className="p-4">
+      <div className="p-3">
         <button
           onClick={handleNewSession}
-          className="w-full flex items-center gap-2 justify-center bg-white dark:bg-zinc-900 border border-border rounded-xl py-2.5 text-sm font-semibold hover:bg-secondary/50 transition-all shadow-sm active:scale-[0.98]"
+          className="w-full flex items-center gap-2 justify-center border border-border rounded-xl py-2.5 text-sm font-semibold hover:bg-muted/60 transition-all"
         >
           <Plus size={16} strokeWidth={3} />
-          <span>新对话</span>
+          <span>{t("newChat")}</span>
         </button>
       </div>
 
       {/* 历史记录 */}
-      <div className="flex-1 overflow-y-auto px-3 space-y-1 custom-scrollbar">
-        <div className="px-3 py-4 text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
-          历史记录
+      <div className="max-h-[360px] overflow-y-auto px-2 pb-3 space-y-1 custom-scrollbar">
+        <div className="px-3 py-2 text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+          {t("history")}
         </div>
 
         {storeSessions.length === 0 ? (
-          <div className="px-3 py-10 text-center text-xs text-muted-foreground italic">
-            暂无聊天记录
+          <div className="px-3 py-8 text-center text-xs text-muted-foreground italic">
+            {t("emptyHistory")}
           </div>
         ) : (
           [...storeSessions]
@@ -75,31 +110,48 @@ export default function GkxAiSidebar({
               const isHighlight = isActive 
 
               return (
-                <Link
+                <div
                   key={session.id}
-                  href={`/imitation-x/gkx/${session.id}`}
                   className={cn(
-                    // 基础样式
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all group overflow-hidden",
-
-                    // hover
-                    "hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 hover:text-foreground",
-
-                    // 状态样式
+                    "flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm transition-all group overflow-hidden border border-transparent",
+                    "hover:bg-muted/60 hover:text-foreground",
                     isHighlight
-                      ? "bg-blue-100 dark:bg-blue-100/50 text-foreground"
-                      : "bg-zinc-200/50 dark:bg-zinc-800/50 text-muted-foreground"
+                      ? "bg-muted text-foreground border-border"
+                      : "text-muted-foreground"
                   )}
                 >
-                  <MessageSquare
-                    size={14}
-                    className="shrink-0 opacity-60 group-hover:opacity-100"
-                  />
+                  <Link
+                    href={`/imitation-x/gkx/${session.id}`}
+                    className="flex min-w-0 flex-1 items-center gap-3"
+                  >
+                    <MessageSquare
+                      size={14}
+                      className="shrink-0 opacity-60 group-hover:opacity-100"
+                    />
+                    <span className="truncate flex-1">
+                      {session.title || t("untitled")}
+                    </span>
+                  </Link>
 
-                  <span className="truncate flex-1">
-                    {session.title || "无标题对话"}
-                  </span>
-                </Link>
+                  <button
+                    type="button"
+                    aria-label={t("deleteSession")}
+                    onClick={(event) => {
+                      event.preventDefault()
+                      event.stopPropagation()
+                      void handleDeleteSession(session.id)
+                    }}
+                    disabled={deletingId === session.id}
+                    className={cn(
+                      "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md transition-opacity",
+                      "opacity-0 group-hover:opacity-100",
+                      "hover:bg-destructive/10 hover:text-destructive",
+                      deletingId === session.id && "opacity-100 cursor-not-allowed"
+                    )}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
               )
             })
         )}

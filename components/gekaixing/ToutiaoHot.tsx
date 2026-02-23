@@ -1,20 +1,9 @@
-"use server"
+"use client"
 
 import { ChartNoAxesColumn } from "lucide-react"
 import Link from "next/link"
-
-export async function ToutiaoHotGTE() {
-  try {
-    const data = await fetch("https://dabenshi.cn/other/api/hot.php?type=toutiaoHot", {
-      method: "GET",
-      cache: "no-store",
-    })
-    return data;
-  } catch (e) {
-    console.error("ToutiaoHot fetch failed:", e)
-    return null
-  }
-}
+import { useEffect, useState } from "react"
+import { useTranslations } from "next-intl"
 
 type HotItem = {
   url: string
@@ -22,43 +11,66 @@ type HotItem = {
   hot_value: string
 }
 
-export default async function ToutiaoHot() {
-  const res = await ToutiaoHotGTE()
- 
-    // ❌ 请求失败
-    if (!res || !res.ok) {
-      return (
-        <div className="border p-2 rounded-2xl text-gray-500">
-          今日头条加载失败
-        </div>
-      )
+export default function ToutiaoHot() {
+  const t = useTranslations("ImitationX.Hot")
+  const [list, setList] = useState<HotItem[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadHot(): Promise<void> {
+      try {
+        const res = await fetch("/api/toutiao-hot")
+        if (!res.ok) {
+          if (!cancelled) {
+            setList([])
+          }
+          return
+        }
+
+        const json = (await res.json()) as { data?: HotItem[] }
+        if (!cancelled) {
+          setList(Array.isArray(json.data) ? json.data : [])
+        }
+      } catch (error) {
+        console.error(t("loadFailed"), error)
+        if (!cancelled) {
+          setList([])
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false)
+        }
+      }
     }
 
-    let json;
-    try {
-      json = await res.json()
-    } catch {
-      return (
-        <div className="border p-2 rounded-2xl text-gray-500">
-          数据解析失败
-        </div>
-      )
-    }
+    void loadHot()
 
-    const list: HotItem[] = Array.isArray(json?.data) ? json.data : []
-
-    // ❌ 没有数据
-    if (list.length === 0) {
-      return (
-        <div className="border p-2 rounded-2xl text-gray-500">
-          暂无今日头条数据
-        </div>
-      )
+    return () => {
+      cancelled = true
     }
+  }, [t])
+
+  if (loading) {
+    return (
+        <div className="border p-2 rounded-2xl text-muted-foreground bg-background">
+        {t("loading")}
+      </div>
+    )
+  }
+
+  if (list.length === 0) {
+    return (
+      <div className="border p-2 rounded-2xl text-muted-foreground bg-background">
+        {t("empty")}
+      </div>
+    )
+  }
 
   return (
     <div className="border p-2 rounded-2xl">
-      <span className="font-semibold">今日头条</span>
+      <span className="font-semibold">{t("title")}</span>
 
       {list.slice(1, 6).map((item, idx) => (
         <Link
@@ -66,10 +78,10 @@ export default async function ToutiaoHot() {
           key={idx}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex py-1 flex-col justify-start hover:bg-gray-200 cursor-pointer rounded-2xl p-1"
+          className="flex py-1 flex-col justify-start hover:bg-muted/70 cursor-pointer rounded-2xl p-1 transition-colors"
         >
           <span className="line-clamp-2">{item.title}</span>
-          <div className="flex items-center gap-1 text-sm text-gray-500">
+          <div className="flex items-center gap-1 text-sm text-muted-foreground">
             <ChartNoAxesColumn size={14} />
             <span>{item.hot_value}</span>
           </div>
@@ -78,9 +90,9 @@ export default async function ToutiaoHot() {
 
       <Link
         href="/imitation-x/explore"
-        className="text-blue-500 block mt-2 hover:underline"
+        className="text-blue-600 dark:text-blue-400 block mt-2 hover:underline"
       >
-        显示更多
+        {t("more")}
       </Link>
     </div>
   )

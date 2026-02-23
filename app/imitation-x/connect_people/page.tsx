@@ -94,35 +94,35 @@ export default function ConnectPeoplePage() {
   ];
 
   return (
-    <div className="min-h-screen">
-      <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-gray-200">
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="sticky top-0 z-10 bg-background/90 backdrop-blur-md border-b border-border">
         <div className="flex items-center gap-4 px-4 py-3">
           <Link
             href="/imitation-x"
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-muted/70 rounded-full transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
             <h1 className="text-xl font-bold">连接</h1>
-            <p className="text-sm text-gray-500">@{users.length} 位用户</p>
+            <p className="text-sm text-muted-foreground">@{users.length} 位用户</p>
           </div>
         </div>
 
         <div className="px-4 py-2">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="text"
               placeholder="搜索用户"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-10 py-2 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+              className="w-full pl-10 pr-10 py-2 bg-muted rounded-full text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-background transition-all"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 bg-gray-400 rounded-full hover:bg-gray-500 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 bg-muted-foreground/70 rounded-full hover:bg-muted-foreground transition-colors"
               >
                 <X className="w-3 h-3 text-white" />
               </button>
@@ -130,7 +130,7 @@ export default function ConnectPeoplePage() {
           </div>
         </div>
 
-        <div className="flex border-b border-gray-200">
+        <div className="flex border-b border-border">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -138,8 +138,8 @@ export default function ConnectPeoplePage() {
               className={cn(
                 "flex-1 py-3 px-4 text-sm font-medium transition-colors relative",
                 activeTab === tab.id
-                  ? "text-black"
-                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/70"
               )}
             >
               {tab.label}
@@ -151,24 +151,24 @@ export default function ConnectPeoplePage() {
         </div>
       </div>
 
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-border">
         {filteredUsers.length === 0 ? (
           <div className="py-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-              <Search className="w-8 h-8 text-gray-400" />
+            <div className="w-16 h-16 mx-auto mb-4 bg-muted rounded-full flex items-center justify-center">
+              <Search className="w-8 h-8 text-muted-foreground" />
             </div>
-            <p className="text-gray-500">没有找到匹配的用户</p>
+            <p className="text-muted-foreground">没有找到匹配的用户</p>
           </div>
         ) : (
           filteredUsers.map((user) => (
             <div
               key={user.id}
-              className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer"
+              className="flex items-start gap-3 px-4 py-3 hover:bg-muted/60 transition-colors cursor-pointer"
             >
               <Link href={`/imitation-x/user/${user.id}`}>
                 <Avatar className="w-12 h-12">
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="bg-gray-200 text-gray-600 font-medium">
+                  <AvatarFallback className="bg-muted text-muted-foreground font-medium">
                     {user.name.slice(0, 2)}
                   </AvatarFallback>
                 </Avatar>
@@ -194,7 +194,7 @@ export default function ConnectPeoplePage() {
                         </svg>
                       )}
                     </div>
-                    <p className="text-sm text-gray-500 truncate">
+                    <p className="text-sm text-muted-foreground truncate">
                       {user.handle}
                     </p>
                   </div>
@@ -209,8 +209,8 @@ export default function ConnectPeoplePage() {
                     className={cn(
                       "rounded-full text-sm font-bold min-w-[80px] transition-all",
                       user.isFollowing
-                        ? "border-gray-300 hover:border-red-300 hover:text-red-500 hover:bg-red-50"
-                        : "bg-black text-white hover:bg-black/90"
+                        ? "border-border hover:border-red-400/50 hover:text-red-500 hover:bg-red-500/10"
+                        : "bg-primary text-primary-foreground hover:opacity-90"
                     )}
                   >
                     {user.isFollowing ? (
@@ -228,7 +228,7 @@ export default function ConnectPeoplePage() {
                 </div>
 
                 <Link href={`/imitation-x/user/${user.id}`}>
-                  <p className="text-sm text-gray-700 mt-1 line-clamp-2">
+                  <p className="text-sm text-foreground/85 mt-1 line-clamp-2">
                     {user.bio}
                   </p>
                 </Link>
@@ -240,7 +240,7 @@ export default function ConnectPeoplePage() {
 
       {filteredUsers.length > 0 && (
         <div className="py-4 text-center">
-          <Button variant="ghost" className="text-blue-500 hover:text-blue-600">
+          <Button variant="ghost" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
             加载更多
           </Button>
         </div>

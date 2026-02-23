@@ -93,11 +93,11 @@ async function subscribe(priceId: string) {
 
 export default function PremiumPage() {
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-background text-foreground">
             {/* header */}
             <div className="max-w-5xl mx-auto px-4 pt-16 pb-10 text-center">
                 <h1 className="text-4xl font-bold">升级 Premium</h1>
-                <p className="text-gray-500 mt-4 text-lg">
+                <p className="text-muted-foreground mt-4 text-lg">
                     更少广告、更强功能、优先展示你的内容
                 </p>
             </div>
@@ -110,12 +110,12 @@ export default function PremiumPage() {
                         className={cn(
                             "rounded-2xl border p-6 flex flex-col",
                             plan.highlight
-                                ? "border-black shadow-xl scale-105"
-                                : "border-gray-200"
+                                ? "border-primary shadow-xl scale-105 bg-card"
+                                : "border-border bg-card"
                         )}
                     >
                         {plan.highlight && (
-                            <div className="mb-4 text-xs font-bold bg-black text-white px-3 py-1 rounded-full w-fit">
+                            <div className="mb-4 text-xs font-bold bg-primary text-primary-foreground px-3 py-1 rounded-full w-fit">
                                 推荐
                             </div>
                         )}
@@ -124,13 +124,13 @@ export default function PremiumPage() {
 
                         <div className="mt-3 text-3xl font-bold">{plan.price}</div>
 
-                        <p className="text-gray-500 mt-2">{plan.description}</p>
+                        <p className="text-muted-foreground mt-2">{plan.description}</p>
 
                         <Button
                             className={cn(
                                 "mt-6 rounded-full",
                                 plan.highlight
-                                    ? "bg-black text-white hover:bg-black/90"
+                                    ? "bg-primary text-primary-foreground hover:opacity-90"
                                     : ""
                             )}
                             variant={plan.highlight ? "default" : "outline"}
@@ -148,11 +148,11 @@ export default function PremiumPage() {
                                     {feature.included ? (
                                         <Check className="w-4 h-4 text-green-500" />
                                     ) : (
-                                        <X className="w-4 h-4 text-gray-300" />
+                                        <X className="w-4 h-4 text-muted-foreground/40" />
                                     )}
                                     <span
                                         className={
-                                            feature.included ? "text-black" : "text-gray-400"
+                                            feature.included ? "text-foreground" : "text-muted-foreground"
                                         }
                                     >
                                         {feature.text}
@@ -165,7 +165,7 @@ export default function PremiumPage() {
             </div>
 
             {/* extra features */}
-            <div className="bg-gray-50 py-20">
+            <div className="bg-muted/40 py-20">
                 <div className="max-w-4xl mx-auto px-4 text-center">
                     <h2 className="text-2xl font-bold">为什么选择 Premium？</h2>
 
@@ -191,9 +191,9 @@ export default function PremiumPage() {
 
 function Feature({ title, desc }: { title: string; desc: string }) {
     return (
-        <div className="p-6 bg-white rounded-xl border">
+        <div className="p-6 bg-card rounded-xl border border-border">
             <div className="text-lg font-bold">{title}</div>
-            <p className="text-gray-500 mt-2">{desc}</p>
+            <p className="text-muted-foreground mt-2">{desc}</p>
         </div>
     );
 }

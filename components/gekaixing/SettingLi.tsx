@@ -5,7 +5,7 @@ import React from 'react'
 
 export default function SettingLi({
     icon,
-    icon2 = <ChevronRight className="text-gray-400 hover:text-black" />,
+    icon2 = <ChevronRight className="text-muted-foreground hover:text-foreground" />,
     text,
     className,
     href = "/imitation-x/settings/account"
@@ -20,7 +20,7 @@ export default function SettingLi({
         <Link
             href={href}
             className={clsx(
-                "w-full px-6 py-2 hover:bg-gray-200 flex justify-between items-center",
+                "w-full px-6 py-2 hover:bg-muted/70 flex justify-between items-center transition-colors",
                 className
             )}
         >

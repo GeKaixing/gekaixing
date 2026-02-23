@@ -109,7 +109,7 @@ export default function FollowCard() {
     return (
         <Card className="p-4 border rounded-lg">
             {loading ? (
-                <div className="text-sm text-gray-500">加载中...</div>
+                <div className="text-sm text-muted-foreground">加载中...</div>
             ) : result ? (
                 <div className="flex items-start justify-between gap-2">
                     <Avatar onClick={() => router.push(`/imitation-x/user/${result.author.id}`)} className="w-12 h-12 shrink-0">
@@ -126,7 +126,7 @@ export default function FollowCard() {
                             {result.author.isPremium && <ShieldCheck className="w-4 h-4 text-blue-500" />}
                         </Link>
 
-                        <p className="text-sm text-gray-500 truncate max-w-[120px]">
+                        <p className="text-sm text-muted-foreground truncate max-w-[120px]">
                             @{result.author.userid}
                         </p>
 
@@ -142,8 +142,8 @@ export default function FollowCard() {
                         className={cn(
                             "rounded-full font-bold",
                             result.author.isFollowing
-                                ? "hover:border-red-300 hover:text-red-500"
-                                : "bg-black text-white"
+                                ? "hover:border-red-400/50 hover:text-red-500"
+                                : "bg-primary text-primary-foreground"
                         )}
                     >
                         {result.author.isFollowing ? (
@@ -160,7 +160,7 @@ export default function FollowCard() {
                     </Button>
                 </div>
             ) : (
-                <div className="text-sm text-gray-500">未找到数据</div>
+                <div className="text-sm text-muted-foreground">未找到数据</div>
             )}
         </Card>
     );

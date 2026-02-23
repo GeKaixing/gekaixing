@@ -1,10 +1,15 @@
+import { streamGLM } from "@/lib/ai";
+import type { GLMMessage } from "@/lib/ai";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body = (await req.json()) as {
+      messages?: GLMMessage[]
+      sessionId?: string
+    };
 
     const { messages, sessionId } = body;
     const supabse = await createClient();
@@ -18,10 +23,6 @@ export async function POST(req: NextRequest) {
 
     if (!messages?.length) {
       return new Response("messages required", { status: 400 });
-    }
-
-    if (!userId) {
-      return new Response("userId required", { status: 400 });
     }
 
     // ⭐ 没 sessionId → 自动创建
@@ -61,23 +62,65 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // ===== 模拟 AI streaming（换成你自己的 AI）=====
+    const glmResponse = await streamGLM(messages);
+    if (!glmResponse.ok || !glmResponse.body) {
+      const errorText = await glmResponse.text();
+      console.error("GLM request failed:", errorText);
+      return new Response("AI service unavailable", { status: 502 });
+    }
+
     const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
 
     let fullText = "";
+    let buffer = "";
 
     const stream = new ReadableStream({
       async start(controller) {
         try {
-          const fakeResponse =
-            "感谢您的提问。让我为您详细解答...这是一个模拟的流式返回测试，每个字符都会逐步显示。";
+          const reader = glmResponse.body?.getReader();
+          if (!reader) {
+            throw new Error("Missing GLM stream reader");
+          }
 
-          for (const char of fakeResponse) {
-            fullText += char;
+          const pushChunkText = (payload: string): void => {
+            if (!payload || payload === "[DONE]") return;
 
-            controller.enqueue(encoder.encode(char));
+            try {
+              const parsed = JSON.parse(payload) as {
+                choices?: Array<{ delta?: { content?: string } }>
+              };
+              const chunkText = parsed.choices?.[0]?.delta?.content;
 
-            await new Promise((r) => setTimeout(r, 20));
+              if (typeof chunkText === "string" && chunkText.length > 0) {
+                fullText += chunkText;
+                controller.enqueue(encoder.encode(chunkText));
+              }
+            } catch (parseError) {
+              console.error("Failed to parse GLM SSE chunk:", parseError);
+            }
+          };
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop() ?? "";
+
+            for (const line of lines) {
+              const trimmedLine = line.trim();
+              if (!trimmedLine.startsWith("data:")) continue;
+
+              const payload = trimmedLine.slice(5).trim();
+              pushChunkText(payload);
+            }
+          }
+
+          const tail = buffer.trim();
+          if (tail.startsWith("data:")) {
+            pushChunkText(tail.slice(5).trim());
           }
 
           // ===== 保存 assistant message =====
@@ -91,9 +134,9 @@ export async function POST(req: NextRequest) {
           });
 
           controller.close();
-        } catch (err) {
-          console.error(err);
-          controller.error(err);
+        } catch (streamError) {
+          console.error(streamError);
+          controller.error(streamError);
         }
       },
     });

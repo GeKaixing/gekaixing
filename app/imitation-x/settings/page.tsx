@@ -3,13 +3,15 @@ import ArrowLeftBack from '@/components/gekaixing/ArrowLeftBack'
 import SettingLi from '@/components/gekaixing/SettingLi'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { userStore } from '@/store/user'
-import { ChevronRight, Info, User,HandHelping } from 'lucide-react'
+import { Info, User,HandHelping, Palette, Languages } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
-export default function page() {
+export default function Page() {
+  const t = useTranslations("ImitationX.Settings")
   const { name, user_avatar, email } = userStore()
   return (
     <div>
-      <ArrowLeftBack name='设置'></ArrowLeftBack>
+      <ArrowLeftBack name={t("title")}></ArrowLeftBack>
       <div className='w-full flex  justify-center items-center'>
         <div className='flex flex-col items-center'>
           <Avatar>
@@ -23,16 +25,26 @@ export default function page() {
       <ul>
         <SettingLi
           icon={<User></User>}
-          text='账号'
+          text={t("account")}
+        ></SettingLi>
+        <SettingLi
+          icon={<Palette />}
+          text={t("theme")}
+          href='/imitation-x/settings/theme'
+        ></SettingLi>
+        <SettingLi
+          icon={<Languages />}
+          text={t("language")}
+          href='/imitation-x/settings/language'
         ></SettingLi>
         <SettingLi
           icon={<HandHelping/>}
-          text='帮助中心'
+          text={t("help")}
           href='/imitation-x/help'
         ></SettingLi>
         <SettingLi
           icon={<Info></Info>}
-          text='关于'
+          text={t("about")}
           href='/about'
         ></SettingLi>
       </ul>

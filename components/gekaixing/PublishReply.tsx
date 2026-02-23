@@ -122,7 +122,7 @@ export default function PublishReply({
     }
 
     return (
-        <Card className="flex w-full flex-row gap-2 p-2 hover:bg-gray-50">
+        <Card className="flex w-full flex-row gap-2 p-2 hover:bg-muted/60 transition-colors">
             {userId ? (
                 <>
                     <Avatar>
@@ -145,8 +145,8 @@ export default function PublishReply({
                         onClick={handleReply}
                         disabled={!replyInput.trim() || isLoading}
                         className={clsx(
-                            'rounded-2xl font-bold h-8 w-[60px] text-white bg-gray-400 flex justify-center items-center',
-                            { '!bg-black': replyInput.trim() && !isLoading }
+                            'rounded-2xl font-bold h-8 w-[60px] text-primary-foreground bg-muted-foreground/60 flex justify-center items-center transition-colors',
+                            { '!bg-primary': replyInput.trim() && !isLoading }
                         )}
                     >
                         {isLoading
@@ -157,7 +157,7 @@ export default function PublishReply({
             ) : (
                 <Link
                     href="/account"
-                    className="rounded-2xl font-bold bg-gray-500 text-white h-8 flex justify-center items-center w-full"
+                    className="rounded-2xl font-bold bg-muted-foreground text-primary-foreground h-8 flex justify-center items-center w-full"
                 >
                     请你登录后回复
                 </Link>

@@ -2,6 +2,195 @@
   "HomePage": {
     "title": "Hello world!"
   },
+  "Navbar": {
+    "login": "Login"
+  },
+  "Landing": {
+    "hero": {
+      "badge": "Build Social + AI",
+      "titleLine1": "A Production-Ready",
+      "titleLine2": "Social Platform Template",
+      "description": "GKX is a full-stack project powered by Next.js, Prisma and Supabase, with feed, messaging, user graph and AI chat capabilities ready for extension.",
+      "primaryCta": "Open Product",
+      "secondaryCta": "View Dev Logs"
+    },
+    "stats": {
+      "arch": {
+        "label": "Architecture",
+        "value": "Next.js 16 App Router"
+      },
+      "db": {
+        "label": "Database",
+        "value": "Prisma + PostgreSQL"
+      },
+      "auth": {
+        "label": "Authentication",
+        "value": "Supabase SSR Auth"
+      }
+    },
+    "preview": {
+      "liveModules": "live modules",
+      "feed": {
+        "title": "Feed",
+        "detail": "Posts, replies, likes, shares"
+      },
+      "chat": {
+        "title": "Messaging",
+        "detail": "Conversations and realtime updates"
+      },
+      "ai": {
+        "title": "AI Assistant",
+        "detail": "Streaming replies and chat history"
+      }
+    },
+    "featureSection": {
+      "badge": "Feature Set",
+      "title": "Core Capabilities"
+    },
+    "features": {
+      "social": {
+        "title": "Social Interaction Loop",
+        "description": "Supports posting, replying, liking, sharing and user relationships to keep content moving."
+      },
+      "ai": {
+        "title": "AI Conversation Layer",
+        "description": "Built-in GKX AI with history, auto session titles and streaming responses."
+      },
+      "security": {
+        "title": "Auth & Data Safety",
+        "description": "Backed by Supabase Auth and PostgreSQL/Prisma for consistent authorization and data access."
+      }
+    },
+    "workflow": {
+      "badge": "Workflow",
+      "title": "Launch Path",
+      "tag": "Ready for personal projects and portfolio"
+    },
+    "steps": {
+      "first": {
+        "title": "Login and create identity",
+        "description": "Use your account to sign in and enter your profile and social feed quickly."
+      },
+      "second": {
+        "title": "Publish and connect",
+        "description": "Post, reply and follow people to build a sustainable content graph."
+      },
+      "third": {
+        "title": "Use GKX AI for creation",
+        "description": "Ask questions, organize ideas and keep multi-turn conversations in one place."
+      }
+    },
+    "cta": {
+      "badge": "Ready to Build",
+      "title": "Start with GKX now",
+      "description": "From social feed to AI workspace, the core modules are already wired together. Extend your business features directly.",
+      "primary": "Open Product",
+      "secondary": "Login"
+    }
+  },
+  "ImitationX": {
+    "Sidebar": {
+      "home": "Home",
+      "chat": "Chat",
+      "connect": "Connect",
+      "explore": "Explore",
+      "premium": "Premium",
+      "more": "More",
+      "likes": "Likes",
+      "bookmarks": "Bookmarks",
+      "settings": "Settings",
+      "profile": "Profile",
+      "publish": "Post",
+      "login": "Login"
+    },
+    "Mobile": {
+      "home": "Home",
+      "search": "Search",
+      "mine": "Me",
+      "settings": "Settings",
+      "publish": "Post",
+      "login": "Login"
+    },
+    "Gkx": {
+      "newChat": "New Chat",
+      "history": "History",
+      "emptyHistory": "No chat history",
+      "untitled": "Untitled Chat",
+      "deleteSession": "Delete session",
+      "deleteSuccess": "Session deleted",
+      "deleteFailed": "Failed to delete session",
+      "deleteFailedRetry": "Delete failed, please retry",
+      "loadHistoryFailed": "Failed to load history",
+      "errorRetry": "Something went wrong, please retry",
+      "generateTitleFailed": "Failed to generate title",
+      "assistantTitle": "AI Assistant",
+      "inputPlaceholder": "Type a message...",
+      "send": "Send",
+      "emptyState": "Start chatting with AI 🚀",
+      "copySuccess": "Copied",
+      "copyFailed": "Copy failed",
+      "copyMessage": "Copy message"
+    },
+    "Settings": {
+      "title": "Settings",
+      "account": "Account",
+      "theme": "Theme",
+      "language": "Language",
+      "help": "Help Center",
+      "about": "About"
+    },
+    "Theme": {
+      "title": "Theme",
+      "light": {
+        "title": "Light",
+        "description": "Always use light theme"
+      },
+      "dark": {
+        "title": "Dark",
+        "description": "Always use dark theme"
+      },
+      "system": {
+        "title": "System",
+        "description": "Follow your device theme"
+      }
+    },
+    "Language": {
+      "title": "Language",
+      "zh": {
+        "title": "简体中文",
+        "description": "Use Chinese UI"
+      },
+      "en": {
+        "title": "English",
+        "description": "Use English UI"
+      }
+    },
+    "Search": {
+      "placeholder": "Search"
+    },
+    "SearchPage": {
+      "empty": "No content yet",
+      "publish": "Post"
+    },
+    "Explore": {
+      "title": "Explore"
+    },
+    "Hot": {
+      "title": "Trending",
+      "loading": "Loading trends...",
+      "empty": "No trend data",
+      "more": "Show more",
+      "loadFailed": "Failed to load trends"
+    },
+    "Profile": {
+      "tabs": {
+        "posts": "Posts",
+        "replies": "Replies",
+        "likes": "Likes",
+        "bookmarks": "Bookmarks"
+      }
+    }
+  },
   "AuthCodeError": {
     "title": "Invalid Code",
     "description": "The verification code you provided is invalid or has expired.",
