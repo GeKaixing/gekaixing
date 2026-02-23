@@ -16,10 +16,12 @@ import EditPost from "./EditPost";
 import { userResult } from "@/app/imitation-x/layout";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Sidebar({ user, mentionCount = 0 }: { user: userResult | null, mentionCount?: number }) {
     const t = useTranslations("ImitationX.Sidebar");
     const router = useRouter();
+    const [isMoreOpen, setIsMoreOpen] = useState(false)
     const { openModal } = postModalStore()
     userStore.setState({
         email: user?.email || '',
@@ -34,9 +36,8 @@ export default function Sidebar({ user, mentionCount = 0 }: { user: userResult |
         following: user?._count.following, // 关注数
     });
 
-    const handleMoreMenuSelect = (href: string) => (event: Event) => {
-        event.preventDefault()
-        event.stopPropagation()
+    const handleMoreMenuSelect = (href: string) => () => {
+        setIsMoreOpen(false)
         router.push(href)
     }
 
@@ -82,14 +83,14 @@ export default function Sidebar({ user, mentionCount = 0 }: { user: userResult |
                     </li>
 
                     <li className="w-full">
-                        <DropdownMenu>
+                        <DropdownMenu open={isMoreOpen} onOpenChange={setIsMoreOpen}>
                             <DropdownMenuTrigger asChild>
                                 <button className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full cursor-pointer transition-colors">
                                     <CircleEllipsis className="w-7 h-7" />
                                     <span className="hidden lg:inline">{t("more")}</span>
                                 </button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent side="right" align="start" className="w-48" onPointerDown={(event) => event.stopPropagation()}>
+                            <DropdownMenuContent side="right" align="start" className="w-48">
                                 <DropdownMenuItem onSelect={handleMoreMenuSelect("/imitation-x/likes")} className="flex items-center gap-2 cursor-pointer">
                                     <Heart className="w-4 h-4" />
                                     <span>{t("likes")}</span>

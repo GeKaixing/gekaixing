@@ -3,15 +3,17 @@
 import { userStore } from "@/store/user";
 import ArrowLeftBack from "./ArrowLeftBack";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function PostRetreat() {
+    const t = useTranslations("ImitationX.StatusHeader")
     const { id } = userStore()
     return (
         <div className='sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/40'>
             <div className='flex justify-between pr-4 '>
                 {id ? (
                     <div className="flex justify-between w-full items-center">
-                        <ArrowLeftBack></ArrowLeftBack>
+                        <ArrowLeftBack name={t("back")}></ArrowLeftBack>
                         <button
                             className='rounded-2xl font-bold bg-gray-500 text-white h-8 w-[60px]'
                             onClick={() => {
@@ -22,17 +24,17 @@ export default function PostRetreat() {
                                 }
                             }}
                         >
-                            回复
+                            {t("reply")}
                         </button>
                     </div>
                 ) : (
                     <div className="flex justify-between w-full items-center">
-                        <ArrowLeftBack></ArrowLeftBack>
+                        <ArrowLeftBack name={t("back")}></ArrowLeftBack>
                         <Link
                             href={'/account'}
                             className='rounded-2xl flex justify-center items-center font-bold bg-gray-500 text-white h-8 w-[120px]'
                         >
-                            请登录后回复
+                            {t("loginToReply")}
                         </Link>
                     </div>
                 )}

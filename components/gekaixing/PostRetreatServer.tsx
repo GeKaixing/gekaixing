@@ -4,8 +4,10 @@ import { createClient } from "@/utils/supabase/server";
 import ArrowLeftBack from "./ArrowLeftBack";
 import Link from "next/link";
 import PostRetreatClient from "./PostRetreatClient";
+import { getTranslations } from "next-intl/server";
 
 export default async function PostRetreatServer() {
+    const t = await getTranslations("ImitationX.StatusHeader")
     const supabase = await createClient();
 
     const {
@@ -20,12 +22,12 @@ export default async function PostRetreatServer() {
                     <PostRetreatClient></PostRetreatClient>
                 ) : (
                     <div className="flex justify-between w-full items-center">
-                        <ArrowLeftBack></ArrowLeftBack>
+                        <ArrowLeftBack name={t("back")}></ArrowLeftBack>
                         <Link
                             href={'/account'}
                             className='rounded-2xl flex justify-center items-center font-bold bg-gray-500 text-white h-8 w-[120px]'
                         >
-                            请登录后回复
+                            {t("loginToReply")}
                         </Link>
                     </div>
                 )}

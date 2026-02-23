@@ -439,6 +439,11 @@
         "6": "1w ago"
       }
     },
+    "StatusHeader": {
+      "back": "Back",
+      "reply": "Reply",
+      "loginToReply": "Please log in to reply"
+    },
     "ConnectPeople": {
       "title": "Connect",
       "userCount": "@{count} users",

@@ -439,6 +439,11 @@
         "6": "1周前"
       }
     },
+    "StatusHeader": {
+      "back": "返回",
+      "reply": "回复",
+      "loginToReply": "请登录后回复"
+    },
     "ConnectPeople": {
       "title": "连接",
       "userCount": "@{count} 位用户",
