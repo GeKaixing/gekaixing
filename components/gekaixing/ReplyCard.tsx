@@ -119,7 +119,7 @@ export default function ReplyCard({
     reply_count: number,
     share: number
 }) {
-    const post = replyStore(state => state.replys.find(p => p.id === id))
+    const post = replyStore(state => state.replies.find(p => p.id === id))
     const updatePost = replyStore(state => state.updateReply)
 
     const [isLiked, setIsLiked] = useState(false)
@@ -135,8 +135,8 @@ export default function ReplyCard({
                 setIsLiked(status.isLiked)
                 setIsBookmarked(status.isBookmarked)
                 updatePost(id, {
-                    likeCount: status.likeCount,
-                    shareCount: status.shareCount,
+                    like: status.likeCount,
+                    share: status.shareCount,
                 })
             })
         }
@@ -144,26 +144,26 @@ export default function ReplyCard({
 
     if (!post) return null
 
-    const { likeCount, shareCount, replyCount } = post
+    const { like, share, reply } = post
 
     const handleLike = async () => {
         if (isLikeLoading) return
         setIsLikeLoading(true)
 
-        const previousLike = likeCount
+        const previousLike = like
         const previousIsLiked = isLiked
-        const newLikeCount = isLiked ? likeCount - 1 : likeCount + 1
+        const newLikeCount = isLiked ? like - 1 : like + 1
 
-        updatePost(id, { likeCount: newLikeCount })
+        updatePost(id, { like: newLikeCount })
         setIsLiked(!isLiked)
 
         const result = await toggleLike(id, previousIsLiked)
 
         if (!result.success) {
-            updatePost(id, { likeCount: previousLike })
+            updatePost(id, { like: previousLike })
             setIsLiked(previousIsLiked)
         } else if (result.likeCount !== undefined) {
-            updatePost(id, { likeCount: result.likeCount })
+            updatePost(id, { like: result.likeCount })
         }
 
         setIsLikeLoading(false)
@@ -190,17 +190,17 @@ export default function ReplyCard({
         if (isShareLoading) return
         setIsShareLoading(true)
 
-        const previousShare = shareCount
-        const newShareCount = shareCount + 1
+        const previousShare = share
+        const newShareCount = share + 1
 
-        updatePost(id, { shareCount: newShareCount })
+        updatePost(id, { share: newShareCount })
 
         const result = await recordShare(id)
 
         if (!result.success) {
-            updatePost(id, { shareCount: previousShare })
+            updatePost(id, { share: previousShare })
         } else if (result.shareCount !== undefined) {
-            updatePost(id, { shareCount: result.shareCount })
+            updatePost(id, { share: result.shareCount })
         }
 
         copyToClipboard(`https://www.gekaixing.top/imitation-x/status/${id}`)
@@ -248,13 +248,13 @@ export default function ReplyCard({
                         <div className={`w-7 h-7 flex justify-center items-center rounded-full hover:bg-blue-400/10 ${isLikeLoading ? 'opacity-50' : ''}`}>
                             <Heart className={isLiked ? 'fill-current' : ''} />
                         </div>
-                        {likeCount || 0}
+                        {like || 0}
                     </li>
                     <Link href={`/imitation-x/status/${id}`} className='flex gap-2 hover:text-green-400'>
                         <div className='w-7 h-7 flex justify-center items-center rounded-full hover:bg-green-400/10'>
                             <MessageCircleMore />
                         </div>
-                        {replyCount || 0}
+                        {reply || 0}
                     </Link>
                     <li
                         className={`flex gap-2 hover:text-red-400 ${isBookmarked ? 'text-red-400' : ''}`}
@@ -269,7 +269,7 @@ export default function ReplyCard({
                         <div className={`w-7 h-7 flex justify-center items-center rounded-full hover:bg-blue-400/10 ${isShareLoading ? 'opacity-50' : ''}`}>
                             <Share2 />
                         </div>
-                        {shareCount || 0}
+                        {share || 0}
                     </li>
                 </ul>
 

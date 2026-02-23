@@ -8,6 +8,10 @@ export async function POST(req: Request) {
   const sig = h.get("stripe-signature");
   let event;
 
+  if (!sig) {
+    return new Response("Missing stripe-signature", { status: 400 });
+  }
+
   try {
     event = stripe.webhooks.constructEvent(
       body,

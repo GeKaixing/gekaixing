@@ -1,5 +1,5 @@
 'use client'
-import React, { use, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -63,11 +63,11 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
 
         if (type === 'reply') {
             // 🔁 1. 找到被删的那一项（用于失败回滚）
-            const deletedPost = replyStore.getState().replys.find(post => post.id === id)
+            const deletedPost = replyStore.getState().replies.find((post) => post.id === id)
 
 
             // 🧹 2. 乐观更新 UI
-            replyStore.getState().deleteReply(id)
+            replyStore.getState().removeReply(id)
             toast.success('删除成功')
             // 🔨 3. 请求后端删除
             result = await deleteReply(id)

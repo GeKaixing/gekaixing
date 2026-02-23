@@ -1,8 +1,9 @@
-import PostCard from '@/components/gekaixing/PostCard'
-import SearchInput from '@/components/gekaixing/SearchInput'
 import Link from 'next/link'
 import React from 'react'
 import { getTranslations } from 'next-intl/server'
+
+import PostCard from '@/components/gekaixing/PostCard'
+import SearchInput from '@/components/gekaixing/SearchInput'
 
 export default async function Page({
     searchParams,
@@ -44,12 +45,15 @@ export default async function Page({
                             user_avatar={items.user_avatar}
                             user_userid={items.user_userid}
                             content={items.content}
+                            createdAt={new Date()}
                             like={items.like}
                             star={items.star}
                             reply={items.reply_count}
                             share={items.share}
-                            isLiked={false}
-                            isBookmarked={false}
+                            likedByMe={false}
+                            bookmarkedByMe={false}
+                            sharedByMe={false}
+                            isPremium={false}
                         ></PostCard>
                     })}
                 </div>

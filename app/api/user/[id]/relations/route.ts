@@ -1,12 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { createClient } from "@/utils/supabase/server";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
-  req: Request,
-  { params }: { params: { id: string } },
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const { id } = await params;
   const supabase = await createClient();
 
   const {
@@ -56,7 +57,7 @@ export async function GET(
     // ===== 粉丝 =====
     if (type === "followers") {
       const followers = await prisma.follow.findMany({
-        where: { followingId: params.id },
+        where: { followingId: id },
         include: { follower: true },
       });
 
@@ -66,7 +67,7 @@ export async function GET(
     // ===== 关注中 =====
     if (type === "following") {
       const following = await prisma.follow.findMany({
-        where: { followerId: params.id },
+        where: { followerId: id },
         include: { following: true },
       });
 
