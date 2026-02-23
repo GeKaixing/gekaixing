@@ -17,9 +17,11 @@ import SidebarAvatar from "./SidebarAvatar";
 import EditPost from "./EditPost";
 import { userResult } from "@/app/imitation-x/layout";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 
 export default function Sidebar({ user }: { user: userResult | null }) {
     const t = useTranslations("ImitationX.Sidebar");
+    const router = useRouter();
     const { openModal } = postModalStore()
     userStore.setState({
         email: user?.email || '',
@@ -33,6 +35,12 @@ export default function Sidebar({ user }: { user: userResult | null }) {
         followers: user?._count.followers, // 被关注数
         following: user?._count.following, // 关注数
     });
+
+    const handleMoreMenuSelect = (href: string) => (event: Event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        router.push(href)
+    }
 
     return (
         <nav className="w-full h-screen flex justify-end px-2 lg:pr-4">
@@ -83,18 +91,14 @@ export default function Sidebar({ user }: { user: userResult | null }) {
                                     <span className="hidden lg:inline">{t("more")}</span>
                                 </button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent side="right" align="start" className="w-48">
-                                <DropdownMenuItem asChild>
-                                    <Link href="/imitation-x/likes" className="flex items-center gap-2 cursor-pointer">
+                            <DropdownMenuContent side="right" align="start" className="w-48" onPointerDown={(event) => event.stopPropagation()}>
+                                <DropdownMenuItem onSelect={handleMoreMenuSelect("/imitation-x/likes")} className="flex items-center gap-2 cursor-pointer">
                                         <Heart className="w-4 h-4" />
                                         <span>{t("likes")}</span>
-                                    </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
-                                    <Link href="/imitation-x/bookmarks" className="flex items-center gap-2 cursor-pointer">
+                                <DropdownMenuItem onSelect={handleMoreMenuSelect("/imitation-x/bookmarks")} className="flex items-center gap-2 cursor-pointer">
                                         <Bookmark className="w-4 h-4" />
                                         <span>{t("bookmarks")}</span>
-                                    </Link>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
