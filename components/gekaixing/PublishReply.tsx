@@ -53,6 +53,7 @@ export default function PublishReply({
         email,
         user_avatar,
         name,
+        isPremium,
     } = userStore()
 
     async function handleReply() {
@@ -69,6 +70,7 @@ export default function PublishReply({
             user_name: name || email,
             user_avatar,
             user_userid: userId,
+            isPremium,
 
             like: 0,
             star: 0,

@@ -15,6 +15,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import PostDropdownMenu from "./PostDropdownMenu"
 import Link from "next/link"
 import { Post } from "@/app/imitation-x/page"
+import { postStore } from "@/store/post"
+import { replyStore } from "@/store/reply"
 
 export default function PostCard({
     id,
@@ -41,6 +43,27 @@ export default function PostCard({
     const [bookmarkLoading, setBookmarkLoading] = useState(false)
     const [shareLoading, setShareLoading] = useState(false)
 
+    React.useEffect(() => {
+        setLiked(likedByMe)
+        setBookmarked(bookmarkedByMe)
+        setLikeCount(like)
+        setStarCount(star)
+        setShareCount(share)
+    }, [bookmarkedByMe, like, likedByMe, share, star])
+
+    const syncInteractionToStore = (patch: Partial<Post>): void => {
+        const postState = postStore.getState()
+        const replyState = replyStore.getState()
+
+        if (postState.posts.some((postItem) => postItem.id === id)) {
+            postState.updatePost(id, patch)
+        }
+
+        if (replyState.replies.some((replyItem) => replyItem.id === id)) {
+            replyState.updateReply(id, patch)
+        }
+    }
+
     // =========================
     // ❤️ 点赞
     // =========================
@@ -54,6 +77,10 @@ export default function PostCard({
         // 乐观更新
         setLiked(!prevLiked)
         setLikeCount(prevLiked ? likeCount - 1 : likeCount + 1)
+        syncInteractionToStore({
+            likedByMe: !prevLiked,
+            like: prevLiked ? likeCount - 1 : likeCount + 1,
+        })
 
         const res = await fetch(`/api/like?postId=${id}`, {
             method: prevLiked ? "DELETE" : "POST",
@@ -67,8 +94,16 @@ export default function PostCard({
             // 回滚
             setLiked(prevLiked)
             setLikeCount(prevCount)
+            syncInteractionToStore({
+                likedByMe: prevLiked,
+                like: prevCount,
+            })
         } else {
             setLikeCount(data.data.likeCount)
+            syncInteractionToStore({
+                likedByMe: !prevLiked,
+                like: data.data.likeCount,
+            })
         }
 
         setLikeLoading(false)
@@ -86,6 +121,10 @@ export default function PostCard({
 
         setBookmarked(!prevBookmarked)
         setStarCount(prevBookmarked ? starCount - 1 : starCount + 1)
+        syncInteractionToStore({
+            bookmarkedByMe: !prevBookmarked,
+            star: prevBookmarked ? starCount - 1 : starCount + 1,
+        })
 
         const res = await fetch(`/api/bookmark?postId=${id}`, {
             method: prevBookmarked ? "DELETE" : "POST",
@@ -98,6 +137,10 @@ export default function PostCard({
         if (!data.success) {
             setBookmarked(prevBookmarked)
             setStarCount(prevStar)
+            syncInteractionToStore({
+                bookmarkedByMe: prevBookmarked,
+                star: prevStar,
+            })
         }
 
         setBookmarkLoading(false)
@@ -112,6 +155,9 @@ export default function PostCard({
 
         const prevShare = shareCount
         setShareCount(prevShare + 1)
+        syncInteractionToStore({
+            share: prevShare + 1,
+        })
 
         const res = await fetch("/api/share", {
             method: "POST",
@@ -123,8 +169,15 @@ export default function PostCard({
 
         if (!data.success) {
             setShareCount(prevShare)
+            syncInteractionToStore({
+                share: prevShare,
+            })
         } else {
             setShareCount(data.data.shareCount)
+            syncInteractionToStore({
+                sharedByMe: true,
+                share: data.data.shareCount,
+            })
         }
 
         await navigator.clipboard.writeText(

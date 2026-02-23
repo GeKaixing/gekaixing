@@ -39,7 +39,7 @@
         "detail": "Conversations and realtime updates"
       },
       "ai": {
-        "title": "AI Assistant",
+        "title": "GKX",
         "detail": "Streaming replies and chat history"
       }
     },
@@ -123,13 +123,14 @@
       "loadHistoryFailed": "Failed to load history",
       "errorRetry": "Something went wrong, please retry",
       "generateTitleFailed": "Failed to generate title",
-      "assistantTitle": "AI Assistant",
+      "assistantTitle": "GKX",
       "inputPlaceholder": "Type a message...",
       "send": "Send",
-      "emptyState": "Start chatting with AI 🚀",
+      "emptyState": "Start chatting with GKX 🚀",
       "copySuccess": "Copied",
       "copyFailed": "Copy failed",
-      "copyMessage": "Copy message"
+      "copyMessage": "Copy message",
+      "copyCode": "Copy code"
     },
     "Settings": {
       "title": "Settings",

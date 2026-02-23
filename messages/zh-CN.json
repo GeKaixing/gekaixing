@@ -39,7 +39,7 @@
         "detail": "会话与实时消息"
       },
       "ai": {
-        "title": "AI 助手",
+        "title": "GKX",
         "detail": "流式回复与历史会话"
       }
     },
@@ -123,13 +123,14 @@
       "loadHistoryFailed": "加载历史失败",
       "errorRetry": "出错了，请重试",
       "generateTitleFailed": "生成会话标题失败",
-      "assistantTitle": "AI 助手",
+      "assistantTitle": "GKX",
       "inputPlaceholder": "输入消息...",
       "send": "发送",
-      "emptyState": "开始和 AI 对话吧 🚀",
+      "emptyState": "开始和 GKX 对话吧 🚀",
       "copySuccess": "复制成功",
       "copyFailed": "复制失败",
-      "copyMessage": "复制消息"
+      "copyMessage": "复制消息",
+      "copyCode": "复制代码"
     },
     "Settings": {
       "title": "设置",

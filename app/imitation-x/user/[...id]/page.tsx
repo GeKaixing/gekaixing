@@ -9,6 +9,19 @@ import User_background_bio from '@/components/gekaixing/User_background_bio'
 import { revalidatePath } from 'next/cache'
 import type { Metadata } from 'next'
 import { getLocale, getTranslations } from 'next-intl/server'
+import { createClient } from "@/utils/supabase/server"
+import { Prisma } from '@/generated/prisma/client'
+
+const PROFILE_LIST_LIMIT = 20
+type FeedScope = "user-posts" | "user-replies" | "user-liked" | "user-bookmarks"
+
+type FeedPage = {
+    data: Post[]
+    page: {
+        nextCursor: string | null
+        hasMore: boolean
+    }
+}
 
 function getSiteUrl(): string {
     const envUrl = process.env.NEXT_PUBLIC_URL
@@ -119,343 +132,124 @@ export async function generateMetadata({
     }
 }
 
-async function getFeed(userId: string): Promise<Post[]> {
-    const posts = await prisma.post.findMany({
-        where: {
-            authorId: userId,
-            parentId: null,
-        },
-        orderBy: {
-            createdAt: "desc",
-        },
-        take: 20,
-
-        include: {
-            author: {
-                select: {
-                    id: true,
-                    userid: true,
-                    name: true,
-                    avatar: true,
-                    isPremium: true,
+function buildWhere(scope: FeedScope, targetId: string): Prisma.PostWhereInput {
+    switch (scope) {
+        case "user-posts":
+            return {
+                authorId: targetId,
+                parentId: null,
+            }
+        case "user-replies":
+            return {
+                authorId: targetId,
+                parentId: { not: null },
+            }
+        case "user-liked":
+            return {
+                parentId: null,
+                likes: {
+                    some: {
+                        userId: targetId,
+                    },
                 },
-            },
-
-            // ✅ 统计数量（数据库 count）
-            _count: {
-                select: {
-                    likes: true,
-                    bookmarks: true,
-                    shares: true,
-                    replies: true,
+            }
+        case "user-bookmarks":
+            return {
+                parentId: null,
+                bookmarks: {
+                    some: {
+                        userId: targetId,
+                    },
                 },
-            },
-
-            // ✅ 只查当前用户是否点赞
-            likes: userId
-                ? {
-                    where: { userId },
-                    select: { id: true },
-                }
-                : false,
-
-            bookmarks: userId
-                ? {
-                    where: { userId },
-                    select: { id: true },
-                }
-                : false,
-
-            shares: userId
-                ? {
-                    where: { userId },
-                    select: { id: true },
-                }
-                : false,
-        },
-    });
-
-    // 格式化输出
-    const result = posts.map((post) => ({
-        id: post.id,
-        content: post.content,
-        createdAt: post.createdAt,
-
-        user_id: post.author.id,
-        user_name: post.author.name,
-        user_avatar: post.author.avatar,
-        user_userid: post.author.userid,
-        isPremium: post.author.isPremium,
-        
-        like: post._count.likes,
-        star: post._count.bookmarks,
-        share: post._count.shares,
-        reply: post._count.replies,
-
-        likedByMe: post.likes?.length > 0,
-        bookmarkedByMe: post.bookmarks?.length > 0,
-        sharedByMe: post.shares?.length > 0,
-    }));
-
-    return result;
-
+            }
+        default:
+            return {
+                parentId: null,
+            }
+    }
 }
 
-async function getUserReplies(userId: string): Promise<Post[]> {
-
-    const replies = await prisma.post.findMany({
-        where: {
-            authorId: userId,
-            parentId: {
-                not: null,
-            },
-        },
-        orderBy: {
-            createdAt: "desc",
-        },
-        include: {
-            author: {
-                select: {
-                    id: true,
-                    userid: true,
-                    name: true,
-                    avatar: true,
-                    isPremium: true,
+async function getScopedFeed(scope: FeedScope, targetId: string, viewerId: string | undefined): Promise<FeedPage> {
+    try {
+        const rows = await prisma.post.findMany({
+            where: buildWhere(scope, targetId),
+            orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+            take: PROFILE_LIST_LIMIT + 1,
+            select: {
+                id: true,
+                content: true,
+                createdAt: true,
+                likeCount: true,
+                starCount: true,
+                shareCount: true,
+                replyCount: true,
+                author: {
+                    select: {
+                        id: true,
+                        userid: true,
+                        name: true,
+                        avatar: true,
+                        isPremium: true,
+                    },
                 },
+                likes: viewerId
+                    ? {
+                        where: { userId: viewerId },
+                        select: { id: true },
+                    }
+                    : false,
+                bookmarks: viewerId
+                    ? {
+                        where: { userId: viewerId },
+                        select: { id: true },
+                    }
+                    : false,
+                shares: viewerId
+                    ? {
+                        where: { userId: viewerId },
+                        select: { id: true },
+                    }
+                    : false,
             },
-            parent: {
-                select: {
-                    id: true,
-                    content: true,
-                },
+        })
+
+        const hasMore = rows.length > PROFILE_LIST_LIMIT
+        const posts = hasMore ? rows.slice(0, PROFILE_LIST_LIMIT) : rows
+        const nextCursor = hasMore ? posts[posts.length - 1]?.id ?? null : null
+
+        return {
+            data: posts.map((post) => ({
+                id: post.id,
+                content: post.content,
+                createdAt: post.createdAt,
+                user_id: post.author.id,
+                user_name: post.author.name,
+                user_avatar: post.author.avatar,
+                user_userid: post.author.userid,
+                isPremium: post.author.isPremium,
+                like: post.likeCount,
+                star: post.starCount,
+                share: post.shareCount,
+                reply: post.replyCount,
+                likedByMe: post.likes?.length > 0,
+                bookmarkedByMe: post.bookmarks?.length > 0,
+                sharedByMe: post.shares?.length > 0,
+            })),
+            page: {
+                nextCursor,
+                hasMore,
             },
-            _count: {
-                select: {
-                    likes: true,
-                    bookmarks: true,
-                    shares: true,
-                    replies: true,
-                },
+        }
+    } catch (error) {
+        console.error(`getScopedFeed failed for ${scope}:`, error)
+        return {
+            data: [],
+            page: {
+                nextCursor: null,
+                hasMore: false,
             },
-            // ✅ 只查当前用户是否点赞
-            likes: userId
-                ? {
-                    where: { userId },
-                    select: { id: true },
-                }
-                : false,
-
-            bookmarks: userId
-                ? {
-                    where: { userId },
-                    select: { id: true },
-                }
-                : false,
-
-            shares: userId
-                ? {
-                    where: { userId },
-                    select: { id: true },
-                }
-                : false,
-        },
-    });
-
-    return replies.map((post) => ({
-        id: post.id,
-        content: post.content,
-        createdAt: post.createdAt,
-
-        user_id: post.author.id,
-        user_name: post.author.name,
-        user_avatar: post.author.avatar,
-        user_userid: post.author.userid,
-        isPremium: post.author.isPremium,
-
-        like: post._count.likes,
-        star: post._count.bookmarks,
-        share: post._count.shares,
-        reply: post._count.replies,
-
-        likedByMe: post.likes?.length > 0,
-        bookmarkedByMe: post.bookmarks?.length > 0,
-        sharedByMe: post.shares?.length > 0,
-
-        parentContent: post.parent?.content, // 👈 可以显示“回复了谁”
-    }));
-}
-
-async function getLikedPosts(userId: string): Promise<Post[]> {
-
-    const replies = await prisma.post.findMany({
-        where: {
-            parentId: null, // ✅ 只查主帖
-            likes: {
-                some: {
-                    userId: userId, // ✅ 用户点赞过
-                },
-            },
-        },
-        orderBy: {
-            createdAt: "desc",
-        },
-        include: {
-            author: {
-                select: {
-                    id: true,
-                    userid: true,
-                    name: true,
-                    avatar: true,
-                    isPremium: true,
-                },
-            },
-            parent: {
-                select: {
-                    id: true,
-                    content: true,
-                },
-            },
-            _count: {
-                select: {
-                    likes: true,
-                    bookmarks: true,
-                    shares: true,
-                    replies: true,
-                },
-            },
-            // ✅ 只查当前用户是否点赞
-            likes: userId
-                ? {
-                    where: { userId },
-                    select: { id: true },
-                }
-                : false,
-
-            bookmarks: userId
-                ? {
-                    where: { userId },
-                    select: { id: true },
-                }
-                : false,
-
-            shares: userId
-                ? {
-                    where: { userId },
-                    select: { id: true },
-                }
-                : false,
-        },
-    });
-
-    return replies.map((post) => ({
-        id: post.id,
-        content: post.content,
-        createdAt: post.createdAt,
-
-        user_id: post.author.id,
-        user_name: post.author.name,
-        user_avatar: post.author.avatar,
-        user_userid: post.author.userid,
-        isPremium: post.author.isPremium,
-
-        like: post._count.likes,
-        star: post._count.bookmarks,
-        share: post._count.shares,
-        reply: post._count.replies,
-
-        likedByMe: post.likes?.length > 0,
-        bookmarkedByMe: post.bookmarks?.length > 0,
-        sharedByMe: post.shares?.length > 0,
-
-        parentContent: post.parent?.content, // 👈 可以显示“回复了谁”
-    }));
-}
-
-async function getBookmarkPosts(userId: string): Promise<Post[]> {
-
-
-    const replies = await prisma.post.findMany({
-        where: {
-            parentId: null, // ✅ 只查主帖
-            bookmarks: {
-                some: {
-                    userId: userId, // ✅ 用户点赞过
-                },
-            },
-        },
-        orderBy: {
-            createdAt: "desc",
-        },
-        include: {
-            author: {
-                select: {
-                    id: true,
-                    userid: true,
-                    name: true,
-                    avatar: true,
-                    isPremium: true,
-                },
-            },
-            parent: {
-                select: {
-                    id: true,
-                    content: true,
-                },
-            },
-            _count: {
-                select: {
-                    likes: true,
-                    bookmarks: true,
-                    shares: true,
-                    replies: true,
-                },
-            },
-            // ✅ 只查当前用户是否点赞
-            likes: userId
-                ? {
-                    where: { userId },
-                    select: { id: true },
-                }
-                : false,
-
-            bookmarks: userId
-                ? {
-                    where: { userId },
-                    select: { id: true },
-                }
-                : false,
-
-            shares: userId
-                ? {
-                    where: { userId },
-                    select: { id: true },
-                }
-                : false,
-        },
-    });
-
-    return replies.map((post) => ({
-        id: post.id,
-        content: post.content,
-        createdAt: post.createdAt,
-
-        user_id: post.author.id,
-        user_name: post.author.name,
-        user_avatar: post.author.avatar,
-        user_userid: post.author.userid,
-        isPremium: post.author.isPremium,
-
-        like: post._count.likes,
-        star: post._count.bookmarks,
-        share: post._count.shares,
-        reply: post._count.replies,
-
-        likedByMe: post.likes?.length > 0,
-        bookmarkedByMe: post.bookmarks?.length > 0,
-        sharedByMe: post.shares?.length > 0,
-
-        parentContent: post.parent?.content, // 👈 可以显示“回复了谁”
-    }));
+        }
+    }
 }
 
 
@@ -465,6 +259,14 @@ async function getUserInfo(userId: string) {
         where: {
             id: userId,
         },
+        include: {
+            _count: {
+                select: {
+                    followers: true,
+                    following: true,
+                },
+            },
+        },
     })
     return user
 }
@@ -472,19 +274,21 @@ async function getUserInfo(userId: string) {
 
 export default async function Page({ params }: { params: Promise<{ id: string[] }> }) {
     const t = await getTranslations("ImitationX.Profile")
+    const supabase = await createClient()
+    const { data: { user: currentUser } } = await supabase.auth.getUser()
     const { id } = await params
 
     const userId = id[0]
 
-    const posts = await getFeed(userId);
-
-    const replies = await getUserReplies(userId);
-
-    const liked = await getLikedPosts(userId);
-
-    const bookmark = await getBookmarkPosts(userId);
+    const [postsPage, repliesPage, likedPage, bookmarkPage] = await Promise.all([
+        getScopedFeed("user-posts", userId, currentUser?.id),
+        getScopedFeed("user-replies", userId, currentUser?.id),
+        getScopedFeed("user-liked", userId, currentUser?.id),
+        getScopedFeed("user-bookmarks", userId, currentUser?.id),
+    ])
 
     const user = await getUserInfo(userId)
+    const isOwner = currentUser?.id === user?.id
 
 
     return (
@@ -497,7 +301,10 @@ export default async function Page({ params }: { params: Promise<{ id: string[] 
                     name={user?.name}
                     avatar={user?.avatar}
                     briefIntroduction={user?.briefIntroduction}
-                    userId={user?.id}
+                    viewedUserid={user?.userid}
+                    followers={user?._count.followers}
+                    following={user?._count.following}
+                    isOwner={isOwner}
                     isPremium={user?.isPremium || false}
                 />
 
@@ -510,19 +317,40 @@ export default async function Page({ params }: { params: Promise<{ id: string[] 
                         <TabsTrigger value="bookmark">{t("tabs.bookmarks")}</TabsTrigger>
                     </TabsList>
                     <TabsContent value="post" className='flex flex-col gap-6'>
-                        <PostStore data={posts} />
+                        <PostStore
+                            data={postsPage.data}
+                            nextCursor={postsPage.page.nextCursor}
+                            hasMore={postsPage.page.hasMore}
+                            feedQuery={{ scope: "user-posts", targetId: userId }}
+                        />
                     </TabsContent>
                     <TabsContent value="reply" className='flex flex-col gap-6'>
-                        <PostStore data={replies} />
+                        <PostStore
+                            data={repliesPage.data}
+                            nextCursor={repliesPage.page.nextCursor}
+                            hasMore={repliesPage.page.hasMore}
+                            feedQuery={{ scope: "user-replies", targetId: userId }}
+                        />
                     </TabsContent>
                     {/* <TabsContent value="article" className='flex flex-col gap-6'>    <PostCard></PostCard></TabsContent>*/}
                     <TabsContent value="like" className='flex flex-col gap-6'>
-                        <PostStore data={liked} />
+                        <PostStore
+                            data={likedPage.data}
+                            nextCursor={likedPage.page.nextCursor}
+                            hasMore={likedPage.page.hasMore}
+                            feedQuery={{ scope: "user-liked", targetId: userId }}
+                        />
                     </TabsContent>
-                    <TabsContent value="bookmark" className='flex flex-col gap-6'>    <PostStore data={bookmark} /></TabsContent>
+                    <TabsContent value="bookmark" className='flex flex-col gap-6'>
+                        <PostStore
+                            data={bookmarkPage.data}
+                            nextCursor={bookmarkPage.page.nextCursor}
+                            hasMore={bookmarkPage.page.hasMore}
+                            feedQuery={{ scope: "user-bookmarks", targetId: userId }}
+                        />
+                    </TabsContent>
                 </Tabs>
             </div>
         </div>
     )
 }
-

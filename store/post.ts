@@ -4,6 +4,7 @@ import { create } from "zustand";
 type Store = {
   posts: Post[];
   setPosts: (posts: Post[]) => void;
+  appendPosts: (posts: Post[]) => void;
   updatePost: (id: string, newData: Partial<Post>) => void;
   addPost: (newPost: Post) => void;
   deletePost: (id: string) => void;
@@ -15,6 +16,20 @@ export const postStore = create<Store>((set) => ({
   posts: [],
 
   setPosts: (posts) => set({ posts }),
+  appendPosts: (posts) =>
+    set((state) => {
+      const nextPosts = [...state.posts];
+      const existingIds = new Set(state.posts.map((post) => post.id));
+
+      for (const post of posts) {
+        if (!existingIds.has(post.id)) {
+          nextPosts.push(post);
+          existingIds.add(post.id);
+        }
+      }
+
+      return { posts: nextPosts };
+    }),
 
   addReplyCount: (id) =>
     set((state) => ({

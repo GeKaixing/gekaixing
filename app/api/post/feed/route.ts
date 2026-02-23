@@ -2,13 +2,63 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
+import { Prisma } from "@/generated/prisma/client";
+
+type FeedScope =
+  | "home"
+  | "user-posts"
+  | "user-replies"
+  | "user-liked"
+  | "user-bookmarks"
+  | "status-replies";
+
+function buildWhere(scope: FeedScope, targetId: string | null): Prisma.PostWhereInput {
+  switch (scope) {
+    case "user-posts":
+      return {
+        parentId: null,
+        authorId: targetId || "",
+      };
+    case "user-replies":
+      return {
+        parentId: { not: null },
+        authorId: targetId || "",
+      };
+    case "user-liked":
+      return {
+        parentId: null,
+        likes: {
+          some: {
+            userId: targetId || "",
+          },
+        },
+      };
+    case "user-bookmarks":
+      return {
+        parentId: null,
+        bookmarks: {
+          some: {
+            userId: targetId || "",
+          },
+        },
+      };
+    case "status-replies":
+      return {
+        parentId: targetId || "",
+      };
+    case "home":
+    default:
+      return {
+        parentId: null,
+      };
+  }
+}
 
 export async function GET(req: NextRequest) {
   try {
     const supabase = await createClient();
-    const cookie=await cookies()
     let userId: string | undefined;
+
     try {
       const {
         data: { user },
@@ -18,14 +68,25 @@ export async function GET(req: NextRequest) {
       userId = undefined;
     }
 
-    const posts = await prisma.post.findMany({
-      where: {
-        parentId: null,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: 20,
+    const searchParams = req.nextUrl.searchParams;
+    const scope = (searchParams.get("scope") || "home") as FeedScope;
+    const targetId = searchParams.get("targetId");
+    const cursor = searchParams.get("cursor");
+    const requestedLimit = Number(searchParams.get("limit") || "20");
+    const limit = Number.isFinite(requestedLimit)
+      ? Math.min(Math.max(requestedLimit, 1), 40)
+      : 20;
+
+    const rows = await prisma.post.findMany({
+      where: buildWhere(scope, targetId),
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      take: limit + 1,
+      ...(cursor
+        ? {
+            cursor: { id: cursor },
+            skip: 1,
+          }
+        : {}),
 
       include: {
         author: {
@@ -34,10 +95,10 @@ export async function GET(req: NextRequest) {
             userid: true,
             name: true,
             avatar: true,
+            isPremium: true,
           },
         },
 
-        // ✅ 统计数量（数据库 count）
         _count: {
           select: {
             likes: true,
@@ -71,7 +132,10 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    // 格式化输出
+    const hasMore = rows.length > limit;
+    const posts = hasMore ? rows.slice(0, limit) : rows;
+    const nextCursor = hasMore ? posts[posts.length - 1]?.id ?? null : null;
+
     const result = posts.map((post) => ({
       id: post.id,
       content: post.content,
@@ -81,6 +145,7 @@ export async function GET(req: NextRequest) {
       user_name: post.author.name,
       user_avatar: post.author.avatar,
       user_userid: post.author.userid,
+      isPremium: post.author.isPremium,
 
       like: post._count.likes,
       star: post._count.bookmarks,
@@ -92,9 +157,15 @@ export async function GET(req: NextRequest) {
       sharedByMe: post.shares?.length > 0,
     }));
 
-    return NextResponse.json(result);
+    return NextResponse.json({
+      data: result,
+      page: {
+        nextCursor,
+        hasMore,
+      },
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Feed load failed:", error);
     return NextResponse.json({ error: "Feed load failed" }, { status: 500 });
   }
 }

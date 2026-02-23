@@ -4,6 +4,9 @@ import { prisma } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest } from "next/server";
 
+const GKX_SYSTEM_PROMPT =
+  "You are GKX, a concise and practical AI assistant. When users ask who you are, you must identify yourself as GKX.";
+
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as {
@@ -62,7 +65,15 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const glmResponse = await streamGLM(messages);
+    const glmMessages: GLMMessage[] = [
+      {
+        role: "system",
+        content: GKX_SYSTEM_PROMPT,
+      },
+      ...messages,
+    ];
+
+    const glmResponse = await streamGLM(glmMessages);
     if (!glmResponse.ok || !glmResponse.body) {
       const errorText = await glmResponse.text();
       console.error("GLM request failed:", errorText);

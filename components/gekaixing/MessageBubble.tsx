@@ -88,6 +88,8 @@ export default MessageBubble
 // =======================
 
 function MarkdownContent({ content }: { content: string }) {
+  const t = useTranslations("ImitationX.Gkx")
+
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -105,11 +107,7 @@ function MarkdownContent({ content }: { content: string }) {
             )
           }
 
-          return (
-            <pre className="p-3 rounded-lg overflow-x-auto bg-black/90 text-white text-xs">
-              <code className={cn(className, "hljs")}>{children}</code>
-            </pre>
-          )
+          return <CodeBlock className={className} t={t}>{children}</CodeBlock>
         },
         a(props) {
           return (
@@ -124,6 +122,53 @@ function MarkdownContent({ content }: { content: string }) {
     >
       {content}
     </ReactMarkdown>
+  )
+}
+
+function CodeBlock({
+  className,
+  children,
+  t,
+}: {
+  className?: string
+  children: React.ReactNode
+  t: (key: string) => string
+}) {
+  const [copied, setCopied] = React.useState(false)
+  const codeText = String(children).replace(/\n$/, "")
+  const language = className?.replace(/^language-/, "") || "text"
+
+  async function handleCopyCode(): Promise<void> {
+    if (!codeText.trim()) return
+
+    try {
+      await navigator.clipboard.writeText(codeText)
+      setCopied(true)
+      toast.success(t("copySuccess"))
+      window.setTimeout(() => setCopied(false), 1200)
+    } catch (error) {
+      console.error(t("copyFailed"), error)
+      toast.error(t("copyFailed"))
+    }
+  }
+
+  return (
+    <div className="my-2 overflow-hidden rounded-lg border border-border/70 bg-zinc-950 text-zinc-100">
+      <div className="flex items-center justify-between border-b border-zinc-800/80 px-3 py-1.5 text-[11px]">
+        <span className="uppercase tracking-wide text-zinc-400">{language}</span>
+        <button
+          type="button"
+          onClick={handleCopyCode}
+          aria-label={t("copyCode")}
+          className="inline-flex h-6 w-6 items-center justify-center rounded text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+        >
+          {copied ? <Check size={14} /> : <Copy size={14} />}
+        </button>
+      </div>
+      <pre className="overflow-x-auto p-3 text-xs">
+        <code className={cn(className, "hljs")}>{children}</code>
+      </pre>
+    </div>
   )
 }
 

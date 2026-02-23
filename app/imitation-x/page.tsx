@@ -26,7 +26,15 @@ export type Post = {
   sharedByMe: boolean
 }
 
-async function getFeed(): Promise<Post[]> {
+export type FeedPage = {
+  data: Post[]
+  page: {
+    nextCursor: string | null
+    hasMore: boolean
+  }
+}
+
+async function getFeed(limit: number = 20): Promise<FeedPage> {
   const supabase = await createClient();
 
   const {
@@ -36,10 +44,10 @@ async function getFeed(): Promise<Post[]> {
   const userId = user?.id;
   const isLogin = !!userId;
 
-  const posts = await prisma.post.findMany({
+  const rows = await prisma.post.findMany({
     where: { parentId: null },
-    orderBy: { createdAt: "desc" },
-    take: 20,
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    take: limit + 1,
 
     include: {
       author: {
@@ -75,7 +83,12 @@ async function getFeed(): Promise<Post[]> {
     },
   });
 
-  return posts.map((post) => ({
+  const hasMore = rows.length > limit;
+  const posts = hasMore ? rows.slice(0, limit) : rows;
+  const nextCursor = hasMore ? posts[posts.length - 1]?.id ?? null : null;
+
+  return {
+    data: posts.map((post) => ({
     id: post.id,
     content: post.content,
     createdAt: post.createdAt,
@@ -94,15 +107,20 @@ async function getFeed(): Promise<Post[]> {
     likedByMe: !!post.likes?.length,
     bookmarkedByMe: !!post.bookmarks?.length,
     sharedByMe: !!post.shares?.length,
-  }));
+    })),
+    page: {
+      nextCursor,
+      hasMore,
+    },
+  };
 }
 
 
 export default async function Page() {
-  const posts = await getFeed();
+  const feed = await getFeed();
   return (
     <div className="px-4 pt-4">
-      <PostStore data={posts} />
+      <PostStore data={feed.data} nextCursor={feed.page.nextCursor} hasMore={feed.page.hasMore} />
     </div>
   );
 }

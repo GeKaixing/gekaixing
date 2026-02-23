@@ -10,15 +10,26 @@ type d = {
     name?: null | string
     avatar?: null | string
     briefIntroduction?: null | string
-    userId: string | null | undefined
-    isPremium:boolean
+    viewedUserid?: string | null
+    followers?: number
+    following?: number
+    isOwner?: boolean
+    isPremium: boolean
 }
 
-export default function User_background_bio({ isPremium,name, avatar, briefIntroduction, userId }: d) {
-    const { userid,
-        followers, // 被关注数
-        following ,
-    } = userStore()
+export default function User_background_bio({
+    isPremium,
+    name,
+    avatar,
+    briefIntroduction,
+    viewedUserid,
+    followers = 0,
+    following = 0,
+    isOwner = false,
+}: d) {
+    const { userid: loginUserid } = userStore()
+    const relationUserid = viewedUserid || loginUserid
+
     return (
         <>
             <div>
@@ -30,7 +41,7 @@ export default function User_background_bio({ isPremium,name, avatar, briefIntro
             <div className='flex'>
                 <div className='w-full'></div>
 
-                {userId === userid ? <UserEditDialog></UserEditDialog> : <div className="h-9"></div>}
+                {isOwner ? <UserEditDialog></UserEditDialog> : <div className="h-9"></div>}
 
             </div>
             <div className='w-full h-10'></div>
@@ -39,10 +50,10 @@ export default function User_background_bio({ isPremium,name, avatar, briefIntro
             </div>
             {briefIntroduction ? <div className='text-sm'>{briefIntroduction}</div> : <div className='text-sm'>{"还没有介绍自己"}</div>}
             <div className="flex gap-2 text-sm cursor-pointer">
-                <Link href={`/imitation-x/following/${userid}`} className="flex hover:underline">
+                <Link href={`/imitation-x/following/${relationUserid}`} className="flex hover:underline">
                     <div className="font-bold ">{following} </div>正在关注
                 </Link>
-                <Link href={`/imitation-x/following/${userid}`} className="flex hover:underline">
+                <Link href={`/imitation-x/following/${relationUserid}`} className="flex hover:underline">
                     <div className="font-bold ">{followers}</div>关注者
                 </Link>
             </div>

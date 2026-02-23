@@ -25,7 +25,7 @@ export default function AIChat({ className }: AIChatProps) {
     {
       id: "welcome",
       role: "assistant",
-      content: "你好！我是AI助手，有什么我可以帮助你的吗？",
+      content: "你好！我是GKX，有什么我可以帮助你的吗？",
       timestamp: new Date(),
     },
   ]);
@@ -83,7 +83,7 @@ export default function AIChat({ className }: AIChatProps) {
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <div>
-            <CardTitle className="text-lg">AI 助手</CardTitle>
+            <CardTitle className="text-lg">GKX</CardTitle>
             <p className="text-sm text-muted-foreground">随时为你提供帮助</p>
           </div>
         </div>
