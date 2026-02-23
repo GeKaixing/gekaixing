@@ -4,22 +4,30 @@ import React from 'react'
 
 export default async function RegistrationProtocol() {
     const t = await getTranslations('Account.RegistrationProtocol')
+
     return (
-        <div className='text-[11px] text-muted-foreground'>
-            <Link href={'/account/signup'} className='h-9 rounded-2xl flex justify-center items-center w-2xs bg-primary text-primary-foreground mb-4 hover:opacity-90 transition-opacity'>{t('createAccount')}</Link>
-            {t('agreementPrefix')}
-            <Link href={'/tos'} className='underline text-primary'>{t('termsOfService')}
-            </Link>{t('and')}
-            <Link href={'/privacy'} className='underline text-primary'>{t('privacyPolicy')}
+        <div className='w-2xs max-w-2xs text-[11px] text-muted-foreground break-words whitespace-normal'>
+            <Link
+                href={'/account/signup'}
+                className='mb-4 flex h-9 w-2xs items-center justify-center rounded-2xl bg-primary text-primary-foreground transition-opacity hover:opacity-90'
+            >
+                {t('createAccount')}
             </Link>
-            ,
-            <p>
+            <p className='leading-relaxed'>
+                {t('agreementPrefix')}
+                <Link href={'/tos'} className='text-primary underline'>
+                    {t('termsOfService')}
+                </Link>
+                {t('and')}
+                <Link href={'/privacy'} className='text-primary underline'>
+                    {t('privacyPolicy')}
+                </Link>
+                ,
                 {t('including')}
-                <Link href={'/gekaixing-cookies'} className='underline text-primary'>
+                <Link href={'/cookies'} className='text-primary underline'>
                     {t('cookiePolicy')}
                 </Link>
             </p>
-
         </div>
     )
 }

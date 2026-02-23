@@ -204,6 +204,9 @@
     "signUpAgain": "Sign Up Again"
   },
   "Account": {
+    "GoogleButton": {
+      "signInWithGoogle": "Sign in with Google"
+    },
     "Layout": {
       "alreadyHaveAccount": "Already have an account?",
       "login": "Log in",

@@ -19,7 +19,7 @@ export default function CookieConsent() {
             sm:max-w-[400px] sm:right-6 '>
             <CardContent className='bg-black text-white'>
                 This website uses cookies to ensure you get the best experience on our website.
-                <Link href={'/gekaixing-cookies'} className='underline'>
+                <Link href={'/cookies'} className='underline'>
                     Cookies Policy
                 </Link>
             </CardContent>

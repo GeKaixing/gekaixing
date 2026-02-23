@@ -14,7 +14,7 @@ export async function LoginFooter() {
         <Separator orientation="vertical" />
         <Link href={'/privacy'}>{t("privacyPolicy")}</Link>
         <Separator orientation="vertical" />
-        <Link href={'/gekaixing-cookies'}>{t("cookiePolicy")}</Link>
+        <Link href={'/cookies'}>{t("cookiePolicy")}</Link>
       </div>
     </div>
   )

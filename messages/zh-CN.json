@@ -204,6 +204,9 @@
     "signUpAgain": "重新注册"
   },
   "Account": {
+    "GoogleButton": {
+      "signInWithGoogle": "使用 Google 账号登录"
+    },
     "Layout": {
       "alreadyHaveAccount": "已经有账户了吗？",
       "login": "登录",

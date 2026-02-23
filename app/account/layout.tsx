@@ -19,7 +19,7 @@ export default async function layout({ children }: { children: React.ReactNode }
                         <Image className='max-sm:hidden dark:hidden' src='/logo.svg' alt="Gekaixing logo" width={200} height={200}></Image>
                         <Image className='max-sm:hidden hidden dark:block' src='/logo-white.svg' alt="Gekaixing logo white" width={200} height={200}></Image>
                     </>
-                    <div className='flex flex-col justify-center items-center gap-6'>
+                    <div className='flex flex-col justify-center items-center gap-6 '>
                         <GoogleButton></GoogleButton>
                         <Separator />
                         <RegistrationProtocol />

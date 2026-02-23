@@ -49,6 +49,9 @@ export async function updateSession(request: NextRequest) {
 
   if (
     request.nextUrl.pathname !== "/" &&
+    request.nextUrl.pathname !== "/tos" &&
+    request.nextUrl.pathname !== "/cookies" &&
+    request.nextUrl.pathname !== "/privacy" &&
     request.nextUrl.pathname !== "/account" &&
     !request.nextUrl.pathname.startsWith("/api") &&
     !user &&
