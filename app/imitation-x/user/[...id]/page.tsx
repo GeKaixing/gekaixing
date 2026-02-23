@@ -34,31 +34,9 @@ function getSiteUrl(): string {
 function buildBioDescription(text: string | null): string {
     const normalized = (text || '').replace(/\s+/g, ' ').trim()
     if (!normalized) {
-        return '查看该用户的帖子、回复与收藏内容。'
+        return ''
     }
     return normalized.slice(0, 120)
-}
-
-function getProfileCopy(locale: string) {
-    if (locale === "zh-CN") {
-        return {
-            defaultDescription: "查看该用户的帖子、回复与收藏内容。",
-            pageTitle: "个人主页 | Gekaixing",
-            pageDescription: "查看用户主页、帖子和互动记录。",
-            notFoundTitle: "用户不存在 | Gekaixing",
-            notFoundDescription: "该用户可能已被删除或不可见。",
-            titleTemplate: (displayName: string) => `${displayName} 的个人主页 | Gekaixing`,
-        }
-    }
-
-    return {
-        defaultDescription: "View this user's posts, replies and bookmarks.",
-        pageTitle: "Profile | Gekaixing",
-        pageDescription: "Browse the user's profile, posts and interactions.",
-        notFoundTitle: "User Not Found | Gekaixing",
-        notFoundDescription: "This user may have been removed or is not available.",
-        titleTemplate: (displayName: string) => `${displayName}'s profile | Gekaixing`,
-    }
 }
 
 export async function generateMetadata({
@@ -67,15 +45,15 @@ export async function generateMetadata({
     params: Promise<{ id: string[] }>
 }): Promise<Metadata> {
     const locale = await getLocale()
-    const copy = getProfileCopy(locale)
+    const t = await getTranslations({ locale, namespace: 'ImitationX.UserPageMeta' })
     const { id } = await params
     const userId = id?.[0]
     const siteUrl = getSiteUrl()
 
     if (!userId) {
         return {
-            title: copy.pageTitle,
-            description: copy.pageDescription,
+            title: t('pageTitle'),
+            description: t('pageDescription'),
         }
     }
 
@@ -92,14 +70,14 @@ export async function generateMetadata({
 
     if (!user) {
         return {
-            title: copy.notFoundTitle,
-            description: copy.notFoundDescription,
+            title: t('notFoundTitle'),
+            description: t('notFoundDescription'),
         }
     }
 
     const displayName = user.name || `@${user.userid}`
-    const title = copy.titleTemplate(displayName)
-    const description = buildBioDescription(user.briefIntroduction) || copy.defaultDescription
+    const title = t('titleTemplate', { displayName })
+    const description = buildBioDescription(user.briefIntroduction) || t('defaultDescription')
     const url = `${siteUrl}/imitation-x/user/${user.id}`
 
     return {

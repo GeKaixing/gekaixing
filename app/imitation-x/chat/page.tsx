@@ -14,6 +14,7 @@ import { createClient } from "@/utils/supabase/client";
 import ArrowLeftBack from "@/components/gekaixing/ArrowLeftBack";
 import { useSearchParams } from "next/navigation";
 import { User } from "@supabase/supabase-js";
+import { useLocale, useTranslations } from "next-intl";
 
 interface Contact {
   id: string;
@@ -54,6 +55,8 @@ interface RealtimeMessage {
 }
 
 export default function ChatPage() {
+  const t = useTranslations("ImitationX.ChatPage");
+  const locale = useLocale();
   const searchParams = useSearchParams();
   const userIdFromQuery = searchParams.get("userId");
   
@@ -367,7 +370,7 @@ export default function ChatPage() {
 
   const formatTime = (timestamp: string) => {
     const date = new Date(timestamp);
-    return date.toLocaleTimeString("zh-CN", {
+    return date.toLocaleTimeString(locale, {
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -382,15 +385,15 @@ export default function ChatPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col h-full bg-background items-center justify-center">
-        <div className="text-muted-foreground">加载中...</div>
+        <div className="flex flex-col h-full bg-background items-center justify-center">
+        <div className="text-muted-foreground">{t("loading")}</div>
       </div>
     );
   }
 
   return (
     <div className="flex flex-col h-full bg-background">
-      <ArrowLeftBack name="聊天" />
+      <ArrowLeftBack name={t("title")} />
       <div className="border-b bg-muted/20 relative">
         <div className="flex items-center px-2 py-3">
           <Button
@@ -485,7 +488,7 @@ export default function ChatPage() {
                   {selectedContact.name}
                 </h2>
                 <span className="text-xs text-muted-foreground">
-                  {selectedContact.isOnline ? "在线" : "离线"}
+                  {selectedContact.isOnline ? t("online") : t("offline")}
                 </span>
               </div>
             </div>
@@ -493,7 +496,7 @@ export default function ChatPage() {
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.length === 0 ? (
                 <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
-                  开始与 {selectedContact.name} 聊天
+                  {t("startChatWith", { name: selectedContact.name })}
                 </div>
               ) : (
                 messages.map((message) => (
@@ -507,11 +510,11 @@ export default function ChatPage() {
                     <Avatar className="size-7 shrink-0">
                       <AvatarImage
                         src={message.isMe ? "/default-avatar.png" : (message.senderAvatar || selectedContact.avatar || "/default-avatar.png")}
-                        alt={message.isMe ? "我" : (message.senderName || selectedContact.name)}
+                        alt={message.isMe ? t("me") : (message.senderName || selectedContact.name)}
                       />
                       <AvatarFallback className="bg-primary/10 text-primary text-[10px]">
                         {message.isMe
-                          ? "我"
+                          ? t("me")
                           : (message.senderName || selectedContact.name).slice(0, 2)}
                       </AvatarFallback>
                     </Avatar>
@@ -544,7 +547,7 @@ export default function ChatPage() {
             <div className="p-3 border-t bg-background shrink-0">
               <div className="flex gap-2">
                 <Input
-                  placeholder={`给 ${selectedContact.name} 发消息...`}
+                  placeholder={t("sendTo", { name: selectedContact.name })}
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
@@ -562,7 +565,7 @@ export default function ChatPage() {
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center text-muted-foreground">
-            {contacts.length === 0 ? "暂无聊天，去关注其他用户开始聊天吧" : "选择一个联系人开始聊天"}
+            {contacts.length === 0 ? t("emptyContacts") : t("selectContact")}
           </div>
         )}
       </div>

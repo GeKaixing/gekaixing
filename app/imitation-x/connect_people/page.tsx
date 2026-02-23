@@ -1,236 +1,182 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { ArrowLeft, Search, UserPlus, UserCheck, X } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
+import { useState } from 'react'
+import { ArrowLeft, Search, UserCheck, UserPlus, X } from 'lucide-react'
+import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 interface UserProfile {
-  id: string;
-  name: string;
-  handle: string;
-  avatar: string;
-  bio: string;
-  isFollowing: boolean;
-  isVerified?: boolean;
+  id: string
+  nameKey: string
+  handle: string
+  avatar: string
+  bioKey: string
+  isFollowing: boolean
+  isVerified?: boolean
 }
 
 const mockUsers: UserProfile[] = [
-  {
-    id: "1",
-    name: "科技日报",
-    handle: "@techdaily",
-    avatar: "",
-    bio: "关注全球科技动态，分享最新科技资讯",
-    isFollowing: false,
-    isVerified: true,
-  },
-  {
-    id: "2",
-    name: "设计之美",
-    handle: "@designhub",
-    avatar: "",
-    bio: "探索设计与艺术的无限可能",
-    isFollowing: true,
-    isVerified: false,
-  },
-  {
-    id: "3",
-    name: "编程狂人",
-    handle: "@codegeek",
-    avatar: "",
-    bio: "Full-stack developer | Open source enthusiast",
-    isFollowing: false,
-    isVerified: true,
-  },
-  {
-    id: "4",
-    name: "美食探店",
-    handle: "@foodie",
-    avatar: "",
-    bio: "吃遍天下美食，记录每一口感动",
-    isFollowing: false,
-    isVerified: false,
-  },
-  {
-    id: "5",
-    name: "摄影师小明",
-    handle: "@photoxm",
-    avatar: "",
-    bio: "用镜头记录世界的美好瞬间",
-    isFollowing: false,
-    isVerified: true,
-  },
-];
+  { id: '1', nameKey: 'users.techDaily.name', handle: '@techdaily', avatar: '', bioKey: 'users.techDaily.bio', isFollowing: false, isVerified: true },
+  { id: '2', nameKey: 'users.design.name', handle: '@designhub', avatar: '', bioKey: 'users.design.bio', isFollowing: true, isVerified: false },
+  { id: '3', nameKey: 'users.coder.name', handle: '@codegeek', avatar: '', bioKey: 'users.coder.bio', isFollowing: false, isVerified: true },
+  { id: '4', nameKey: 'users.food.name', handle: '@foodie', avatar: '', bioKey: 'users.food.bio', isFollowing: false, isVerified: false },
+  { id: '5', nameKey: 'users.photo.name', handle: '@photoxm', avatar: '', bioKey: 'users.photo.bio', isFollowing: false, isVerified: true },
+]
 
-type TabType = "recommended" | "followers" | "following";
+type TabType = 'recommended' | 'followers' | 'following'
 
-export default function ConnectPeoplePage() {
-  const [activeTab, setActiveTab] = useState<TabType>("recommended");
-  const [users, setUsers] = useState<UserProfile[]>(mockUsers);
-  const [searchQuery, setSearchQuery] = useState("");
+export default function ConnectPeoplePage(): JSX.Element {
+  const t = useTranslations('ImitationX.ConnectPeople')
+  const [activeTab, setActiveTab] = useState<TabType>('recommended')
+  const [users, setUsers] = useState<UserProfile[]>(mockUsers)
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const handleFollow = (userId: string) => {
-    setUsers((prev) =>
-      prev.map((user) =>
+  const handleFollow = (userId: string): void => {
+    setUsers((prev: UserProfile[]) =>
+      prev.map((user: UserProfile) =>
         user.id === userId ? { ...user, isFollowing: !user.isFollowing } : user
       )
-    );
-  };
+    )
+  }
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.handle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.bio.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredUsers = users.filter((user: UserProfile) => {
+    const name = t(user.nameKey).toLowerCase()
+    const bio = t(user.bioKey).toLowerCase()
+    const q = searchQuery.toLowerCase()
 
-  const tabs = [
-    { id: "recommended" as TabType, label: "推荐关注" },
-    { id: "followers" as TabType, label: "关注者" },
-    { id: "following" as TabType, label: "正在关注" },
-  ];
+    return name.includes(q) || user.handle.toLowerCase().includes(q) || bio.includes(q)
+  })
+
+  const tabs: { id: TabType; label: string }[] = [
+    { id: 'recommended', label: t('tabs.recommended') },
+    { id: 'followers', label: t('tabs.followers') },
+    { id: 'following', label: t('tabs.following') },
+  ]
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="sticky top-0 z-10 bg-background/90 backdrop-blur-md border-b border-border">
-        <div className="flex items-center gap-4 px-4 py-3">
-          <Link
-            href="/imitation-x"
-            className="p-2 hover:bg-muted/70 rounded-full transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
+    <div className='min-h-screen bg-background text-foreground'>
+      <div className='sticky top-0 z-10 border-b border-border bg-background/90 backdrop-blur-md'>
+        <div className='flex items-center gap-4 px-4 py-3'>
+          <Link href='/imitation-x' className='rounded-full p-2 transition-colors hover:bg-muted/70'>
+            <ArrowLeft className='h-5 w-5' />
           </Link>
           <div>
-            <h1 className="text-xl font-bold">连接</h1>
-            <p className="text-sm text-muted-foreground">@{users.length} 位用户</p>
+            <h1 className='text-xl font-bold'>{t('title')}</h1>
+            <p className='text-sm text-muted-foreground'>{t('userCount', { count: users.length })}</p>
           </div>
         </div>
 
-        <div className="px-4 py-2">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <div className='px-4 py-2'>
+          <div className='relative'>
+            <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
             <input
-              type="text"
-              placeholder="搜索用户"
+              type='text'
+              placeholder={t('searchPlaceholder')}
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-10 py-2 bg-muted rounded-full text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-background transition-all"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+              className='w-full rounded-full bg-muted py-2 pl-10 pr-10 text-sm text-foreground transition-all focus:bg-background focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
             {searchQuery && (
               <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 bg-muted-foreground/70 rounded-full hover:bg-muted-foreground transition-colors"
+                onClick={() => setSearchQuery('')}
+                className='absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-muted-foreground/70 p-0.5 transition-colors hover:bg-muted-foreground'
               >
-                <X className="w-3 h-3 text-white" />
+                <X className='h-3 w-3 text-white' />
               </button>
             )}
           </div>
         </div>
 
-        <div className="flex border-b border-border">
-          {tabs.map((tab) => (
+        <div className='flex border-b border-border'>
+          {tabs.map((tab: { id: TabType; label: string }) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "flex-1 py-3 px-4 text-sm font-medium transition-colors relative",
-                activeTab === tab.id
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/70"
+                'relative flex-1 px-4 py-3 text-sm font-medium transition-colors',
+                activeTab === tab.id ? 'text-foreground' : 'text-muted-foreground hover:bg-muted/70 hover:text-foreground'
               )}
             >
               {tab.label}
-              {activeTab === tab.id && (
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-blue-500 rounded-full" />
-              )}
+              {activeTab === tab.id && <div className='absolute bottom-0 left-1/2 h-1 w-12 -translate-x-1/2 rounded-full bg-blue-500' />}
             </button>
           ))}
         </div>
       </div>
 
-      <div className="divide-y divide-border">
+      <div className='divide-y divide-border'>
         {filteredUsers.length === 0 ? (
-          <div className="py-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-muted rounded-full flex items-center justify-center">
-              <Search className="w-8 h-8 text-muted-foreground" />
+          <div className='py-12 text-center'>
+            <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted'>
+              <Search className='h-8 w-8 text-muted-foreground' />
             </div>
-            <p className="text-muted-foreground">没有找到匹配的用户</p>
+            <p className='text-muted-foreground'>{t('empty')}</p>
           </div>
         ) : (
-          filteredUsers.map((user) => (
+          filteredUsers.map((user: UserProfile) => (
             <div
               key={user.id}
-              className="flex items-start gap-3 px-4 py-3 hover:bg-muted/60 transition-colors cursor-pointer"
+              className='flex cursor-pointer items-start gap-3 px-4 py-3 transition-colors hover:bg-muted/60'
             >
               <Link href={`/imitation-x/user/${user.id}`}>
-                <Avatar className="w-12 h-12">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="bg-muted text-muted-foreground font-medium">
-                    {user.name.slice(0, 2)}
+                <Avatar className='h-12 w-12'>
+                  <AvatarImage src={user.avatar} alt={t(user.nameKey)} />
+                  <AvatarFallback className='bg-muted font-medium text-muted-foreground'>
+                    {t(user.nameKey).slice(0, 2)}
                   </AvatarFallback>
                 </Avatar>
               </Link>
 
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1">
-                      <Link
-                        href={`/imitation-x/user/${user.id}`}
-                        className="font-bold text-sm hover:underline truncate"
-                      >
-                        {user.name}
+              <div className='min-w-0 flex-1'>
+                <div className='flex items-start justify-between gap-2'>
+                  <div className='min-w-0 flex-1'>
+                    <div className='flex items-center gap-1'>
+                      <Link href={`/imitation-x/user/${user.id}`} className='truncate text-sm font-bold hover:underline'>
+                        {t(user.nameKey)}
                       </Link>
                       {user.isVerified && (
-                        <svg
-                          className="w-4 h-4 text-blue-500 flex-shrink-0"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                        <svg className='h-4 w-4 flex-shrink-0 text-blue-500' fill='currentColor' viewBox='0 0 24 24'>
+                          <path d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z' />
                         </svg>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground truncate">
-                      {user.handle}
-                    </p>
+                    <p className='truncate text-sm text-muted-foreground'>{user.handle}</p>
                   </div>
 
                   <Button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleFollow(user.id);
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                      e.stopPropagation()
+                      handleFollow(user.id)
                     }}
-                    variant={user.isFollowing ? "outline" : "default"}
-                    size="sm"
+                    variant={user.isFollowing ? 'outline' : 'default'}
+                    size='sm'
                     className={cn(
-                      "rounded-full text-sm font-bold min-w-[80px] transition-all",
+                      'min-w-[80px] rounded-full text-sm font-bold transition-all',
                       user.isFollowing
-                        ? "border-border hover:border-red-400/50 hover:text-red-500 hover:bg-red-500/10"
-                        : "bg-primary text-primary-foreground hover:opacity-90"
+                        ? 'border-border hover:border-red-400/50 hover:bg-red-500/10 hover:text-red-500'
+                        : 'bg-primary text-primary-foreground hover:opacity-90'
                     )}
                   >
                     {user.isFollowing ? (
-                      <span className="flex items-center gap-1">
-                        <UserCheck className="w-4 h-4" />
-                        已关注
+                      <span className='flex items-center gap-1'>
+                        <UserCheck className='h-4 w-4' />
+                        {t('following')}
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1">
-                        <UserPlus className="w-4 h-4" />
-                        关注
+                      <span className='flex items-center gap-1'>
+                        <UserPlus className='h-4 w-4' />
+                        {t('follow')}
                       </span>
                     )}
                   </Button>
                 </div>
 
                 <Link href={`/imitation-x/user/${user.id}`}>
-                  <p className="text-sm text-foreground/85 mt-1 line-clamp-2">
-                    {user.bio}
-                  </p>
+                  <p className='mt-1 line-clamp-2 text-sm text-foreground/85'>{t(user.bioKey)}</p>
                 </Link>
               </div>
             </div>
@@ -239,12 +185,12 @@ export default function ConnectPeoplePage() {
       </div>
 
       {filteredUsers.length > 0 && (
-        <div className="py-4 text-center">
-          <Button variant="ghost" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
-            加载更多
+        <div className='py-4 text-center'>
+          <Button variant='ghost' className='text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300'>
+            {t('loadMore')}
           </Button>
         </div>
       )}
     </div>
-  );
+  )
 }

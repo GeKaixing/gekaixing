@@ -23,6 +23,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { useTranslations } from 'next-intl'
 async function PasswordResetFetch(email: string) {
     const result = await fetch('/api/password_reset', {
         method: 'POST',
@@ -39,6 +40,7 @@ async function PasswordResetFetch(email: string) {
 
 
 export default function Password_resetDialog() {
+    const t = useTranslations('Account.PasswordResetDialog')
     const [open, setOpen] = useState(true)
     const [openAlertDialog, setOpenAlertDialog] = useState(false)
     const router = useRouter()
@@ -48,7 +50,7 @@ export default function Password_resetDialog() {
         if (open === false) {
             router.replace('/account')
         }
-    }, [open])
+    }, [open, router])
 
     async function password_reset() {
 
@@ -66,15 +68,15 @@ export default function Password_resetDialog() {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>查找你的 gekaixing 账户
-                        <div className='text-gray-800 text-[12px] mt-4 mb-6'> 输入与你的账户关联的电子邮件。</div>
+                    <DialogTitle>{t('title')}
+                        <div className='text-gray-800 text-[12px] mt-4 mb-6'>{t('description')}</div>
                     </DialogTitle>
                     <DialogDescription className='flex flex-col justify-center items-center gap-6'>
-                        <Input type='email' placeholder="请输入邮箱" value={email} onChange={(e) => { setEmail(e.target.value) }} ></Input>
+                        <Input type='email' placeholder={t('emailPlaceholder')} value={email} onChange={(e) => { setEmail(e.target.value) }} ></Input>
                         <Button
                             onClick={password_reset}
-                        >发送验证码</Button>
-                        <EnterMsmAlertDialog open={openAlertDialog} setOpen={setOpenAlertDialog} />
+                        >{t('sendCode')}</Button>
+                        <EnterMsmAlertDialog open={openAlertDialog} setOpen={setOpenAlertDialog} t={t} />
                     </DialogDescription>
                 </DialogHeader>
             </DialogContent>
@@ -84,10 +86,12 @@ export default function Password_resetDialog() {
 
 function EnterMsmAlertDialog({
     open,
-    setOpen
+    setOpen,
+    t,
 }: {
     open: boolean;
     setOpen: (open: boolean) => void;
+    t: ReturnType<typeof useTranslations>;
 }) {
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
@@ -96,14 +100,14 @@ function EnterMsmAlertDialog({
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>确认邮件已经发送道你的邮箱</AlertDialogTitle>
+                    <AlertDialogTitle>{t('dialog.title')}</AlertDialogTitle>
                     <AlertDialogDescription>
-                        请前往邮箱点击连接确认是否本人操作
+                        {t('dialog.description')}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel>取消</AlertDialogCancel>
-                    <AlertDialogAction>确认</AlertDialogAction>
+                    <AlertDialogCancel>{t('dialog.cancel')}</AlertDialogCancel>
+                    <AlertDialogAction>{t('dialog.confirm')}</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

@@ -194,6 +194,321 @@
         "likes": "Likes",
         "bookmarks": "Bookmarks"
       }
+    },
+    "Help": {
+      "heroTitle": "Help Center",
+      "heroSubTitle": "Find the support and answers you need",
+      "cards": {
+        "faqTitle": "FAQs",
+        "faqDesc": "Most common user questions",
+        "guideTitle": "Guidelines",
+        "guideDesc": "Platform usage guidance",
+        "contactTitle": "Contact Us",
+        "contactDesc": "Reach our support team"
+      },
+      "sectionTitles": {
+        "faq": "Frequently Asked Questions",
+        "guide": "Guidelines",
+        "contact": "Contact",
+        "links": "Related Links"
+      },
+      "contactIntro": "If you still need help, please contact us via:",
+      "contactItems": {
+        "emailPrefix": "Email: ",
+        "hours": "Support hours: Monday to Friday 9:00-18:00",
+        "reply": "Usually replies within 24 hours"
+      },
+      "relatedLinks": {
+        "tos": "Terms of Service",
+        "privacy": "Privacy Policy",
+        "about": "About Us"
+      },
+      "faqs": {
+        "1": {
+          "question": "How do I sign up?",
+          "answer": "Click the login button in the top-right corner, choose sign up, then fill in email and password. You can also sign in with Google."
+        },
+        "2": {
+          "question": "How can I post updates?",
+          "answer": "After login, use the input box on home or profile page, type your content and click publish. You can also add images and emojis."
+        },
+        "3": {
+          "question": "How do I edit my profile?",
+          "answer": "Open your profile by clicking your avatar, then click edit profile to update nickname, avatar and bio."
+        },
+        "4": {
+          "question": "How do I follow users?",
+          "answer": "Open the profile you are interested in and click follow. You can check all followed users in your following list."
+        },
+        "5": {
+          "question": "How can I send private messages?",
+          "answer": "Open the target user's profile and click message to start a conversation. You can review all conversations in the chat page."
+        }
+      },
+      "guides": {
+        "1": {
+          "title": "Community Rules",
+          "content": "Please keep content friendly and positive. Illegal, violent, explicit or discriminatory content is not allowed."
+        },
+        "2": {
+          "title": "Privacy",
+          "content": "Protect your personal information and avoid sharing sensitive details like ID numbers or bank cards publicly."
+        },
+        "3": {
+          "title": "Account Security",
+          "content": "Use strong passwords and update them regularly. Do not share credentials. Enabling 2FA improves account safety."
+        }
+      }
+    },
+    "Premium": {
+      "title": "Upgrade to Premium",
+      "subtitle": "Fewer ads, stronger features, and better visibility for your content",
+      "recommended": "Recommended",
+      "subscribe": "Subscribe",
+      "whyTitle": "Why choose Premium?",
+      "whyCards": {
+        "1": {
+          "title": "Fewer ads",
+          "desc": "Less distraction, more focus"
+        },
+        "2": {
+          "title": "Priority exposure",
+          "desc": "Your content is easier to discover"
+        },
+        "3": {
+          "title": "More creator tools",
+          "desc": "Edit posts and upload longer videos"
+        }
+      },
+      "plans": {
+        "basic": {
+          "name": "Basic",
+          "description": "Free access to core platform features",
+          "features": {
+            "0": {
+              "text": "Posting",
+              "included": "true"
+            },
+            "1": {
+              "text": "Like / Reply",
+              "included": "true"
+            },
+            "2": {
+              "text": "Follow users",
+              "included": "true"
+            },
+            "3": {
+              "text": "No ads",
+              "included": "false"
+            },
+            "4": {
+              "text": "Priority exposure",
+              "included": "false"
+            },
+            "5": {
+              "text": "Edit posts",
+              "included": "false"
+            },
+            "6": {
+              "text": "Verified badge",
+              "included": "false"
+            }
+          },
+          "price": "¥0"
+        },
+        "premium": {
+          "name": "Premium",
+          "description": "Fewer ads + stronger features",
+          "features": {
+            "0": {
+              "text": "Posting",
+              "included": "true"
+            },
+            "1": {
+              "text": "Like / Reply",
+              "included": "true"
+            },
+            "2": {
+              "text": "Follow users",
+              "included": "true"
+            },
+            "3": {
+              "text": "Reduced ads",
+              "included": "true"
+            },
+            "4": {
+              "text": "Edit posts",
+              "included": "true"
+            },
+            "5": {
+              "text": "Longer video uploads",
+              "included": "true"
+            },
+            "6": {
+              "text": "Verified badge",
+              "included": "false"
+            }
+          },
+          "price": "¥28 / month"
+        },
+        "premiumPlus": {
+          "name": "Premium+",
+          "description": "No ads + highest priority",
+          "features": {
+            "0": {
+              "text": "Posting",
+              "included": "true"
+            },
+            "1": {
+              "text": "Like / Reply",
+              "included": "true"
+            },
+            "2": {
+              "text": "Follow users",
+              "included": "true"
+            },
+            "3": {
+              "text": "No ads",
+              "included": "true"
+            },
+            "4": {
+              "text": "Priority exposure",
+              "included": "true"
+            },
+            "5": {
+              "text": "Edit posts",
+              "included": "true"
+            },
+            "6": {
+              "text": "Verified badge",
+              "included": "true"
+            }
+          },
+          "price": "¥88 / month"
+        }
+      }
+    },
+    "Notifications": {
+      "title": "Notifications",
+      "tabs": {
+        "all": "All",
+        "mentions": "Mentions",
+        "verified": "Verified"
+      },
+      "actions": {
+        "like": "liked your post",
+        "follow": "started following you",
+        "repost": "reposted your post",
+        "reply": "replied to you",
+        "mention": "mentioned you"
+      },
+      "followBack": "Follow back",
+      "empty": {
+        "allTitle": "No notifications",
+        "allDesc": "You'll see new interactions here.",
+        "mentionsTitle": "No mentions",
+        "mentionsDesc": "You'll see mentions and reply mentions here."
+      },
+      "users": {
+        "zhangsan": "Alex",
+        "lisi": "Brooke",
+        "wangwu": "Carter",
+        "zhaoliu": "Dana",
+        "qianqi": "Evan",
+        "system": "System"
+      },
+      "posts": {
+        "1": "This is a sample post to preview notification layout.",
+        "2": "Sharing an interesting project!",
+        "3": "Starting a new project today..."
+      },
+      "contents": {
+        "1": "I also think this project is great!",
+        "2": "@gekaixing what do you think about this design?",
+        "3": "Congrats! Your account is now verified."
+      },
+      "times": {
+        "1": "2h ago",
+        "2": "5h ago",
+        "3": "1d ago",
+        "4": "2d ago",
+        "5": "3d ago",
+        "6": "1w ago"
+      }
+    },
+    "ConnectPeople": {
+      "title": "Connect",
+      "userCount": "@{count} users",
+      "searchPlaceholder": "Search users",
+      "tabs": {
+        "recommended": "Recommended",
+        "followers": "Followers",
+        "following": "Following"
+      },
+      "empty": "No matching users",
+      "follow": "Follow",
+      "following": "Following",
+      "loadMore": "Load more",
+      "users": {
+        "techDaily": {
+          "name": "Tech Daily",
+          "bio": "Follow global tech trends and latest updates"
+        },
+        "design": {
+          "name": "Design Hub",
+          "bio": "Explore the infinite possibilities of design and art"
+        },
+        "coder": {
+          "name": "Code Geek",
+          "bio": "Full-stack developer | Open source enthusiast"
+        },
+        "food": {
+          "name": "Food Explorer",
+          "bio": "Try great food and record every memorable bite"
+        },
+        "photo": {
+          "name": "Photo XM",
+          "bio": "Capture beautiful moments around the world"
+        }
+      }
+    },
+    "Following": {
+      "title": "Connections",
+      "userCount": "{count} users",
+      "searchPlaceholder": "Search users",
+      "tabs": {
+        "recommended": "Recommended",
+        "followers": "Followers",
+        "following": "Following"
+      },
+      "loading": "Loading..."
+    },
+    "ChatPage": {
+      "title": "Chat",
+      "loading": "Loading...",
+      "online": "Online",
+      "offline": "Offline",
+      "startChatWith": "Start chatting with {name}",
+      "me": "Me",
+      "sendTo": "Send a message to {name}...",
+      "emptyContacts": "No chats yet. Follow users to start chatting.",
+      "selectContact": "Select a contact to start chatting"
+    },
+    "UserPageMeta": {
+      "defaultDescription": "View this user's posts, replies and bookmarks.",
+      "pageTitle": "Profile | Gekaixing",
+      "pageDescription": "Browse the user's profile, posts and interactions.",
+      "notFoundTitle": "User Not Found | Gekaixing",
+      "notFoundDescription": "This user may have been removed or is not available.",
+      "titleTemplate": "{displayName}'s profile | Gekaixing"
+    },
+    "StatusPageMeta": {
+      "pageTitle": "Post Detail | Gekaixing",
+      "pageDescription": "View post details and replies on Gekaixing.",
+      "notFoundTitle": "Post Not Found | Gekaixing",
+      "notFoundDescription": "This post may have been removed or is not available.",
+      "fallbackDescription": "Read this post and discussion replies.",
+      "titleTemplate": "{authorName}'s post | Gekaixing"
     }
   },
   "AuthCodeError": {
@@ -226,6 +541,230 @@
       "termsOfService": "Terms of Service",
       "privacyPolicy": "Privacy Policy",
       "cookiePolicy": "Cookie Policy"
+    },
+    "LoginForm": {
+      "validation": {
+        "email": "Please enter a valid email address.",
+        "passwordMin": "Password must be at least 6 characters."
+      },
+      "serverError": "Unexpected server response. Please check console logs.",
+      "loginFailed": "Login failed",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "submit": "Submit"
+    },
+    "SignupForm": {
+      "validation": {
+        "email": "Please enter a valid email address.",
+        "passwordMin": "Password must be at least 6 characters."
+      },
+      "signupFailed": "Sign up failed",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "submit": "Submit",
+      "dialog": {
+        "title": "Verification email has been sent",
+        "description": "Please open your email and click the link to confirm registration.",
+        "cancel": "Cancel",
+        "confirm": "Confirm"
+      }
+    },
+    "SettingEmail": {
+      "validation": {
+        "email": "Please enter a valid email address."
+      },
+      "success": "A confirmation link was sent to both your old and new email addresses.",
+      "failed": "Update failed",
+      "entry": "Change Email",
+      "title": "Change Email",
+      "newEmailLabel": "Enter your new email address.",
+      "submit": "Submit"
+    },
+    "UserEditDialog": {
+      "validation": {
+        "nameMin": "Name must be at least 3 characters.",
+        "nameMax": "Name cannot exceed 50 characters.",
+        "useridMin": "User ID must be at least 3 characters.",
+        "useridMax": "User ID cannot exceed 36 characters.",
+        "useridPattern": "User ID can only contain letters, numbers, underscores and hyphens.",
+        "bioMax": "Bio cannot exceed 200 characters."
+      },
+      "success": "Updated successfully",
+      "failed": "Update failed",
+      "networkError": "Network or server error",
+      "editProfile": "Edit Profile",
+      "nameLabel": "Name",
+      "namePlaceholder": "Enter your name",
+      "useridLabel": "User ID",
+      "useridPlaceholder": "Enter your user ID",
+      "bioLabel": "Bio",
+      "bioPlaceholder": "Enter your bio",
+      "submit": "Submit"
+    },
+    "LoginDialog": {
+      "title": "Log in to Gekaixing",
+      "forgotPassword": "Forgot password",
+      "noAccount": "Don't have an account? ",
+      "signup": "Sign up"
+    },
+    "PasswordResetDialog": {
+      "title": "Find your Gekaixing account",
+      "description": "Enter the email associated with your account.",
+      "emailPlaceholder": "Enter your email",
+      "sendCode": "Send verification code",
+      "dialog": {
+        "title": "Verification email has been sent",
+        "description": "Please open your email and click the link to confirm this request.",
+        "cancel": "Cancel",
+        "confirm": "Confirm"
+      }
     }
+  },
+  "Legal": {
+    "Tos": {
+      "title": "Gekaixing Terms of Service",
+      "updatedDateLabel": "Updated on:",
+      "updatedDate": "August 4, 2025",
+      "sections": {
+        "acceptance": {
+          "title": "1. Acceptance of Terms",
+          "body": "Welcome to Gekaixing. These Terms of Service govern your use of our website and related services. By accessing or using the service, you confirm that you have read, understood, and agreed to these terms. If you do not agree, please stop using the service."
+        },
+        "usage": {
+          "title": "2. Use of Service",
+          "items": {
+            "0": "You must have legal capacity in your jurisdiction to use this service.",
+            "1": "You agree to use the service only for lawful purposes and in compliance with applicable laws.",
+            "2": "You are responsible for your account activities, posted content, and interactions on the platform.",
+            "3": "We may update, suspend, or discontinue parts of the service when necessary."
+          }
+        },
+        "account": {
+          "title": "3. User Accounts",
+          "body": "You may need an account to access some features. You are responsible for safeguarding your account credentials and for all activities under your account. If you suspect unauthorized access, contact us promptly."
+        },
+        "ip": {
+          "title": "4. Intellectual Property",
+          "body": "All content and software in this service are protected by intellectual property laws and are owned by Gekaixing or its licensors. You may not copy, modify, distribute, sell, or lease any part of the service without prior written permission."
+        },
+        "disclaimer": {
+          "title": "5. Disclaimer and Limitation of Liability",
+          "body": "The service is provided on an \"as is\" and \"as available\" basis without warranties of any kind. To the maximum extent permitted by law, we are not liable for indirect, incidental, or consequential damages arising from your use of the service."
+        },
+        "termination": {
+          "title": "6. Termination",
+          "body": "You may stop using the service at any time. We may suspend or terminate your access if you violate these terms or when required for security and compliance reasons."
+        },
+        "contact": {
+          "title": "7. Contact Us",
+          "body": "If you have any questions about these terms, please contact us:",
+          "emailLabel": "Email:"
+        }
+      }
+    },
+    "Privacy": {
+      "title": "Gekaixing Privacy Policy",
+      "updatedDateLabel": "Updated on:",
+      "updatedDate": "August 4, 2025",
+      "intro": "We value your privacy. This policy explains how we collect, use, disclose, and protect information when you use Gekaixing.",
+      "sections": {
+        "collectedInfo": {
+          "title": "1. Information We Collect",
+          "summary": "We may collect the following categories of information:",
+          "items": {
+            "0": "Identity and profile information, such as name and email when you register.",
+            "1": "Account and usage data generated while you use our product features.",
+            "2": "Technical information such as IP address, browser type, device information, and visited pages."
+          }
+        },
+        "usage": {
+          "title": "2. How We Use Information",
+          "summary": "We use collected information to:",
+          "items": {
+            "0": "Provide, maintain, and improve our services.",
+            "1": "Authenticate users, secure accounts, and prevent abuse.",
+            "2": "Communicate important account and product updates.",
+            "3": "Personalize product experience and recommendations.",
+            "4": "Comply with legal obligations."
+          }
+        },
+        "sharing": {
+          "title": "3. Sharing and Disclosure",
+          "summary": "We do not sell personal information. We may share data in these cases:",
+          "items": {
+            "0": "With service providers that help us operate the product.",
+            "1": "When required by law, regulation, or valid legal process.",
+            "2": "During business transfers such as merger, acquisition, or asset sale."
+          }
+        },
+        "cookies": {
+          "title": "4. Cookies and Tracking Technologies",
+          "body": "We use cookies and similar technologies to keep you signed in, remember preferences, analyze traffic, and improve performance."
+        },
+        "security": {
+          "title": "5. Data Security",
+          "body": "We implement reasonable technical and organizational safeguards to protect personal information, but no system can be completely secure."
+        },
+        "rights": {
+          "title": "6. Your Rights",
+          "body": "Depending on your jurisdiction, you may have rights to access, correct, delete, or restrict the processing of your personal information."
+        },
+        "contact": {
+          "title": "7. Contact Us",
+          "body": "If you have any questions about this privacy policy, please contact us:",
+          "emailLabel": "Email:"
+        }
+      }
+    },
+    "Cookies": {
+      "title": "Gekaixing Cookie Policy",
+      "updatedDateLabel": "Updated on:",
+      "updatedDate": "August 4, 2025",
+      "intro": "This policy explains how Gekaixing uses cookies and similar technologies.",
+      "sections": {
+        "whatIsCookie": {
+          "title": "1. What Are Cookies?",
+          "body": "Cookies are small text files stored in your browser when you visit a website. They help the site remember settings, session status, and preferences."
+        },
+        "howWeUse": {
+          "title": "2. How We Use Cookies",
+          "summary": "We use cookies for the following purposes:",
+          "items": {
+            "0": "Essential cookies: required for core features and secure access.",
+            "1": "Functional cookies: remember your preferences such as language and settings.",
+            "2": "Analytics cookies: understand traffic and usage patterns to improve the product.",
+            "3": "Advertising cookies: measure and improve marketing effectiveness where applicable."
+          }
+        },
+        "thirdParty": {
+          "title": "3. Third-Party Cookies",
+          "body": "Some cookies may be set by third-party services such as analytics or embedded content providers. Their use is governed by their own privacy policies."
+        },
+        "manage": {
+          "title": "4. Managing Cookie Preferences",
+          "body1": "You can control or disable cookies in your browser settings.",
+          "body2": "Disabling cookies may affect the availability or performance of some features."
+        },
+        "contact": {
+          "title": "5. Contact Us",
+          "body": "If you have any questions about this cookie policy, please contact us:",
+          "emailLabel": "Email:"
+        }
+      }
+    }
+  },
+  "FooterLinks": {
+    "about": "About",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "helpCenter": "Help Center",
+    "cookiePolicy": "Cookie Policy",
+    "accessibility": "Accessibility",
+    "more": "More",
+    "github": "GitHub"
   }
 }

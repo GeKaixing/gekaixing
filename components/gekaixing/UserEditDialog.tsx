@@ -20,25 +20,8 @@ import { useState } from "react"
 import { toast } from "sonner"
 import Spin from "./Spin"
 import { useRouter } from "next/navigation"
+import { useTranslations } from "next-intl"
 
-
-const formSchema = z.object({
-    name: z
-        .string()
-        .min(3, "名字不能为空")
-        .max(50, "名字不能超过50个字符"),
-    userid: z
-        .string()
-        .min(3, "用户ID至少3个字符")
-        .max(36, "用户ID不能超过36个字符")
-        .regex(/^[a-zA-Z0-9]+([_-]?[a-zA-Z0-9]+)*$/, {
-            message: "用户ID只能包含字母、数字、下划线和连字符",
-        }),
-    brief_introduction: z
-        .string()
-        .max(200, "简介不能超过200个字符")
-        .optional(),
-})
 
 export async function PATCHUser(username: string, userid: string, brief?: string) {
     return fetch('/api/user', {
@@ -53,9 +36,27 @@ export async function PATCHUser(username: string, userid: string, brief?: string
 
 
 export default function UserEditDialog() {
+    const t = useTranslations("Account.UserEditDialog")
     const [status, setStatus] = useState(false)
     const { name, userid, brief_introduction } = userStore()
     const router = useRouter()
+    const formSchema = z.object({
+        name: z
+            .string()
+            .min(3, t("validation.nameMin"))
+            .max(50, t("validation.nameMax")),
+        userid: z
+            .string()
+            .min(3, t("validation.useridMin"))
+            .max(36, t("validation.useridMax"))
+            .regex(/^[a-zA-Z0-9]+([_-]?[a-zA-Z0-9]+)*$/, {
+                message: t("validation.useridPattern"),
+            }),
+        brief_introduction: z
+            .string()
+            .max(200, t("validation.bioMax"))
+            .optional(),
+    })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -75,14 +76,14 @@ export default function UserEditDialog() {
             const res = await PATCHUser(values.name, values.userid, values.brief_introduction)
             const data = await res.json()
             if (data.success) {
-                toast.success('修改成功')
+                toast.success(t("success"))
                 userStore.setState({ name: values.name, userid: values.userid, brief_introduction: values.brief_introduction })
                 router.refresh()
             } else {
-                toast.error(data.error || '修改失败')
+                toast.error(data.error || t("failed"))
             }
         } catch (err) {
-            toast.error('网络错误或服务器错误')
+            toast.error(t("networkError"))
             console.error(err)
         } finally {
             setStatus(false)
@@ -93,13 +94,13 @@ export default function UserEditDialog() {
     return (
         <Dialog>
             <DialogTrigger className='ml-auto!'>
-                <div className='border-1 border-gray-400 h-9 flex justify-center items-center rounded-2xl p-4 mt-4 hover:bg-gray-200 whitespace-nowrap'>编辑个人资料</div>
+                <div className='border-1 border-gray-400 h-9 flex justify-center items-center rounded-2xl p-4 mt-4 hover:bg-gray-200 whitespace-nowrap'>{t("editProfile")}</div>
             </DialogTrigger>
             <DialogContent>
 
                 <DialogHeader>
                     <DialogTitle>
-                        编辑个人资料
+                        {t("editProfile")}
                     </DialogTitle>
                     <DialogDescription className="hidden">
                     </DialogDescription>
@@ -118,11 +119,11 @@ export default function UserEditDialog() {
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>名字</FormLabel>
+                                    <FormLabel>{t("nameLabel")}</FormLabel>
                                     <FormControl>
                                         <Input
                                             disabled={status}
-                                            placeholder="输入您的名字"
+                                            placeholder={t("namePlaceholder")}
                                             {...field}
                                         />
                                     </FormControl>
@@ -135,11 +136,11 @@ export default function UserEditDialog() {
                             name="userid"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>用户ID</FormLabel>
+                                    <FormLabel>{t("useridLabel")}</FormLabel>
                                     <FormControl>
                                         <Input
                                             disabled={status}
-                                            placeholder="输入您的用户ID"
+                                            placeholder={t("useridPlaceholder")}
                                             {...field}
                                         />
                                     </FormControl>
@@ -152,11 +153,11 @@ export default function UserEditDialog() {
                             name="brief_introduction"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>简介</FormLabel>
+                                    <FormLabel>{t("bioLabel")}</FormLabel>
                                     <FormControl>
                                         <Input
                                             disabled={status}
-                                            placeholder="输入您的简介"
+                                            placeholder={t("bioPlaceholder")}
                                             {...field}
                                         />
                                     </FormControl>
@@ -167,7 +168,7 @@ export default function UserEditDialog() {
                         <Button type="submit"
                             disabled={status}
                         >
-                            {status ? <Spin></Spin> : '提交'}
+                            {status ? <Spin></Spin> : t("submit")}
                         </Button>
                     </form>
                 </Form>

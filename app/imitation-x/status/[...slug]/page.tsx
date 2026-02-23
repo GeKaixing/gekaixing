@@ -10,7 +10,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import type { Post } from '../../page'
 import PostRetreatServer from '@/components/gekaixing/PostRetreatServer'
-import { getLocale } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { Prisma } from '@/generated/prisma/client'
 
 /* =======================
@@ -34,28 +34,6 @@ function buildExcerpt(text: string): string {
     return plainText.slice(0, 120)
 }
 
-function getStatusCopy(locale: string) {
-    if (locale === "zh-CN") {
-        return {
-            pageTitle: "帖子详情 | Gekaixing",
-            pageDescription: "查看 Gekaixing 平台上的帖子详情与回复。",
-            notFoundTitle: "帖子不存在 | Gekaixing",
-            notFoundDescription: "该帖子可能已被删除或不可见。",
-            fallbackDescription: "查看这条帖子内容与评论讨论。",
-            titleTemplate: (authorName: string) => `${authorName} 的帖子 | Gekaixing`,
-        }
-    }
-
-    return {
-        pageTitle: "Post Detail | Gekaixing",
-        pageDescription: "View post details and replies on Gekaixing.",
-        notFoundTitle: "Post Not Found | Gekaixing",
-        notFoundDescription: "This post may have been removed or is not available.",
-        fallbackDescription: "Read this post and discussion replies.",
-        titleTemplate: (authorName: string) => `${authorName}'s post | Gekaixing`,
-    }
-}
-
 function getSiteUrl(): string {
     const envUrl = process.env.NEXT_PUBLIC_URL
     if (envUrl && envUrl.startsWith('http')) {
@@ -70,15 +48,15 @@ export async function generateMetadata({
     params: Promise<{ slug: string[] }>
 }): Promise<Metadata> {
     const locale = await getLocale()
-    const copy = getStatusCopy(locale)
+    const t = await getTranslations({ locale, namespace: 'ImitationX.StatusPageMeta' })
     const { slug } = await params
     const postId = slug?.[0]
     const siteUrl = getSiteUrl()
 
     if (!postId) {
         return {
-            title: copy.pageTitle,
-            description: copy.pageDescription,
+            title: t('pageTitle'),
+            description: t('pageDescription'),
         }
     }
 
@@ -99,15 +77,15 @@ export async function generateMetadata({
 
     if (!post) {
         return {
-            title: copy.notFoundTitle,
-            description: copy.notFoundDescription,
+            title: t('notFoundTitle'),
+            description: t('notFoundDescription'),
         }
     }
 
     const authorName = post.author.name || `@${post.author.userid}`
     const excerpt = buildExcerpt(post.content)
-    const title = copy.titleTemplate(authorName)
-    const description = excerpt || copy.fallbackDescription
+    const title = t('titleTemplate', { authorName })
+    const description = excerpt || t('fallbackDescription')
     const url = `${siteUrl}/imitation-x/status/${post.id}`
 
     return {

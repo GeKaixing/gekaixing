@@ -10,15 +10,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import z from 'zod'
 import { useState } from 'react'
-
-const formSchema = z.object({
-    email: z.string().email({
-        message: "请输入有效的电子邮件地址。",
-    }),
-    password: z.string().min(6, {
-        message: "密码必须至少包含6个字符。",
-    }),
-})
+import { useTranslations } from 'next-intl'
 export async function LoginFetch(email: string, password: string) {
     const result = await fetch('/api/login', {
         method: 'POST',
@@ -35,8 +27,17 @@ export async function LoginFetch(email: string, password: string) {
 
 
 export default function LoginForm() {
+    const t = useTranslations('Account.LoginForm')
     const router = useRouter();
     const [status, setStatus] = useState(false)
+    const formSchema = z.object({
+        email: z.string().email({
+            message: t('validation.email'),
+        }),
+        password: z.string().min(6, {
+            message: t('validation.passwordMin'),
+        }),
+    })
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -56,7 +57,7 @@ export default function LoginForm() {
         try {
             data = JSON.parse(text)
         } catch {
-            toast.error("服务器返回异常，请查看控制台")
+            toast.error(t('serverError'))
             console.error("Non-JSON response:", text)
             setStatus(false)
             return
@@ -65,7 +66,7 @@ export default function LoginForm() {
         if (data.success) {
             router.replace("/imitation-x")
         } else {
-            toast.error(data.error || "登录失败")
+            toast.error(data.error || t('loginFailed'))
         }
         setStatus(false)
     }
@@ -79,11 +80,11 @@ export default function LoginForm() {
                     name="email"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>邮箱</FormLabel>
+                            <FormLabel>{t('emailLabel')}</FormLabel>
                             <FormControl>
                                 <Input
                                     disabled={status}
-                                    placeholder="请输入邮箱"
+                                    placeholder={t('emailPlaceholder')}
                                     type='email'
                                     {...field}
                                 />
@@ -93,9 +94,9 @@ export default function LoginForm() {
                                 name="password"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>密码</FormLabel>
+                                        <FormLabel>{t('passwordLabel')}</FormLabel>
                                         <FormControl>
-                                            <Input disabled={status} placeholder="请输入密码" {...field} type='password' />
+                                            <Input disabled={status} placeholder={t('passwordPlaceholder')} {...field} type='password' />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -112,7 +113,7 @@ export default function LoginForm() {
                     className='bg-black text-white'
                     disabled={status}
                 >
-                    {status ? <Spin></Spin> : '提交'}
+                    {status ? <Spin></Spin> : t('submit')}
                 </Button>
             </form>
         </Form>

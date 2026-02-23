@@ -194,6 +194,321 @@
         "likes": "喜欢",
         "bookmarks": "收藏"
       }
+    },
+    "Help": {
+      "heroTitle": "帮助中心",
+      "heroSubTitle": "找到您需要的帮助和解答",
+      "cards": {
+        "faqTitle": "常见问题",
+        "faqDesc": "查看用户最常问的问题",
+        "guideTitle": "使用指南",
+        "guideDesc": "了解平台使用规范",
+        "contactTitle": "联系我们",
+        "contactDesc": "获取人工客服支持"
+      },
+      "sectionTitles": {
+        "faq": "常见问题",
+        "guide": "使用指南",
+        "contact": "联系我们",
+        "links": "相关链接"
+      },
+      "contactIntro": "如果您没有找到需要的帮助，可以通过以下方式联系我们：",
+      "contactItems": {
+        "emailPrefix": "电子邮件：",
+        "hours": "客服时间：周一至周五 9:00-18:00",
+        "reply": "通常在 24 小时内回复"
+      },
+      "relatedLinks": {
+        "tos": "服务条款",
+        "privacy": "隐私政策",
+        "about": "关于我们"
+      },
+      "faqs": {
+        "1": {
+          "question": "如何注册账号？",
+          "answer": "点击页面右上角的登录按钮，选择注册选项，填写邮箱和密码即可完成注册。您也可以使用 Google 账号快速登录。"
+        },
+        "2": {
+          "question": "如何发布动态？",
+          "answer": "登录后，在首页或个人主页点击输入框，输入您想分享的内容，然后点击发布按钮即可。您可以添加图片、表情等丰富您的动态。"
+        },
+        "3": {
+          "question": "如何修改个人资料？",
+          "answer": "点击您的头像进入个人主页，点击编辑资料按钮可以修改昵称、头像、简介等个人信息。"
+        },
+        "4": {
+          "question": "如何关注其他用户？",
+          "answer": "在您感兴趣的用户主页上，点击关注按钮即可关注该用户。您可以在关注列表中查看所有已关注的用户。"
+        },
+        "5": {
+          "question": "如何私信其他用户？",
+          "answer": "访问对方的个人主页，点击私信按钮即可发起对话。您也可以在消息页面查看所有对话记录。"
+        }
+      },
+      "guides": {
+        "1": {
+          "title": "社区规范",
+          "content": "请遵守社区规范，发布友善、积极的内容。禁止发布违法、暴力、色情、歧视等内容。"
+        },
+        "2": {
+          "title": "隐私保护",
+          "content": "请保护好您的个人隐私，不要在公开场合分享敏感信息如身份证号、银行卡号等。"
+        },
+        "3": {
+          "title": "账号安全",
+          "content": "请使用强密码并定期更换。不要将账号密码告诉他人，开启两步验证可以增加账号安全性。"
+        }
+      }
+    },
+    "Premium": {
+      "title": "升级 Premium",
+      "subtitle": "更少广告、更强功能、优先展示你的内容",
+      "recommended": "推荐",
+      "subscribe": "订阅",
+      "whyTitle": "为什么选择 Premium？",
+      "whyCards": {
+        "1": {
+          "title": "更少广告",
+          "desc": "减少干扰，专注内容"
+        },
+        "2": {
+          "title": "优先展示",
+          "desc": "你的内容更容易被看到"
+        },
+        "3": {
+          "title": "更多创作工具",
+          "desc": "编辑帖子、长视频等"
+        }
+      },
+      "plans": {
+        "basic": {
+          "name": "基础版",
+          "description": "免费使用平台基础功能",
+          "features": {
+            "0": {
+              "text": "发帖",
+              "included": "true"
+            },
+            "1": {
+              "text": "点赞 / 评论",
+              "included": "true"
+            },
+            "2": {
+              "text": "关注用户",
+              "included": "true"
+            },
+            "3": {
+              "text": "无广告",
+              "included": "false"
+            },
+            "4": {
+              "text": "优先展示",
+              "included": "false"
+            },
+            "5": {
+              "text": "编辑帖子",
+              "included": "false"
+            },
+            "6": {
+              "text": "蓝V认证",
+              "included": "false"
+            }
+          },
+          "price": "¥0"
+        },
+        "premium": {
+          "name": "Premium",
+          "description": "更少广告 + 更强功能",
+          "features": {
+            "0": {
+              "text": "发帖",
+              "included": "true"
+            },
+            "1": {
+              "text": "点赞 / 评论",
+              "included": "true"
+            },
+            "2": {
+              "text": "关注用户",
+              "included": "true"
+            },
+            "3": {
+              "text": "减少广告",
+              "included": "true"
+            },
+            "4": {
+              "text": "编辑帖子",
+              "included": "true"
+            },
+            "5": {
+              "text": "更长视频上传",
+              "included": "true"
+            },
+            "6": {
+              "text": "蓝V认证",
+              "included": "false"
+            }
+          },
+          "price": "¥28 / 月"
+        },
+        "premiumPlus": {
+          "name": "Premium+",
+          "description": "完全无广告 + 最高优先级",
+          "features": {
+            "0": {
+              "text": "发帖",
+              "included": "true"
+            },
+            "1": {
+              "text": "点赞 / 评论",
+              "included": "true"
+            },
+            "2": {
+              "text": "关注用户",
+              "included": "true"
+            },
+            "3": {
+              "text": "完全无广告",
+              "included": "true"
+            },
+            "4": {
+              "text": "优先展示",
+              "included": "true"
+            },
+            "5": {
+              "text": "编辑帖子",
+              "included": "true"
+            },
+            "6": {
+              "text": "蓝V认证",
+              "included": "true"
+            }
+          },
+          "price": "¥88 / 月"
+        }
+      }
+    },
+    "Notifications": {
+      "title": "通知",
+      "tabs": {
+        "all": "全部",
+        "mentions": "提及",
+        "verified": "认证"
+      },
+      "actions": {
+        "like": "赞了你的推文",
+        "follow": "开始关注你",
+        "repost": "转发了你的推文",
+        "reply": "回复了你",
+        "mention": "在推文中提到了你"
+      },
+      "followBack": "关注回",
+      "empty": {
+        "allTitle": "暂无通知",
+        "allDesc": "当有新的互动时，你会在这里看到通知。",
+        "mentionsTitle": "暂无提及",
+        "mentionsDesc": "当有人在推文或回复中提到你时，你会在这里看到。"
+      },
+      "users": {
+        "zhangsan": "张三",
+        "lisi": "李四",
+        "wangwu": "王五",
+        "zhaoliu": "赵六",
+        "qianqi": "钱七",
+        "system": "系统通知"
+      },
+      "posts": {
+        "1": "这是一条示例推文内容，展示通知页面的样式。",
+        "2": "分享一个有趣的项目！",
+        "3": "今天开始一个新的项目..."
+      },
+      "contents": {
+        "1": "我也觉得这个项目很棒！",
+        "2": "@gekaixing 你觉得这个设计怎么样？",
+        "3": "恭喜！你的账号已获得认证。"
+      },
+      "times": {
+        "1": "2小时前",
+        "2": "5小时前",
+        "3": "1天前",
+        "4": "2天前",
+        "5": "3天前",
+        "6": "1周前"
+      }
+    },
+    "ConnectPeople": {
+      "title": "连接",
+      "userCount": "@{count} 位用户",
+      "searchPlaceholder": "搜索用户",
+      "tabs": {
+        "recommended": "推荐关注",
+        "followers": "关注者",
+        "following": "正在关注"
+      },
+      "empty": "没有找到匹配的用户",
+      "follow": "关注",
+      "following": "已关注",
+      "loadMore": "加载更多",
+      "users": {
+        "techDaily": {
+          "name": "科技日报",
+          "bio": "关注全球科技动态，分享最新科技资讯"
+        },
+        "design": {
+          "name": "设计之美",
+          "bio": "探索设计与艺术的无限可能"
+        },
+        "coder": {
+          "name": "编程狂人",
+          "bio": "Full-stack developer | Open source enthusiast"
+        },
+        "food": {
+          "name": "美食探店",
+          "bio": "吃遍天下美食，记录每一口感动"
+        },
+        "photo": {
+          "name": "摄影师小明",
+          "bio": "用镜头记录世界的美好瞬间"
+        }
+      }
+    },
+    "Following": {
+      "title": "用户关系",
+      "userCount": "{count} 位用户",
+      "searchPlaceholder": "搜索用户",
+      "tabs": {
+        "recommended": "推荐关注",
+        "followers": "关注者",
+        "following": "正在关注"
+      },
+      "loading": "加载中..."
+    },
+    "ChatPage": {
+      "title": "聊天",
+      "loading": "加载中...",
+      "online": "在线",
+      "offline": "离线",
+      "startChatWith": "开始与 {name} 聊天",
+      "me": "我",
+      "sendTo": "给 {name} 发消息...",
+      "emptyContacts": "暂无聊天，去关注其他用户开始聊天吧",
+      "selectContact": "选择一个联系人开始聊天"
+    },
+    "UserPageMeta": {
+      "defaultDescription": "查看该用户的帖子、回复与收藏内容。",
+      "pageTitle": "个人主页 | Gekaixing",
+      "pageDescription": "查看用户主页、帖子和互动记录。",
+      "notFoundTitle": "用户不存在 | Gekaixing",
+      "notFoundDescription": "该用户可能已被删除或不可见。",
+      "titleTemplate": "{displayName} 的个人主页 | Gekaixing"
+    },
+    "StatusPageMeta": {
+      "pageTitle": "帖子详情 | Gekaixing",
+      "pageDescription": "查看 Gekaixing 平台上的帖子详情与回复。",
+      "notFoundTitle": "帖子不存在 | Gekaixing",
+      "notFoundDescription": "该帖子可能已被删除或不可见。",
+      "fallbackDescription": "查看这条帖子内容与评论讨论。",
+      "titleTemplate": "{authorName} 的帖子 | Gekaixing"
     }
   },
   "AuthCodeError": {
@@ -226,6 +541,230 @@
       "termsOfService": "服务条款",
       "privacyPolicy": "隐私政策",
       "cookiePolicy": "Cookie 使用政策"
+    },
+    "LoginForm": {
+      "validation": {
+        "email": "请输入有效的电子邮件地址。",
+        "passwordMin": "密码必须至少包含6个字符。"
+      },
+      "serverError": "服务器返回异常，请查看控制台",
+      "loginFailed": "登录失败",
+      "emailLabel": "邮箱",
+      "emailPlaceholder": "请输入邮箱",
+      "passwordLabel": "密码",
+      "passwordPlaceholder": "请输入密码",
+      "submit": "提交"
+    },
+    "SignupForm": {
+      "validation": {
+        "email": "请输入有效的电子邮件地址。",
+        "passwordMin": "密码必须至少包含6个字符。"
+      },
+      "signupFailed": "注册失败",
+      "emailLabel": "邮箱",
+      "emailPlaceholder": "请输入邮箱",
+      "passwordLabel": "密码",
+      "passwordPlaceholder": "请输入密码",
+      "submit": "提交",
+      "dialog": {
+        "title": "确认邮件已经发送到你的邮箱",
+        "description": "请前往邮箱点击链接确认账户注册成功",
+        "cancel": "取消",
+        "confirm": "确认"
+      }
+    },
+    "SettingEmail": {
+      "validation": {
+        "email": "请输入有效的电子邮件地址。"
+      },
+      "success": "已经向您的旧邮箱和新邮箱发送确认链接，请前往旧邮箱和新邮箱确认链接，完成修改电子邮箱",
+      "failed": "修改失败",
+      "entry": "更改电子邮箱",
+      "title": "更改电子邮箱",
+      "newEmailLabel": "请输入你的新电子邮箱地址。",
+      "submit": "提交"
+    },
+    "UserEditDialog": {
+      "validation": {
+        "nameMin": "名字不能为空",
+        "nameMax": "名字不能超过50个字符",
+        "useridMin": "用户ID至少3个字符",
+        "useridMax": "用户ID不能超过36个字符",
+        "useridPattern": "用户ID只能包含字母、数字、下划线和连字符",
+        "bioMax": "简介不能超过200个字符"
+      },
+      "success": "修改成功",
+      "failed": "修改失败",
+      "networkError": "网络错误或服务器错误",
+      "editProfile": "编辑个人资料",
+      "nameLabel": "名字",
+      "namePlaceholder": "输入您的名字",
+      "useridLabel": "用户ID",
+      "useridPlaceholder": "输入您的用户ID",
+      "bioLabel": "简介",
+      "bioPlaceholder": "输入您的简介",
+      "submit": "提交"
+    },
+    "LoginDialog": {
+      "title": "登录 Gekaixing",
+      "forgotPassword": "忘记密码",
+      "noAccount": "还没有账户吗？",
+      "signup": "注册"
+    },
+    "PasswordResetDialog": {
+      "title": "查找你的 Gekaixing 账户",
+      "description": "输入与你的账户关联的电子邮件。",
+      "emailPlaceholder": "请输入邮箱",
+      "sendCode": "发送验证码",
+      "dialog": {
+        "title": "确认邮件已经发送到你的邮箱",
+        "description": "请前往邮箱点击链接确认是否本人操作",
+        "cancel": "取消",
+        "confirm": "确认"
+      }
     }
+  },
+  "Legal": {
+    "Tos": {
+      "title": "Gekaixing 服务条款",
+      "updatedDateLabel": "更新日期：",
+      "updatedDate": "2025年8月4日",
+      "sections": {
+        "acceptance": {
+          "title": "1. 协议接受",
+          "body": "欢迎使用 Gekaixing。本服务条款用于规范您对网站及相关服务的使用。访问或使用本服务即表示您已阅读、理解并同意受本条款约束；如不同意，请停止使用本服务。"
+        },
+        "usage": {
+          "title": "2. 服务使用",
+          "items": {
+            "0": "您应具备所在地法律要求的行为能力后再使用本服务。",
+            "1": "您同意仅出于合法目的使用本服务，并遵守适用法律法规。",
+            "2": "您需对账户下的操作、发布内容和互动行为负责。",
+            "3": "我们可在必要时调整、暂停或终止部分服务。"
+          }
+        },
+        "account": {
+          "title": "3. 用户账户",
+          "body": "部分功能需要注册账户。您应妥善保管账户凭证，并对账户下发生的行为承担责任。若发现未经授权访问，请及时联系我们。"
+        },
+        "ip": {
+          "title": "4. 知识产权",
+          "body": "本服务中的内容与软件受知识产权法律保护，归 Gekaixing 或其许可方所有。未经书面许可，您不得复制、修改、分发、出售或出租服务的任何部分。"
+        },
+        "disclaimer": {
+          "title": "5. 免责声明与责任限制",
+          "body": "本服务按“现状”与“可用”提供，不作任何形式保证。在法律允许范围内，我们不对因使用本服务产生的间接、附带或后果性损失承担责任。"
+        },
+        "termination": {
+          "title": "6. 协议终止",
+          "body": "您可随时停止使用本服务。若您违反本条款或出于安全、合规需要，我们可暂停或终止您的访问权限。"
+        },
+        "contact": {
+          "title": "7. 联系我们",
+          "body": "如果您对本服务条款有疑问，请通过以下方式联系我们：",
+          "emailLabel": "电子邮件："
+        }
+      }
+    },
+    "Privacy": {
+      "title": "Gekaixing 隐私政策",
+      "updatedDateLabel": "更新日期：",
+      "updatedDate": "2025年8月4日",
+      "intro": "我们重视您的隐私。本政策说明您在使用 Gekaixing 时，我们如何收集、使用、披露和保护您的信息。",
+      "sections": {
+        "collectedInfo": {
+          "title": "1. 我们收集的信息",
+          "summary": "我们可能收集以下类型的信息：",
+          "items": {
+            "0": "身份与资料信息，例如注册时提供的姓名、邮箱等。",
+            "1": "您在使用产品功能过程中产生的账户与使用数据。",
+            "2": "技术信息，例如 IP 地址、浏览器类型、设备信息与访问页面。"
+          }
+        },
+        "usage": {
+          "title": "2. 我们如何使用信息",
+          "summary": "我们将信息用于：",
+          "items": {
+            "0": "提供、维护并改进我们的服务。",
+            "1": "进行身份验证、账号安全保护与防滥用。",
+            "2": "发送重要的账户通知与产品更新。",
+            "3": "个性化产品体验与内容推荐。",
+            "4": "履行法律法规要求。"
+          }
+        },
+        "sharing": {
+          "title": "3. 信息共享与披露",
+          "summary": "我们不会出售个人信息。以下情况下可能共享数据：",
+          "items": {
+            "0": "与协助我们运营产品的服务提供商共享。",
+            "1": "根据法律法规或有效法律程序要求披露。",
+            "2": "在合并、收购或资产转让等交易中按需转移。"
+          }
+        },
+        "cookies": {
+          "title": "4. Cookie 与追踪技术",
+          "body": "我们使用 Cookie 和类似技术来维持登录状态、记住偏好、分析流量并改进性能。"
+        },
+        "security": {
+          "title": "5. 信息安全",
+          "body": "我们采取合理的技术与管理措施保护个人信息，但任何系统都无法保证绝对安全。"
+        },
+        "rights": {
+          "title": "6. 您的权利",
+          "body": "依据适用法律，您可能享有访问、更正、删除或限制处理个人信息等权利。"
+        },
+        "contact": {
+          "title": "7. 联系我们",
+          "body": "如果您对本隐私政策有疑问，请通过以下方式联系我们：",
+          "emailLabel": "电子邮件："
+        }
+      }
+    },
+    "Cookies": {
+      "title": "Gekaixing Cookie 使用政策",
+      "updatedDateLabel": "更新日期：",
+      "updatedDate": "2025年8月4日",
+      "intro": "本政策说明 Gekaixing 如何使用 Cookie 及类似技术。",
+      "sections": {
+        "whatIsCookie": {
+          "title": "1. 什么是 Cookie？",
+          "body": "Cookie 是您访问网站时存储在浏览器中的小型文本文件，可帮助网站记住设置、会话状态和偏好。"
+        },
+        "howWeUse": {
+          "title": "2. 我们如何使用 Cookie",
+          "summary": "我们使用 Cookie 的主要目的包括：",
+          "items": {
+            "0": "必需 Cookie：用于核心功能和安全访问。",
+            "1": "功能性 Cookie：记住语言、偏好等个性化设置。",
+            "2": "分析 Cookie：了解访问与使用情况，持续优化产品。",
+            "3": "广告 Cookie：在适用场景下评估并提升营销效果。"
+          }
+        },
+        "thirdParty": {
+          "title": "3. 第三方 Cookie",
+          "body": "部分 Cookie 可能由第三方服务设置，例如统计分析或嵌入内容服务，其使用受对应第三方隐私政策约束。"
+        },
+        "manage": {
+          "title": "4. 如何管理 Cookie 偏好",
+          "body1": "您可以在浏览器设置中管理或禁用 Cookie。",
+          "body2": "禁用 Cookie 可能会影响部分功能的可用性或体验。"
+        },
+        "contact": {
+          "title": "5. 联系我们",
+          "body": "如果您对本 Cookie 政策有疑问，请通过以下方式联系我们：",
+          "emailLabel": "电子邮件："
+        }
+      }
+    }
+  },
+  "FooterLinks": {
+    "about": "关于",
+    "termsOfService": "服务条款",
+    "privacyPolicy": "隐私政策",
+    "helpCenter": "帮助中心",
+    "cookiePolicy": "Cookie 使用政策",
+    "accessibility": "辅助功能",
+    "more": "更多",
+    "github": "GitHub"
   }
 }

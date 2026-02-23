@@ -1,3 +1,4 @@
+ "use client"
 import React, { useState } from 'react'
 import {
     Dialog,
@@ -27,13 +28,15 @@ import { z } from "zod"
 import { createClient } from '@/utils/supabase/client'
 import { toast } from 'sonner'
 import Spin from './Spin'
-const formSchema = z.object({
-    email: z.string().email({
-        message: "请输入有效的电子邮件地址。",
-    }),
-})
+import { useTranslations } from 'next-intl'
 export default function SettingEmail() {
+    const t = useTranslations('Account.SettingEmail')
     const [status, setStatus] = useState(false)
+    const formSchema = z.object({
+        email: z.string().email({
+            message: t('validation.email'),
+        }),
+    })
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -54,10 +57,10 @@ export default function SettingEmail() {
             }
         )
         if (data) {
-            toast.success('已经向您的旧邮箱和新邮箱发送确认链接,请前往旧邮箱和新邮箱确认链接,完成修改电子邮箱')
+            toast.success(t('success'))
             setStatus(false)
         } else {
-            toast.error('修改失败')
+            toast.error(t('failed'))
             setStatus(false)
         }
         // Do something with the form values.
@@ -67,12 +70,12 @@ export default function SettingEmail() {
     return (
         <Dialog>
             <DialogTrigger>
-                <SettingAccountLi icon={<PenLine />} text={'更改电子邮箱'}></SettingAccountLi>
+                <SettingAccountLi icon={<PenLine />} text={t('entry')}></SettingAccountLi>
 
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>更改电子邮箱</DialogTitle>
+                    <DialogTitle>{t('title')}</DialogTitle>
                     <DialogDescription className='hidden'>
                     </DialogDescription>
                     <Form {...form}>
@@ -82,7 +85,7 @@ export default function SettingEmail() {
                                 name="email"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>请输入你的新电子邮箱地址。</FormLabel>
+                                        <FormLabel>{t('newEmailLabel')}</FormLabel>
                                         <FormControl>
                                             <Input
                                                 disabled={status}
@@ -99,7 +102,7 @@ export default function SettingEmail() {
                                 className='bg-black text-white'
                                 disabled={status}
                             >
-                                {status ? <Spin></Spin> : '提交'}
+                                {status ? <Spin></Spin> : t('submit')}
                             </Button>
                         </form>
                     </Form>

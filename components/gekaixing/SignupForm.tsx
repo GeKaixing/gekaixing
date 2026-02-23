@@ -21,14 +21,7 @@ import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import Spin from './Spin'
-const formSchema = z.object({
-    email: z.string().email({
-        message: "请输入有效的电子邮件地址。",
-    }),
-    password: z.string().min(6, {
-        message: "密码必须至少包含6个字符。",
-    }),
-})
+import { useTranslations } from 'next-intl'
 async function SignupFetch(email: string, password: string) {
     const result = await fetch('/api/signup', {
         method: 'POST',
@@ -45,9 +38,18 @@ async function SignupFetch(email: string, password: string) {
     return result
 }
 export default function SignupForm() {
+    const t = useTranslations('Account.SignupForm')
     const [open, setOpen] = useState(false);
 
     const [status, setStatus] = useState(false)
+    const formSchema = z.object({
+        email: z.string().email({
+            message: t('validation.email'),
+        }),
+        password: z.string().min(6, {
+            message: t('validation.passwordMin'),
+        }),
+    })
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -66,7 +68,7 @@ export default function SignupForm() {
             setOpen(true);
         } else {
             setStatus(false)
-            toast.error('注册失败')
+            toast.error(t('signupFailed'))
         }
     }
     return (
@@ -77,11 +79,11 @@ export default function SignupForm() {
                     name="email"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>邮箱</FormLabel>
+                            <FormLabel>{t('emailLabel')}</FormLabel>
                             <FormControl>
                                 <Input
                                     disabled={status}
-                                    placeholder="请输入邮箱"
+                                    placeholder={t('emailPlaceholder')}
                                     type='email'
                                     {...field}
                                 />
@@ -91,9 +93,9 @@ export default function SignupForm() {
                                 name="password"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>密码</FormLabel>
+                                        <FormLabel>{t('passwordLabel')}</FormLabel>
                                         <FormControl>
-                                            <Input disabled={status} placeholder="请输入密码" {...field} type='password' />
+                                            <Input disabled={status} placeholder={t('passwordPlaceholder')} {...field} type='password' />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -110,13 +112,14 @@ export default function SignupForm() {
                     className='bg-black text-white'
                     disabled={status}
                 >
-                    {status ? <Spin></Spin> : '提交'}
+                    {status ? <Spin></Spin> : t('submit')}
                 </Button>
             </form>
 
             <EnterMsmAlertDialog
                 open={open}
                 setOpen={setOpen}
+                t={t}
             ></EnterMsmAlertDialog>
         </Form>
     )
@@ -128,6 +131,7 @@ function EnterMsmAlertDialog({
 }: {
     open: boolean;
     setOpen: (open: boolean) => void;
+    t: ReturnType<typeof useTranslations>;
 }) {
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
@@ -136,14 +140,14 @@ function EnterMsmAlertDialog({
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>确认邮件已经发送道你的邮箱</AlertDialogTitle>
+                    <AlertDialogTitle>{t('dialog.title')}</AlertDialogTitle>
                     <AlertDialogDescription>
-                        请前往邮箱点击连接确认账户注册成功
+                        {t('dialog.description')}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel>取消</AlertDialogCancel>
-                    <AlertDialogAction>确认</AlertDialogAction>
+                    <AlertDialogCancel>{t('dialog.cancel')}</AlertDialogCancel>
+                    <AlertDialogAction>{t('dialog.confirm')}</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
