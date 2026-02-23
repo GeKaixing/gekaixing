@@ -262,7 +262,7 @@ export default function PublishReply({
                                 <AvatarImage src={user.avatar ?? undefined} />
                                 <AvatarFallback>{(user.name || user.userid).slice(0, 1).toUpperCase()}</AvatarFallback>
                             </Avatar>
-                            <span className="text-sm font-medium">{user.name || user.userid}</span>
+                            <span className="truncate text-sm font-medium">{user.name || user.userid}</span>
                             <span className="text-xs text-muted-foreground">@{user.userid}</span>
                         </button>
                     ))}
