@@ -202,5 +202,27 @@
     "helpText": "Please go back and try again, or contact support for assistance.",
     "backToAccount": "Back to Account",
     "signUpAgain": "Sign Up Again"
+  },
+  "Account": {
+    "Layout": {
+      "alreadyHaveAccount": "Already have an account?",
+      "login": "Log in",
+      "forgotPassword": "Forgot password"
+    },
+    "RegistrationProtocol": {
+      "createAccount": "Create your account",
+      "agreementPrefix": "By signing up, you agree to the ",
+      "termsOfService": "Terms of Service",
+      "and": " and ",
+      "privacyPolicy": "Privacy Policy",
+      "including": "including ",
+      "cookiePolicy": "Cookie Policy."
+    },
+    "Footer": {
+      "about": "About",
+      "termsOfService": "Terms of Service",
+      "privacyPolicy": "Privacy Policy",
+      "cookiePolicy": "Cookie Policy"
+    }
   }
 }

@@ -7,7 +7,10 @@ export default function LandingPageFooter({ className }: { className?: string })
     return (
         <footer className={clsx('w-full text-[16px]  text-white flex max-w-[80%] mx-auto', className)}>
             <div className='flex flex-col gap-6 text-gray-400'>
-                <Image src='/logo.svg' width={64} height={64} alt='logo' ></Image>
+                <>
+                    <Image src='/logo.svg' width={64} height={64} alt='logo' className='dark:hidden'></Image>
+                    <Image src='/logo-white.svg' width={64} height={64} alt='logo white' className='hidden dark:block'></Image>
+                </>
                 <Link href={'/about'} className='cursor-pointer '>about</Link>
                 <Link href={'/tos'} className='cursor-pointer '>terms of service</Link>
                 <Link href={'/privacy'} className='cursor-pointer '>privacy policy</Link>

@@ -47,7 +47,7 @@ export function FooterDropdownMenu() {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuItem>
-                    <Link href={'https://github.com/GeKaixing/towel'}>github</Link>
+                    <Link href={'https://github.com/GeKaixing/gekaixing'}>github</Link>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

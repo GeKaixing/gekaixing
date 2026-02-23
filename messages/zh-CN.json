@@ -202,5 +202,27 @@
     "helpText": "请返回并重新尝试，或联系支持团队获取帮助。",
     "backToAccount": "返回账户",
     "signUpAgain": "重新注册"
+  },
+  "Account": {
+    "Layout": {
+      "alreadyHaveAccount": "已经有账户了吗？",
+      "login": "登录",
+      "forgotPassword": "忘记密码"
+    },
+    "RegistrationProtocol": {
+      "createAccount": "建立你的账户",
+      "agreementPrefix": "如果注册，即表示你同意",
+      "termsOfService": "服务条款",
+      "and": "和",
+      "privacyPolicy": "隐私政策",
+      "including": "包括",
+      "cookiePolicy": "Cookie 使用政策。"
+    },
+    "Footer": {
+      "about": "关于",
+      "termsOfService": "服务条款",
+      "privacyPolicy": "隐私政策",
+      "cookiePolicy": "Cookie 使用政策"
+    }
   }
 }

@@ -32,7 +32,10 @@ export default function MobileHeader({ user }: { user: userResult | null }) {
         <div className='sm:hidden'>
             <div className='w-full fixed top-0 h-20 px-6 py-2 flex justify-between items-center bg-background/90 backdrop-blur border-b border-border'>
                 <MobileDrawer user={user} />
-                <Image src='/logo.svg' width={24} height={12} alt='logo'></Image>
+                <>
+                    <Image src='/logo.svg' width={24} height={12} alt='logo' className='dark:hidden'></Image>
+                    <Image src='/logo-white.svg' width={24} height={12} alt='logo white' className='hidden dark:block'></Image>
+                </>
                 <Link href={'/imitation-x/explore'} data-value={t("search")}><Search></Search></Link>
             </div>
             <div className='w-full  h-20'></div>

@@ -9,7 +9,10 @@ export default async function page() {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen gap-6 p-4">
-      <Image src={'/logo.svg'} width={120} height={120} alt='logo.svg' className='mb-4' />
+      <>
+        <Image src={'/logo.svg'} width={120} height={120} alt='logo.svg' className='mb-4 dark:hidden' />
+        <Image src={'/logo-white.svg'} width={120} height={120} alt='logo-white.svg' className='mb-4 hidden dark:block' />
+      </>
       
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">

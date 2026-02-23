@@ -5,7 +5,10 @@ import React from 'react'
 export default function page() {
   return (
     <div className='flex  flex-col justify-center items-center h-screen gap-6'>
-      <Image src={'/logo.svg'} width={200} height={200} alt='logo.svg'></Image>
+      <>
+        <Image src={'/logo.svg'} width={200} height={200} alt='logo.svg' className='dark:hidden'></Image>
+        <Image src={'/logo-white.svg'} width={200} height={200} alt='logo-white.svg' className='hidden dark:block'></Image>
+      </>
       <span className='  text-2xl text-red-500'>
         发生错误
       </span>

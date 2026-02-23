@@ -9,7 +9,10 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 export default function Button({ children, className, ...props }: ButtonProps) {
   return (
     <button
-      className={clsx('h-9 border border-gray-300 rounded-2xl flex justify-center items-center w-2xs', className)}
+      className={clsx(
+        'h-9 w-2xs rounded-2xl border border-border bg-background text-foreground flex justify-center items-center transition-colors hover:bg-muted',
+        className,
+      )}
       {...props}
     >
       {children}

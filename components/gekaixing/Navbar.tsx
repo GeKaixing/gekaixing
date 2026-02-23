@@ -53,7 +53,10 @@ export default function Navbar({ user }: NavbarProps) {
             >
                 <div className='flex items-center gap-6'>
                     <Link href={'/'}>
-                        <Image alt='logo' src={'/logo.svg'} width={64} height={64} />
+                        <>
+                            <Image alt='logo' src={'/logo.svg'} width={64} height={64} className='dark:hidden' />
+                            <Image alt='logo white' src={'/logo-white.svg'} width={64} height={64} className='hidden dark:block' />
+                        </>
                     </Link>
                 </div>
                 <div className='flex items-center gap-6 '>
@@ -72,7 +75,7 @@ export default function Navbar({ user }: NavbarProps) {
                             <span className='text-sm font-medium text-foreground'>{userName || userEmail}</span>
                         </div>
                     )}
-                    <Link href={'https://github.com/GeKaixing/towel'}>
+                    <Link href={'https://github.com/GeKaixing/gekaixing'}>
                         <Github className='text-foreground' />
                     </Link>
                 </div>

@@ -20,6 +20,6 @@ export default function GoogleButton() {
     }
 
     return (
-        <Button className='text-black mb-6' onClick={google_login}>使用Google账号登录</Button>
+        <Button className='mb-6' onClick={google_login}>使用Google账号登录</Button>
     )
 }

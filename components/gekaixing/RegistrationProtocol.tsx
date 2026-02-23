@@ -1,22 +1,22 @@
 import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 import React from 'react'
-import SignupDialogForm from './SignupDialog'
 
-
-export default function RegistrationProtocol() {
+export default async function RegistrationProtocol() {
+    const t = await getTranslations('Account.RegistrationProtocol')
     return (
-        <div className='text-[11px] text-gray-500 '>
-            <Link  href={'/account/signup'} className='h-9 border border-gray-300 rounded-2xl flex justify-center items-center w-2xs bg-blue-500 text-white mb-4'>建立你的账户</Link>
-            如果注册，即表示你同意
-            <Link href={'/tos'} className='underline text-blue-500'>服务条款
-            </Link>和
-            <Link href={'/privacy'} className='underline text-blue-500'>隐私政策
+        <div className='text-[11px] text-muted-foreground'>
+            <Link href={'/account/signup'} className='h-9 rounded-2xl flex justify-center items-center w-2xs bg-primary text-primary-foreground mb-4 hover:opacity-90 transition-opacity'>{t('createAccount')}</Link>
+            {t('agreementPrefix')}
+            <Link href={'/tos'} className='underline text-primary'>{t('termsOfService')}
+            </Link>{t('and')}
+            <Link href={'/privacy'} className='underline text-primary'>{t('privacyPolicy')}
             </Link>
             ,
             <p>
-                包括
-                <Link href={'/gekaixing-cookies'} className='underline text-blue-500'>
-                    Cookie 使用政策。
+                {t('including')}
+                <Link href={'/gekaixing-cookies'} className='underline text-primary'>
+                    {t('cookiePolicy')}
                 </Link>
             </p>
 

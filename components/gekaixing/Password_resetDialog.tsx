@@ -66,7 +66,7 @@ export default function Password_resetDialog() {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>查找你的 towel 账户
+                    <DialogTitle>查找你的 gekaixing 账户
                         <div className='text-gray-800 text-[12px] mt-4 mb-6'> 输入与你的账户关联的电子邮件。</div>
                     </DialogTitle>
                     <DialogDescription className='flex flex-col justify-center items-center gap-6'>

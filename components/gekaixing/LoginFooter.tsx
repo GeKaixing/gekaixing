@@ -1,17 +1,20 @@
 import { Separator } from "@/components/ui/separator"
+import { getTranslations } from "next-intl/server"
 import Link from "next/link"
 
-export function LoginFooter() {
+export async function LoginFooter() {
+  const t = await getTranslations("Account.Footer")
+
   return (
     <div className="w-full flex justify-center items-end absolute bottom-2 left-0">
       <div className="flex h-5 items-center space-x-4 text-sm">
-        <Link href={'/about'}>关于</Link>
+        <Link href={'/about'}>{t("about")}</Link>
         <Separator orientation="vertical" />
-        <Link href={'/tos'}>服务条款</Link>
+        <Link href={'/tos'}>{t("termsOfService")}</Link>
         <Separator orientation="vertical" />
-        <Link href={'/privacy'}>隐私政策</Link>
+        <Link href={'/privacy'}>{t("privacyPolicy")}</Link>
         <Separator orientation="vertical" />
-        <Link href={'/gekaixing-cookies'}>Cookie 使用政策</Link>
+        <Link href={'/gekaixing-cookies'}>{t("cookiePolicy")}</Link>
       </div>
     </div>
   )
