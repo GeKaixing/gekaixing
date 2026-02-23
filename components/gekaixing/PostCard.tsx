@@ -17,6 +17,8 @@ import Link from "next/link"
 import { Post } from "@/app/imitation-x/page"
 import { postStore } from "@/store/post"
 import { replyStore } from "@/store/reply"
+import { useRouter } from "next/navigation"
+import { getMentionHrefFromTarget, renderMentionHtml } from "@/utils/function/mention"
 
 export default function PostCard({
     id,
@@ -33,6 +35,7 @@ export default function PostCard({
     bookmarkedByMe,
     isPremium
 }: Post) {
+    const router = useRouter()
     const [liked, setLiked] = useState(likedByMe)
     const [bookmarked, setBookmarked] = useState(bookmarkedByMe)
     const [likeCount, setLikeCount] = useState(like)
@@ -50,6 +53,8 @@ export default function PostCard({
         setStarCount(star)
         setShareCount(share)
     }, [bookmarkedByMe, like, likedByMe, share, star])
+
+    const contentWithMentions = React.useMemo(() => renderMentionHtml(content), [content])
 
     const syncInteractionToStore = (patch: Partial<Post>): void => {
         const postState = postStore.getState()
@@ -187,6 +192,19 @@ export default function PostCard({
         setShareLoading(false)
     }
 
+    const handleContentClick = (event: React.MouseEvent<HTMLDivElement>): void => {
+        const mentionHref = getMentionHrefFromTarget(event.target)
+
+        if (mentionHref) {
+            event.preventDefault()
+            event.stopPropagation()
+            router.push(mentionHref)
+            return
+        }
+
+        router.push(`/imitation-x/status/${id}`)
+    }
+
     return (
         <Card className="cursor-pointer hover:bg-muted/60 transition-colors">
             <CardHeader>
@@ -217,9 +235,7 @@ export default function PostCard({
             </CardHeader>
 
             <CardContent>
-                <Link href={`/imitation-x/status/${id}`}>
-                    <div dangerouslySetInnerHTML={{ __html: content }} />
-                </Link>
+                <div onClick={handleContentClick} dangerouslySetInnerHTML={{ __html: contentWithMentions }} />
             </CardContent>
 
             <CardFooter>

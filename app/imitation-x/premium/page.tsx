@@ -2,6 +2,7 @@
 
 import { Check, X } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import type { ReactElement } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -58,7 +59,7 @@ async function subscribe(priceId: string): Promise<void> {
   }
 }
 
-export default function PremiumPage(): JSX.Element {
+export default function PremiumPage(): ReactElement {
   const t = useTranslations('ImitationX.Premium')
 
   return (
@@ -136,7 +137,7 @@ export default function PremiumPage(): JSX.Element {
   )
 }
 
-function Feature({ title, desc }: { title: string; desc: string }): JSX.Element {
+function Feature({ title, desc }: { title: string; desc: string }): ReactElement {
   return (
     <div className='rounded-xl border border-border bg-card p-6'>
       <div className='text-lg font-bold'>{title}</div>

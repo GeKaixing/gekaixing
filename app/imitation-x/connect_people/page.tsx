@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type ReactElement } from 'react'
 import { ArrowLeft, Search, UserCheck, UserPlus, X } from 'lucide-react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
@@ -29,7 +29,7 @@ const mockUsers: UserProfile[] = [
 
 type TabType = 'recommended' | 'followers' | 'following'
 
-export default function ConnectPeoplePage(): JSX.Element {
+export default function ConnectPeoplePage(): ReactElement {
   const t = useTranslations('ImitationX.ConnectPeople')
   const [activeTab, setActiveTab] = useState<TabType>('recommended')
   const [users, setUsers] = useState<UserProfile[]>(mockUsers)

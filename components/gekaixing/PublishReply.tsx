@@ -3,13 +3,14 @@
 import { Card } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from "../ui/input"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { userStore } from "@/store/user"
 import Link from "next/link"
 import { replyStore } from "@/store/reply"
 import { postStore } from "@/store/post"
 import clsx from "clsx"
 import { Loader2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 async function publishReply(payload: {
     user_id: string
@@ -36,15 +37,62 @@ type Props = {
     type?: 'post' | 'reply'
 }
 
+type MentionUser = {
+    id: string
+    userid: string
+    name: string | null
+    avatar: string | null
+}
+
+type MentionToken = {
+    query: string
+    from: number
+    to: number
+}
+
+function getInputMentionToken(text: string): MentionToken | null {
+    const match = /(?:^|[\s(（])@([^\s@]{0,36})$/u.exec(text)
+    if (!match) {
+        return null
+    }
+
+    const raw = match[0]
+    const mentionText = raw.startsWith('@') ? raw : raw.slice(1)
+    const from = text.length - mentionText.length
+
+    return {
+        query: match[1] || "",
+        from,
+        to: text.length,
+    }
+}
+
+async function searchUsers(query: string): Promise<MentionUser[]> {
+    try {
+        const response = await fetch(`/api/user/search?query=${encodeURIComponent(query)}`)
+        const data = await response.json()
+        if (!data?.success || !Array.isArray(data?.data)) {
+            return []
+        }
+        return data.data as MentionUser[]
+    } catch (error) {
+        console.error("Failed to search users:", error)
+        return []
+    }
+}
+
 export default function PublishReply({
     postId,
     replyId,
     userId,
     type = 'post',
 }: Props) {
+    const t = useTranslations("PublishReply")
 
     const [replyInput, setReplyInput] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [mentionToken, setMentionToken] = useState<MentionToken | null>(null)
+    const [mentionUsers, setMentionUsers] = useState<MentionUser[]>([])
 
     const { addReply, replaceReply, removeReply } = replyStore()
     const { addReplyCount, subReplyCount } = postStore()
@@ -89,6 +137,8 @@ export default function PublishReply({
         addReplyCount(postId)
 
         setReplyInput('')
+        setMentionUsers([])
+        setMentionToken(null)
         setIsLoading(true)
 
         try {
@@ -123,8 +173,43 @@ export default function PublishReply({
         }
     }
 
+    function handleReplyInput(value: string): void {
+        setReplyInput(value)
+        const token = getInputMentionToken(value)
+        setMentionToken(token)
+    }
+
+    function handleSelectMention(user: MentionUser): void {
+        if (!mentionToken) {
+            return
+        }
+
+        const before = replyInput.slice(0, mentionToken.from)
+        const after = replyInput.slice(mentionToken.to)
+        setReplyInput(`${before}@${user.userid} ${after}`)
+        setMentionUsers([])
+        setMentionToken(null)
+    }
+
+    useEffect(() => {
+        if (!mentionToken) {
+            setMentionUsers([])
+            return
+        }
+
+        const timer = setTimeout(() => {
+            void searchUsers(mentionToken.query).then((users) => {
+                setMentionUsers(users)
+            })
+        }, 150)
+
+        return () => {
+            clearTimeout(timer)
+        }
+    }, [mentionToken])
+
     return (
-        <Card className="flex w-full flex-row gap-2 p-2 hover:bg-muted/60 transition-colors">
+        <Card className="relative flex w-full flex-row gap-2 p-2 hover:bg-muted/60 transition-colors">
             {userId ? (
                 <>
                     <Avatar>
@@ -138,9 +223,9 @@ export default function PublishReply({
 
                     <Input
                         value={replyInput}
-                        onChange={(e) => setReplyInput(e.target.value)}
+                        onChange={(e) => handleReplyInput(e.target.value)}
                         className="flex-1"
-                        placeholder="发表你的回复"
+                        placeholder={t("placeholder")}
                     />
 
                     <button
@@ -153,7 +238,7 @@ export default function PublishReply({
                     >
                         {isLoading
                             ? <Loader2 className="h-4 w-4 animate-spin" />
-                            : '回复'}
+                            : t("submit")}
                     </button>
                 </>
             ) : (
@@ -161,9 +246,28 @@ export default function PublishReply({
                     href="/account"
                     className="rounded-2xl font-bold bg-muted-foreground text-primary-foreground h-8 flex justify-center items-center w-full"
                 >
-                    请你登录后回复
+                    {t("loginToReply")}
                 </Link>
             )}
+            {mentionUsers.length > 0 && mentionToken ? (
+                <div className="absolute mt-14 ml-12 max-h-56 w-[320px] overflow-y-auto rounded-md border border-border bg-background shadow-md">
+                    {mentionUsers.map((user) => (
+                        <button
+                            key={user.id}
+                            type="button"
+                            onClick={() => handleSelectMention(user)}
+                            className="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-muted/60"
+                        >
+                            <Avatar className="h-7 w-7">
+                                <AvatarImage src={user.avatar ?? undefined} />
+                                <AvatarFallback>{(user.name || user.userid).slice(0, 1).toUpperCase()}</AvatarFallback>
+                            </Avatar>
+                            <span className="text-sm font-medium">{user.name || user.userid}</span>
+                            <span className="text-xs text-muted-foreground">@{user.userid}</span>
+                        </button>
+                    ))}
+                </div>
+            ) : null}
         </Card>
     )
 }

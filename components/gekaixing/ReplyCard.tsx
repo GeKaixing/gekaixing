@@ -15,6 +15,8 @@ import PostDropdownMenu from './PostDropdownMenu'
 import { replyStore } from '@/store/reply'
 import { copyToClipboard } from '@/utils/function/copyToClipboard'
 import { userStore } from '@/store/user'
+import { useRouter } from 'next/navigation'
+import { getMentionHrefFromTarget, renderMentionHtml } from '@/utils/function/mention'
 
 async function toggleLike(postId: string, isLiked: boolean): Promise<{ success: boolean; likeCount?: number }> {
     try {
@@ -119,6 +121,7 @@ export default function ReplyCard({
     reply_count: number,
     share: number
 }) {
+    const router = useRouter()
     const post = replyStore(state => state.replies.find(p => p.id === id))
     const updatePost = replyStore(state => state.updateReply)
 
@@ -127,6 +130,7 @@ export default function ReplyCard({
     const [isLikeLoading, setIsLikeLoading] = useState(false)
     const [isBookmarkLoading, setIsBookmarkLoading] = useState(false)
     const [isShareLoading, setIsShareLoading] = useState(false)
+    const contentWithMentions = React.useMemo(() => renderMentionHtml(content), [content])
 
     useEffect(() => {
         const currentUser = userStore.getState()
@@ -207,6 +211,19 @@ export default function ReplyCard({
         setIsShareLoading(false)
     }
 
+    const handleContentClick = (event: React.MouseEvent<HTMLDivElement>): void => {
+        const mentionHref = getMentionHrefFromTarget(event.target)
+
+        if (mentionHref) {
+            event.preventDefault()
+            event.stopPropagation()
+            router.push(mentionHref)
+            return
+        }
+
+        router.push(`/imitation-x/status/${id}`)
+    }
+
     return (
         <Card className='cursor-pointer hover:bg-muted/60 transition-colors' key={id}>
             <CardHeader>
@@ -235,9 +252,7 @@ export default function ReplyCard({
                 </CardAction>
             </CardHeader>
             <CardContent >
-                <Link href={`/imitation-x/status/${id}`}>
-                    <div dangerouslySetInnerHTML={{ __html: content }}></div>
-                </Link>
+                <div onClick={handleContentClick} dangerouslySetInnerHTML={{ __html: contentWithMentions }}></div>
             </CardContent>
             {userStore.getState().id && <CardFooter>
                 <ul className='flex justify-between items-center w-full'>

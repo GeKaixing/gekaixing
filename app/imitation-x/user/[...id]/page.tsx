@@ -11,6 +11,7 @@ import type { Metadata } from 'next'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { createClient } from "@/utils/supabase/server"
 import { Prisma } from '@/generated/prisma/client'
+import { notFound } from 'next/navigation'
 
 const PROFILE_LIST_LIMIT = 20
 type FeedScope = "user-posts" | "user-replies" | "user-liked" | "user-bookmarks"
@@ -39,6 +40,24 @@ function buildBioDescription(text: string | null): string {
     return normalized.slice(0, 120)
 }
 
+async function resolveUserIdentifier(identifier: string): Promise<{ id: string; userid: string } | null> {
+    const user = await prisma.user.findFirst({
+        where: {
+            OR: [{ id: identifier }, { userid: identifier }, { name: identifier }],
+        },
+        select: {
+            id: true,
+            userid: true,
+        },
+    })
+
+    if (!user) {
+        return null
+    }
+
+    return user
+}
+
 export async function generateMetadata({
     params,
 }: {
@@ -47,18 +66,26 @@ export async function generateMetadata({
     const locale = await getLocale()
     const t = await getTranslations({ locale, namespace: 'ImitationX.UserPageMeta' })
     const { id } = await params
-    const userId = id?.[0]
+    const identifier = id?.[0]
     const siteUrl = getSiteUrl()
 
-    if (!userId) {
+    if (!identifier) {
         return {
             title: t('pageTitle'),
             description: t('pageDescription'),
         }
     }
 
+    const resolvedUser = await resolveUserIdentifier(identifier)
+    if (!resolvedUser) {
+        return {
+            title: t('notFoundTitle'),
+            description: t('notFoundDescription'),
+        }
+    }
+
     const user = await prisma.user.findUnique({
-        where: { id: userId },
+        where: { id: resolvedUser.id },
         select: {
             id: true,
             name: true,
@@ -256,7 +283,14 @@ export default async function Page({ params }: { params: Promise<{ id: string[] 
     const { data: { user: currentUser } } = await supabase.auth.getUser()
     const { id } = await params
 
-    const userId = id[0]
+    const identifier = id[0]
+    const resolvedUser = await resolveUserIdentifier(identifier)
+
+    if (!resolvedUser) {
+        notFound()
+    }
+
+    const userId = resolvedUser.id
 
     const [postsPage, repliesPage, likedPage, bookmarkPage] = await Promise.all([
         getScopedFeed("user-posts", userId, currentUser?.id),

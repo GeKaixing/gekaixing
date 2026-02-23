@@ -33,23 +33,23 @@ export default
         fetchf()
     }, [])
     return <Tabs defaultValue="ToutiaoHot" className="w-full mt-2">
-        <TabsList className='w-full flex justify-between'>
+        <TabsList className='w-full flex justify-between bg-muted/60'>
             <TabsTrigger value="ToutiaoHot">今日头条</TabsTrigger>
             <TabsTrigger value="us">美国</TabsTrigger>
             <TabsTrigger value="techcrunch">科技</TabsTrigger>
             <TabsTrigger value="sports">体育</TabsTrigger>
             <TabsTrigger value="entertainment">娱乐</TabsTrigger>
         </TabsList>
-        <TabsContent value="ToutiaoHot">
+        <TabsContent value="ToutiaoHot" className='mt-3'>
             {data.length !== 0 && data.map((item: { url: string, title: string, hot_value: string }, idx: number) => (
                 <Link
                     href={item.url}
                     key={idx}
-                    className="flex py-1 flex-col justify-start hover:bg-gray-200 cursor-pointer rounded-2xl p-1"
+                    className="flex flex-col justify-start rounded-2xl p-2 py-1 transition-colors hover:bg-muted/60"
                 >
-                    <span>{item.title}</span>
-                    <div className='flex '>
-                        <ChartNoAxesColumn /> <span>{item.hot_value}</span>
+                    <span className='text-foreground'>{item.title}</span>
+                    <div className='flex items-center gap-1 text-muted-foreground'>
+                        <ChartNoAxesColumn className='h-4 w-4' /> <span>{item.hot_value}</span>
                     </div>
                 </Link>
             ))}
@@ -68,4 +68,3 @@ export default
         </TabsContent>
     </Tabs>
 }
-

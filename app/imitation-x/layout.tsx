@@ -45,13 +45,23 @@ export default async function RootLayout({
             },
         },
     })
+
+    const mentionCount = UserResult?.id
+        ? await prisma.post.count({
+            where: {
+                authorId: { not: UserResult.id },
+                content: { contains: `@${UserResult.userid}`, mode: "insensitive" },
+            },
+        })
+        : 0
+
     return (
         <div className="min-h-screen">
             {/* <MobileAdd /> */}
             <MobileHeader user={UserResult} />
             <div className="flex justify-center w-full mx-auto min-h-screen">
                 <header className="hidden sm:flex w-[88px] lg:w-[275px] shrink-0 sticky top-0 h-screen transition-all duration-200">
-                    <Sidebar user={UserResult} />
+                    <Sidebar user={UserResult} mentionCount={mentionCount} />
                 </header>
                 <main className="flex-1 w-full max-w-[600px] border-x border-border sm:border-x">
                     {children}

@@ -127,7 +127,8 @@ export default function SignupForm() {
 
 function EnterMsmAlertDialog({
     open,
-    setOpen
+    setOpen,
+    t
 }: {
     open: boolean;
     setOpen: (open: boolean) => void;

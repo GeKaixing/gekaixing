@@ -20,7 +20,7 @@ export default function NEWs({ url }: { url: string }) {
             }
         }
         Fetchs()
-    }, [])
+    }, [url])
     return data.length !== 0 && data.map((item: {
         url: string;
         source_name: string;
@@ -30,10 +30,10 @@ export default function NEWs({ url }: { url: string }) {
         <Link
             href={item.url}
             key={index}
-            className="flex py-1 flex-col justify-start hover:bg-gray-200 cursor-pointer rounded-2xl p-1"
-        >   <span className='text-xl font-semibold'>{item.source_name}</span>
-            <span className='text-[16px] text-gray-500'>{item.author}</span>
-            <span>{item.title}</span>
+            className="flex flex-col justify-start rounded-2xl p-2 py-1 transition-colors hover:bg-muted/60"
+        >   <span className='text-xl font-semibold text-foreground'>{item.source_name}</span>
+            <span className='text-[16px] text-muted-foreground'>{item.author}</span>
+            <span className='text-foreground'>{item.title}</span>
         </Link>
     ))
 

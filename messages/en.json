@@ -98,10 +98,13 @@
       "more": "More",
       "likes": "Likes",
       "bookmarks": "Bookmarks",
+      "notifications": "Notifications",
       "settings": "Settings",
       "profile": "Profile",
       "publish": "Post",
-      "login": "Login"
+      "login": "Login",
+      "logout": "Logout",
+      "copyProfileLink": "Copy profile link"
     },
     "Mobile": {
       "home": "Home",
@@ -766,5 +769,24 @@
     "accessibility": "Accessibility",
     "more": "More",
     "github": "GitHub"
+  },
+  "EditPost": {
+    "title": "What's new?",
+    "publish": "Publish",
+    "placeholder": "Say something... supports @mentions",
+    "publishSuccess": "Published successfully",
+    "publishFailed": "Failed to publish",
+    "confirmCloseTitle": "Confirm close",
+    "confirmCloseSaved": "The content is already published. Close now?",
+    "confirmCloseUnsaved": "Delete all unpublished content? This cannot be undone.",
+    "loginTitle": "Please log in",
+    "loginDesc": "You need to log in before publishing.",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "PublishReply": {
+    "placeholder": "Write a reply... supports @mentions",
+    "submit": "Reply",
+    "loginToReply": "Please log in to reply"
   }
 }

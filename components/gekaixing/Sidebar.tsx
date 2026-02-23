@@ -1,14 +1,12 @@
 'use client'
 import { userStore } from "@/store/user";
 import { postModalStore } from "@/store/postModal";
-import { MessageSquare, House, LogIn, Settings, Users, Search, RailSymbol, CircleEllipsis, Heart, Bookmark, Feather, User as UserIcon, ShieldCheck } from "lucide-react";
+import { MessageSquare, House, LogIn, Settings, Users, Search, RailSymbol, CircleEllipsis, Heart, Bookmark, Feather, User as UserIcon, ShieldCheck, Bell } from "lucide-react";
 import Link from "next/link";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Ellipsis } from 'lucide-react'
@@ -19,7 +17,7 @@ import { userResult } from "@/app/imitation-x/layout";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
-export default function Sidebar({ user }: { user: userResult | null }) {
+export default function Sidebar({ user, mentionCount = 0 }: { user: userResult | null, mentionCount?: number }) {
     const t = useTranslations("ImitationX.Sidebar");
     const router = useRouter();
     const { openModal } = postModalStore()
@@ -30,7 +28,7 @@ export default function Sidebar({ user }: { user: userResult | null }) {
         user_background_image: user?.backgroundImage || '',
         user_avatar: user?.avatar || '',
         brief_introduction: user?.briefIntroduction || '',
-        isPremium:user?.isPremium || false,
+        isPremium: user?.isPremium || false,
         userid: user?.userid || '',
         followers: user?._count.followers, // 被关注数
         following: user?._count.following, // 关注数
@@ -93,12 +91,21 @@ export default function Sidebar({ user }: { user: userResult | null }) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent side="right" align="start" className="w-48" onPointerDown={(event) => event.stopPropagation()}>
                                 <DropdownMenuItem onSelect={handleMoreMenuSelect("/imitation-x/likes")} className="flex items-center gap-2 cursor-pointer">
-                                        <Heart className="w-4 h-4" />
-                                        <span>{t("likes")}</span>
+                                    <Heart className="w-4 h-4" />
+                                    <span>{t("likes")}</span>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onSelect={handleMoreMenuSelect("/imitation-x/bookmarks")} className="flex items-center gap-2 cursor-pointer">
-                                        <Bookmark className="w-4 h-4" />
-                                        <span>{t("bookmarks")}</span>
+                                    <Bookmark className="w-4 h-4" />
+                                    <span>{t("bookmarks")}</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onSelect={handleMoreMenuSelect("/imitation-x/notifications")} className="flex items-center gap-2 cursor-pointer">
+                                    <Bell className="w-4 h-4" />
+                                    <span>{t("notifications")}</span>
+                                    {mentionCount > 0 ? (
+                                        <span className="ml-auto min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-center text-xs font-semibold text-primary-foreground">
+                                            {mentionCount > 99 ? "99+" : mentionCount}
+                                        </span>
+                                    ) : null}
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -161,6 +168,7 @@ async function logoutfetch() {
 }
 
 export function SidebarDropdownMenu() {
+    const t = useTranslations("ImitationX.Sidebar")
     const { email, id } = userStore((state) => state)
 
     return (
@@ -169,9 +177,10 @@ export function SidebarDropdownMenu() {
                 <Ellipsis />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <Link href="/account"><DropdownMenuItem onClick={logoutfetch}>登出 {email}</DropdownMenuItem></Link>
-                <Link href={`/imitation-x/user/${id}`}><DropdownMenuItem>个人信息</DropdownMenuItem></Link>
-                <DropdownMenuItem onClick={() => copyToClipboard(`${process.env.NEXT_PUBLIC_URL}/imitation-x/user/${id}`)}>复制连接</DropdownMenuItem>
+                <Link href="/imitation-x/notifications"><DropdownMenuItem>{t("notifications")}</DropdownMenuItem></Link>
+                <Link href="/account"><DropdownMenuItem onClick={logoutfetch}>{t("logout")} {email}</DropdownMenuItem></Link>
+                <Link href={`/imitation-x/user/${id}`}><DropdownMenuItem>{t("profile")}</DropdownMenuItem></Link>
+                <DropdownMenuItem onClick={() => copyToClipboard(`${process.env.NEXT_PUBLIC_URL}/imitation-x/user/${id}`)}>{t("copyProfileLink")}</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )

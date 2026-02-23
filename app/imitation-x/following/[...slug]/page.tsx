@@ -1,6 +1,6 @@
 'use client'
 
-import { use, useCallback, useEffect, useState } from 'react'
+import { use, useCallback, useEffect, useState, type ReactElement } from 'react'
 import { ArrowLeft, Search, UserCheck, UserPlus, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
@@ -21,7 +21,7 @@ interface UserProfile {
 
 type TabType = 'recommended' | 'followers' | 'following'
 
-export default function Page({ params }: { params: Promise<{ slug: string[] }> }): JSX.Element {
+export default function Page({ params }: { params: Promise<{ slug: string[] }> }): ReactElement {
   const t = useTranslations('ImitationX.Following')
   const { slug } = use(params)
   const profileId = slug[0]

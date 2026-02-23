@@ -1,8 +1,9 @@
 import Navbar from '@/components/gekaixing/Navbar'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
+import type { ReactElement } from 'react'
 
-export default async function HelpCenter(): Promise<JSX.Element> {
+export default async function HelpCenter(): Promise<ReactElement> {
   const t = await getTranslations('ImitationX.Help')
   const faqKeys: string[] = ['1', '2', '3', '4', '5']
   const guideKeys: string[] = ['1', '2', '3']

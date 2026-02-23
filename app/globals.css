@@ -120,3 +120,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .mention-handle {
+    @apply text-blue-500 font-semibold cursor-pointer no-underline hover:underline;
+  }
+}

@@ -98,10 +98,13 @@
       "more": "更多",
       "likes": "喜欢",
       "bookmarks": "收藏",
+      "notifications": "通知",
       "settings": "设置",
       "profile": "个人信息",
       "publish": "发布",
-      "login": "登录"
+      "login": "登录",
+      "logout": "登出",
+      "copyProfileLink": "复制连接"
     },
     "Mobile": {
       "home": "主页",
@@ -766,5 +769,24 @@
     "accessibility": "辅助功能",
     "more": "更多",
     "github": "GitHub"
+  },
+  "EditPost": {
+    "title": "有什么新鲜事？",
+    "publish": "发布",
+    "placeholder": "说点什么吧，支持@用户",
+    "publishSuccess": "发布成功",
+    "publishFailed": "发布失败",
+    "confirmCloseTitle": "确认关闭",
+    "confirmCloseSaved": "内容已发布，确认关闭？",
+    "confirmCloseUnsaved": "确认删除所有未发布内容吗？此操作无法恢复。",
+    "loginTitle": "请登录",
+    "loginDesc": "登录后才能发布内容。",
+    "cancel": "取消",
+    "confirm": "确认"
+  },
+  "PublishReply": {
+    "placeholder": "发表你的回复，支持@用户",
+    "submit": "回复",
+    "loginToReply": "请你登录后回复"
   }
 }

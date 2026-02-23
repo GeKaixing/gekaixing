@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { createClient } from '@/utils/supabase/server'
 import { getTranslations } from 'next-intl/server'
 import { Search } from 'lucide-react'
+import type { ReactElement } from 'react'
 
 import type { Post } from '../page'
 import { Prisma } from '@/generated/prisma/client'
@@ -106,7 +107,7 @@ export default async function BookmarksPage({
   searchParams,
 }: {
   searchParams: Promise<{ q?: string }>
-}): Promise<JSX.Element> {
+}): Promise<ReactElement> {
   const tSidebar = await getTranslations('ImitationX.Sidebar')
   const tSearch = await getTranslations('ImitationX.SearchPage')
   const tSearchInput = await getTranslations('ImitationX.Search')
@@ -142,7 +143,7 @@ export default async function BookmarksPage({
   )
 }
 
-async function BookmarksContent({ userId, search }: { userId: string; search: string }): Promise<JSX.Element> {
+async function BookmarksContent({ userId, search }: { userId: string; search: string }): Promise<ReactElement> {
   const feed = await getBookmarkedFeed(userId, search)
 
   return (

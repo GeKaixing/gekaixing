@@ -18,17 +18,19 @@ import clsx from "clsx"
 import { useEffect } from "react"
 import Spin from "@/components/gekaixing/Spin"
 import { Fragment } from "@tiptap/pm/model"
+import { useTranslations } from "next-intl"
 
 export interface MinimalTiptapProps
   extends Omit<UseMinimalTiptapEditorProps, "onUpdate"> {
   value?: Content
   onChange?: (value: Content) => void
+  onEditorReady?: (editor: Editor | null) => void
   className?: string
   editorContentClassName?: string
 }
 
 const Toolbar = ({ editor, publish, value }: { editor: Editor, publish?: () => void, value: Content | undefined | string }) => {
-
+const t = useTranslations('EditPost')
   return (
     <div className="border-border flex justify-between  h-12 shrink-0  border-b p-2">
       <div className="flex w-max items-center gap-px">
@@ -72,7 +74,7 @@ const Toolbar = ({ editor, publish, value }: { editor: Editor, publish?: () => v
       <Button onClick={publish} className={clsx('!w-16 !max-w-2xs', {
         '!bg-black': value?.length !== 0,
         '!text-white': value?.length !== 0
-      })}>发布</Button>
+      })}>{t("publish")}</Button>
     </div>
   )
 }
@@ -82,6 +84,7 @@ export const MinimalTiptapEditor = ({
   publish,
   status,
   onChange,
+  onEditorReady,
   className,
   editorContentClassName,
   ...props
@@ -100,6 +103,10 @@ export const MinimalTiptapEditor = ({
       editor.commands.setContent('') // false: 不记录到历史记录中
     }
   }, [value, editor])
+
+  useEffect(() => {
+    onEditorReady?.(editor ?? null)
+  }, [editor, onEditorReady])
   if (!editor) {
     return null
   }
