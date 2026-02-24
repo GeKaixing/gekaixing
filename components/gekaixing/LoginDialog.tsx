@@ -38,7 +38,7 @@ export default function LoginDialog() {
                     <DialogTitle>{t('title')}</DialogTitle>
                     <DialogDescription className='flex flex-col justify-center items-center'>
                         <GoogleButton></GoogleButton>
-                        <Separator className='mb-6' />
+                        <Separator className='mb-6 mt-4' />
                         <LoginForm></LoginForm>
                         <Button className='mt-6' onClick={() => { router.push('/account/password_reset') }}>{t('forgotPassword')}</Button>
                         <span className='mt-4'>{t('noAccount')}

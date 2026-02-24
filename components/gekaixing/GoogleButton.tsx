@@ -22,7 +22,7 @@ export default function GoogleButton() {
     }
 
     return (
-        <Button className='mb-6 inline-flex items-center gap-2' onClick={google_login}>
+        <Button className=' inline-flex items-center gap-2' onClick={google_login}>
             <svg aria-hidden='true' viewBox='0 0 24 24' className='size-4 shrink-0'>
                 <path
                     d='M23.49 12.27c0-.79-.07-1.55-.2-2.27H12v4.3h6.45a5.52 5.52 0 0 1-2.4 3.62v3h3.88c2.27-2.08 3.56-5.15 3.56-8.65Z'

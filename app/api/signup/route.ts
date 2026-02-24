@@ -16,12 +16,19 @@ export async function POST(request: Request) {
     });
 
     if (error || !data.user) {
-      return NextResponse.json({ error: error?.message }, { status: 401 });
+      return NextResponse.json(
+        { error: error?.message ?? "Signup failed" },
+        { status: 401 }
+      );
     }
 
-    // ✅ 同步写入 Prisma User 表（用 Supabase user.id）
-    await prisma.user.create({
-      data: {
+    // ✅ 用 id 做 upsert（最安全）
+    await prisma.user.upsert({
+      where: { id: data.user.id },
+      update: {
+        // 如果未来想更新 name / avatar 可以写这里
+      },
+      create: {
         id: data.user.id,
         userid: `user_${data.user.id.slice(0, 8)}`,
         email,
@@ -31,7 +38,12 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ success: true });
+
   } catch (e) {
-    console.log(e)
+    console.error(e);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

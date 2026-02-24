@@ -581,6 +581,9 @@
         "confirm": "Confirm"
       }
     },
+    "SignupDialog": {
+      "title": "Sign up for Gekaixing"
+    },
     "SettingEmail": {
       "validation": {
         "email": "Please enter a valid email address."

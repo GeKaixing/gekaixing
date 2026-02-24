@@ -581,6 +581,9 @@
         "confirm": "确认"
       }
     },
+    "SignupDialog": {
+      "title": "注册 Gekaixing"
+    },
     "SettingEmail": {
       "validation": {
         "email": "请输入有效的电子邮件地址。"

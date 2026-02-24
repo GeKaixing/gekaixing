@@ -9,13 +9,14 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import SignupForm from '@/components/gekaixing/SignupForm'
-import Button from '@/components/gekaixing/Button'
 import { Separator } from '@/components/ui/separator'
 import { useRouter } from 'next/navigation'
 import GoogleButton from './GoogleButton'
+import { useTranslations } from 'next-intl'
 
 
 export default function SignupDialog() {
+    const t = useTranslations('Account.SignupDialog')
     const [open, setOpen] = useState(true)
     const router = useRouter()
     
@@ -23,7 +24,7 @@ export default function SignupDialog() {
         if (open === false) {
             router.replace('/account')
         }
-    }, [open])
+    }, [open, router])
 
     return (
         <Dialog open={open} onOpenChange={setOpen}  >
@@ -31,10 +32,10 @@ export default function SignupDialog() {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>注册Gekaixing</DialogTitle>
+                    <DialogTitle>{t("title")}</DialogTitle>
                     <DialogDescription className='flex flex-col justify-center items-center'>
                         <GoogleButton></GoogleButton>
-                        <Separator className='mb-6' />
+                        <Separator className='mb-6 mt-4' />
                         <SignupForm></SignupForm>
                     </DialogDescription>
                 </DialogHeader>
