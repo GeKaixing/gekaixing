@@ -16,25 +16,28 @@ import EditPost from "./EditPost";
 import { userResult } from "@/app/imitation-x/layout";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Sidebar({ user, mentionCount = 0 }: { user: userResult | null, mentionCount?: number }) {
     const t = useTranslations("ImitationX.Sidebar");
     const router = useRouter();
     const [isMoreOpen, setIsMoreOpen] = useState(false)
     const { openModal } = postModalStore()
-    userStore.setState({
-        email: user?.email || '',
-        id: user?.id || '',
-        name: user?.name || 'anonymity',
-        user_background_image: user?.backgroundImage || '',
-        user_avatar: user?.avatar || '',
-        brief_introduction: user?.briefIntroduction || '',
-        isPremium: user?.isPremium || false,
-        userid: user?.userid || '',
-        followers: user?._count.followers, // 被关注数
-        following: user?._count.following, // 关注数
-    });
+
+    useEffect(() => {
+        userStore.setState({
+            email: user?.email || '',
+            id: user?.id || '',
+            name: user?.name || 'anonymity',
+            user_background_image: user?.backgroundImage || '',
+            user_avatar: user?.avatar || '',
+            brief_introduction: user?.briefIntroduction || '',
+            isPremium: user?.isPremium || false,
+            userid: user?.userid || '',
+            followers: user?._count.followers ?? 0, // 被关注数
+            following: user?._count.following ?? 0, // 关注数
+        });
+    }, [user]);
 
     const handleMoreMenuSelect = (href: string) => () => {
         setIsMoreOpen(false)

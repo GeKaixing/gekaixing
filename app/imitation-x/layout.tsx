@@ -45,8 +45,6 @@ export default async function RootLayout({
             },
         },
     })
-    console.log("User in RootLayout:", user);
-    console.log("UserResult in RootLayout:", UserResult);
 
     const mentionCount = UserResult?.id
         ? await prisma.post.count({

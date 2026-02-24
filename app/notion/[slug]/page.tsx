@@ -20,10 +20,8 @@ export default async function BlogPost({ params }: { params: { slug: string } })
     );
 
     if (!post) return <div>文章未找到</div>;
-    console.log(post)
     const recordMap = await notion.getPage(post.id);
     if (!recordMap) return <div>内容加载失败</div>;
-    console.log(recordMap)
     return (
         <div className="max-w-3xl mx-auto p-6">
             <NotionPage recordMap={recordMap} />

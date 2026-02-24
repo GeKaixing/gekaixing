@@ -33,12 +33,13 @@ export default function SignupDialog() {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>{t("title")}</DialogTitle>
-                    <DialogDescription className='flex flex-col justify-center items-center'>
-                        <GoogleButton></GoogleButton>
-                        <Separator className='mb-6 mt-4' />
-                        <SignupForm></SignupForm>
-                    </DialogDescription>
+                    <DialogDescription className='sr-only'>{t("title")}</DialogDescription>
                 </DialogHeader>
+                <div className='flex flex-col justify-center items-center'>
+                    <GoogleButton></GoogleButton>
+                    <Separator className='mb-6 mt-4' />
+                    <SignupForm></SignupForm>
+                </div>
             </DialogContent>
         </Dialog>
     )

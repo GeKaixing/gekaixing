@@ -34,7 +34,7 @@ export default function Update_passwordDialog() {
         if (open === false) {
             router.replace('/account')
         }
-    }, [open])
+    }, [open, router])
 
     async function update_password() {
         const result = await update_passwordFetch(password)
@@ -50,18 +50,16 @@ export default function Update_passwordDialog() {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>更新你的密码
-                        <div className='text-gray-800 text-[12px] mt-4 mb-6'> 输入你的新密码</div>
-                    </DialogTitle>
-                    <DialogDescription className='flex flex-col justify-center items-center gap-6'>
-                        <Input type='password' placeholder="请新密码" value={password} onChange={(e) => setPassword(e.target.value)}></Input>
-                        <Button className=''
-                            onClick={ update_password}
-                        >确认</Button>
-                    </DialogDescription>
+                    <DialogTitle>更新你的密码</DialogTitle>
+                    <DialogDescription>输入你的新密码</DialogDescription>
                 </DialogHeader>
+                <div className='flex flex-col justify-center items-center gap-6'>
+                    <Input type='password' placeholder="请新密码" value={password} onChange={(e) => setPassword(e.target.value)}></Input>
+                    <Button className=''
+                        onClick={ update_password}
+                    >确认</Button>
+                </div>
             </DialogContent>
         </Dialog>
     )
 }
-

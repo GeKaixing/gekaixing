@@ -68,17 +68,16 @@ export default function Password_resetDialog() {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>{t('title')}
-                        <div className='text-gray-800 text-[12px] mt-4 mb-6'>{t('description')}</div>
-                    </DialogTitle>
-                    <DialogDescription className='flex flex-col justify-center items-center gap-6'>
-                        <Input type='email' placeholder={t('emailPlaceholder')} value={email} onChange={(e) => { setEmail(e.target.value) }} ></Input>
-                        <Button
-                            onClick={password_reset}
-                        >{t('sendCode')}</Button>
-                        <EnterMsmAlertDialog open={openAlertDialog} setOpen={setOpenAlertDialog} t={t} />
-                    </DialogDescription>
+                    <DialogTitle>{t('title')}</DialogTitle>
+                    <DialogDescription>{t('description')}</DialogDescription>
                 </DialogHeader>
+                <div className='flex flex-col justify-center items-center gap-6'>
+                    <Input type='email' placeholder={t('emailPlaceholder')} value={email} onChange={(e) => { setEmail(e.target.value) }} ></Input>
+                    <Button
+                        onClick={password_reset}
+                    >{t('sendCode')}</Button>
+                    <EnterMsmAlertDialog open={openAlertDialog} setOpen={setOpenAlertDialog} t={t} />
+                </div>
             </DialogContent>
         </Dialog>
     )

@@ -36,16 +36,17 @@ export default function LoginDialog() {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>{t('title')}</DialogTitle>
-                    <DialogDescription className='flex flex-col justify-center items-center'>
-                        <GoogleButton></GoogleButton>
-                        <Separator className='mb-6 mt-4' />
-                        <LoginForm></LoginForm>
-                        <Button className='mt-6' onClick={() => { router.push('/account/password_reset') }}>{t('forgotPassword')}</Button>
-                        <span className='mt-4'>{t('noAccount')}
-                            <Link href={'/account/signup'} className='text-blue-500 '>{t('signup')}</Link>
-                        </span>
-                    </DialogDescription>
+                    <DialogDescription className='sr-only'>{t('title')}</DialogDescription>
                 </DialogHeader>
+                <div className='flex flex-col justify-center items-center'>
+                    <GoogleButton></GoogleButton>
+                    <Separator className='mb-6 mt-4' />
+                    <LoginForm></LoginForm>
+                    <Button className='mt-6' onClick={() => { router.push('/account/password_reset') }}>{t('forgotPassword')}</Button>
+                    <span className='mt-4'>{t('noAccount')}
+                        <Link href={'/account/signup'} className='text-blue-500 '>{t('signup')}</Link>
+                    </span>
+                </div>
             </DialogContent>
         </Dialog>
     )
