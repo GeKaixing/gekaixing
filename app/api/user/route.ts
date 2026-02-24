@@ -21,6 +21,7 @@ export async function GET() {
     });
 
     return NextResponse.json({
+      id: prismaUser?.id || null,
       userid: prismaUser?.userid || null,
       success: true,
     });

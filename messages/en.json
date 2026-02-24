@@ -454,6 +454,7 @@
         "following": "Following"
       },
       "empty": "No matching users",
+      "loading": "Loading...",
       "follow": "Follow",
       "following": "Following",
       "loadMore": "Load more",

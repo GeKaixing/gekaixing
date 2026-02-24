@@ -454,6 +454,7 @@
         "following": "正在关注"
       },
       "empty": "没有找到匹配的用户",
+      "loading": "加载中...",
       "follow": "关注",
       "following": "已关注",
       "loadMore": "加载更多",

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, type ReactElement } from 'react'
+import { useCallback, useEffect, useMemo, useState, type ReactElement } from 'react'
 import { ArrowLeft, Search, UserCheck, UserPlus, X } from 'lucide-react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
@@ -8,48 +8,126 @@ import { useTranslations } from 'next-intl'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { userStore } from '@/store/user'
 
 interface UserProfile {
   id: string
-  nameKey: string
+  name: string
   handle: string
-  avatar: string
-  bioKey: string
+  avatar: string | null
+  bio: string | null
   isFollowing: boolean
-  isVerified?: boolean
 }
 
-const mockUsers: UserProfile[] = [
-  { id: '1', nameKey: 'users.techDaily.name', handle: '@techdaily', avatar: '', bioKey: 'users.techDaily.bio', isFollowing: false, isVerified: true },
-  { id: '2', nameKey: 'users.design.name', handle: '@designhub', avatar: '', bioKey: 'users.design.bio', isFollowing: true, isVerified: false },
-  { id: '3', nameKey: 'users.coder.name', handle: '@codegeek', avatar: '', bioKey: 'users.coder.bio', isFollowing: false, isVerified: true },
-  { id: '4', nameKey: 'users.food.name', handle: '@foodie', avatar: '', bioKey: 'users.food.bio', isFollowing: false, isVerified: false },
-  { id: '5', nameKey: 'users.photo.name', handle: '@photoxm', avatar: '', bioKey: 'users.photo.bio', isFollowing: false, isVerified: true },
-]
-
 type TabType = 'recommended' | 'followers' | 'following'
+type RelationsResponse = { success?: boolean; users?: UserProfile[]; error?: string }
+type CurrentUserResponse = { success?: boolean; id?: string; userid?: string; error?: string }
 
 export default function ConnectPeoplePage(): ReactElement {
   const t = useTranslations('ImitationX.ConnectPeople')
+  const storeUserId = userStore((state) => state.id)
   const [activeTab, setActiveTab] = useState<TabType>('recommended')
-  const [users, setUsers] = useState<UserProfile[]>(mockUsers)
-  const [searchQuery, setSearchQuery] = useState('')
+  const [users, setUsers] = useState<UserProfile[]>([])
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
+  const [currentUserId, setCurrentUserId] = useState<string>(storeUserId)
 
-  const handleFollow = (userId: string): void => {
-    setUsers((prev: UserProfile[]) =>
-      prev.map((user: UserProfile) =>
-        user.id === userId ? { ...user, isFollowing: !user.isFollowing } : user
+  useEffect(() => {
+    if (storeUserId) {
+      setCurrentUserId(storeUserId)
+    }
+  }, [storeUserId])
+
+  useEffect(() => {
+    if (storeUserId) {
+      return
+    }
+
+    const fetchCurrentUser = async (): Promise<void> => {
+      try {
+        const response = await fetch('/api/user')
+        const data = (await response.json()) as CurrentUserResponse
+        if (response.ok && data.success && data.id) {
+          setCurrentUserId(data.id)
+        }
+      } catch (error) {
+        console.error('Failed to fetch current user:', error)
+      }
+    }
+
+    void fetchCurrentUser()
+  }, [storeUserId])
+
+  const fetchUsers = useCallback(async (): Promise<void> => {
+    if (!currentUserId) {
+      setUsers([])
+      return
+    }
+
+    setLoading(true)
+    try {
+      const response = await fetch(`/api/user/${currentUserId}/relations?type=${activeTab}`)
+      const data = (await response.json()) as RelationsResponse
+      if (response.ok && data.success && data.users) {
+        setUsers(data.users)
+      } else {
+        setUsers([])
+      }
+    } catch (error) {
+      console.error('Failed to fetch relations:', error)
+      setUsers([])
+    } finally {
+      setLoading(false)
+    }
+  }, [activeTab, currentUserId])
+
+  useEffect(() => {
+    void fetchUsers()
+  }, [fetchUsers])
+
+  const handleFollow = async (targetId: string): Promise<void> => {
+    const targetUser = users.find((user: UserProfile) => user.id === targetId)
+    if (!targetUser) {
+      return
+    }
+
+    setUsers((prevUsers: UserProfile[]) =>
+      prevUsers.map((user: UserProfile) =>
+        user.id === targetId ? { ...user, isFollowing: !user.isFollowing } : user
       )
     )
+
+    try {
+      if (targetUser.isFollowing) {
+        await fetch('/api/follow', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ targetId }),
+        })
+      } else {
+        await fetch('/api/follow', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ targetId }),
+        })
+      }
+    } catch (error) {
+      console.error('Failed to update follow status:', error)
+      void fetchUsers()
+    }
   }
 
-  const filteredUsers = users.filter((user: UserProfile) => {
-    const name = t(user.nameKey).toLowerCase()
-    const bio = t(user.bioKey).toLowerCase()
+  const filteredUsers = useMemo(() => {
     const q = searchQuery.toLowerCase()
 
-    return name.includes(q) || user.handle.toLowerCase().includes(q) || bio.includes(q)
-  })
+    return users.filter((user: UserProfile) => {
+      return (
+        user.name.toLowerCase().includes(q) ||
+        user.handle.toLowerCase().includes(q) ||
+        (user.bio ?? '').toLowerCase().includes(q)
+      )
+    })
+  }, [searchQuery, users])
 
   const tabs: { id: TabType; label: string }[] = [
     { id: 'recommended', label: t('tabs.recommended') },
@@ -109,7 +187,9 @@ export default function ConnectPeoplePage(): ReactElement {
       </div>
 
       <div className='divide-y divide-border'>
-        {filteredUsers.length === 0 ? (
+        {loading ? (
+          <div className='p-8 text-center text-muted-foreground'>{t('loading')}</div>
+        ) : filteredUsers.length === 0 ? (
           <div className='py-12 text-center'>
             <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted'>
               <Search className='h-8 w-8 text-muted-foreground' />
@@ -124,9 +204,9 @@ export default function ConnectPeoplePage(): ReactElement {
             >
               <Link href={`/imitation-x/user/${user.id}`}>
                 <Avatar className='h-12 w-12'>
-                  <AvatarImage src={user.avatar} alt={t(user.nameKey)} />
+                  <AvatarImage src={user.avatar ?? ''} alt={user.name} />
                   <AvatarFallback className='bg-muted font-medium text-muted-foreground'>
-                    {t(user.nameKey).slice(0, 2)}
+                    {user.name.slice(0, 2)}
                   </AvatarFallback>
                 </Avatar>
               </Link>
@@ -136,21 +216,16 @@ export default function ConnectPeoplePage(): ReactElement {
                   <div className='min-w-0 flex-1'>
                     <div className='flex items-center gap-1'>
                       <Link href={`/imitation-x/user/${user.id}`} className='truncate text-sm font-bold hover:underline'>
-                        {t(user.nameKey)}
+                        {user.name}
                       </Link>
-                      {user.isVerified && (
-                        <svg className='h-4 w-4 flex-shrink-0 text-blue-500' fill='currentColor' viewBox='0 0 24 24'>
-                          <path d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z' />
-                        </svg>
-                      )}
                     </div>
                     <p className='truncate text-sm text-muted-foreground'>{user.handle}</p>
                   </div>
 
                   <Button
-                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>): void => {
                       e.stopPropagation()
-                      handleFollow(user.id)
+                      void handleFollow(user.id)
                     }}
                     variant={user.isFollowing ? 'outline' : 'default'}
                     size='sm'
@@ -176,7 +251,7 @@ export default function ConnectPeoplePage(): ReactElement {
                 </div>
 
                 <Link href={`/imitation-x/user/${user.id}`}>
-                  <p className='mt-1 line-clamp-2 text-sm text-foreground/85'>{t(user.bioKey)}</p>
+                  <p className='mt-1 line-clamp-2 text-sm text-foreground/85'>{user.bio ?? ''}</p>
                 </Link>
               </div>
             </div>
@@ -184,7 +259,7 @@ export default function ConnectPeoplePage(): ReactElement {
         )}
       </div>
 
-      {filteredUsers.length > 0 && (
+      {!loading && filteredUsers.length > 0 && (
         <div className='py-4 text-center'>
           <Button variant='ghost' className='text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300'>
             {t('loadMore')}
