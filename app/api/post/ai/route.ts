@@ -80,7 +80,7 @@ export async function POST(request: Request): Promise<Response> {
         prompt: promptText,
         temperature: 0.85,
         maxOutputTokens: 220,
-        modelCandidates: ["gemini-2.0-flash", "gemini-1.5-flash"],
+        modelCandidates: ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"],
       });
 
       const content = cleanOutput(text);

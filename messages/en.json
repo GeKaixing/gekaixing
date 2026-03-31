@@ -847,7 +847,8 @@
     },
     "cta": {
       "title": "Ready to change the channel?",
-      "description": "Stop scrolling and start connecting. Editorial Noir is where the conversation gets deeper.",
+
+      "description": "Stop scrolling and start connecting. Gekaixing is where the conversation gets deeper.",
       "button": "Sign Up for Noir"
     },
     "footer": {
@@ -858,7 +859,7 @@
       "cookies": "Cookie Policy",
       "accessibility": "Accessibility",
       "ads": "Ads Info",
-      "copyright": "(c) 2026 Editorial Noir, Inc."
+      "copyright": "(c) 2026 Gekaixing, Inc."
     }
   },
   "NoirPages": {

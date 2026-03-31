@@ -1,15 +1,30 @@
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { generateText } from "ai";
+import { GoogleGenAI } from "@google/genai";
 
-const FALLBACK_GEMINI_API_KEY = "AIzaSyB_bq-R7LHTQE0PFTpAzwZbb9FVrN1MfDw";
-const DEFAULT_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash"] as const;
+const DEFAULT_MODELS = [
+  "gemini-2.5-flash",
+  "gemini-2.0-flash",
+  "gemini-1.5-flash",
+] as const;
 
 const geminiApiKey =
-  process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() || FALLBACK_GEMINI_API_KEY;
+  process.env.GEMINI_API_KEY?.trim() ||
+  process.env.GOOGLE_API_KEY?.trim() ||
+  process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ||
+  "";
 
-const geminiProvider = createGoogleGenerativeAI({
-  apiKey: geminiApiKey,
-});
+let geminiClient: GoogleGenAI | null = null;
+
+function getGeminiClient(): GoogleGenAI {
+  if (!geminiApiKey) {
+    throw new Error("Gemini API key is not configured");
+  }
+
+  if (!geminiClient) {
+    geminiClient = new GoogleGenAI({ apiKey: geminiApiKey });
+  }
+
+  return geminiClient;
+}
 
 export function hasGeminiApiKey(): boolean {
   return Boolean(geminiApiKey);
@@ -30,14 +45,21 @@ export async function generateGeminiText({
 
   for (const modelName of modelCandidates) {
     try {
-      const result = await generateText({
-        model: geminiProvider(modelName),
-        temperature,
-        maxOutputTokens,
-        prompt,
+      const result = await getGeminiClient().models.generateContent({
+        model: modelName,
+        contents: prompt,
+        config: {
+          temperature,
+          maxOutputTokens,
+        },
       });
 
-      return { text: result.text, model: modelName };
+      const text = (result.text ?? "").trim();
+      if (!text) {
+        throw new Error("Gemini returned empty content");
+      }
+
+      return { text, model: modelName };
     } catch (error) {
       lastError = error instanceof Error ? error.message : "Unknown Gemini error";
     }

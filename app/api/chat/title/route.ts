@@ -29,7 +29,7 @@ async function generateAiTitle(text: string): Promise<string | null> {
 
   try {
     const { text: title } = await generateGeminiText({
-      modelCandidates: ["gemini-2.0-flash", "gemini-1.5-flash"],
+      modelCandidates: ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"],
       temperature: 0.2,
       maxOutputTokens: 32,
       prompt: [
