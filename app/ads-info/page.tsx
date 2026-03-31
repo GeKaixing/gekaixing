@@ -1,14 +1,14 @@
 import Link from "next/link"
 import { getTranslations } from "next-intl/server"
 
-type AboutItem = {
-  key: "who" | "build" | "work"
+type AdPolicy = {
+  key: "transparency" | "quality" | "respect"
 }
 
-const aboutItems: AboutItem[] = [{ key: "who" }, { key: "build" }, { key: "work" }]
+const adPolicies: AdPolicy[] = [{ key: "transparency" }, { key: "quality" }, { key: "respect" }]
 
-export default async function AboutPage(): Promise<React.JSX.Element> {
-  const t = await getTranslations("NoirPages.about")
+export default async function AdsInfoPage(): Promise<React.JSX.Element> {
+  const t = await getTranslations("NoirPages.ads")
   const common = await getTranslations("NoirPages.common")
 
   return (
@@ -18,12 +18,12 @@ export default async function AboutPage(): Promise<React.JSX.Element> {
         <h1 className="mt-3 text-4xl font-black tracking-tight md:text-6xl">{t("title")}</h1>
         <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-600 dark:text-zinc-300">{t("description")}</p>
 
-        <div className="mt-10 grid gap-4 md:grid-cols-3">
-          {aboutItems.map((item: AboutItem) => (
-            <article key={item.key} className="rounded-xl border border-zinc-200 bg-zinc-50 p-5 dark:border-white/10 dark:bg-white/[0.03]">
-              <h2 className="text-lg font-semibold">{t(`cards.${item.key}.title`)}</h2>
-              <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-300">{t(`cards.${item.key}.description`)}</p>
-            </article>
+        <div className="mt-10 space-y-4">
+          {adPolicies.map((policy: AdPolicy) => (
+            <section key={policy.key} className="rounded-xl border border-zinc-200 bg-zinc-50 p-5 dark:border-white/10 dark:bg-white/[0.03]">
+              <h2 className="text-xl font-semibold">{t(`policies.${policy.key}.title`)}</h2>
+              <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">{t(`policies.${policy.key}.text`)}</p>
+            </section>
           ))}
         </div>
 

@@ -1,4 +1,7 @@
 import { prisma } from "@/lib/prisma";
+import { UserActionType } from "@/generated/prisma/enums";
+import { logUserAction } from "@/lib/feed/actions";
+import { invalidateUserHomeFeed } from "@/lib/feed/service";
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 
@@ -13,6 +16,15 @@ export async function POST(request: Request) {
 
     if (!postId) {
       return NextResponse.json({ error: "Post ID required" }, { status: 400 });
+    }
+
+    const targetPost = await prisma.post.findUnique({
+      where: { id: postId },
+      select: { authorId: true },
+    });
+
+    if (!targetPost) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
     const post = await prisma.post.update({
@@ -33,6 +45,19 @@ export async function POST(request: Request) {
           userId: user.id,
           postId: postId,
         },
+      });
+    }
+
+    await Promise.all([
+      invalidateUserHomeFeed(user?.id ?? null),
+      invalidateUserHomeFeed(targetPost.authorId),
+    ]);
+    if (user) {
+      await logUserAction({
+        userId: user.id,
+        actionType: UserActionType.POST_SHARE,
+        targetPostId: postId,
+        targetAuthorId: targetPost.authorId,
       });
     }
 

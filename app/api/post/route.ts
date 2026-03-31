@@ -1,4 +1,7 @@
 import { prisma } from "@/lib/prisma";
+import { UserActionType } from "@/generated/prisma/enums";
+import { logUserAction } from "@/lib/feed/actions";
+import { invalidateAuthorAudienceFeed, invalidateUserHomeFeed } from "@/lib/feed/service";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
@@ -169,6 +172,23 @@ export async function POST(request: Request) {
     });
 
     revalidatePath("/imitation-x");
+    if (!parentId) {
+      await invalidateAuthorAudienceFeed(user_id);
+      await logUserAction({
+        userId: user_id,
+        actionType: UserActionType.POST_CREATE,
+        targetPostId: post.id,
+        targetAuthorId: user_id,
+      });
+    } else {
+      await invalidateUserHomeFeed(user_id);
+      await logUserAction({
+        userId: user_id,
+        actionType: UserActionType.REPLY_CREATE,
+        targetPostId: post.id,
+        targetAuthorId: user_id,
+      });
+    }
 
     return NextResponse.json({ data: [transformPost(post)], success: true });
   } catch (error: any) {
@@ -188,6 +208,7 @@ export async function DELETE(request: Request) {
     });
 
     revalidatePath("/imitation-x");
+    await invalidateUserHomeFeed(deleted.authorId);
 
     return NextResponse.json({ data: deleted, success: true });
   } catch (error: any) {

@@ -1,4 +1,7 @@
 import { prisma } from "@/lib/prisma";
+import { UserActionType } from "@/generated/prisma/enums";
+import { logUserAction } from "@/lib/feed/actions";
+import { invalidateUserHomeFeed } from "@/lib/feed/service";
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 
@@ -55,6 +58,20 @@ export async function POST(request: Request) {
       where: { id: parentId },
       data: { replyCount: { increment: 1 } },
     });
+    const parentPost = await prisma.post.findUnique({
+      where: { id: parentId },
+      select: { authorId: true },
+    });
+    await Promise.all([
+      invalidateUserHomeFeed(user.id),
+      invalidateUserHomeFeed(parentPost?.authorId ?? null),
+    ]);
+    await logUserAction({
+      userId: user.id,
+      actionType: UserActionType.REPLY_CREATE,
+      targetPostId: post_id ?? parentId,
+      targetAuthorId: parentPost?.authorId ?? null,
+    });
 
     return NextResponse.json({ data: reply, success: true });
   } catch (error: any) {
@@ -99,6 +116,16 @@ export async function DELETE(request: Request) {
         data: { replyCount: { decrement: 1 } },
       });
     }
+    const parentPost = reply.parentId
+      ? await prisma.post.findUnique({
+          where: { id: reply.parentId },
+          select: { authorId: true },
+        })
+      : null;
+    await Promise.all([
+      invalidateUserHomeFeed(user.id),
+      invalidateUserHomeFeed(parentPost?.authorId ?? null),
+    ]);
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

@@ -100,3 +100,8 @@ export type ChatAISession = Prisma.ChatAISessionModel
  * 
  */
 export type ChatAIMessage = Prisma.ChatAIMessageModel
+/**
+ * Model UserAction
+ * 
+ */
+export type UserAction = Prisma.UserActionModel

@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { prisma } from "@/lib/prisma";
+import { UserActionType } from "@/generated/prisma/enums";
+import { logUserAction } from "@/lib/feed/actions";
+import { invalidateUserHomeFeed } from "@/lib/feed/service";
 
 
 // ===== 关注 =====
@@ -31,6 +34,12 @@ export async function POST(req: Request) {
         followingId: targetId,
       },
     });
+    await Promise.all([invalidateUserHomeFeed(user.id), invalidateUserHomeFeed(targetId)]);
+    await logUserAction({
+      userId: user.id,
+      actionType: UserActionType.FOLLOW,
+      targetAuthorId: targetId,
+    });
 
     return NextResponse.json({ success: true });
   } catch (err) {
@@ -58,6 +67,12 @@ export async function DELETE(req: Request) {
         followerId: user.id,
         followingId: targetId,
       },
+    });
+    await Promise.all([invalidateUserHomeFeed(user.id), invalidateUserHomeFeed(targetId)]);
+    await logUserAction({
+      userId: user.id,
+      actionType: UserActionType.UNFOLLOW,
+      targetAuthorId: targetId,
     });
 
     return NextResponse.json({ success: true });

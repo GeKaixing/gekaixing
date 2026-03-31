@@ -1,4 +1,7 @@
 import { prisma } from "@/lib/prisma";
+import { UserActionType } from "@/generated/prisma/enums";
+import { logUserAction } from "@/lib/feed/actions";
+import { invalidateUserHomeFeed } from "@/lib/feed/service";
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 
@@ -32,11 +35,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Already bookmarked" }, { status: 409 });
     }
 
+    const targetPost = await prisma.post.findUnique({
+      where: { id: postId },
+      select: { authorId: true },
+    });
+
+    if (!targetPost) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
+
     const bookmark = await prisma.bookmark.create({
       data: {
         userId: user.id,
         postId: postId,
       },
+    });
+    await invalidateUserHomeFeed(user.id);
+    await logUserAction({
+      userId: user.id,
+      actionType: UserActionType.POST_BOOKMARK,
+      targetPostId: postId,
+      targetAuthorId: targetPost.authorId,
     });
 
     return NextResponse.json({
@@ -82,6 +101,11 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "Not bookmarked yet" }, { status: 404 });
     }
 
+    const targetPost = await prisma.post.findUnique({
+      where: { id: postId },
+      select: { authorId: true },
+    });
+
     await prisma.bookmark.delete({
       where: {
         userId_postId: {
@@ -89,6 +113,13 @@ export async function DELETE(request: Request) {
           postId: postId,
         },
       },
+    });
+    await invalidateUserHomeFeed(user.id);
+    await logUserAction({
+      userId: user.id,
+      actionType: UserActionType.POST_UNBOOKMARK,
+      targetPostId: postId,
+      targetAuthorId: targetPost?.authorId ?? null,
     });
 
     return NextResponse.json({

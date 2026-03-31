@@ -797,5 +797,154 @@
     "placeholder": "Write a reply... supports @mentions",
     "submit": "Reply",
     "loginToReply": "Please log in to reply"
+  },
+  "NoirLanding": {
+    "nav": {
+      "center": "GeKaixing",
+      "login": "Log In",
+      "signup": "Sign Up"
+    },
+    "hero": {
+      "badge": "Live globally right now",
+      "titleLine1": "Connect with",
+      "titleLine2": "the world.",
+      "description": "The kinetic pulse of human conversation, refined. Join the high-fidelity ecosystem where information moves at the speed of thought.",
+      "primaryCta": "Get Started",
+      "secondaryCta": "Explore Trends"
+    },
+    "features": {
+      "titlePrefix": "Designed for the",
+      "titleNow": "Now.",
+      "description": "Experience a platform that prioritizes breathability, speed, and meaningful interaction over noise.",
+      "cards": {
+        "realtime": {
+          "title": "Real-time updates",
+          "description": "Watch the pulse of the world as it happens. Zero latency news and personal updates streamed directly to your kinetic broadsheet."
+        },
+        "global": {
+          "title": "Global conversations",
+          "description": "Break the echo chambers. Engage with diverse perspectives across every continent through high-fidelity thread architectures."
+        },
+        "trend": {
+          "title": "Trend discovery",
+          "description": "Sophisticated algorithms that surface what matters, not just what is loud. Discover the hidden currents of culture and tech."
+        }
+      }
+    },
+    "happening": {
+      "title": "WHATS HAPPENING NOW?",
+      "post1": {
+        "author": "Alex Rivers",
+        "handleTime": "@arivers - 4m",
+        "content": "The new design language for #EditorialNoir feels like reading a luxury magazine. No borders, just pure content flow. This is the future of social UX."
+      },
+      "post2": {
+        "author": "Maya Chen",
+        "handleTime": "@mchen_design - 22m",
+        "content": "San Francisco at 3 AM has a different energy.",
+        "imageAlt": "Night bridge scene"
+      }
+    },
+    "cta": {
+      "title": "Ready to change the channel?",
+      "description": "Stop scrolling and start connecting. Editorial Noir is where the conversation gets deeper.",
+      "button": "Sign Up for Noir"
+    },
+    "footer": {
+      "about": "About",
+      "helpCenter": "Help Center",
+      "tos": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookie Policy",
+      "accessibility": "Accessibility",
+      "ads": "Ads Info",
+      "copyright": "(c) 2026 Editorial Noir, Inc."
+    }
+  },
+  "NoirPages": {
+    "common": {
+      "backToHome": "Back to Home"
+    },
+    "about": {
+      "badge": "About",
+      "title": "Built for real conversation.",
+      "description": "GeKaixing connects people across interests and cultures with a fast, modern social experience.",
+      "cards": {
+        "who": {
+          "title": "Who we are",
+          "description": "GeKaixing is a social platform focused on meaningful, fast, and global conversation experiences."
+        },
+        "build": {
+          "title": "What we build",
+          "description": "We build a feed-first product with replies, likes, sharing, messaging, and AI assistance for creators."
+        },
+        "work": {
+          "title": "How we work",
+          "description": "We prioritize accessibility, trust, and product clarity so every interaction feels intentional and human."
+        }
+      }
+    },
+    "help": {
+      "badge": "Help Center",
+      "title": "How can we help?",
+      "description": "Find quick guidance for common setup, usage, and security questions.",
+      "topics": {
+        "account": {
+          "title": "Account access",
+          "detail": "Sign up, log in, password reset, and account recovery."
+        },
+        "posts": {
+          "title": "Posts and replies",
+          "detail": "Create posts, manage replies, and keep your conversations organized."
+        },
+        "privacy": {
+          "title": "Privacy and safety",
+          "detail": "Understand privacy controls, blocking, reporting, and moderation basics."
+        }
+      }
+    },
+    "accessibility": {
+      "badge": "Accessibility",
+      "title": "Accessibility commitment",
+      "description": "GeKaixing aims to make social experiences inclusive and easy to use for everyone.",
+      "points": {
+        "readable": {
+          "title": "Readable typography",
+          "description": "High-contrast text, scalable sizes, and clear hierarchy across key pages."
+        },
+        "keyboard": {
+          "title": "Keyboard-friendly navigation",
+          "description": "Core interactions are designed to be reachable without a mouse."
+        },
+        "improve": {
+          "title": "Ongoing improvements",
+          "description": "We continuously review color contrast, semantics, and focus visibility."
+        }
+      }
+    },
+    "ads": {
+      "badge": "Ads Info",
+      "title": "Advertising information",
+      "description": "Our ads approach is designed to balance relevance, transparency, and platform integrity.",
+      "policies": {
+        "transparency": {
+          "title": "Ad transparency",
+          "text": "Sponsored content should be clearly labeled so users can distinguish ads from organic posts."
+        },
+        "quality": {
+          "title": "Quality standards",
+          "text": "We do not support deceptive, malicious, or misleading advertising formats."
+        },
+        "respect": {
+          "title": "User respect",
+          "text": "Ad experiences should remain lightweight and should not disrupt core platform usage."
+        }
+      }
+    },
+    "legal": {
+      "tos": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookie Policy"
+    }
   }
 }

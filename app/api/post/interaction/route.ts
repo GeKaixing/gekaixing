@@ -1,4 +1,7 @@
 import { prisma } from '@/lib/prisma'
+import { UserActionType } from '@/generated/prisma/enums'
+import { logUserAction } from '@/lib/feed/actions'
+import { createClient } from '@/utils/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(req: NextRequest) {
@@ -65,6 +68,44 @@ export async function GET(req: NextRequest) {
         isBookmarked: !!bookmark,
       },
     })
+  } catch (error) {
+    console.error(error)
+    return NextResponse.json({ success: false }, { status: 500 })
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const supabase = await createClient()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
+    }
+
+    const body = (await req.json()) as {
+      postId?: string
+      targetAuthorId?: string
+      actionType?: 'POST_CLICK' | 'DWELL'
+      dwellMs?: number
+    }
+
+    if (!body.postId || !body.actionType) {
+      return NextResponse.json({ success: false, message: 'Missing postId or actionType' }, { status: 400 })
+    }
+
+    const actionType = body.actionType === 'DWELL' ? UserActionType.DWELL : UserActionType.POST_CLICK
+    await logUserAction({
+      userId: user.id,
+      actionType,
+      targetPostId: body.postId,
+      targetAuthorId: body.targetAuthorId ?? null,
+      dwellMs: body.actionType === 'DWELL' ? body.dwellMs ?? null : null,
+    })
+
+    return NextResponse.json({ success: true })
   } catch (error) {
     console.error(error)
     return NextResponse.json({ success: false }, { status: 500 })

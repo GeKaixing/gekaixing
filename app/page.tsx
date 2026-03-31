@@ -1,231 +1,179 @@
-import CookieConsent from "@/components/gekaixing/CookieConsent"
-import Navbar from "@/components/gekaixing/Navbar"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Bot, MessageCircle, Shield, Sparkles, Zap } from "lucide-react"
+import { Compass, Globe2, Heart, MessageSquare, Repeat2, Zap } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
-import { createClient } from "@/utils/supabase/server"
 import { getTranslations } from "next-intl/server"
 
-type FeatureItem = {
-  title: string
-  description: string
-  icon: typeof Sparkles
+type FeatureCard = {
+  key: "realtime" | "global" | "trend"
+  icon: typeof Zap
 }
 
-type StepItem = {
-  step: string
-  title: string
-  description: string
-}
+const featureCards: FeatureCard[] = [
+  { key: "realtime", icon: Zap },
+  { key: "global", icon: Globe2 },
+  { key: "trend", icon: Compass },
+]
 
-export default async function Page() {
-  const t = await getTranslations("Landing")
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  const featureItems: FeatureItem[] = [
-    {
-      title: t("features.social.title"),
-      description: t("features.social.description"),
-      icon: MessageCircle,
-    },
-    {
-      title: t("features.ai.title"),
-      description: t("features.ai.description"),
-      icon: Bot,
-    },
-    {
-      title: t("features.security.title"),
-      description: t("features.security.description"),
-      icon: Shield,
-    },
-  ]
-
-  const stepItems: StepItem[] = [
-    {
-      step: "01",
-      title: t("steps.first.title"),
-      description: t("steps.first.description"),
-    },
-    {
-      step: "02",
-      title: t("steps.second.title"),
-      description: t("steps.second.description"),
-    },
-    {
-      step: "03",
-      title: t("steps.third.title"),
-      description: t("steps.third.description"),
-    },
-  ]
+export default async function Page(): Promise<React.JSX.Element> {
+  const t = await getTranslations("NoirLanding")
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#f4f4f0] text-zinc-900">
-      <div className="pointer-events-none absolute -top-32 left-1/2 h-[520px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,123,0,0.26),transparent_58%)]" />
-      <div className="pointer-events-none absolute right-[-120px] top-[340px] h-[460px] w-[460px] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,117,255,0.2),transparent_62%)]" />
+    <div className="min-h-screen bg-white text-zinc-950 dark:bg-[#03060b] dark:text-white">
+      <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/90 backdrop-blur dark:border-white/10 dark:bg-[#05080d]/90">
+        <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between px-5 md:px-8">
+          <Link href="/" className="inline-flex items-center">
+            <Image src="/logo.svg" alt="Gekaixing logo" width={128} height={28} priority className="h-7 w-auto dark:hidden" />
+            <Image src="/logo-white.svg" alt="Gekaixing logo" width={128} height={28} priority className="hidden h-7 w-auto dark:block" />
+          </Link>
 
-      <Navbar user={user} />
-      <CookieConsent />
+          <nav className="hidden items-center gap-6 text-xs text-zinc-600 dark:text-zinc-300 md:flex">
+            <Link href="#" className="transition-colors hover:text-zinc-950 dark:hover:text-white">
+              {t("nav.center")}
+            </Link>
+          </nav>
 
-      <main className="mx-auto flex w-full max-w-6xl flex-col gap-20 px-6 pb-20 pt-8 md:px-10">
-        <section className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="space-y-8">
-            <span className="inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-700">
-              <Zap size={14} />
+          <div className="flex items-center gap-3">
+            <Link href="/account/login" className="text-xs text-zinc-700 transition-colors hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white md:text-sm">
+              {t("nav.login")}
+            </Link>
+            <Link href="/account/signup">
+              <Button className="h-10 rounded-full bg-zinc-950 px-5 text-xs font-semibold text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 md:text-sm">
+                {t("nav.signup")}
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section className="relative overflow-hidden border-b border-zinc-200 dark:border-white/10">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(circle_at_60%_10%,rgba(24,24,27,0.1),transparent_45%)] dark:bg-[radial-gradient(circle_at_60%_10%,rgba(255,255,255,0.06),transparent_45%)]" />
+          <div className="pointer-events-none absolute right-[-220px] top-[70px] h-[520px] w-[920px] rounded-full bg-[repeating-radial-gradient(circle_at_15%_20%,rgba(39,39,42,0.1)_0,rgba(39,39,42,0.1)_2px,transparent_8px,transparent_22px)] opacity-40 dark:bg-[repeating-radial-gradient(circle_at_15%_20%,rgba(255,255,255,0.08)_0,rgba(255,255,255,0.08)_2px,transparent_8px,transparent_22px)]" />
+
+          <div className="mx-auto flex min-h-[640px] w-full max-w-[1200px] flex-col justify-center px-5 py-20 md:px-8">
+            <span className="mb-8 inline-flex w-fit items-center gap-2 rounded-full border border-zinc-300 bg-zinc-100 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-zinc-700 dark:border-white/15 dark:bg-white/5 dark:text-zinc-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-zinc-700 dark:bg-zinc-300" />
               {t("hero.badge")}
             </span>
 
-            <div className="space-y-4">
-              <h1 className="text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
-                {t("hero.titleLine1")}
-                <span className="block text-[#0047ab]">{t("hero.titleLine2")}</span>
-              </h1>
-              <p className="max-w-xl text-base leading-7 text-zinc-700 sm:text-lg">
-                {t("hero.description")}
-              </p>
-            </div>
+            <h1 className="max-w-[580px] text-5xl font-black leading-[0.95] tracking-[-0.03em] md:text-7xl">
+              {t("hero.titleLine1")}
+              <br />
+              {t("hero.titleLine2")}
+            </h1>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <p className="mt-6 max-w-[560px] text-lg leading-8 text-zinc-600 dark:text-zinc-300">{t("hero.description")}</p>
+
+            <div className="mt-10 flex flex-wrap gap-3">
               <Link href="/imitation-x">
-                <Button className="h-11 rounded-full px-6 text-sm font-semibold">
+                <Button className="h-12 rounded-full bg-zinc-950 px-8 font-semibold text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200">
                   {t("hero.primaryCta")}
-                  <ArrowRight />
                 </Button>
               </Link>
-              <Link href="/blog">
+              <Link href="/imitation-x/explore">
                 <Button
                   variant="outline"
-                  className="h-11 rounded-full border-zinc-400 bg-transparent px-6 text-sm font-semibold"
+                  className="h-12 rounded-full border-zinc-300 bg-white px-8 font-semibold text-zinc-900 hover:bg-zinc-100 dark:border-white/20 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"
                 >
                   {t("hero.secondaryCta")}
                 </Button>
               </Link>
             </div>
-
-            <div className="grid gap-3 sm:grid-cols-3">
-              <StatCard label={t("stats.arch.label")} value={t("stats.arch.value")} />
-              <StatCard label={t("stats.db.label")} value={t("stats.db.value")} />
-              <StatCard label={t("stats.auth.label")} value={t("stats.auth.value")} />
-            </div>
           </div>
+        </section>
 
-          <div className="rounded-3xl border border-zinc-300 bg-white/90 p-4 shadow-[0_20px_80px_-48px_rgba(0,0,0,0.45)]">
-            <div className="rounded-2xl border border-zinc-200 bg-zinc-950 p-5 text-zinc-100">
-              <div className="mb-5 flex items-center justify-between text-xs text-zinc-400">
-                <span className="tracking-[0.16em]">GKX PREVIEW</span>
-                <span>{t("preview.liveModules")}</span>
-              </div>
+        <section className="border-b border-zinc-200 bg-zinc-50 dark:border-white/10 dark:bg-[#080c12]">
+          <div className="mx-auto w-full max-w-[1200px] px-5 py-16 md:px-8">
+            <div className="mb-10 grid gap-5 md:grid-cols-2">
+              <h2 className="text-4xl font-black tracking-[-0.03em] md:text-5xl">
+                {t("features.titlePrefix")} <span className="italic text-zinc-600 dark:text-zinc-300">{t("features.titleNow")}</span>
+              </h2>
+              <p className="max-w-[420px] justify-self-start text-sm leading-6 text-zinc-600 dark:text-zinc-300 md:justify-self-end">{t("features.description")}</p>
+            </div>
 
-              <div className="space-y-3">
-                <PreviewRow title={t("preview.feed.title")} detail={t("preview.feed.detail")} tone="bg-cyan-400/20" />
-                <PreviewRow title={t("preview.chat.title")} detail={t("preview.chat.detail")} tone="bg-orange-400/20" />
-                <PreviewRow title={t("preview.ai.title")} detail={t("preview.ai.detail")} tone="bg-blue-400/20" />
-              </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {featureCards.map((card: FeatureCard) => (
+                <article key={card.key} className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-white/10 dark:bg-[#10151f]">
+                  <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-md bg-zinc-200 text-zinc-800 dark:bg-zinc-700 dark:text-zinc-100">
+                    <card.icon size={16} />
+                  </div>
+                  <h3 className="mb-3 text-2xl font-semibold tracking-tight">{t(`features.cards.${card.key}.title`)}</h3>
+                  <p className="text-sm leading-6 text-zinc-600 dark:text-zinc-300">{t(`features.cards.${card.key}.description`)}</p>
+                </article>
+              ))}
             </div>
           </div>
         </section>
 
-        <section className="space-y-6">
-          <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-600">{t("featureSection.badge")}</p>
-            <h2 className="text-3xl font-black sm:text-4xl">{t("featureSection.title")}</h2>
-          </div>
+        <section className="border-b border-zinc-200 bg-white dark:border-white/10 dark:bg-[#02050a]">
+          <div className="mx-auto grid w-full max-w-[1200px] gap-10 px-5 py-16 md:grid-cols-[240px_1fr] md:px-8">
+            <h2 className="text-5xl font-black leading-[0.9] tracking-[-0.04em] md:sticky md:top-28 md:self-start">{t("happening.title")}</h2>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            {featureItems.map((item) => (
-              <article
-                key={item.title}
-                className="rounded-2xl border border-zinc-300 bg-white p-5 transition-transform duration-200 hover:-translate-y-1"
-              >
-                <item.icon className="mb-4 text-zinc-800" />
-                <h3 className="mb-2 text-lg font-bold">{item.title}</h3>
-                <p className="text-sm leading-6 text-zinc-700">{item.description}</p>
+            <div className="space-y-10">
+              <article className="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-white/10 dark:bg-[#0a0f17]">
+                <div className="mb-3 flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-zinc-300 to-zinc-700" />
+                  <p className="text-sm text-zinc-600 dark:text-zinc-300">
+                    <span className="mr-1 font-semibold text-zinc-950 dark:text-white">{t("happening.post1.author")}</span>
+                    <span>{t("happening.post1.handleTime")}</span>
+                  </p>
+                </div>
+                <p className="text-2xl leading-9">{t("happening.post1.content")}</p>
+                <div className="mt-5 flex items-center gap-6 text-sm text-zinc-600 dark:text-zinc-400">
+                  <span className="flex items-center gap-2"><MessageSquare size={14} />24</span>
+                  <span className="flex items-center gap-2"><Repeat2 size={14} />12</span>
+                  <span className="flex items-center gap-2"><Heart size={14} />158</span>
+                </div>
               </article>
-            ))}
-          </div>
-        </section>
 
-        <section className="rounded-3xl border border-zinc-300 bg-[linear-gradient(135deg,#ffffff,#eceef7)] p-6 sm:p-8">
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-600">{t("workflow.badge")}</p>
-              <h2 className="text-3xl font-black sm:text-4xl">{t("workflow.title")}</h2>
-            </div>
-            <span className="rounded-full bg-zinc-900 px-4 py-1 text-xs font-semibold text-white">
-              {t("workflow.tag")}
-            </span>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-3">
-            {stepItems.map((item) => (
-              <article key={item.step} className="rounded-2xl border border-zinc-300 bg-white p-5">
-                <p className="mb-4 text-xs font-semibold tracking-[0.16em] text-zinc-500">{item.step}</p>
-                <h3 className="mb-2 text-lg font-bold">{item.title}</h3>
-                <p className="text-sm leading-6 text-zinc-700">{item.description}</p>
+              <article className="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-white/10 dark:bg-[#0a0f17]">
+                <div className="mb-3 flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-zinc-500 to-zinc-900" />
+                  <p className="text-sm text-zinc-600 dark:text-zinc-300">
+                    <span className="mr-1 font-semibold text-zinc-950 dark:text-white">{t("happening.post2.author")}</span>
+                    <span>{t("happening.post2.handleTime")}</span>
+                  </p>
+                </div>
+                <p className="text-3xl leading-tight">{t("happening.post2.content")}</p>
+                <img src="/test.jpg" alt={t("happening.post2.imageAlt")} className="mt-5 h-[280px] w-full rounded-xl object-cover md:h-[360px]" />
+                <div className="mt-5 flex items-center gap-6 text-sm text-zinc-600 dark:text-zinc-400">
+                  <span className="flex items-center gap-2"><MessageSquare size={14} />89</span>
+                  <span className="flex items-center gap-2"><Repeat2 size={14} />442</span>
+                  <span className="flex items-center gap-2"><Heart size={14} />2.1k</span>
+                </div>
               </article>
-            ))}
+            </div>
           </div>
         </section>
 
-        <section className="rounded-3xl border border-zinc-900 bg-zinc-950 p-8 text-zinc-100 sm:p-10">
-          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-400">{t("cta.badge")}</p>
-              <h2 className="text-3xl font-black sm:text-4xl">{t("cta.title")}</h2>
-              <p className="max-w-xl text-sm leading-6 text-zinc-300 sm:text-base">
-                {t("cta.description")}
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-3">
-              <Link href="/imitation-x">
-                <Button className="h-11 rounded-full bg-white px-6 font-semibold text-zinc-900 hover:bg-zinc-200">
-                  {t("cta.primary")}
-                </Button>
-              </Link>
-              <Link href="/account">
-                <Button
-                  variant="outline"
-                  className="h-11 rounded-full border-zinc-500 bg-transparent px-6 font-semibold text-white hover:bg-zinc-800"
-                >
-                  {t("cta.secondary")}
-                </Button>
-              </Link>
-            </div>
+        <section className="bg-zinc-50 dark:bg-[#080d17]">
+          <div className="mx-auto w-full max-w-[1200px] px-5 py-24 text-center md:px-8">
+            <h2 className="text-5xl font-black uppercase leading-[0.9] tracking-[-0.04em] md:text-7xl">{t("cta.title")}</h2>
+            <p className="mx-auto mt-8 max-w-[520px] text-lg leading-8 text-zinc-600 dark:text-zinc-300">{t("cta.description")}</p>
+            <Link href="/account/signup">
+              <Button className="mt-10 h-12 rounded-full bg-zinc-950 px-10 font-semibold text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200">
+                {t("cta.button")}
+              </Button>
+            </Link>
           </div>
         </section>
       </main>
-    </div>
-  )
-}
 
-function StatCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl border border-zinc-300 bg-white px-4 py-3">
-      <p className="text-xs uppercase tracking-[0.15em] text-zinc-500">{label}</p>
-      <p className="mt-1 text-sm font-semibold text-zinc-800">{value}</p>
-    </div>
-  )
-}
-
-function PreviewRow({
-  title,
-  detail,
-  tone,
-}: {
-  title: string
-  detail: string
-  tone: string
-}) {
-  return (
-    <div className="flex items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2.5">
-      <span className={`h-2.5 w-2.5 rounded-full ${tone}`} />
-      <div className="min-w-0">
-        <p className="text-sm font-semibold text-zinc-100">{title}</p>
-        <p className="truncate text-xs text-zinc-400">{detail}</p>
-      </div>
+      <footer className="border-t border-zinc-200 bg-white dark:border-white/10 dark:bg-[#070b13]">
+        <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-5 px-5 py-8 text-xs text-zinc-600 dark:text-zinc-400 md:px-8">
+          <div className="flex flex-wrap items-center justify-center gap-5">
+            <Link href="/about">{t("footer.about")}</Link>
+            <Link href="/help-center">{t("footer.helpCenter")}</Link>
+            <Link href="/tos">{t("footer.tos")}</Link>
+            <Link href="/privacy">{t("footer.privacy")}</Link>
+            <Link href="/cookies">{t("footer.cookies")}</Link>
+            <Link href="/accessibility">{t("footer.accessibility")}</Link>
+            <Link href="/ads-info">{t("footer.ads")}</Link>
+          </div>
+          <p className="text-zinc-500 dark:text-zinc-500">{t("footer.copyright")}</p>
+        </div>
+      </footer>
     </div>
   )
 }

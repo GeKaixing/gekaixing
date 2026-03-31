@@ -395,7 +395,8 @@ export const ModelName = {
   Message: 'Message',
   ConversationRead: 'ConversationRead',
   ChatAISession: 'ChatAISession',
-  ChatAIMessage: 'ChatAIMessage'
+  ChatAIMessage: 'ChatAIMessage',
+  UserAction: 'UserAction'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -411,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "follow" | "post" | "like" | "bookmark" | "share" | "conversation" | "conversationParticipant" | "message" | "conversationRead" | "chatAISession" | "chatAIMessage"
+    modelProps: "user" | "follow" | "post" | "like" | "bookmark" | "share" | "conversation" | "conversationParticipant" | "message" | "conversationRead" | "chatAISession" | "chatAIMessage" | "userAction"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1303,6 +1304,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    UserAction: {
+      payload: Prisma.$UserActionPayload<ExtArgs>
+      fields: Prisma.UserActionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserActionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserActionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserActionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserActionPayload>
+        }
+        findFirst: {
+          args: Prisma.UserActionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserActionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserActionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserActionPayload>
+        }
+        findMany: {
+          args: Prisma.UserActionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserActionPayload>[]
+        }
+        create: {
+          args: Prisma.UserActionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserActionPayload>
+        }
+        createMany: {
+          args: Prisma.UserActionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserActionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserActionPayload>[]
+        }
+        delete: {
+          args: Prisma.UserActionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserActionPayload>
+        }
+        update: {
+          args: Prisma.UserActionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserActionPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserActionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserActionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserActionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserActionPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserActionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserActionPayload>
+        }
+        aggregate: {
+          args: Prisma.UserActionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserAction>
+        }
+        groupBy: {
+          args: Prisma.UserActionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserActionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserActionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserActionCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1491,6 +1566,20 @@ export const ChatAIMessageScalarFieldEnum = {
 export type ChatAIMessageScalarFieldEnum = (typeof ChatAIMessageScalarFieldEnum)[keyof typeof ChatAIMessageScalarFieldEnum]
 
 
+export const UserActionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  actionType: 'actionType',
+  targetPostId: 'targetPostId',
+  targetAuthorId: 'targetAuthorId',
+  dwellMs: 'dwellMs',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type UserActionScalarFieldEnum = (typeof UserActionScalarFieldEnum)[keyof typeof UserActionScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1581,6 +1670,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'UserActionType'
+ */
+export type EnumUserActionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserActionType'>
+    
+
+
+/**
+ * Reference to a field of type 'UserActionType[]'
+ */
+export type ListEnumUserActionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserActionType[]'>
     
 
 
@@ -1704,6 +1807,7 @@ export type GlobalOmitConfig = {
   conversationRead?: Prisma.ConversationReadOmit
   chatAISession?: Prisma.ChatAISessionOmit
   chatAIMessage?: Prisma.ChatAIMessageOmit
+  userAction?: Prisma.UserActionOmit
 }
 
 /* Types for Logging */

@@ -46,6 +46,25 @@ export default function MobileHeader({ user }: { user: userResult | null }) {
 
 function MobileDrawer({ user }: { user: userResult | null }) {
     const t = useTranslations("ImitationX.Mobile")
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    if (!mounted) {
+        return (
+            <div className='sm:hidden'>
+                <button
+                    type="button"
+                    aria-label="Open menu"
+                    className="inline-flex items-center justify-center"
+                >
+                    <AlignJustify />
+                </button>
+            </div>
+        )
+    }
 
 
     return (

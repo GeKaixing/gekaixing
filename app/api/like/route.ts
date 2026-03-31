@@ -1,4 +1,7 @@
 import { prisma } from "@/lib/prisma";
+import { UserActionType } from "@/generated/prisma/enums";
+import { logUserAction } from "@/lib/feed/actions";
+import { invalidateUserHomeFeed } from "@/lib/feed/service";
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 
@@ -32,6 +35,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Already liked" }, { status: 409 });
     }
 
+    const targetPost = await prisma.post.findUnique({
+      where: { id: postId },
+      select: { authorId: true },
+    });
+
+    if (!targetPost) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
+
     const [like] = await prisma.$transaction([
       prisma.like.create({
         data: {
@@ -44,6 +56,13 @@ export async function POST(request: Request) {
         data: { likeCount: { increment: 1 } },
       }),
     ]);
+    await Promise.all([invalidateUserHomeFeed(user.id), invalidateUserHomeFeed(targetPost.authorId)]);
+    await logUserAction({
+      userId: user.id,
+      actionType: UserActionType.POST_LIKE,
+      targetPostId: postId,
+      targetAuthorId: targetPost.authorId,
+    });
 
     const post = await prisma.post.findUnique({
       where: { id: postId },
@@ -93,6 +112,11 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "Not liked yet" }, { status: 404 });
     }
 
+    const targetPost = await prisma.post.findUnique({
+      where: { id: postId },
+      select: { authorId: true },
+    });
+
     await prisma.$transaction([
       prisma.like.delete({
         where: {
@@ -107,6 +131,16 @@ export async function DELETE(request: Request) {
         data: { likeCount: { decrement: 1 } },
       }),
     ]);
+    await Promise.all([
+      invalidateUserHomeFeed(user.id),
+      invalidateUserHomeFeed(targetPost?.authorId ?? null),
+    ]);
+    await logUserAction({
+      userId: user.id,
+      actionType: UserActionType.POST_UNLIKE,
+      targetPostId: postId,
+      targetAuthorId: targetPost?.authorId ?? null,
+    });
 
     const post = await prisma.post.findUnique({
       where: { id: postId },

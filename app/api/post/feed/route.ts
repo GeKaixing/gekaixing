@@ -1,8 +1,11 @@
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { UserActionType } from "@/generated/prisma/enums";
+import { logUserAction } from "@/lib/feed/actions";
 import { createClient } from "@/utils/supabase/server";
 import { Prisma } from "@/generated/prisma/client";
+import { getHomeFeed } from "@/lib/feed/service";
 
 type FeedScope =
   | "home"
@@ -76,6 +79,28 @@ export async function GET(req: NextRequest) {
     const limit = Number.isFinite(requestedLimit)
       ? Math.min(Math.max(requestedLimit, 1), 40)
       : 20;
+
+    if (scope === "home") {
+      const feed = await getHomeFeed({
+        userId: userId ?? null,
+        cursor,
+        limit,
+      });
+      if (userId) {
+        void Promise.all(
+          feed.data.slice(0, 20).map((post) =>
+            logUserAction({
+              userId,
+              actionType: UserActionType.FEED_IMPRESSION,
+              targetPostId: post.id,
+              targetAuthorId: post.user_id,
+            })
+          )
+        );
+      }
+
+      return NextResponse.json(feed);
+    }
 
     const rows = await prisma.post.findMany({
       where: buildWhere(scope, targetId),

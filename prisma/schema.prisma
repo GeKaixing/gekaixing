@@ -29,6 +29,7 @@ model User {
   likes     Like[]
   bookmarks Bookmark[]
   shares    Share[]
+  actions   UserAction[]
 
   // 聊天
   conversationParticipants ConversationParticipant[]
@@ -102,6 +103,7 @@ model Post {
   likes     Like[]
   bookmarks Bookmark[]
   shares    Share[]
+  actions   UserAction[]
 
   // 索引优化
   @@index([parentId])
@@ -272,4 +274,38 @@ model ChatAIMessage {
   session ChatAISession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
   @@index([sessionId, createdAt])
+}
+
+model UserAction {
+  id             String         @id @default(cuid())
+  userId         String
+  actionType     UserActionType
+  targetPostId   String?
+  targetAuthorId String?
+  dwellMs        Int?
+  metadata       String?
+  createdAt      DateTime       @default(now())
+
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post? @relation(fields: [targetPostId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([targetAuthorId, createdAt])
+  @@index([targetPostId, createdAt])
+  @@index([actionType, createdAt])
+}
+
+enum UserActionType {
+  FEED_IMPRESSION
+  POST_CREATE
+  REPLY_CREATE
+  POST_LIKE
+  POST_UNLIKE
+  POST_BOOKMARK
+  POST_UNBOOKMARK
+  POST_SHARE
+  FOLLOW
+  UNFOLLOW
+  POST_CLICK
+  DWELL
 }

@@ -1,6 +1,7 @@
 import { createServerClient, type SetAllCookies } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-
+console.log('SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+console.log('SUPABASE_PUBLISHABLE_DEFAULT_KEY:', process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
 const hasEnvVars =
   process.env.NEXT_PUBLIC_SUPABASE_URL &&
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -53,6 +54,12 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname !== "/cookies" &&
     request.nextUrl.pathname !== "/privacy" &&
     request.nextUrl.pathname !== "/account" &&
+    request.nextUrl.pathname !== "/about" &&
+    request.nextUrl.pathname !== "/account" &&
+    request.nextUrl.pathname !== "/about" &&
+    request.nextUrl.pathname !== "/help-center" &&
+    request.nextUrl.pathname !== "/accessibility" &&
+    request.nextUrl.pathname !== "/ads-info" &&
     !request.nextUrl.pathname.startsWith("/api") &&
     !user &&
     !request.nextUrl.pathname.startsWith("/account") &&

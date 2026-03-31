@@ -16,3 +16,21 @@ export const FollowStatus = {
 } as const
 
 export type FollowStatus = (typeof FollowStatus)[keyof typeof FollowStatus]
+
+
+export const UserActionType = {
+  FEED_IMPRESSION: 'FEED_IMPRESSION',
+  POST_CREATE: 'POST_CREATE',
+  REPLY_CREATE: 'REPLY_CREATE',
+  POST_LIKE: 'POST_LIKE',
+  POST_UNLIKE: 'POST_UNLIKE',
+  POST_BOOKMARK: 'POST_BOOKMARK',
+  POST_UNBOOKMARK: 'POST_UNBOOKMARK',
+  POST_SHARE: 'POST_SHARE',
+  FOLLOW: 'FOLLOW',
+  UNFOLLOW: 'UNFOLLOW',
+  POST_CLICK: 'POST_CLICK',
+  DWELL: 'DWELL'
+} as const
+
+export type UserActionType = (typeof UserActionType)[keyof typeof UserActionType]

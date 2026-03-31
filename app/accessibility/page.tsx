@@ -1,14 +1,14 @@
 import Link from "next/link"
 import { getTranslations } from "next-intl/server"
 
-type AboutItem = {
-  key: "who" | "build" | "work"
+type AccessibilityPoint = {
+  key: "readable" | "keyboard" | "improve"
 }
 
-const aboutItems: AboutItem[] = [{ key: "who" }, { key: "build" }, { key: "work" }]
+const accessibilityPoints: AccessibilityPoint[] = [{ key: "readable" }, { key: "keyboard" }, { key: "improve" }]
 
-export default async function AboutPage(): Promise<React.JSX.Element> {
-  const t = await getTranslations("NoirPages.about")
+export default async function AccessibilityPage(): Promise<React.JSX.Element> {
+  const t = await getTranslations("NoirPages.accessibility")
   const common = await getTranslations("NoirPages.common")
 
   return (
@@ -19,10 +19,10 @@ export default async function AboutPage(): Promise<React.JSX.Element> {
         <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-600 dark:text-zinc-300">{t("description")}</p>
 
         <div className="mt-10 grid gap-4 md:grid-cols-3">
-          {aboutItems.map((item: AboutItem) => (
-            <article key={item.key} className="rounded-xl border border-zinc-200 bg-zinc-50 p-5 dark:border-white/10 dark:bg-white/[0.03]">
-              <h2 className="text-lg font-semibold">{t(`cards.${item.key}.title`)}</h2>
-              <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-300">{t(`cards.${item.key}.description`)}</p>
+          {accessibilityPoints.map((point: AccessibilityPoint) => (
+            <article key={point.key} className="rounded-xl border border-zinc-200 bg-zinc-50 p-5 dark:border-white/10 dark:bg-white/[0.03]">
+              <h2 className="text-lg font-semibold">{t(`points.${point.key}.title`)}</h2>
+              <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-300">{t(`points.${point.key}.description`)}</p>
             </article>
           ))}
         </div>
