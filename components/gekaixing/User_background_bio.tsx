@@ -50,10 +50,10 @@ export default function User_background_bio({
             </div>
             {briefIntroduction ? <div className='text-sm'>{briefIntroduction}</div> : <div className='text-sm'>{"还没有介绍自己"}</div>}
             <div className="flex gap-2 text-sm cursor-pointer">
-                <Link href={`/imitation-x/following/${relationUserid}`} className="flex hover:underline">
+                <Link href={`/gekaixing/following/${relationUserid}`} className="flex hover:underline">
                     <div className="font-bold ">{following} </div>正在关注
                 </Link>
-                <Link href={`/imitation-x/following/${relationUserid}`} className="flex hover:underline">
+                <Link href={`/gekaixing/following/${relationUserid}`} className="flex hover:underline">
                     <div className="font-bold ">{followers}</div>关注者
                 </Link>
             </div>

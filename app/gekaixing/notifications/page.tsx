@@ -201,7 +201,7 @@ export default async function NotificationsPage() {
                       </AvatarFallback>
                     </Avatar>
 
-                    <Link href={`/imitation-x/user/${notification.actor.id}`} className="font-semibold hover:underline">
+                    <Link href={`/gekaixing/user/${notification.actor.id}`} className="font-semibold hover:underline">
                       {notification.actor.name || notification.actor.userid}
                     </Link>
                     <span className="text-muted-foreground">@{notification.actor.userid}</span>
@@ -209,7 +209,7 @@ export default async function NotificationsPage() {
                     <span className="text-sm text-muted-foreground">· {formatRelativeTime(notification.createdAt, locale)}</span>
                   </div>
 
-                  <Link href={`/imitation-x/status/${notification.threadId}`} className="mt-2 block rounded-xl border border-border bg-muted/40 p-3">
+                  <Link href={`/gekaixing/status/${notification.threadId}`} className="mt-2 block rounded-xl border border-border bg-muted/40 p-3">
                     <p className="line-clamp-3 text-sm text-foreground">{getPreview(notification.content)}</p>
                   </Link>
                 </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { Post } from "@/app/imitation-x/page"
+import { Post } from "@/app/gekaixing/page"
 import { postStore } from "@/store/post"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useTranslations } from "next-intl"
@@ -278,7 +278,7 @@ export default function PostList({
       ) : null}
 
       {!hasMore && posts.length > 0 ? (
-        pathName.includes('/imitation-x/status')? null : (
+        pathName.includes('/gekaixing/status')? null : (
         <div className="py-4 text-center text-sm text-muted-foreground">{t("allLoaded")}</div>)
       ) : null}
 

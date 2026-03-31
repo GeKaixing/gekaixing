@@ -207,7 +207,7 @@ export default function ReplyCard({
             updatePost(id, { share: result.shareCount })
         }
 
-        copyToClipboard(`https://www.gekaixing.top/imitation-x/status/${id}`)
+        copyToClipboard(`https://www.gekaixing.top/gekaixing/status/${id}`)
         setIsShareLoading(false)
     }
 
@@ -221,7 +221,7 @@ export default function ReplyCard({
             return
         }
 
-        router.push(`/imitation-x/status/${id}`)
+        router.push(`/gekaixing/status/${id}`)
     }
 
     return (
@@ -265,7 +265,7 @@ export default function ReplyCard({
                         </div>
                         {like || 0}
                     </li>
-                    <Link href={`/imitation-x/status/${id}`} className='flex gap-2 hover:text-green-400'>
+                    <Link href={`/gekaixing/status/${id}`} className='flex gap-2 hover:text-green-400'>
                         <div className='w-7 h-7 flex justify-center items-center rounded-full hover:bg-green-400/10'>
                             <MessageCircleMore />
                         </div>

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/sheet"
 import SidebarAvatar from './SidebarAvatar'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { userResult } from '@/app/imitation-x/layout'
+import { userResult } from '@/app/gekaixing/layout'
 import { useTranslations } from 'next-intl'
 
 export default function MobileHeader({ user }: { user: userResult | null }) {
@@ -36,7 +36,7 @@ export default function MobileHeader({ user }: { user: userResult | null }) {
                     <Image src='/logo.svg' width={24} height={12} alt='logo' className='dark:hidden'></Image>
                     <Image src='/logo-white.svg' width={24} height={12} alt='logo white' className='hidden dark:block'></Image>
                 </>
-                <Link href={'/imitation-x/explore'} data-value={t("search")}><Search></Search></Link>
+                <Link href={'/gekaixing/explore'} data-value={t("search")}><Search></Search></Link>
             </div>
             <div className='w-full  h-20'></div>
         </div>
@@ -76,7 +76,7 @@ function MobileDrawer({ user }: { user: userResult | null }) {
                         <SheetTitle className='hidden'></SheetTitle>
                         <SheetDescription className='hidden'> </SheetDescription>
                         {user?.id &&
-                            <Link href={`/imitation-x/user/${user.id}`}>
+                            <Link href={`/gekaixing/user/${user.id}`}>
                                 <Avatar>
                                     <AvatarImage src={user?.avatar || user.avatar || ''} />
                                     <AvatarFallback>{user.name?.charAt(0)?.toUpperCase() || 'U'}</AvatarFallback>
@@ -87,12 +87,12 @@ function MobileDrawer({ user }: { user: userResult | null }) {
                         }
                         <nav className="w-full h-screen flex justify-center  mt-4">
                             <ul className=" space-y-6 w-full">
-                                <Link href="/imitation-x" className="flex gap-2 text-xl font-bold hover:bg-muted/70 rounded-2xl p-2 transition-colors">
+                                <Link href="/gekaixing" className="flex gap-2 text-xl font-bold hover:bg-muted/70 rounded-2xl p-2 transition-colors">
                                     <House />
                                     <span >{t("home")}</span>
                                 </Link>
                                 {user?.id &&
-                                    <Link href="/imitation-x/settings" className="flex gap-2 text-xl font-bold hover:bg-muted/70 rounded-2xl p-2 transition-colors">
+                                    <Link href="/gekaixing/settings" className="flex gap-2 text-xl font-bold hover:bg-muted/70 rounded-2xl p-2 transition-colors">
                                         <Settings></Settings>
                                         <span>{t("settings")}</span>
                                     </Link>}
@@ -106,7 +106,7 @@ function MobileDrawer({ user }: { user: userResult | null }) {
                                 }
 
                                 {user?.id && <Link
-                                    href={'/imitation-x/post'}
+                                    href={'/gekaixing/post'}
                                     className="rounded-2xl bg-primary text-xl h-9 w-[200px] text-primary-foreground flex justify-center items-center hover:opacity-90 cursor-pointer transition-opacity"
                                 >
                                     {t("publish")}

@@ -14,7 +14,7 @@ import { Heart, MessageCircleMore, Share2, ShieldCheck, Star } from "lucide-reac
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import PostDropdownMenu from "./PostDropdownMenu"
 import Link from "next/link"
-import { Post } from "@/app/imitation-x/page"
+import { Post } from "@/app/gekaixing/page"
 import { postStore } from "@/store/post"
 import { replyStore } from "@/store/reply"
 import { useRouter } from "next/navigation"
@@ -186,7 +186,7 @@ export default function PostCard({
         }
 
         await navigator.clipboard.writeText(
-            `${window.location.origin}/imitation-x/status/${id}`
+            `${window.location.origin}/gekaixing/status/${id}`
         )
 
         setShareLoading(false)
@@ -202,7 +202,7 @@ export default function PostCard({
             return
         }
 
-        router.push(`/imitation-x/status/${id}`)
+        router.push(`/gekaixing/status/${id}`)
     }
 
     return (
@@ -252,7 +252,7 @@ export default function PostCard({
 
                     {/* 💬 回复 */}
                     <Link
-                        href={`/imitation-x/status/${id}`}
+                        href={`/gekaixing/status/${id}`}
                         className="flex gap-2 items-center hover:text-green-500"
                     >
                         <MessageCircleMore />

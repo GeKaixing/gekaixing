@@ -19,18 +19,43 @@ import { useEffect } from "react"
 import Spin from "@/components/gekaixing/Spin"
 import { Fragment } from "@tiptap/pm/model"
 import { useTranslations } from "next-intl"
+import { useLocale } from "next-intl"
 
 export interface MinimalTiptapProps
   extends Omit<UseMinimalTiptapEditorProps, "onUpdate"> {
   value?: Content
   onChange?: (value: Content) => void
   onEditorReady?: (editor: Editor | null) => void
+  onAiGenerate?: () => void
+  aiGenerating?: boolean
   className?: string
   editorContentClassName?: string
 }
 
-const Toolbar = ({ editor, publish, value }: { editor: Editor, publish?: () => void, value: Content | undefined | string }) => {
+const Toolbar = ({
+  editor,
+  publish,
+  value,
+  onAiGenerate,
+  aiGenerating = false,
+}: {
+  editor: Editor
+  publish?: () => void
+  value: Content | undefined | string
+  onAiGenerate?: () => void
+  aiGenerating?: boolean
+}) => {
 const t = useTranslations('EditPost')
+  const locale = useLocale()
+  const hasContent = typeof value === "string" ? value.trim().length !== 0 : false
+  const aiButtonLabel = aiGenerating
+    ? locale === "zh-CN"
+      ? "生成中..."
+      : "Thinking..."
+    : locale === "zh-CN"
+      ? "AI发帖"
+      : "AI Post"
+
   return (
     <div className="border-border flex justify-between  h-12 shrink-0  border-b p-2">
       <div className="flex w-max items-center gap-px">
@@ -71,10 +96,19 @@ const t = useTranslations('EditPost')
           mainActionCount={0}
         />
       </div>
-      <Button onClick={publish} className={clsx('!w-16 !max-w-2xs', {
-        '!bg-black': value?.length !== 0,
-        '!text-white': value?.length !== 0
-      })}>{t("publish")}</Button>
+      <div className="flex items-center gap-2">
+        <Button
+          onClick={onAiGenerate}
+          className="!w-[88px] !max-w-none"
+          disabled={aiGenerating}
+        >
+          {aiButtonLabel}
+        </Button>
+        <Button onClick={publish} className={clsx('!w-16 !max-w-2xs', {
+          '!bg-black': hasContent,
+          '!text-white': hasContent
+        })}>{t("publish")}</Button>
+      </div>
     </div>
   )
 }
@@ -85,6 +119,8 @@ export const MinimalTiptapEditor = ({
   status,
   onChange,
   onEditorReady,
+  onAiGenerate,
+  aiGenerating,
   className,
   editorContentClassName,
   ...props
@@ -131,7 +167,13 @@ export const MinimalTiptapEditor = ({
         <div className="flex justify-center">
           <Spin></Spin>
         </div>
-        : <Toolbar editor={editor} publish={publish} value={value} />}
+        : <Toolbar
+          editor={editor}
+          publish={publish}
+          value={value}
+          onAiGenerate={onAiGenerate}
+          aiGenerating={aiGenerating}
+        />}
 
       <LinkBubbleMenu editor={editor} />
     </MeasuredContainer>

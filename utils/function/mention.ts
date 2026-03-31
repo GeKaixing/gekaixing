@@ -58,7 +58,7 @@ export function renderMentionHtml(html: string): string {
       const mentionNode = documentNode.createElement("a")
       mentionNode.textContent = `@${handle}`
       mentionNode.setAttribute("data-mention-handle", handle)
-      mentionNode.setAttribute("href", `/imitation-x/user/${handle}`)
+      mentionNode.setAttribute("href", `/gekaixing/user/${handle}`)
       mentionNode.className = "mention-handle"
       fragment.appendChild(mentionNode)
 

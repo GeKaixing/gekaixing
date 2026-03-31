@@ -89,7 +89,7 @@ export default function ToutiaoHot() {
       ))}
 
       <Link
-        href="/imitation-x/explore"
+        href="/gekaixing/explore"
         className="text-blue-600 dark:text-blue-400 block mt-2 hover:underline"
       >
         {t("more")}

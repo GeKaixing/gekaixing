@@ -64,7 +64,7 @@ export default function LoginForm() {
         }
 
         if (data.success) {
-            router.replace("/imitation-x")
+            router.replace("/gekaixing")
         } else {
             toast.error(data.error || t('loginFailed'))
         }

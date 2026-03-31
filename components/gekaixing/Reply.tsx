@@ -1,6 +1,6 @@
 "use server"
 
-import { Post } from '@/app/imitation-x/page'
+import { Post } from '@/app/gekaixing/page'
 import ReplyStore from './ReplyStore'
 
 type Replies = {

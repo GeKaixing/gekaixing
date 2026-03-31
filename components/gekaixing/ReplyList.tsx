@@ -1,6 +1,6 @@
 "use client"
 
-import { Post } from "@/app/imitation-x/page"
+import { Post } from "@/app/gekaixing/page"
 import { replyStore } from "@/store/reply"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useTranslations } from "next-intl"

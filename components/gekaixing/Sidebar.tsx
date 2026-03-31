@@ -13,7 +13,7 @@ import { Ellipsis } from 'lucide-react'
 import { copyToClipboard } from "@/utils/function/copyToClipboard";
 import SidebarAvatar from "./SidebarAvatar";
 import EditPost from "./EditPost";
-import { userResult } from "@/app/imitation-x/layout";
+import { userResult } from "@/app/gekaixing/layout";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -49,37 +49,37 @@ export default function Sidebar({ user, mentionCount = 0 }: { user: userResult |
             <div className="flex flex-col h-full w-full lg:w-[200px]">
                 <ul className="space-y-1 flex flex-col items-center lg:items-start">
                     <li className="w-full">
-                        <Link href="/imitation-x" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
+                        <Link href="/gekaixing" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                             <House className="w-7 h-7" />
                             <span className="hidden lg:inline">{t("home")}</span>
                         </Link>
                     </li>
                     <li className="w-full">
-                        <Link href="/imitation-x/chat" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
+                        <Link href="/gekaixing/chat" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                             <MessageSquare className="w-7 h-7" />
                             <span className="hidden lg:inline">{t("chat")}</span>
                         </Link>
                     </li>
                     <li className="w-full">
-                        <Link href="/imitation-x/connect_people" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
+                        <Link href="/gekaixing/connect_people" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                             <Users className="w-7 h-7" />
                             <span className="hidden lg:inline">{t("connect")}</span>
                         </Link>
                     </li>
                     <li className="w-full">
-                        <Link href="/imitation-x/explore" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
+                        <Link href="/gekaixing/explore" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                             <Search className="w-7 h-7" />
                             <span className="hidden lg:inline">{t("explore")}</span>
                         </Link>
                     </li>
                     <li className="w-full">
-                        <Link href="/imitation-x/gkx" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
+                        <Link href="/gekaixing/gkx" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                             <RailSymbol className="w-7 h-7" />
                             <span className="hidden lg:inline">GKX</span>
                         </Link>
                     </li>
                     <li className="w-full">
-                        <Link href="/imitation-x/premium" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
+                        <Link href="/gekaixing/premium" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                             <ShieldCheck className="w-7 h-7" />
                             <span className="hidden lg:inline">{t("premium")}</span>
                         </Link>
@@ -94,15 +94,15 @@ export default function Sidebar({ user, mentionCount = 0 }: { user: userResult |
                                 </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent side="right" align="start" className="w-48">
-                                <DropdownMenuItem onSelect={handleMoreMenuSelect("/imitation-x/likes")} className="flex items-center gap-2 cursor-pointer">
+                                <DropdownMenuItem onSelect={handleMoreMenuSelect("/gekaixing/likes")} className="flex items-center gap-2 cursor-pointer">
                                     <Heart className="w-4 h-4" />
                                     <span>{t("likes")}</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onSelect={handleMoreMenuSelect("/imitation-x/bookmarks")} className="flex items-center gap-2 cursor-pointer">
+                                <DropdownMenuItem onSelect={handleMoreMenuSelect("/gekaixing/bookmarks")} className="flex items-center gap-2 cursor-pointer">
                                     <Bookmark className="w-4 h-4" />
                                     <span>{t("bookmarks")}</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onSelect={handleMoreMenuSelect("/imitation-x/notifications")} className="flex items-center gap-2 cursor-pointer">
+                                <DropdownMenuItem onSelect={handleMoreMenuSelect("/gekaixing/notifications")} className="flex items-center gap-2 cursor-pointer">
                                     <Bell className="w-4 h-4" />
                                     <span>{t("notifications")}</span>
                                     {mentionCount > 0 ? (
@@ -117,7 +117,7 @@ export default function Sidebar({ user, mentionCount = 0 }: { user: userResult |
 
                     {user?.id && (
                         <li className="w-full">
-                            <Link href="/imitation-x/settings" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
+                            <Link href="/gekaixing/settings" className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                                 <Settings className="w-7 h-7" />
                                 <span className="hidden lg:inline">{t("settings")}</span>
                             </Link>
@@ -125,7 +125,7 @@ export default function Sidebar({ user, mentionCount = 0 }: { user: userResult |
                     )}
                     {user?.id && (
                         <li className="w-full">
-                            <Link href={`/imitation-x/user/${user?.id}`} className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
+                            <Link href={`/gekaixing/user/${user?.id}`} className="flex items-center justify-center lg:justify-start gap-0 lg:gap-3 text-xl font-bold hover:bg-muted/70 rounded-full p-3 w-full transition-colors">
                                 <UserIcon className="w-7 h-7" />
                                 <span className="hidden lg:inline">{t("profile")}</span>
                             </Link>
@@ -181,10 +181,10 @@ export function SidebarDropdownMenu() {
                 <Ellipsis />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <Link href="/imitation-x/notifications"><DropdownMenuItem>{t("notifications")}</DropdownMenuItem></Link>
+                <Link href="/gekaixing/notifications"><DropdownMenuItem>{t("notifications")}</DropdownMenuItem></Link>
                 <Link href="/account"><DropdownMenuItem onClick={logoutfetch}>{t("logout")} {email}</DropdownMenuItem></Link>
-                <Link href={`/imitation-x/user/${id}`}><DropdownMenuItem>{t("profile")}</DropdownMenuItem></Link>
-                <DropdownMenuItem onClick={() => copyToClipboard(`${process.env.NEXT_PUBLIC_URL}/imitation-x/user/${id}`)}>{t("copyProfileLink")}</DropdownMenuItem>
+                <Link href={`/gekaixing/user/${id}`}><DropdownMenuItem>{t("profile")}</DropdownMenuItem></Link>
+                <DropdownMenuItem onClick={() => copyToClipboard(`${process.env.NEXT_PUBLIC_URL}/gekaixing/user/${id}`)}>{t("copyProfileLink")}</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )

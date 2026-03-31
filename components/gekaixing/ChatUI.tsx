@@ -275,7 +275,7 @@ useEffect(() => {
     if (!initialSessionId) {
       const newSessionId = crypto.randomUUID()
       router.push(
-        `/imitation-x/gkx/${newSessionId}?input=${encodeURIComponent(text)}`
+        `/gekaixing/gkx/${newSessionId}?input=${encodeURIComponent(text)}`
       )
       return
     }

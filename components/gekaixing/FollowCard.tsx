@@ -73,7 +73,7 @@ export default function FollowCard() {
 
     useEffect(() => {
         const fetchPost = async () => {
-            if (!pathname.includes("/imitation-x/status/")) {
+            if (!pathname.includes("/gekaixing/status/")) {
                 setShow(false);
                 return;
             }
@@ -112,14 +112,14 @@ export default function FollowCard() {
                 <div className="text-sm text-muted-foreground">加载中...</div>
             ) : result ? (
                 <div className="flex items-start justify-between gap-2">
-                    <Avatar onClick={() => router.push(`/imitation-x/user/${result.author.id}`)} className="w-12 h-12 shrink-0">
+                    <Avatar onClick={() => router.push(`/gekaixing/user/${result.author.id}`)} className="w-12 h-12 shrink-0">
                         <AvatarImage src={result.author.avatar || ""} />
                         <AvatarFallback>u</AvatarFallback>
                     </Avatar>
 
                     <div>
                         <Link
-                            href={`/imitation-x/user/${result.author.id}`}
+                            href={`/gekaixing/user/${result.author.id}`}
                             className="font-bold text-sm hover:underline flex items-center"
                         >
                             {result.author.name}

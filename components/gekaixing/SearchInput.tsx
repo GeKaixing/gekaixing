@@ -23,7 +23,7 @@ export default function SearchInput() {
             onSubmit={(e) => {
                 e.preventDefault(); // ✅ 阻止表单默认提交
                 if (v.trim() === '') return;
-                router.push(`/imitation-x/search/?query=${v}`);
+                router.push(`/gekaixing/search/?query=${v}`);
             }}>
                 <input
                     type='text'

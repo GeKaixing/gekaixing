@@ -105,7 +105,7 @@ export async function generateMetadata({
     const displayName = user.name || `@${user.userid}`
     const title = t('titleTemplate', { displayName })
     const description = buildBioDescription(user.briefIntroduction) || t('defaultDescription')
-    const url = `${siteUrl}/imitation-x/user/${user.id}`
+    const url = `${siteUrl}/gekaixing/user/${user.id}`
 
     return {
         title,

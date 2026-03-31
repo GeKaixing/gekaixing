@@ -1,7 +1,6 @@
+import { generateGeminiText, hasGeminiApiKey } from "@/lib/gemini";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
-import { google } from "@ai-sdk/google";
-import { generateText } from "ai";
 import { NextResponse } from "next/server";
 
 const DEFAULT_TITLE = "新对话";
@@ -24,31 +23,31 @@ function normalizeTitle(title: string): string {
 }
 
 async function generateAiTitle(text: string): Promise<string | null> {
-  if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+  if (!hasGeminiApiKey()) {
     return null;
   }
 
   try {
-    const result = await generateText({
-      model: google("gemini-2.0-flash"),
+    const { text: title } = await generateGeminiText({
+      modelCandidates: ["gemini-2.0-flash", "gemini-1.5-flash"],
       temperature: 0.2,
       maxOutputTokens: 32,
       prompt: [
-        "你是标题生成器。",
-        "根据用户首条消息生成一个简短会话标题。",
-        `要求：不超过${MAX_TITLE_LENGTH}个中文字符，禁止标点结尾，直接输出标题本身。`,
+        "你是标题生成助手。",
+        "根据用户第一条消息生成简短会话标题。",
+        `要求：不超过${MAX_TITLE_LENGTH}个中文字符，不要句号和引号，只返回标题。`,
         `用户消息：${text}`,
       ].join("\n"),
     });
 
-    return normalizeTitle(result.text);
+    return normalizeTitle(title);
   } catch (error) {
     console.error("AI 生成标题失败:", error);
     return null;
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<Response> {
   try {
     const { sessionId, text } = (await req.json()) as {
       sessionId?: string;

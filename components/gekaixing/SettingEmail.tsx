@@ -53,7 +53,7 @@ export default function SettingEmail() {
                 email: values.email,
             },
             {
-                emailRedirectTo: `${process.env.NEXT_PUBLIC_URL}/imitation-x`
+                emailRedirectTo: `${process.env.NEXT_PUBLIC_URL}/gekaixing`
             }
         )
         if (data) {

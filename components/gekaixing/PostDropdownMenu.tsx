@@ -114,8 +114,8 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
                     const { data: UrlsArrayData, error: UrlsArrayError } = await deleteUnusedImages('post-image', UrlsArray)
                   
                 }
-                if (pathName.includes('/imitation-x/status')) {
-                    router.replace("/imitation-x")
+                if (pathName.includes('/gekaixing/status')) {
+                    router.replace("/gekaixing")
                 }
 
             } else {
@@ -135,10 +135,10 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
 
     function CopyLink() {
         if (type === 'reply') {
-            copyToClipboard(`${process.env.NEXT_PUBLIC_URL}/imitation-x/reply/${id}`)
+            copyToClipboard(`${process.env.NEXT_PUBLIC_URL}/gekaixing/reply/${id}`)
             return;
         }
-        copyToClipboard(`${process.env.NEXT_PUBLIC_URL}/imitation-x/status/${id}`)
+        copyToClipboard(`${process.env.NEXT_PUBLIC_URL}/gekaixing/status/${id}`)
 
     }
 
@@ -153,14 +153,14 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
                     onClick={() => setAlertDialogOpen(true)}
                 >删除帖子</DropdownMenuItem>}
                 {userStore.getState().id && userStore.getState().id !== user_id && (
-                    <DropdownMenuItem onClick={() => router.push(`/imitation-x/chat?userId=${user_id}`)}>
+                    <DropdownMenuItem onClick={() => router.push(`/gekaixing/chat?userId=${user_id}`)}>
                         私聊用户
                     </DropdownMenuItem>
                 )}
                 {userStore.getState().id && <DropdownMenuItem>关注用户</DropdownMenuItem>}
                 <DropdownMenuItem onClick={CopyLink}>复制连接</DropdownMenuItem>
                 <DropdownMenuItem >
-                    <Link href={`/imitation-x/user/${user_id}`}>查看用户</Link>
+                    <Link href={`/gekaixing/user/${user_id}`}>查看用户</Link>
                 </DropdownMenuItem>
             </DropdownMenuContent>
             <DeleteAlertDialog isopen={AlertDialogOpen} setOpen={setAlertDialogOpen} deleteHandler={deleteHandler}></DeleteAlertDialog>

@@ -139,7 +139,7 @@ export default function ConnectPeoplePage(): ReactElement {
     <div className='min-h-screen bg-background text-foreground'>
       <div className='sticky top-0 z-10 border-b border-border bg-background/90 backdrop-blur-md'>
         <div className='flex items-center gap-4 px-4 py-3'>
-          <Link href='/imitation-x' className='rounded-full p-2 transition-colors hover:bg-muted/70'>
+          <Link href='/gekaixing' className='rounded-full p-2 transition-colors hover:bg-muted/70'>
             <ArrowLeft className='h-5 w-5' />
           </Link>
           <div>
@@ -202,7 +202,7 @@ export default function ConnectPeoplePage(): ReactElement {
               key={user.id}
               className='flex cursor-pointer items-start gap-3 px-4 py-3 transition-colors hover:bg-muted/60'
             >
-              <Link href={`/imitation-x/user/${user.id}`}>
+              <Link href={`/gekaixing/user/${user.id}`}>
                 <Avatar className='h-12 w-12'>
                   <AvatarImage src={user.avatar ?? ''} alt={user.name} />
                   <AvatarFallback className='bg-muted font-medium text-muted-foreground'>
@@ -215,7 +215,7 @@ export default function ConnectPeoplePage(): ReactElement {
                 <div className='flex items-start justify-between gap-2'>
                   <div className='min-w-0 flex-1'>
                     <div className='flex items-center gap-1'>
-                      <Link href={`/imitation-x/user/${user.id}`} className='truncate text-sm font-bold hover:underline'>
+                      <Link href={`/gekaixing/user/${user.id}`} className='truncate text-sm font-bold hover:underline'>
                         {user.name}
                       </Link>
                     </div>
@@ -250,7 +250,7 @@ export default function ConnectPeoplePage(): ReactElement {
                   </Button>
                 </div>
 
-                <Link href={`/imitation-x/user/${user.id}`}>
+                <Link href={`/gekaixing/user/${user.id}`}>
                   <p className='mt-1 line-clamp-2 text-sm text-foreground/85'>{user.bio ?? ''}</p>
                 </Link>
               </div>

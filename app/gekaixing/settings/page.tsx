@@ -30,17 +30,17 @@ export default function Page() {
         <SettingLi
           icon={<Palette />}
           text={t("theme")}
-          href='/imitation-x/settings/theme'
+          href='/gekaixing/settings/theme'
         ></SettingLi>
         <SettingLi
           icon={<Languages />}
           text={t("language")}
-          href='/imitation-x/settings/language'
+          href='/gekaixing/settings/language'
         ></SettingLi>
         <SettingLi
           icon={<HandHelping/>}
           text={t("help")}
-          href='/imitation-x/help'
+          href='/gekaixing/help'
         ></SettingLi>
         <SettingLi
           icon={<Info></Info>}

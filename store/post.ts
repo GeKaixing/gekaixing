@@ -1,4 +1,4 @@
-import { Post } from "@/app/imitation-x/page";
+import { Post } from "@/app/gekaixing/page";
 import { create } from "zustand";
 
 type Store = {

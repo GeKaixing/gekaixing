@@ -171,7 +171,7 @@ export async function POST(request: Request) {
       },
     });
 
-    revalidatePath("/imitation-x");
+    revalidatePath("/gekaixing");
     if (!parentId) {
       await invalidateAuthorAudienceFeed(user_id);
       await logUserAction({
@@ -207,7 +207,7 @@ export async function DELETE(request: Request) {
       where: { id },
     });
 
-    revalidatePath("/imitation-x");
+    revalidatePath("/gekaixing");
     await invalidateUserHomeFeed(deleted.authorId);
 
     return NextResponse.json({ data: deleted, success: true });

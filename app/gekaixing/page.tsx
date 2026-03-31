@@ -54,7 +54,7 @@ async function getFeed(limit: number = 20): Promise<FeedPage> {
       8000,
     );
   } catch (error) {
-    console.error("Failed to load imitation-x feed:", error);
+    console.error("Failed to load gekaixing feed:", error);
     return getFallbackFeed(userId, limit);
   }
 }

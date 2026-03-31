@@ -31,8 +31,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${siteUrl}/`, lastModified: now, changeFrequency: "daily", priority: 1 },
     { url: `${siteUrl}/blog`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
-    { url: `${siteUrl}/imitation-x`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
-    { url: `${siteUrl}/imitation-x/explore`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    { url: `${siteUrl}/gekaixing`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
+    { url: `${siteUrl}/gekaixing/explore`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
     { url: `${siteUrl}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${siteUrl}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.4 },
     { url: `${siteUrl}/tos`, lastModified: now, changeFrequency: "yearly", priority: 0.4 },
@@ -68,14 +68,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ])
 
   const postRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: `${siteUrl}/imitation-x/status/${post.id}`,
+    url: `${siteUrl}/gekaixing/status/${post.id}`,
     lastModified: post.updatedAt,
     changeFrequency: "weekly",
     priority: 0.7,
   }))
 
   const userRoutes: MetadataRoute.Sitemap = users.map((user) => ({
-    url: `${siteUrl}/imitation-x/user/${user.id}`,
+    url: `${siteUrl}/gekaixing/user/${user.id}`,
     lastModified: user.updatedAt,
     changeFrequency: "weekly",
     priority: 0.6,

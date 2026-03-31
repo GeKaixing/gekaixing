@@ -2,7 +2,7 @@
 import { postStore } from '@/store/post'
 import { useEffect } from 'react'
 import PostList from './PostList'
-import { Post } from '@/app/imitation-x/page'
+import { Post } from '@/app/gekaixing/page'
 
 type PostStoreProps = {
   data: Post[]

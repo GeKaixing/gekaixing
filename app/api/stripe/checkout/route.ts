@@ -53,8 +53,8 @@ export async function POST(request: Request) {
       },
     ],
 
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/imitation-x`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/imitation-x/premium`,
+    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/gekaixing`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/gekaixing/premium`,
   });
 
   return NextResponse.json({ url: session.url });

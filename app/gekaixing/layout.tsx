@@ -56,7 +56,7 @@ export default async function RootLayout({
     } = await withTimeout(supabase.auth.getUser(), 5000);
     userId = user?.id ?? null;
   } catch (error) {
-    console.error("Failed to resolve session user in imitation-x layout:", error);
+    console.error("Failed to resolve session user in gekaixing layout:", error);
   }
 
   let userInfo: userResult | null = null;
@@ -79,7 +79,7 @@ export default async function RootLayout({
         5000,
       );
     } catch (error) {
-      console.error("Failed to load profile in imitation-x layout:", error);
+      console.error("Failed to load profile in gekaixing layout:", error);
     }
   }
 
@@ -96,7 +96,7 @@ export default async function RootLayout({
         5000,
       );
     } catch (error) {
-      console.error("Failed to count mentions in imitation-x layout:", error);
+      console.error("Failed to count mentions in gekaixing layout:", error);
     }
   }
 

@@ -66,12 +66,12 @@ export default async function Page(): Promise<React.JSX.Element> {
             <p className="mt-6 max-w-[560px] text-lg leading-8 text-zinc-600 dark:text-zinc-300">{t("hero.description")}</p>
 
             <div className="mt-10 flex flex-wrap gap-3">
-              <Link href="/imitation-x">
+              <Link href="/gekaixing">
                 <Button className="h-12 rounded-full bg-zinc-950 px-8 font-semibold text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200">
                   {t("hero.primaryCta")}
                 </Button>
               </Link>
-              <Link href="/imitation-x/explore">
+              <Link href="/gekaixing/explore">
                 <Button
                   variant="outline"
                   className="h-12 rounded-full border-zinc-300 bg-white px-8 font-semibold text-zinc-900 hover:bg-zinc-100 dark:border-white/20 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"

@@ -8,7 +8,7 @@ export default function SettingLi({
     icon2 = <ChevronRight className="text-muted-foreground hover:text-foreground" />,
     text,
     className,
-    href = "/imitation-x/settings/account"
+    href = "/gekaixing/settings/account"
 }: {
     icon2?: React.ReactNode;
     icon: React.ReactNode;

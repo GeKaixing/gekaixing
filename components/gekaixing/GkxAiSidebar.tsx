@@ -22,7 +22,7 @@ export default function GkxAiSidebar({
 
   // 判断当前 session 是否 active
   const isActiveSession = (sessionId: string) => {
-    return pathname === `/imitation-x/gkx/${sessionId}`
+    return pathname === `/gekaixing/gkx/${sessionId}`
   }
 
   // store
@@ -39,7 +39,7 @@ export default function GkxAiSidebar({
   }, [sessions, setSessions])
 
   const handleNewSession = () => {
-    router.push(`/imitation-x/gkx`)
+    router.push(`/gekaixing/gkx`)
   }
 
   async function handleDeleteSession(sessionId: string): Promise<void> {
@@ -63,7 +63,7 @@ export default function GkxAiSidebar({
       toast.success(t("deleteSuccess"))
 
       if (isActiveSession(sessionId)) {
-        router.push("/imitation-x/gkx")
+        router.push("/gekaixing/gkx")
       }
     } catch (error) {
       console.error(t("deleteFailed"), error)
@@ -121,7 +121,7 @@ export default function GkxAiSidebar({
                   )}
                 >
                   <Link
-                    href={`/imitation-x/gkx/${session.id}`}
+                    href={`/gekaixing/gkx/${session.id}`}
                     className="flex min-w-0 flex-1 items-center gap-3"
                   >
                     <MessageSquare

@@ -66,7 +66,7 @@ export default function Navbar({ user }: NavbarProps) {
                     ) : (
                         <div 
                             className='flex items-center gap-2 cursor-pointer hover:bg-muted/70 rounded-full px-2 py-1 transition-colors'
-                            onClick={() => router.push(`/imitation-x/user/${userId}`)}
+                            onClick={() => router.push(`/gekaixing/user/${userId}`)}
                         >
                             <Avatar className='w-8 h-8'>
                                 <AvatarImage src={avatarUrl} />

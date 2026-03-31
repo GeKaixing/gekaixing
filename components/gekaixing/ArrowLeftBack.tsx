@@ -17,7 +17,7 @@ export default function ArrowLeftBack({ className, children, name='返回' }: {
                 <ArrowLeft
                     className={className}
                     onClick={() => {
-                        router.replace('/imitation-x')
+                        router.replace('/gekaixing')
                     }} />
                 {/* <ArrowLeft className="w-5 h-5" /> */}
             </div>

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 export default function ShowOnGkx({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const isGkxRoute =
-    pathname === "/imitation-x/gkx" || pathname.startsWith("/imitation-x/gkx/")
+    pathname === "/gekaixing/gkx" || pathname.startsWith("/gekaixing/gkx/")
 
   if (!isGkxRoute) return null
 

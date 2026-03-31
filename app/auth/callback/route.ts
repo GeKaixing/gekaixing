@@ -23,10 +23,10 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
 export async function GET(request: Request): Promise<NextResponse> {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  let next = searchParams.get("next") ?? "/imitation-x";
+  let next = searchParams.get("next") ?? "/gekaixing";
 
   if (!next.startsWith("/")) {
-    next = "/imitation-x";
+    next = "/gekaixing";
   }
 
   if (!code) {

@@ -86,7 +86,7 @@ export async function generateMetadata({
     const excerpt = buildExcerpt(post.content)
     const title = t('titleTemplate', { authorName })
     const description = excerpt || t('fallbackDescription')
-    const url = `${siteUrl}/imitation-x/status/${post.id}`
+    const url = `${siteUrl}/gekaixing/status/${post.id}`
 
     return {
         title,
