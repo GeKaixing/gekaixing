@@ -31,7 +31,6 @@ import { postStore } from "@/store/post"
 import { postModalStore } from "@/store/postModal"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { useTranslations } from "next-intl"
-import { useLocale } from "next-intl"
 
 async function publishPost({
   user_id,
@@ -65,25 +64,6 @@ type MentionToken = {
   query: string
   from: number
   to: number
-}
-
-function buildParagraphContent(text: string): Content {
-  const rows = text
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0)
-
-  if (!rows.length) {
-    return ""
-  }
-
-  return {
-    type: "doc",
-    content: rows.map((line) => ({
-      type: "paragraph",
-      content: [{ type: "text", text: line }],
-    })),
-  }
 }
 
 function getMentionToken(editor: Editor): MentionToken | null {
@@ -127,7 +107,6 @@ export default function EditPost({ onClose }: EditPostProps) {
   const [editor, setEditor] = useState<Editor | null>(null)
   const [mentionToken, setMentionToken] = useState<MentionToken | null>(null)
   const [mentionUsers, setMentionUsers] = useState<MentionUser[]>([])
-  const [isGeneratingAiPost, setIsGeneratingAiPost] = useState(false)
 
   // ⭐ 正确使用 store
   const { isOpen, closeModal, openModal } = postModalStore()
@@ -144,9 +123,6 @@ export default function EditPost({ onClose }: EditPostProps) {
   const bucketName = "images"
 
   const t = useTranslations('EditPost')
-  const locale = useLocale()
-  const aiGenerateSuccessText = locale === "zh-CN" ? "AI草稿已生成" : "AI draft generated"
-  const aiGenerateFailedText = locale === "zh-CN" ? "AI生成失败" : "Failed to generate AI draft"
 
   // 自动删除未保存图片
   useEffect(() => {
@@ -253,67 +229,6 @@ export default function EditPost({ onClose }: EditPostProps) {
     }
   }
 
-  async function generateAiPost() {
-    if (!id) {
-      setLogin(true)
-      return
-    }
-
-    if (isGeneratingAiPost) {
-      return
-    }
-
-    setIsGeneratingAiPost(true)
-    try {
-      const promptSource = editor?.getText().trim() || (typeof value === "string" ? value : "")
-
-      const response = await fetch("/api/post/ai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: promptSource,
-          locale,
-        }),
-      })
-
-      const data = (await response.json()) as {
-        content?: string
-        error?: string
-        warning?: string
-        source?: string
-      }
-
-      if (!response.ok || !data.content) {
-        throw new Error(
-          data.error || `Generate post failed (status: ${response.status})`
-        )
-      }
-
-      if (!editor) {
-        setValue(data.content)
-        if (data.source === "local-fallback" && data.warning) {
-          toast.warning(data.warning)
-        }
-        toast.success(aiGenerateSuccessText)
-        return
-      }
-
-      editor.commands.setContent(buildParagraphContent(data.content))
-      setMentionUsers([])
-      setMentionToken(null)
-      if (data.source === "local-fallback" && data.warning) {
-        toast.warning(data.warning)
-      }
-      toast.success(aiGenerateSuccessText)
-    } catch (error) {
-      const message = error instanceof Error ? error.message : aiGenerateFailedText
-      console.error("Failed to generate AI post:", error)
-      toast.error(message || aiGenerateFailedText)
-    } finally {
-      setIsGeneratingAiPost(false)
-    }
-  }
-
   function handleSelectMention(user: MentionUser): void {
     if (!editor || !mentionToken) {
       return
@@ -357,8 +272,6 @@ export default function EditPost({ onClose }: EditPostProps) {
           <MinimalTiptapEditor
             status={status}
             publish={publish}
-            onAiGenerate={generateAiPost}
-            aiGenerating={isGeneratingAiPost}
             value={value}
             onChange={setValue}
             onEditorReady={setEditor}

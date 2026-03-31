@@ -97,13 +97,15 @@ const t = useTranslations('EditPost')
         />
       </div>
       <div className="flex items-center gap-2">
-        <Button
-          onClick={onAiGenerate}
-          className="!w-[88px] !max-w-none"
-          disabled={aiGenerating}
-        >
-          {aiButtonLabel}
-        </Button>
+        {onAiGenerate ? (
+          <Button
+            onClick={onAiGenerate}
+            className="!w-[88px] !max-w-none"
+            disabled={aiGenerating}
+          >
+            {aiButtonLabel}
+          </Button>
+        ) : null}
         <Button onClick={publish} className={clsx('!w-16 !max-w-2xs', {
           '!bg-black': hasContent,
           '!text-white': hasContent

@@ -40,15 +40,6 @@ function buildPromptText(prompt: string, locale: "zh-CN" | "en"): string {
   ].join("\n");
 }
 
-function buildLocalDraft(prompt: string, locale: "zh-CN" | "en"): string {
-  const topic = prompt.slice(0, 40);
-  if (locale === "zh-CN") {
-    return `今天在想一件事：${topic}。先把这个想法记下来，欢迎大家聊聊你们的看法。`;
-  }
-
-  return `Quick thought today: ${topic}. Dropping this here first, curious how you see it.`;
-}
-
 export async function POST(request: Request): Promise<Response> {
   try {
     const supabase = await createClient();
@@ -66,13 +57,13 @@ export async function POST(request: Request): Promise<Response> {
     const promptText = buildPromptText(prompt, locale);
 
     if (!hasGeminiApiKey()) {
-      const localDraft = buildLocalDraft(prompt, locale);
-      return NextResponse.json({
-        content: cleanOutput(localDraft),
-        success: true,
-        source: "local-fallback",
-        warning: "Missing Gemini API key, local fallback used",
-      });
+      return NextResponse.json(
+        {
+          error: "Gemini API key is not configured",
+          success: false,
+        },
+        { status: 503 }
+      );
     }
 
     try {
@@ -90,16 +81,16 @@ export async function POST(request: Request): Promise<Response> {
 
       return NextResponse.json({ content, success: true, source: `gemini:${model}` });
     } catch (error) {
-      const localDraft = buildLocalDraft(prompt, locale);
       const warning =
         error instanceof Error ? error.message : "Gemini request failed";
 
-      return NextResponse.json({
-        content: cleanOutput(localDraft),
-        success: true,
-        source: "local-fallback",
-        warning,
-      });
+      return NextResponse.json(
+        {
+          error: warning,
+          success: false,
+        },
+        { status: 502 }
+      );
     }
   } catch (error) {
     const message =

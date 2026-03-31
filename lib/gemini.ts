@@ -11,7 +11,7 @@ const geminiApiKey =
   process.env.GOOGLE_API_KEY?.trim() ||
   process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ||
   "";
-
+console.log("Gemini API Key configured:", geminiApiKey);
 let geminiClient: GoogleGenAI | null = null;
 
 function getGeminiClient(): GoogleGenAI {
