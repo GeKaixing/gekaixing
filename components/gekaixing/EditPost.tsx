@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useRef, useState } from "react"
 import {
   Dialog,
   DialogContent,
@@ -33,13 +33,20 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { useTranslations } from "next-intl"
 import { useLocale } from "next-intl"
 import { useRouter } from "next/navigation"
+import { uploadMediaToSupabase } from "@/utils/function/uploadMediaToSupabase"
+import { Loader2, Music2, Video } from "lucide-react"
+import { ToolbarButton } from "../ui/minimal-tiptap/components/toolbar-button"
 
 async function publishPost({
   user_id,
   value,
+  videoUrl,
+  audioUrl,
 }: {
   user_id: string
   value: string
+  videoUrl: string | null
+  audioUrl: string | null
 }) {
   return await fetch("/api/post", {
     method: "POST",
@@ -47,6 +54,8 @@ async function publishPost({
     body: JSON.stringify({
       user_id,
       content: value,
+      videoUrl,
+      audioUrl,
     }),
   })
 }
@@ -104,6 +113,37 @@ async function searchUsers(query: string): Promise<MentionUser[]> {
   }
 }
 
+async function getVideoDimensions(file: File): Promise<{ width: number; height: number } | null> {
+  return await new Promise((resolve) => {
+    const objectUrl = URL.createObjectURL(file)
+    const video = document.createElement("video")
+    video.preload = "metadata"
+    video.src = objectUrl
+
+    const cleanup = (): void => {
+      URL.revokeObjectURL(objectUrl)
+      video.removeAttribute("src")
+      video.load()
+    }
+
+    video.onloadedmetadata = () => {
+      const width = video.videoWidth
+      const height = video.videoHeight
+      cleanup()
+      if (!width || !height) {
+        resolve(null)
+        return
+      }
+      resolve({ width, height })
+    }
+
+    video.onerror = () => {
+      cleanup()
+      resolve(null)
+    }
+  })
+}
+
 export default function EditPost({ onClose }: EditPostProps) {
   const [value, setValue] = useState<Content>("")
   const [editor, setEditor] = useState<Editor | null>(null)
@@ -118,12 +158,19 @@ export default function EditPost({ onClose }: EditPostProps) {
   const [saved, setSaved] = useState(false)
   const [status, setStatus] = useState(false)
   const [aiGenerating, setAiGenerating] = useState(false)
+  const [uploadedMediaUrls, setUploadedMediaUrls] = useState<string[]>([])
+  const [videoUploading, setVideoUploading] = useState(false)
+  const [audioUploading, setAudioUploading] = useState(false)
+  const videoInputRef = useRef<HTMLInputElement | null>(null)
+  const audioInputRef = useRef<HTMLInputElement | null>(null)
+  const wasOpenRef = useRef<boolean>(false)
 
   const { poset_images } = post_imagesStore()
   const supabase = createClient()
   const { email, id, user_avatar, name, userid } = userStore()
 
   const bucketName = "images"
+  const mediaBucketName = "post-media"
 
   const t = useTranslations('EditPost')
   const locale = useLocale()
@@ -131,7 +178,14 @@ export default function EditPost({ onClose }: EditPostProps) {
 
   // 自动删除未保存图片
   useEffect(() => {
-    if (!isOpen && poset_images.length !== 0 && !saved) {
+    const isClosing = wasOpenRef.current && !isOpen
+    wasOpenRef.current = isOpen
+
+    if (!isClosing) {
+      return
+    }
+
+    if (poset_images.length !== 0 && !saved) {
       poset_images.forEach((image) => {
         const filePath = image.split("/images/")[1]
 
@@ -143,13 +197,19 @@ export default function EditPost({ onClose }: EditPostProps) {
           })
       })
     }
-
-    if (!isOpen) {
-      setValue("")
-      setSaved(false)
-      setMentionUsers([])
-      setMentionToken(null)
+    if (!saved) {
+      uploadedMediaUrls.forEach((url) => {
+        void deleteMediaByUrl(url)
+      })
     }
+
+    setValue("")
+    setSaved(false)
+    setMentionUsers([])
+    setMentionToken(null)
+    setUploadedMediaUrls([])
+    setVideoUploading(false)
+    setAudioUploading(false)
   }, [isOpen])
 
   useEffect(() => {
@@ -183,6 +243,32 @@ export default function EditPost({ onClose }: EditPostProps) {
     onClose?.()
   }
 
+  async function deleteMediaByUrl(url: string | null): Promise<void> {
+    if (!url) {
+      return
+    }
+
+    const key = `${mediaBucketName}/`
+    const startIndex = url.indexOf(key)
+    if (startIndex === -1) {
+      return
+    }
+
+    const filePath = url.slice(startIndex + key.length)
+    if (!filePath) {
+      return
+    }
+
+    try {
+      const { error } = await supabase.storage.from(mediaBucketName).remove([filePath])
+      if (error) {
+        console.error("删除媒体失败:", error)
+      }
+    } catch (error) {
+      console.error("删除媒体失败:", error)
+    }
+  }
+
   function hasPublishableContent(content: Content): boolean {
     if (typeof content !== "string") {
       return false
@@ -190,7 +276,94 @@ export default function EditPost({ onClose }: EditPostProps) {
 
     const plainText = content.replace(/<[^>]*>/g, " ").replace(/\s+/g, "").trim()
     const hasYouTubeNode = content.includes("data-youtube-embed")
-    return plainText.length > 0 || hasYouTubeNode
+    const hasVideoNode = content.includes("data-video-embed")
+    const hasAudioNode = content.includes("data-audio-embed")
+    return plainText.length > 0 || hasYouTubeNode || hasVideoNode || hasAudioNode
+  }
+
+  function extractEmbeddedMediaUrls(content: string): { videoUrl: string | null; audioUrl: string | null; allUrls: string[] } {
+    const videoMatch = /<video\b[^>]*\ssrc=["']([^"']+)["'][^>]*>/i.exec(content)
+    const audioMatch = /<audio\b[^>]*\ssrc=["']([^"']+)["'][^>]*>/i.exec(content)
+    const allMatches = Array.from(content.matchAll(/<(?:video|audio)\b[^>]*\ssrc=["']([^"']+)["'][^>]*>/gi))
+    const allUrls = allMatches
+      .map((match) => match[1] ?? "")
+      .filter((url) => url.length > 0)
+
+    return {
+      videoUrl: videoMatch?.[1] ?? null,
+      audioUrl: audioMatch?.[1] ?? null,
+      allUrls,
+    }
+  }
+
+  async function handleMediaUpload(
+    file: File,
+    type: "video" | "audio"
+  ): Promise<void> {
+    const isVideo = type === "video"
+    const isValidType = isVideo ? file.type.startsWith("video/") : file.type.startsWith("audio/")
+    if (!isValidType) {
+      toast.error(t(isVideo ? "videoTypeError" : "audioTypeError"))
+      return
+    }
+
+    if (file.size > 100 * 1024 * 1024) {
+      toast.error(t("mediaSizeError"))
+      return
+    }
+
+    const videoDimensions = isVideo ? await getVideoDimensions(file) : null
+
+    if (isVideo) {
+      setVideoUploading(true)
+    } else {
+      setAudioUploading(true)
+    }
+
+    try {
+      const uploadedUrl = await uploadMediaToSupabase(file, "post-media", type)
+      if (!uploadedUrl) {
+        toast.error(t("mediaUploadFailed"))
+        return
+      }
+
+      if (isVideo) {
+        editor
+          ?.chain()
+          .focus()
+          .insertVideoEmbed(uploadedUrl, videoDimensions?.width, videoDimensions?.height)
+          .run()
+      } else {
+        editor?.chain().focus().insertAudioEmbed(uploadedUrl).run()
+      }
+
+      setUploadedMediaUrls((prev) => (prev.includes(uploadedUrl) ? prev : [...prev, uploadedUrl]))
+    } catch (error) {
+      console.error(`Failed to upload ${type}:`, error)
+      toast.error(t("mediaUploadFailed"))
+    } finally {
+      if (isVideo) {
+        setVideoUploading(false)
+      } else {
+        setAudioUploading(false)
+      }
+    }
+  }
+
+  async function handleVideoChange(event: ChangeEvent<HTMLInputElement>): Promise<void> {
+    const file = event.target.files?.[0]
+    if (file) {
+      await handleMediaUpload(file, "video")
+    }
+    event.target.value = ""
+  }
+
+  async function handleAudioChange(event: ChangeEvent<HTMLInputElement>): Promise<void> {
+    const file = event.target.files?.[0]
+    if (file) {
+      await handleMediaUpload(file, "audio")
+    }
+    event.target.value = ""
   }
 
   function extractPlainTextFromHtml(html: string): string {
@@ -323,18 +496,29 @@ export default function EditPost({ onClose }: EditPostProps) {
       setLogin(true)
       return
     }
+    if (!hasPublishableContent(value)) {
+      return
+    }
+    if (videoUploading || audioUploading) {
+      toast.error(t("mediaUploading"))
+      return
+    }
 
     setStatus(true)
+
+    const { videoUrl, audioUrl, allUrls } = extractEmbeddedMediaUrls(value as string)
 
     const result = await publishPost({
       user_id: id,
       value: value as string,
+      videoUrl,
+      audioUrl,
     })
 
     const data = await result.json()
     const unusedPictures = findUnusedUrls(value as string, poset_images)
 
-  if (data.success) {
+    if (data.success) {
       postStore.getState().addPost({
         id: data.data[0]["id"],
         user_id: id,
@@ -344,6 +528,7 @@ export default function EditPost({ onClose }: EditPostProps) {
         user_userid: userid,
         content: value as string,
         videoUrl: data.data[0]["videoUrl"] ?? null,
+        audioUrl: data.data[0]["audioUrl"] ?? null,
         createdAt: new Date(),
         isPremium: false,
         like: 0,
@@ -359,6 +544,9 @@ export default function EditPost({ onClose }: EditPostProps) {
       setStatus(false)
       closeModal()
       setValue("")
+      const unusedMedia = uploadedMediaUrls.filter((url) => !allUrls.includes(url))
+      await Promise.all(unusedMedia.map((url) => deleteMediaByUrl(url)))
+      setUploadedMediaUrls([])
       toast.success(t("publishSuccess"))
     } else {
       setStatus(false)
@@ -392,7 +580,7 @@ export default function EditPost({ onClose }: EditPostProps) {
         open={isOpen}
         onOpenChange={(nextOpen) => {
           // 关闭时有内容 → 拦截
-          if (!nextOpen && value !== "") {
+          if (!nextOpen && hasPublishableContent(value)) {
             setIsOpenAlertDialog(true)
             return
           }
@@ -426,6 +614,45 @@ export default function EditPost({ onClose }: EditPostProps) {
             autofocus
             editable
             editorClassName="focus:outline-hidden"
+            toolbarLeftContent={
+              <div className="ml-2 flex items-center gap-1 overflow-x-auto whitespace-nowrap">
+                  <input
+                    ref={videoInputRef}
+                    type="file"
+                    accept="video/*"
+                    className="hidden"
+                    onChange={(event) => void handleVideoChange(event)}
+                  />
+                  <input
+                    ref={audioInputRef}
+                    type="file"
+                    accept="audio/*"
+                    className="hidden"
+                    onChange={(event) => void handleAudioChange(event)}
+                  />
+                  <ToolbarButton
+                    type="button"
+                    size="sm"
+                    onClick={() => videoInputRef.current?.click()}
+                    disabled={videoUploading}
+                    tooltip={t("uploadVideo")}
+                    aria-label={t("uploadVideo")}
+                  >
+                    {videoUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Video className="h-4 w-4" />}
+                  </ToolbarButton>
+                  <ToolbarButton
+                    type="button"
+                    size="sm"
+                    onClick={() => audioInputRef.current?.click()}
+                    disabled={audioUploading}
+                    tooltip={t("uploadAudio")}
+                    aria-label={t("uploadAudio")}
+                  >
+                    {audioUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Music2 className="h-4 w-4" />}
+                  </ToolbarButton>
+
+              </div>
+            }
           />
           {mentionUsers.length > 0 && mentionToken ? (
             <div className="mt-2 max-h-56 overflow-y-auto rounded-md border border-border bg-background">

@@ -184,6 +184,7 @@ async function getScopedFeed(scope: FeedScope, targetId: string, viewerId: strin
                 id: true,
                 content: true,
                 videoUrl: true,
+                audioUrl: true,
                 createdAt: true,
                 likeCount: true,
                 starCount: true,
@@ -228,6 +229,7 @@ async function getScopedFeed(scope: FeedScope, targetId: string, viewerId: strin
                 id: post.id,
                 content: post.content,
                 videoUrl: post.videoUrl ?? null,
+                audioUrl: post.audioUrl ?? null,
                 createdAt: post.createdAt,
                 user_id: post.author.id,
                 user_name: post.author.name,
@@ -328,6 +330,7 @@ export default async function Page({ params }: { params: Promise<{ id: string[] 
             <div className='px-4'>
 
                 <User_background_bio
+                    viewedUserId={user?.id}
                     name={user?.name}
                     avatar={user?.avatar}
                     briefIntroduction={user?.briefIntroduction}

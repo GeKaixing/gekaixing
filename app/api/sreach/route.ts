@@ -45,6 +45,7 @@ export async function GET(request: Request) {
     user_userid: post.author?.userid || "",
     content: post.content,
     videoUrl: post.videoUrl ?? null,
+    audioUrl: post.audioUrl ?? null,
     like: post._count?.likes || 0,
     star: post._count?.bookmarks || 0,
     reply_count: post._count?.replies || 0,

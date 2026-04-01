@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { getMentionHrefFromTarget, renderMentionHtml } from "@/utils/function/mention"
 
-export default function PostCard({
+function PostCard({
     id,
     user_id,
     user_name,
@@ -29,6 +29,7 @@ export default function PostCard({
     user_userid,
     content,
     videoUrl,
+    audioUrl,
     like,
     star,
     reply,
@@ -59,8 +60,15 @@ export default function PostCard({
     }, [bookmarkedByMe, like, likedByMe, share, star])
 
     const contentWithMentions = React.useMemo(() => renderMentionHtml(content), [content])
-    const hasEmbeddedYouTubeNode = React.useMemo(() => {
-        return content.includes("data-youtube-embed") || content.includes("<iframe")
+    const hasEmbeddedMediaNode = React.useMemo(() => {
+        return (
+            content.includes("data-youtube-embed") ||
+            content.includes("data-video-embed") ||
+            content.includes("data-audio-embed") ||
+            content.includes("<iframe") ||
+            content.includes("<video") ||
+            content.includes("<audio")
+        )
     }, [content])
     const formatRate = (value: number): string => `${value.toFixed(2)}%`
 
@@ -270,7 +278,7 @@ export default function PostCard({
 
             <CardContent>
                 <div onClick={handleContentClick} dangerouslySetInnerHTML={{ __html: contentWithMentions }} />
-                {videoUrl && !hasEmbeddedYouTubeNode ? (
+                {videoUrl && !hasEmbeddedMediaNode ? (
                     <div className="mt-3 overflow-hidden rounded-xl border border-border">
                         <div className="aspect-video w-full">
                             <iframe
@@ -282,6 +290,13 @@ export default function PostCard({
                                 allowFullScreen
                             />
                         </div>
+                    </div>
+                ) : null}
+                {audioUrl && !hasEmbeddedMediaNode ? (
+                    <div className="mt-3 overflow-hidden rounded-xl border border-border p-3">
+                    <audio className="w-full" controls preload="none">
+                      <source src={audioUrl} />
+                    </audio>
                     </div>
                 ) : null}
                 {metrics ? (
@@ -343,3 +358,33 @@ export default function PostCard({
         </Card>
     )
 }
+
+function arePostCardPropsEqual(prev: Post, next: Post): boolean {
+    return (
+        prev.id === next.id &&
+        prev.user_id === next.user_id &&
+        prev.user_name === next.user_name &&
+        prev.user_avatar === next.user_avatar &&
+        prev.user_userid === next.user_userid &&
+        prev.content === next.content &&
+        prev.videoUrl === next.videoUrl &&
+        prev.audioUrl === next.audioUrl &&
+        prev.like === next.like &&
+        prev.star === next.star &&
+        prev.reply === next.reply &&
+        prev.share === next.share &&
+        prev.likedByMe === next.likedByMe &&
+        prev.bookmarkedByMe === next.bookmarkedByMe &&
+        prev.sharedByMe === next.sharedByMe &&
+        prev.isPremium === next.isPremium &&
+        prev.metrics?.impressions === next.metrics?.impressions &&
+        prev.metrics?.postClicks === next.metrics?.postClicks &&
+        prev.metrics?.repliesReceived === next.metrics?.repliesReceived &&
+        prev.metrics?.profileEnters === next.metrics?.profileEnters &&
+        prev.metrics?.postClickRate === next.metrics?.postClickRate &&
+        prev.metrics?.replyRate === next.metrics?.replyRate &&
+        prev.metrics?.profileEnterRate === next.metrics?.profileEnterRate
+    )
+}
+
+export default React.memo(PostCard, arePostCardPropsEqual)

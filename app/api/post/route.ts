@@ -17,6 +17,7 @@ function transformPost(post: any) {
     user_userid: post.author?.userid || "",
     content: post.content,
     videoUrl: post.videoUrl ?? null,
+    audioUrl: post.audioUrl ?? null,
     like: post.likeCount || 0,
     star: 0,
     reply_count: post.replyCount || post._count?.replies || 0,
@@ -57,6 +58,7 @@ export async function GET(request: Request) {
         user_userid: post.author?.userid || "",
         content: post.content,
         videoUrl: post.videoUrl ?? null,
+        audioUrl: post.audioUrl ?? null,
         like: post._count?.likes || 0,
         star: post._count?.bookmarks || 0,
         reply_count: post._count?.replies || 0,
@@ -99,6 +101,7 @@ export async function GET(request: Request) {
           user_userid: post.author?.userid || "",
           content: post.content,
           videoUrl: post.videoUrl ?? null,
+          audioUrl: post.audioUrl ?? null,
           like: post._count?.likes || 0,
           star: post._count?.bookmarks || 0,
           reply_count: post._count?.replies || 0,
@@ -112,6 +115,7 @@ export async function GET(request: Request) {
             user_userid: reply.author?.userid || "",
             content: reply.content,
             videoUrl: reply.videoUrl ?? null,
+            audioUrl: reply.audioUrl ?? null,
             like: reply._count?.likes || 0,
             star: reply._count?.bookmarks || 0,
             reply_count: reply._count?.replies || 0,
@@ -147,6 +151,7 @@ export async function GET(request: Request) {
       user_userid: post.author?.userid || "",
       content: post.content,
       videoUrl: post.videoUrl ?? null,
+      audioUrl: post.audioUrl ?? null,
       like: post._count?.likes || 0,
       star: post._count?.bookmarks || 0,
       reply_count: post._count?.replies || 0,
@@ -173,14 +178,28 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { content, parentId, rootId, videoUrl: inputVideoUrl } = await request.json();
+    const {
+      content,
+      parentId,
+      rootId,
+      videoUrl: inputVideoUrl,
+      audioUrl: inputAudioUrl,
+    } = await request.json() as {
+      content: string;
+      parentId?: string | null;
+      rootId?: string | null;
+      videoUrl?: string | null;
+      audioUrl?: string | null;
+    };
     const containsEmbeddedYouTube = typeof content === "string" && content.includes("data-youtube-embed");
     const videoUrl = containsEmbeddedYouTube ? null : inputVideoUrl ?? extractYouTubeEmbedUrl(content);
+    const audioUrl = inputAudioUrl ?? null;
 
     const post = await prisma.post.create({
       data: {
         content,
         videoUrl,
+        audioUrl,
         authorId: user.id,
         parentId: parentId ?? null,
         rootId: rootId ?? null,

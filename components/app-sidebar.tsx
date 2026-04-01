@@ -13,7 +13,6 @@ import {
   IconCreditCard,
 } from "@tabler/icons-react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -59,13 +58,13 @@ const defaultUser: DashboardSidebarUser = {
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
   currentUser?: DashboardSidebarUser;
+  labels: Record<DashboardNavKey, string>;
+  brandLabel: string;
 };
 
-export function AppSidebar({ currentUser, ...props }: AppSidebarProps): React.JSX.Element {
-  const t = useTranslations("Dashboard.nav");
-
+export function AppSidebar({ currentUser, labels, brandLabel, ...props }: AppSidebarProps): React.JSX.Element {
   const navMain: SidebarItem[] = DASHBOARD_NAV_ITEMS.map((item) => ({
-    title: t(item.key),
+    title: labels[item.key],
     url: item.href,
     icon: ICON_MAP[item.key],
   }));
@@ -77,7 +76,7 @@ export function AppSidebar({ currentUser, ...props }: AppSidebarProps): React.JS
           <SidebarMenuItem>
             <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:p-1.5!">
               <Link href="/dashboard" className="font-bold">
-                {t("brand")}
+                {brandLabel}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

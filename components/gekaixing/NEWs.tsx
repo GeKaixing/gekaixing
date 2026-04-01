@@ -1,40 +1,96 @@
-"use client"
-import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
-async function NEWsFetch(url: string) {
-    return await fetch(url, {
-        next: {
-            revalidate: 60, // 以秒为单位，表示 60 秒内使用缓存
-        },
-        cache: 'force-cache', // 强制使用缓存（默认也可以不写）
-    })
-}
-export default function NEWs({ url }: { url: string }) {
-    const [data, setData] = useState([])
-    useEffect(() => {
-        async function Fetchs() {
-            const reslut = await NEWsFetch(url)
-            const data = await reslut.json()
-            if (data.success) {
-                setData(data.data)
-            }
-        }
-        Fetchs()
-    }, [url])
-    return data.length !== 0 && data.map((item: {
-        url: string;
-        source_name: string;
-        author: string;
-        title: string;
-    }, index) => (
-        <Link
-            href={item.url}
-            key={index}
-            className="flex flex-col justify-start rounded-2xl p-2 py-1 transition-colors hover:bg-muted/60"
-        >   <span className='text-xl font-semibold text-foreground'>{item.source_name}</span>
-            <span className='text-[16px] text-muted-foreground'>{item.author}</span>
-            <span className='text-foreground'>{item.title}</span>
-        </Link>
-    ))
+"use client";
 
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
+interface NewsItem {
+  url: string;
+  source_name: string;
+  title: string;
+  summary?: string;
+  author?: string;
+}
+
+interface NewsResponse {
+  success?: boolean;
+  data?: NewsItem[];
+  error?: string;
+}
+
+async function newsFetch(url: string): Promise<Response> {
+  return fetch(url, {
+    cache: "no-store",
+  });
+}
+
+export default function NEWs({ url }: { url: string }) {
+  const [data, setData] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadNews(): Promise<void> {
+      setLoading(true);
+      setError("");
+
+      try {
+        const result = await newsFetch(url);
+        const json = (await result.json()) as NewsResponse;
+        if (!result.ok || !json.success) {
+          throw new Error(json.error ?? "Failed to load news");
+        }
+
+        if (!cancelled) {
+          setData(Array.isArray(json.data) ? json.data : []);
+        }
+      } catch (fetchError) {
+        if (!cancelled) {
+          console.error(fetchError);
+          setData([]);
+          setError(fetchError instanceof Error ? fetchError.message : "Failed to load news");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadNews();
+    return () => {
+      cancelled = true;
+    };
+  }, [url]);
+
+  if (loading) {
+    return <div className="rounded-2xl border p-3 text-sm text-muted-foreground">加载中...</div>;
+  }
+
+  if (error) {
+    return <div className="rounded-2xl border p-3 text-sm text-muted-foreground">{error}</div>;
+  }
+
+  if (data.length === 0) {
+    return <div className="rounded-2xl border p-3 text-sm text-muted-foreground">暂无新闻</div>;
+  }
+
+  return (
+    <div className="space-y-1">
+      {data.map((item, index) => (
+        <Link
+          href={item.url}
+          key={`${item.url}-${index}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-col justify-start rounded-2xl p-2 py-2 transition-colors hover:bg-muted/60"
+        >
+          <span className="text-base font-semibold text-foreground">{item.source_name}</span>
+          <span className="text-foreground">{item.title}</span>
+          <span className="line-clamp-2 text-sm text-muted-foreground">{item.summary ?? item.author ?? ""}</span>
+        </Link>
+      ))}
+    </div>
+  );
 }

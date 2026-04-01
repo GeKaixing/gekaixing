@@ -15,6 +15,8 @@ import {
   ResetMarksOnEnter,
   FileHandler,
   YouTube,
+  VideoEmbed,
+  AudioEmbed,
 } from "../extensions"
 import { cn } from "@/lib/utils"
 import { fileToBase64, getOutput, randomId } from "../utils"
@@ -195,6 +197,8 @@ const createExtensions = ({
     ResetMarksOnEnter,
     CodeBlockLowlight,
     YouTube,
+    VideoEmbed,
+    AudioEmbed,
     Placeholder.configure({ placeholder: () => placeholder }),
   ])
 }

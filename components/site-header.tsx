@@ -3,25 +3,28 @@
 import { useMemo } from "react";
 
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
 
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { DASHBOARD_NAV_ITEMS } from "@/lib/dashboard/navigation";
+import { DASHBOARD_NAV_ITEMS, type DashboardNavKey } from "@/lib/dashboard/navigation";
 
-export function SiteHeader(): React.JSX.Element {
+type SiteHeaderProps = {
+  labels: Record<DashboardNavKey, string>;
+  fallbackTitle: string;
+};
+
+export function SiteHeader({ labels, fallbackTitle }: SiteHeaderProps): React.JSX.Element {
   const pathname = usePathname();
-  const t = useTranslations("Dashboard.nav");
 
   const title = useMemo(() => {
     const match = DASHBOARD_NAV_ITEMS.find((item) => item.href === pathname);
 
     if (!match) {
-      return t("fallbackTitle");
+      return fallbackTitle;
     }
 
-    return t(match.key);
-  }, [pathname, t]);
+    return labels[match.key];
+  }, [fallbackTitle, labels, pathname]);
 
   return (
     <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">

@@ -30,6 +30,7 @@ export interface MinimalTiptapProps
   onAiGenerate?: () => void
   aiGenerating?: boolean
   canPublish?: boolean
+  toolbarLeftContent?: ReactNode
   contentAfterEditor?: ReactNode
   className?: string
   editorContentClassName?: string
@@ -42,6 +43,7 @@ const Toolbar = ({
   canPublish,
   onAiGenerate,
   aiGenerating = false,
+  toolbarLeftContent,
 }: {
   editor: Editor
   publish?: () => void
@@ -49,6 +51,7 @@ const Toolbar = ({
   canPublish?: boolean
   onAiGenerate?: () => void
   aiGenerating?: boolean
+  toolbarLeftContent?: ReactNode
 }) => {
 const t = useTranslations('EditPost')
   const locale = useLocale()
@@ -63,7 +66,7 @@ const t = useTranslations('EditPost')
 
   return (
     <div className="border-border flex justify-between  h-12 shrink-0  border-b p-2">
-      <div className="flex w-max items-center gap-px">
+      <div className="flex min-w-0 flex-1 items-center gap-px overflow-x-auto">
         {/* <SectionOne editor={editor} activeLevels={[1, 2, 3, 4, 5, 6]} /> */}
 
         {/* <Separator orientation="vertical" className="mx-2" /> */}
@@ -80,6 +83,8 @@ const t = useTranslations('EditPost')
           ]}
           mainActionCount={3}
         />
+        {toolbarLeftContent}
+        
 
         {/* <Separator orientation="vertical" className="mx-2" />
 
@@ -111,7 +116,7 @@ const t = useTranslations('EditPost')
             {aiButtonLabel}
           </Button>
         ) : null}
-        <Button onClick={publish} className={clsx('!w-16 !max-w-2xs', {
+        <Button onClick={publish} disabled={!hasContent} className={clsx('!w-16 !max-w-2xs', {
           '!bg-black': hasContent,
           '!text-white': hasContent
         })}>{t("publish")}</Button>
@@ -129,6 +134,7 @@ export const MinimalTiptapEditor = ({
   onAiGenerate,
   aiGenerating,
   canPublish,
+  toolbarLeftContent,
   contentAfterEditor,
   className,
   editorContentClassName,
@@ -184,6 +190,7 @@ export const MinimalTiptapEditor = ({
           canPublish={canPublish}
           onAiGenerate={onAiGenerate}
           aiGenerating={aiGenerating}
+          toolbarLeftContent={toolbarLeftContent}
         />}
 
       <LinkBubbleMenu editor={editor} />

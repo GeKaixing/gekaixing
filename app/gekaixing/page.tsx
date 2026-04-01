@@ -54,7 +54,11 @@ async function getFallbackFeed(userId: string | null, limit: number): Promise<Fe
         where: { parentId: null },
         orderBy: { createdAt: "desc" },
         take: limit,
-        include: {
+        select: {
+          id: true,
+          content: true,
+          createdAt: true,
+          videoUrl: true,
           author: {
             select: {
               id: true,
@@ -104,6 +108,7 @@ async function getFallbackFeed(userId: string | null, limit: number): Promise<Fe
         id: post.id,
         content: post.content,
         videoUrl: post.videoUrl ?? null,
+        audioUrl: null,
         createdAt: post.createdAt,
         user_id: post.author.id,
         user_name: post.author.name,

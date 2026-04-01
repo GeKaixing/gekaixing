@@ -172,6 +172,7 @@ function formatRelativeTime(date: Date): string {
 }
 
 async function queryJobs(filters: {
+  authorId: string;
   keyword: string;
   location: string;
   company: string;
@@ -180,6 +181,12 @@ async function queryJobs(filters: {
   selectedEmploymentType: JobEmploymentType | "";
 }): Promise<JobRow[]> {
   const andFilters: Prisma.JobPostingWhereInput[] = [];
+
+  if (filters.authorId) {
+    andFilters.push({
+      authorId: filters.authorId,
+    });
+  }
 
   if (filters.keyword) {
     andFilters.push({
@@ -276,6 +283,7 @@ export default async function JobsPage({ searchParams }: { searchParams: SearchP
   };
 
   const keyword = cleanSearchValue(getSingleValue(params.keyword));
+  const authorId = cleanSearchValue(getSingleValue(params.authorId));
   const location = cleanSearchValue(getSingleValue(params.location));
   const company = cleanSearchValue(getSingleValue(params.company));
 
@@ -290,6 +298,7 @@ export default async function JobsPage({ searchParams }: { searchParams: SearchP
     : "";
 
   const jobs = await queryJobs({
+    authorId,
     keyword,
     location,
     company,

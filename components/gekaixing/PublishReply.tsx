@@ -114,6 +114,7 @@ export default function PublishReply({
             id: tempId,
             content: replyInput,
             videoUrl: extractYouTubeEmbedUrl(replyInput),
+            audioUrl: null,
             createdAt: new Date(),
 
             user_id: userId,
@@ -160,6 +161,8 @@ export default function PublishReply({
                 replaceReply(tempId, {
                     ...optimisticReply,
                     id: real.id,
+                    videoUrl: real.videoUrl ?? optimisticReply.videoUrl,
+                    audioUrl: real.audioUrl ?? null,
                     createdAt: new Date(real.createdAt),
                 })
             } else {

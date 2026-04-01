@@ -229,7 +229,12 @@ export default function PostList({
   const bottomSpacerHeight = Math.max(0, totalHeight - (offsets[endIndex + 1] ?? 0))
 
   useEffect(() => {
-    if (!hasMore || isLoading || totalHeight === 0) {
+    if (!hasMore || isLoading) {
+      return
+    }
+
+    if (posts.length === 0) {
+      void loadMore()
       return
     }
 
@@ -237,7 +242,7 @@ export default function PostList({
     if (totalHeight - viewportBottom <= LOAD_MORE_THRESHOLD_PX) {
       void loadMore()
     }
-  }, [hasMore, isLoading, loadMore, totalHeight, viewport.height, viewport.top])
+  }, [hasMore, isLoading, loadMore, posts.length, totalHeight, viewport.height, viewport.top])
 
   return (
     <div className="w-full" ref={listRef}>
@@ -261,6 +266,7 @@ export default function PostList({
             user_userid={item.user_userid}
             content={item.content}
             videoUrl={item.videoUrl}
+            audioUrl={item.audioUrl}
             like={item.like}
             star={item.star}
             reply={item.reply}

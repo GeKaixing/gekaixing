@@ -1538,7 +1538,8 @@ export const PostScalarFieldEnum = {
   replyCount: 'replyCount',
   shareCount: 'shareCount',
   starCount: 'starCount',
-  videoUrl: 'videoUrl'
+  videoUrl: 'videoUrl',
+  audioUrl: 'audioUrl'
 } as const
 
 export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]

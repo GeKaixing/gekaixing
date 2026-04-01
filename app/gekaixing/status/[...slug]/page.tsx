@@ -217,6 +217,7 @@ const getPost = async (id: string): Promise<FeedPost | null> => {
         id: post.id,
         content: post.content,
         videoUrl: post.videoUrl ?? null,
+        audioUrl: post.audioUrl ?? null,
         createdAt: post.createdAt,
 
         user_id: post.author.id,
@@ -288,6 +289,7 @@ async function getStatusReplies(postId: string, viewerId: string | undefined): P
                 id: reply.id,
                 content: reply.content,
                 videoUrl: reply.videoUrl ?? null,
+                audioUrl: reply.audioUrl ?? null,
                 createdAt: reply.createdAt,
                 user_id: reply.author.id,
                 user_name: reply.author.name,

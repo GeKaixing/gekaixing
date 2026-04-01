@@ -112,8 +112,11 @@ export async function GET(req: NextRequest) {
             skip: 1,
           }
         : {}),
-
-      include: {
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        videoUrl: true,
         author: {
           select: {
             id: true,
@@ -165,6 +168,7 @@ export async function GET(req: NextRequest) {
       id: post.id,
       content: post.content,
       videoUrl: post.videoUrl ?? null,
+      audioUrl: null,
       createdAt: post.createdAt,
 
       user_id: post.author.id,

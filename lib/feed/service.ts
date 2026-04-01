@@ -231,7 +231,11 @@ async function hydratePostsForPage(userId: string | null, pagePostIds: string[])
       id: { in: pagePostIds },
       parentId: null,
     },
-    include: {
+    select: {
+      id: true,
+      content: true,
+      createdAt: true,
+      videoUrl: true,
       author: {
         select: {
           id: true,
@@ -277,6 +281,7 @@ async function hydratePostsForPage(userId: string | null, pagePostIds: string[])
         id: post.id,
         content: post.content,
         videoUrl: post.videoUrl ?? null,
+        audioUrl: null,
         createdAt: post.createdAt,
         user_id: post.author.id,
         user_name: post.author.name,
@@ -359,7 +364,29 @@ export async function getHomeFeed(options: FeedQueryOptions): Promise<FeedPage> 
     }
   }
 
-  const posts = await hydratePostsForPage(options.userId, pageCache.postIds);
+  let posts = await hydratePostsForPage(options.userId, pageCache.postIds);
+
+  // If cached IDs no longer exist (deleted/filtered), recompute once to avoid blank feed pages.
+  if (posts.length === 0 && pageCache.postIds.length > 0) {
+    const refreshedPostIds = await recomputeAndCacheHomeFeed(options.userId);
+    const refreshedStartIndex = getStartIndex(refreshedPostIds, options.cursor);
+    const refreshedPagePostIds = refreshedPostIds.slice(refreshedStartIndex, refreshedStartIndex + limit);
+    const refreshedHasMore = refreshedStartIndex + limit < refreshedPostIds.length;
+    const refreshedNextCursor = refreshedHasMore
+      ? refreshedPagePostIds[refreshedPagePostIds.length - 1] ?? null
+      : null;
+
+    posts = await hydratePostsForPage(options.userId, refreshedPagePostIds);
+
+    return {
+      data: posts,
+      page: {
+        nextCursor: refreshedNextCursor,
+        hasMore: refreshedHasMore,
+      },
+    };
+  }
+
   return {
     data: posts,
     page: {

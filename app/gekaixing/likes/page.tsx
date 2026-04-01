@@ -83,6 +83,7 @@ async function getLikedFeed(userId: string, search: string, limit: number = 20):
       id: post.id,
       content: post.content,
       videoUrl: post.videoUrl ?? null,
+      audioUrl: post.audioUrl ?? null,
       createdAt: post.createdAt,
       user_id: post.author.id,
       user_name: post.author.name,

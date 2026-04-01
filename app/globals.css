@@ -125,6 +125,23 @@
   .mention-handle {
     @apply text-blue-500 font-semibold cursor-pointer no-underline hover:underline;
   }
+
+  /* Reserve video space early to avoid layout shift before media metadata loads. */
+  [data-video-embed] {
+    display: block;
+  }
+
+  [data-video-embed] > .video-frame {
+    width: 100%;
+  }
+
+  [data-video-embed] video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+  }
 }
 
 @layer components {

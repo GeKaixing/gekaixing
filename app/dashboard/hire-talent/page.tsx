@@ -1,7 +1,9 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
+import Link from "next/link";
 
 import { JobPostPublisher } from "@/components/dashboard/job-post-publisher";
-import { Badge } from "@/components/ui/badge";
+import { JobPostManager } from "@/components/dashboard/job-post-manager";
+import { Button } from "@/components/ui/button";
 import {
   CardAction,
   Card,
@@ -10,31 +12,37 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { getDashboardHireTalentData } from "@/lib/dashboard/service";
 import { getDashboardViewer } from "@/lib/dashboard/viewer";
 import { TrendPill } from "@/components/dashboard/trend-pill";
+import { Input } from "@/components/ui/input";
 
-function formatDate(date: Date, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(date);
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+
+function getSingleValue(value: string | string[] | undefined): string {
+  if (typeof value === "string") {
+    return value;
+  }
+  if (Array.isArray(value)) {
+    return value[0] ?? "";
+  }
+  return "";
 }
 
-export default async function HireTalentPage(): Promise<React.JSX.Element> {
+function cleanKeyword(value: string): string {
+  return value.replace(/\s+/g, " ").trim().slice(0, 100);
+}
+
+export default async function HireTalentPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}): Promise<React.JSX.Element> {
   const { userId } = await getDashboardViewer();
-  const [t, locale] = await Promise.all([getTranslations("Dashboard.talent"), getLocale()]);
-  const { summary, jobPosts } = await getDashboardHireTalentData(userId);
+  const params = await searchParams;
+  const keyword = cleanKeyword(getSingleValue(params.keyword));
+  const t = await getTranslations("Dashboard.talent");
+  const { summary, jobPosts } = await getDashboardHireTalentData(userId, { keyword });
 
   return (
     <>
@@ -86,54 +94,24 @@ export default async function HireTalentPage(): Promise<React.JSX.Element> {
             <CardTitle>{t("title")}</CardTitle>
             <CardDescription>{t("desc")}</CardDescription>
           </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t("table.title")}</TableHead>
-                  <TableHead>{t("table.company")}</TableHead>
-                  <TableHead>{t("table.locationType")}</TableHead>
-                  <TableHead>{t("table.seniority")}</TableHead>
-                  <TableHead>{t("table.employmentType")}</TableHead>
-                  <TableHead className="text-right">{t("table.time")}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {jobPosts.length ? (
-                  jobPosts.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell>
-                        <div className="font-medium">{item.title}</div>
-                        {item.description ? (
-                          <div className="mt-1 max-w-[420px] truncate text-xs text-muted-foreground">
-                            {item.description}
-                          </div>
-                        ) : null}
-                      </TableCell>
-                      <TableCell>{item.company}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{t(`locationType.${item.locationType}`)}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{t(`seniority.${item.seniority}`)}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{t(`employmentType.${item.employmentType}`)}</Badge>
-                      </TableCell>
-                      <TableCell className="text-right text-muted-foreground">
-                        {formatDate(item.createdAt, locale)}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center text-muted-foreground">
-                      {t("noData")}
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+          <CardContent className="space-y-4">
+            <form action="/dashboard/hire-talent" method="get" className="flex flex-col gap-3 md:flex-row md:items-center">
+              <Input
+                name="keyword"
+                defaultValue={keyword}
+                placeholder={t("searchPlaceholder")}
+                maxLength={100}
+              />
+              <div className="flex items-center gap-2">
+                <Button type="submit">{t("actions.search")}</Button>
+                {keyword ? (
+                  <Button type="button" variant="outline" asChild>
+                    <Link href="/dashboard/hire-talent">{t("actions.reset")}</Link>
+                  </Button>
+                ) : null}
+              </div>
+            </form>
+            <JobPostManager initialJobPosts={jobPosts} />
           </CardContent>
         </Card>
       </div>

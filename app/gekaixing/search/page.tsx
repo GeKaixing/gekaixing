@@ -33,6 +33,7 @@ export default async function Page({
                         user_userid: string,
                         content: string,
                         videoUrl: string | null,
+                        audioUrl: string | null,
                         like: number,
                         star: number,
                         reply_count: number,
@@ -47,6 +48,7 @@ export default async function Page({
                             user_userid={items.user_userid}
                             content={items.content}
                             videoUrl={items.videoUrl}
+                            audioUrl={items.audioUrl}
                             createdAt={new Date()}
                             like={items.like}
                             star={items.star}

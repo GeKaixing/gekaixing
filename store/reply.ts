@@ -4,6 +4,7 @@ export type ReplyItem = {
   id: string
   content: string
   videoUrl: string | null
+  audioUrl: string | null
   createdAt: Date
 
   user_id: string

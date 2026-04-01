@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import UserEditDialog from "./UserEditDialog"
 
 type UserBackgroundBioProps = {
+  viewedUserId?: string | null
   name?: string | null
   avatar?: string | null
   briefIntroduction?: string | null
@@ -20,6 +21,7 @@ type UserBackgroundBioProps = {
 }
 
 export default function User_background_bio({
+  viewedUserId,
   isPremium,
   name,
   avatar,
@@ -50,7 +52,14 @@ export default function User_background_bio({
       <div className="mb-2 flex items-center gap-2 text-2xl font-bold">
         {name}
         <div>{isPremium && <ShieldCheck className="h-4 w-4 text-blue-500" />}</div>
-        {isHiring ? <span className="text-sm font-semibold text-[#1D9BF0]">我们正在招人</span> : null}
+        {isHiring && viewedUserId ? (
+          <Link
+            href={`/gekaixing/jobs?authorId=${viewedUserId}`}
+            className="text-sm font-semibold text-[#1D9BF0] hover:underline"
+          >
+            我们正在招人
+          </Link>
+        ) : null}
       </div>
 
       {briefIntroduction ? (

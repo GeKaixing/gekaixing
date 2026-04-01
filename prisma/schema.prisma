@@ -65,6 +65,7 @@ model Post {
   shareCount Int          @default(0)
   starCount  Int          @default(0)
   videoUrl   String?
+  audioUrl   String?
   bookmarks  Bookmark[]
   likes      Like[]
   author     User         @relation(fields: [authorId], references: [id], onDelete: Cascade)

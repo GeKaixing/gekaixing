@@ -257,6 +257,7 @@ export default function ReplyList({ initialNextCursor = null, initialHasMore = f
             user_userid={item.user_userid}
             content={item.content}
             videoUrl={item.videoUrl}
+            audioUrl={item.audioUrl}
             like={item.like}
             star={item.star}
             reply={item.reply}

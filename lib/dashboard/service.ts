@@ -599,7 +599,14 @@ export const getDashboardAcquireHandlesData = cache(async (userId: string | null
   }
 });
 
-export const getDashboardHireTalentData = cache(async (userId: string | null): Promise<DashboardHireTalentData> => {
+function cleanDashboardKeyword(value: string): string {
+  return value.replace(/\s+/g, " ").trim().slice(0, 100);
+}
+
+export const getDashboardHireTalentData = cache(async (
+  userId: string | null,
+  options?: { keyword?: string }
+): Promise<DashboardHireTalentData> => {
   if (!userId) {
     return {
       summary: {
@@ -612,9 +619,19 @@ export const getDashboardHireTalentData = cache(async (userId: string | null): P
   }
 
   try {
+    const keyword = cleanDashboardKeyword(options?.keyword ?? "");
     const rows = await prisma.jobPosting.findMany({
       where: {
         authorId: userId,
+        ...(keyword
+          ? {
+              OR: [
+                { title: { contains: keyword, mode: "insensitive" } },
+                { company: { contains: keyword, mode: "insensitive" } },
+                { description: { contains: keyword, mode: "insensitive" } },
+              ],
+            }
+          : {}),
       },
       orderBy: { createdAt: "desc" },
       take: 50,

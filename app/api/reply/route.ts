@@ -19,8 +19,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { content, post_id, reply_id } = await request.json();
-    const videoUrl = extractYouTubeEmbedUrl(content);
+    const {
+      content,
+      post_id,
+      reply_id,
+      videoUrl: inputVideoUrl,
+      audioUrl: inputAudioUrl,
+    } = await request.json() as {
+      content: string;
+      post_id: string;
+      reply_id?: string | null;
+      videoUrl?: string | null;
+      audioUrl?: string | null;
+    };
+    const videoUrl = inputVideoUrl ?? extractYouTubeEmbedUrl(content);
+    const audioUrl = inputAudioUrl ?? null;
 
     // rootId 规则：
     // - 回复主帖：rootId = post_id, parentId = post_id
@@ -47,6 +60,7 @@ export async function POST(request: Request) {
       data: {
         content,
         videoUrl,
+        audioUrl,
         authorId: user.id,
         parentId,
         rootId,
