@@ -1,17 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
-
-const DEFAULT_MODELS = [
-  "gemini-2.5-flash",
-  "gemini-2.0-flash",
-  "gemini-1.5-flash",
-] as const;
-
 export async function generateGeminiText({
   apiKey,
   prompt,
   temperature = 0.7,
   maxOutputTokens = 256,
-  modelCandidates = DEFAULT_MODELS,
+
 }: {
   apiKey: string;
   prompt: string;
@@ -27,10 +20,9 @@ export async function generateGeminiText({
   const geminiClient = new GoogleGenAI({ apiKey: normalizedApiKey });
   let lastError = "Unknown Gemini error";
 
-  for (const modelName of modelCandidates) {
     try {
       const result = await geminiClient.models.generateContent({
-        model: modelName,
+        model: "gemini-3-flash-preview",
         contents: prompt,
         config: {
           temperature,
@@ -43,11 +35,11 @@ export async function generateGeminiText({
         throw new Error("Gemini returned empty content");
       }
 
-      return { text, model: modelName };
+      return { text, model: "gemini-3-flash-preview" };
     } catch (error) {
       lastError = error instanceof Error ? error.message : "Unknown Gemini error";
     }
-  }
+
 
   throw new Error(`Gemini failed: ${lastError}`);
 }

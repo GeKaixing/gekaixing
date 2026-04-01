@@ -4,11 +4,14 @@ import { NextResponse } from "next/server";
 
 interface GeneratePostBody {
   prompt?: string;
+  content?: string;
+  mode?: "generate" | "polish";
   locale?: string;
 }
 
 const DEFAULT_PROMPT = "Write a short social post";
 const MAX_PROMPT_LENGTH = 500;
+const MAX_CONTENT_LENGTH = 1500;
 const MAX_POST_LENGTH = 280;
 
 function cleanPrompt(prompt?: string): string {
@@ -25,7 +28,12 @@ function cleanOutput(text: string): string {
   return normalized.slice(0, MAX_POST_LENGTH);
 }
 
-function buildPromptText(prompt: string, locale: "zh-CN" | "en"): string {
+function cleanContent(content?: string): string {
+  const normalized = content?.replace(/\s+/g, " ").trim() ?? "";
+  return normalized.slice(0, MAX_CONTENT_LENGTH);
+}
+
+function buildGeneratePromptText(prompt: string, locale: "zh-CN" | "en"): string {
   const languageInstruction =
     locale === "zh-CN"
       ? "Please respond in Simplified Chinese."
@@ -40,6 +48,64 @@ function buildPromptText(prompt: string, locale: "zh-CN" | "en"): string {
   ].join("\n");
 }
 
+function buildPolishPromptText(content: string, locale: "zh-CN" | "en"): string {
+  const languageInstruction =
+    locale === "zh-CN"
+      ? "Please respond in Simplified Chinese."
+      : "Please respond in concise English.";
+
+  return [
+    "You are a social media writing assistant.",
+    languageInstruction,
+    `Polish the post below while keeping the same meaning, tone, and intent.`,
+    `Constraints: under ${MAX_POST_LENGTH} characters, natural style, no markdown, no quotation marks.`,
+    `Original post: ${content}`,
+  ].join("\n");
+}
+
+function mapGeminiErrorToHttp(errorMessage: string): { status: number; message: string } {
+  const text = errorMessage.toLowerCase();
+
+  if (
+    text.includes("fetch failed") ||
+    text.includes("network error") ||
+    text.includes("econnrefused") ||
+    text.includes("enotfound") ||
+    text.includes("timed out")
+  ) {
+    return {
+      status: 503,
+      message: "Cannot reach Gemini service from server network. Please retry later or check network/proxy.",
+    };
+  }
+
+  if (text.includes("api key") || text.includes("api_key") || text.includes("permission denied")) {
+    return {
+      status: 401,
+      message: "Gemini API key is invalid or unauthorized. Please update it in Settings.",
+    };
+  }
+
+  if (text.includes("quota") || text.includes("rate limit") || text.includes("resource exhausted")) {
+    return {
+      status: 429,
+      message: "Gemini quota exceeded or rate limited. Please try again later.",
+    };
+  }
+
+  if (text.includes("model") && text.includes("not found")) {
+    return {
+      status: 503,
+      message: "Gemini model is currently unavailable. Please try again later.",
+    };
+  }
+
+  return {
+    status: 502,
+    message: "Gemini request failed. Please retry in a moment.",
+  };
+}
+
 export async function POST(request: Request): Promise<Response> {
   try {
     const supabase = await createClient();
@@ -52,9 +118,14 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     const body = (await request.json()) as GeneratePostBody;
+    const mode = body.mode === "polish" ? "polish" : "generate";
     const prompt = cleanPrompt(body.prompt);
+    const content = cleanContent(body.content);
     const locale: "zh-CN" | "en" = body.locale === "zh-CN" ? "zh-CN" : "en";
-    const promptText = buildPromptText(prompt, locale);
+    const promptText =
+      mode === "polish"
+        ? buildPolishPromptText(content || prompt, locale)
+        : buildGeneratePromptText(prompt, locale);
     const geminiApiKey =
       typeof user.user_metadata?.gemini_api_key === "string"
         ? user.user_metadata.gemini_api_key.trim()
@@ -69,14 +140,13 @@ export async function POST(request: Request): Promise<Response> {
         { status: 503 }
       );
     }
-
+    
     try {
       const { text, model } = await generateGeminiText({
         apiKey: geminiApiKey,
         prompt: promptText,
         temperature: 0.85,
         maxOutputTokens: 220,
-        modelCandidates: ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"],
       });
 
       const content = cleanOutput(text);
@@ -88,13 +158,15 @@ export async function POST(request: Request): Promise<Response> {
     } catch (error) {
       const warning =
         error instanceof Error ? error.message : "Gemini request failed";
+      const mapped = mapGeminiErrorToHttp(warning);
 
       return NextResponse.json(
         {
-          error: warning,
+          error: mapped.message,
+          details: warning,
           success: false,
         },
-        { status: 502 }
+        { status: mapped.status }
       );
     }
   } catch (error) {

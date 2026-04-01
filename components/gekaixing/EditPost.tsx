@@ -31,6 +31,8 @@ import { postStore } from "@/store/post"
 import { postModalStore } from "@/store/postModal"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { useTranslations } from "next-intl"
+import { useLocale } from "next-intl"
+import { useRouter } from "next/navigation"
 
 async function publishPost({
   user_id,
@@ -115,6 +117,7 @@ export default function EditPost({ onClose }: EditPostProps) {
   const [isLogin, setLogin] = useState(false)
   const [saved, setSaved] = useState(false)
   const [status, setStatus] = useState(false)
+  const [aiGenerating, setAiGenerating] = useState(false)
 
   const { poset_images } = post_imagesStore()
   const supabase = createClient()
@@ -123,6 +126,8 @@ export default function EditPost({ onClose }: EditPostProps) {
   const bucketName = "images"
 
   const t = useTranslations('EditPost')
+  const locale = useLocale()
+  const router = useRouter()
 
   // 自动删除未保存图片
   useEffect(() => {
@@ -186,6 +191,131 @@ export default function EditPost({ onClose }: EditPostProps) {
     const plainText = content.replace(/<[^>]*>/g, " ").replace(/\s+/g, "").trim()
     const hasYouTubeNode = content.includes("data-youtube-embed")
     return plainText.length > 0 || hasYouTubeNode
+  }
+
+  function extractPlainTextFromHtml(html: string): string {
+    return html
+      .replace(/<div[^>]*data-youtube-embed[^>]*>[\s\S]*?<\/div>/gi, " ")
+      .replace(/<[^>]*>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+  }
+
+  function toParagraphHtml(text: string): string {
+    const escaped = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+    const lines = escaped
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0)
+
+    if (lines.length === 0) {
+      return "<p></p>"
+    }
+
+    return lines.map((line) => `<p>${line}</p>`).join("")
+  }
+
+  async function handleAiPolish(): Promise<void> {
+    if (aiGenerating || status) {
+      return
+    }
+
+    const htmlValue = typeof value === "string" ? value : ""
+    const plainText = extractPlainTextFromHtml(htmlValue)
+
+    if (!plainText) {
+      toast.error(locale === "zh-CN" ? "请先输入需要润色的内容" : "Please enter content to polish");
+      return
+    }
+
+    setAiGenerating(true)
+    try {
+      const response = await fetch("/api/post/ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mode: "polish",
+          content: plainText,
+          locale: locale === "zh-CN" ? "zh-CN" : "en",
+        }),
+      })
+
+      const payload = (await response.json()) as {
+        success?: boolean
+        content?: string
+        error?: string
+        details?: string
+      }
+
+      if (!response.ok || !payload.success || !payload.content) {
+        if (response.status === 401) {
+          toast.error(
+            locale === "zh-CN"
+              ? "请先在设置-账户中配置 Gemini API Key"
+              : "Please configure Gemini API key in Settings > Account first"
+          )
+          router.push("/gekaixing/settings/account")
+          return
+        }
+
+        if (response.status === 503) {
+          const message = payload.error || ""
+          const missingKey =
+            message.toLowerCase().includes("not configured") ||
+            message.toLowerCase().includes("api key")
+
+          if (missingKey) {
+            toast.error(
+              locale === "zh-CN"
+                ? "请先在设置-账户中配置 Gemini API Key"
+                : "Please configure Gemini API key in Settings > Account first"
+            )
+            router.push("/gekaixing/settings/account")
+            return
+          }
+
+          toast.error(
+            locale === "zh-CN"
+              ? "服务器当前无法连接 Gemini，请稍后重试（或检查网络/代理）"
+              : "Server cannot reach Gemini right now. Please retry later (or check network/proxy)."
+          )
+          if (payload.details) {
+            console.warn("AI polish details:", payload.details)
+          }
+          return
+        }
+
+        if (response.status === 429) {
+          toast.error(
+            locale === "zh-CN"
+              ? "Gemini 配额已用尽或触发限流，请稍后再试"
+              : "Gemini quota exceeded or rate limited, please try again later"
+          )
+          return
+        }
+
+        toast.error(payload.error || (locale === "zh-CN" ? "AI 润色失败" : "AI polish failed"))
+        if (payload.details) {
+          console.warn("AI polish details:", payload.details)
+        }
+        return
+      }
+
+      const polishedHtml = toParagraphHtml(payload.content)
+      setValue(polishedHtml)
+      editor?.commands.setContent(polishedHtml)
+      toast.success(locale === "zh-CN" ? "润色完成" : "Polish completed")
+    } catch (error) {
+      console.error("AI polish failed:", error)
+      toast.error(locale === "zh-CN" ? "AI 润色失败" : "AI polish failed")
+    } finally {
+      setAiGenerating(false)
+    }
   }
 
   async function publish() {
@@ -286,6 +416,8 @@ export default function EditPost({ onClose }: EditPostProps) {
             value={value}
             onChange={setValue}
             onEditorReady={setEditor}
+            onAiGenerate={handleAiPolish}
+            aiGenerating={aiGenerating}
             canPublish={hasPublishableContent(value)}
             className="!max-w-[622px] w-full"
             editorContentClassName="p-5"
