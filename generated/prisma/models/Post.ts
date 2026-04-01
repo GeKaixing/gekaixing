@@ -43,7 +43,6 @@ export type PostSumAggregateOutputType = {
 export type PostMinAggregateOutputType = {
   id: string | null
   content: string | null
-  videoUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
   authorId: string | null
@@ -53,12 +52,12 @@ export type PostMinAggregateOutputType = {
   replyCount: number | null
   shareCount: number | null
   starCount: number | null
+  videoUrl: string | null
 }
 
 export type PostMaxAggregateOutputType = {
   id: string | null
   content: string | null
-  videoUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
   authorId: string | null
@@ -68,12 +67,12 @@ export type PostMaxAggregateOutputType = {
   replyCount: number | null
   shareCount: number | null
   starCount: number | null
+  videoUrl: string | null
 }
 
 export type PostCountAggregateOutputType = {
   id: number
   content: number
-  videoUrl: number
   createdAt: number
   updatedAt: number
   authorId: number
@@ -83,6 +82,7 @@ export type PostCountAggregateOutputType = {
   replyCount: number
   shareCount: number
   starCount: number
+  videoUrl: number
   _all: number
 }
 
@@ -104,7 +104,6 @@ export type PostSumAggregateInputType = {
 export type PostMinAggregateInputType = {
   id?: true
   content?: true
-  videoUrl?: true
   createdAt?: true
   updatedAt?: true
   authorId?: true
@@ -114,12 +113,12 @@ export type PostMinAggregateInputType = {
   replyCount?: true
   shareCount?: true
   starCount?: true
+  videoUrl?: true
 }
 
 export type PostMaxAggregateInputType = {
   id?: true
   content?: true
-  videoUrl?: true
   createdAt?: true
   updatedAt?: true
   authorId?: true
@@ -129,12 +128,12 @@ export type PostMaxAggregateInputType = {
   replyCount?: true
   shareCount?: true
   starCount?: true
+  videoUrl?: true
 }
 
 export type PostCountAggregateInputType = {
   id?: true
   content?: true
-  videoUrl?: true
   createdAt?: true
   updatedAt?: true
   authorId?: true
@@ -144,6 +143,7 @@ export type PostCountAggregateInputType = {
   replyCount?: true
   shareCount?: true
   starCount?: true
+  videoUrl?: true
   _all?: true
 }
 
@@ -236,7 +236,6 @@ export type PostGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type PostGroupByOutputType = {
   id: string
   content: string
-  videoUrl: string | null
   createdAt: Date
   updatedAt: Date
   authorId: string
@@ -246,6 +245,7 @@ export type PostGroupByOutputType = {
   replyCount: number
   shareCount: number
   starCount: number
+  videoUrl: string | null
   _count: PostCountAggregateOutputType | null
   _avg: PostAvgAggregateOutputType | null
   _sum: PostSumAggregateOutputType | null
@@ -274,7 +274,6 @@ export type PostWhereInput = {
   NOT?: Prisma.PostWhereInput | Prisma.PostWhereInput[]
   id?: Prisma.StringFilter<"Post"> | string
   content?: Prisma.StringFilter<"Post"> | string
-  videoUrl?: Prisma.StringNullableFilter<"Post"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   authorId?: Prisma.StringFilter<"Post"> | string
@@ -284,11 +283,12 @@ export type PostWhereInput = {
   replyCount?: Prisma.IntFilter<"Post"> | number
   shareCount?: Prisma.IntFilter<"Post"> | number
   starCount?: Prisma.IntFilter<"Post"> | number
+  videoUrl?: Prisma.StringNullableFilter<"Post"> | string | null
+  bookmarks?: Prisma.BookmarkListRelationFilter
+  likes?: Prisma.LikeListRelationFilter
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   parent?: Prisma.XOR<Prisma.PostNullableScalarRelationFilter, Prisma.PostWhereInput> | null
   replies?: Prisma.PostListRelationFilter
-  likes?: Prisma.LikeListRelationFilter
-  bookmarks?: Prisma.BookmarkListRelationFilter
   shares?: Prisma.ShareListRelationFilter
   actions?: Prisma.UserActionListRelationFilter
 }
@@ -296,7 +296,6 @@ export type PostWhereInput = {
 export type PostOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  videoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
@@ -306,11 +305,12 @@ export type PostOrderByWithRelationInput = {
   replyCount?: Prisma.SortOrder
   shareCount?: Prisma.SortOrder
   starCount?: Prisma.SortOrder
+  videoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  bookmarks?: Prisma.BookmarkOrderByRelationAggregateInput
+  likes?: Prisma.LikeOrderByRelationAggregateInput
   author?: Prisma.UserOrderByWithRelationInput
   parent?: Prisma.PostOrderByWithRelationInput
   replies?: Prisma.PostOrderByRelationAggregateInput
-  likes?: Prisma.LikeOrderByRelationAggregateInput
-  bookmarks?: Prisma.BookmarkOrderByRelationAggregateInput
   shares?: Prisma.ShareOrderByRelationAggregateInput
   actions?: Prisma.UserActionOrderByRelationAggregateInput
 }
@@ -321,7 +321,6 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.PostWhereInput[]
   NOT?: Prisma.PostWhereInput | Prisma.PostWhereInput[]
   content?: Prisma.StringFilter<"Post"> | string
-  videoUrl?: Prisma.StringNullableFilter<"Post"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   authorId?: Prisma.StringFilter<"Post"> | string
@@ -331,11 +330,12 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   replyCount?: Prisma.IntFilter<"Post"> | number
   shareCount?: Prisma.IntFilter<"Post"> | number
   starCount?: Prisma.IntFilter<"Post"> | number
+  videoUrl?: Prisma.StringNullableFilter<"Post"> | string | null
+  bookmarks?: Prisma.BookmarkListRelationFilter
+  likes?: Prisma.LikeListRelationFilter
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   parent?: Prisma.XOR<Prisma.PostNullableScalarRelationFilter, Prisma.PostWhereInput> | null
   replies?: Prisma.PostListRelationFilter
-  likes?: Prisma.LikeListRelationFilter
-  bookmarks?: Prisma.BookmarkListRelationFilter
   shares?: Prisma.ShareListRelationFilter
   actions?: Prisma.UserActionListRelationFilter
 }, "id">
@@ -343,7 +343,6 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
 export type PostOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  videoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
@@ -353,6 +352,7 @@ export type PostOrderByWithAggregationInput = {
   replyCount?: Prisma.SortOrder
   shareCount?: Prisma.SortOrder
   starCount?: Prisma.SortOrder
+  videoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PostCountOrderByAggregateInput
   _avg?: Prisma.PostAvgOrderByAggregateInput
   _max?: Prisma.PostMaxOrderByAggregateInput
@@ -366,7 +366,6 @@ export type PostScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PostScalarWhereWithAggregatesInput | Prisma.PostScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Post"> | string
   content?: Prisma.StringWithAggregatesFilter<"Post"> | string
-  videoUrl?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
   authorId?: Prisma.StringWithAggregatesFilter<"Post"> | string
@@ -376,12 +375,12 @@ export type PostScalarWhereWithAggregatesInput = {
   replyCount?: Prisma.IntWithAggregatesFilter<"Post"> | number
   shareCount?: Prisma.IntWithAggregatesFilter<"Post"> | number
   starCount?: Prisma.IntWithAggregatesFilter<"Post"> | number
+  videoUrl?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
 }
 
 export type PostCreateInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rootId?: string | null
@@ -389,11 +388,12 @@ export type PostCreateInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
+  videoUrl?: string | null
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
+  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
   author: Prisma.UserCreateNestedOneWithoutPostsInput
   parent?: Prisma.PostCreateNestedOneWithoutRepliesInput
   replies?: Prisma.PostCreateNestedManyWithoutParentInput
-  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
-  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
   shares?: Prisma.ShareCreateNestedManyWithoutPostInput
   actions?: Prisma.UserActionCreateNestedManyWithoutPostInput
 }
@@ -401,7 +401,6 @@ export type PostCreateInput = {
 export type PostUncheckedCreateInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   authorId: string
@@ -411,9 +410,10 @@ export type PostUncheckedCreateInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
-  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  videoUrl?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutPostInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutPostInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutPostInput
 }
@@ -421,7 +421,6 @@ export type PostUncheckedCreateInput = {
 export type PostUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -429,11 +428,12 @@ export type PostUpdateInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   parent?: Prisma.PostUpdateOneWithoutRepliesNestedInput
   replies?: Prisma.PostUpdateManyWithoutParentNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
-  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
   shares?: Prisma.ShareUpdateManyWithoutPostNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutPostNestedInput
 }
@@ -441,7 +441,6 @@ export type PostUpdateInput = {
 export type PostUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -451,9 +450,10 @@ export type PostUncheckedUpdateInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
-  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutPostNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
   shares?: Prisma.ShareUncheckedUpdateManyWithoutPostNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutPostNestedInput
 }
@@ -461,7 +461,6 @@ export type PostUncheckedUpdateInput = {
 export type PostCreateManyInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   authorId: string
@@ -471,12 +470,12 @@ export type PostCreateManyInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
+  videoUrl?: string | null
 }
 
 export type PostUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -484,12 +483,12 @@ export type PostUpdateManyMutationInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PostUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -499,6 +498,7 @@ export type PostUncheckedUpdateManyInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PostListRelationFilter = {
@@ -519,7 +519,6 @@ export type PostNullableScalarRelationFilter = {
 export type PostCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  videoUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
@@ -529,6 +528,7 @@ export type PostCountOrderByAggregateInput = {
   replyCount?: Prisma.SortOrder
   shareCount?: Prisma.SortOrder
   starCount?: Prisma.SortOrder
+  videoUrl?: Prisma.SortOrder
 }
 
 export type PostAvgOrderByAggregateInput = {
@@ -541,7 +541,6 @@ export type PostAvgOrderByAggregateInput = {
 export type PostMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  videoUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
@@ -551,12 +550,12 @@ export type PostMaxOrderByAggregateInput = {
   replyCount?: Prisma.SortOrder
   shareCount?: Prisma.SortOrder
   starCount?: Prisma.SortOrder
+  videoUrl?: Prisma.SortOrder
 }
 
 export type PostMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  videoUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
@@ -566,6 +565,7 @@ export type PostMinOrderByAggregateInput = {
   replyCount?: Prisma.SortOrder
   shareCount?: Prisma.SortOrder
   starCount?: Prisma.SortOrder
+  videoUrl?: Prisma.SortOrder
 }
 
 export type PostSumOrderByAggregateInput = {
@@ -749,7 +749,6 @@ export type PostUpdateOneWithoutActionsNestedInput = {
 export type PostCreateWithoutAuthorInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rootId?: string | null
@@ -757,10 +756,11 @@ export type PostCreateWithoutAuthorInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
+  videoUrl?: string | null
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
+  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
   parent?: Prisma.PostCreateNestedOneWithoutRepliesInput
   replies?: Prisma.PostCreateNestedManyWithoutParentInput
-  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
-  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
   shares?: Prisma.ShareCreateNestedManyWithoutPostInput
   actions?: Prisma.UserActionCreateNestedManyWithoutPostInput
 }
@@ -768,7 +768,6 @@ export type PostCreateWithoutAuthorInput = {
 export type PostUncheckedCreateWithoutAuthorInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parentId?: string | null
@@ -777,9 +776,10 @@ export type PostUncheckedCreateWithoutAuthorInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
-  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  videoUrl?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutPostInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutPostInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutPostInput
 }
@@ -816,7 +816,6 @@ export type PostScalarWhereInput = {
   NOT?: Prisma.PostScalarWhereInput | Prisma.PostScalarWhereInput[]
   id?: Prisma.StringFilter<"Post"> | string
   content?: Prisma.StringFilter<"Post"> | string
-  videoUrl?: Prisma.StringNullableFilter<"Post"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   authorId?: Prisma.StringFilter<"Post"> | string
@@ -826,12 +825,12 @@ export type PostScalarWhereInput = {
   replyCount?: Prisma.IntFilter<"Post"> | number
   shareCount?: Prisma.IntFilter<"Post"> | number
   starCount?: Prisma.IntFilter<"Post"> | number
+  videoUrl?: Prisma.StringNullableFilter<"Post"> | string | null
 }
 
 export type PostCreateWithoutRepliesInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rootId?: string | null
@@ -839,10 +838,11 @@ export type PostCreateWithoutRepliesInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
+  videoUrl?: string | null
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
+  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
   author: Prisma.UserCreateNestedOneWithoutPostsInput
   parent?: Prisma.PostCreateNestedOneWithoutRepliesInput
-  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
-  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
   shares?: Prisma.ShareCreateNestedManyWithoutPostInput
   actions?: Prisma.UserActionCreateNestedManyWithoutPostInput
 }
@@ -850,7 +850,6 @@ export type PostCreateWithoutRepliesInput = {
 export type PostUncheckedCreateWithoutRepliesInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   authorId: string
@@ -860,8 +859,9 @@ export type PostUncheckedCreateWithoutRepliesInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  videoUrl?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutPostInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutPostInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutPostInput
 }
@@ -874,7 +874,6 @@ export type PostCreateOrConnectWithoutRepliesInput = {
 export type PostCreateWithoutParentInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rootId?: string | null
@@ -882,10 +881,11 @@ export type PostCreateWithoutParentInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
+  videoUrl?: string | null
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
+  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
   author: Prisma.UserCreateNestedOneWithoutPostsInput
   replies?: Prisma.PostCreateNestedManyWithoutParentInput
-  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
-  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
   shares?: Prisma.ShareCreateNestedManyWithoutPostInput
   actions?: Prisma.UserActionCreateNestedManyWithoutPostInput
 }
@@ -893,7 +893,6 @@ export type PostCreateWithoutParentInput = {
 export type PostUncheckedCreateWithoutParentInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   authorId: string
@@ -902,9 +901,10 @@ export type PostUncheckedCreateWithoutParentInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
-  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  videoUrl?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutPostInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutPostInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutPostInput
 }
@@ -933,7 +933,6 @@ export type PostUpdateToOneWithWhereWithoutRepliesInput = {
 export type PostUpdateWithoutRepliesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -941,10 +940,11 @@ export type PostUpdateWithoutRepliesInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   parent?: Prisma.PostUpdateOneWithoutRepliesNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
-  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
   shares?: Prisma.ShareUpdateManyWithoutPostNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutPostNestedInput
 }
@@ -952,7 +952,6 @@ export type PostUpdateWithoutRepliesInput = {
 export type PostUncheckedUpdateWithoutRepliesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -962,8 +961,9 @@ export type PostUncheckedUpdateWithoutRepliesInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutPostNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
   shares?: Prisma.ShareUncheckedUpdateManyWithoutPostNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutPostNestedInput
 }
@@ -987,7 +987,6 @@ export type PostUpdateManyWithWhereWithoutParentInput = {
 export type PostCreateWithoutLikesInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rootId?: string | null
@@ -995,10 +994,11 @@ export type PostCreateWithoutLikesInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
+  videoUrl?: string | null
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
   author: Prisma.UserCreateNestedOneWithoutPostsInput
   parent?: Prisma.PostCreateNestedOneWithoutRepliesInput
   replies?: Prisma.PostCreateNestedManyWithoutParentInput
-  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
   shares?: Prisma.ShareCreateNestedManyWithoutPostInput
   actions?: Prisma.UserActionCreateNestedManyWithoutPostInput
 }
@@ -1006,7 +1006,6 @@ export type PostCreateWithoutLikesInput = {
 export type PostUncheckedCreateWithoutLikesInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   authorId: string
@@ -1016,8 +1015,9 @@ export type PostUncheckedCreateWithoutLikesInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
-  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
+  videoUrl?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutPostInput
+  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutPostInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutPostInput
 }
@@ -1041,7 +1041,6 @@ export type PostUpdateToOneWithWhereWithoutLikesInput = {
 export type PostUpdateWithoutLikesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1049,10 +1048,11 @@ export type PostUpdateWithoutLikesInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   parent?: Prisma.PostUpdateOneWithoutRepliesNestedInput
   replies?: Prisma.PostUpdateManyWithoutParentNestedInput
-  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
   shares?: Prisma.ShareUpdateManyWithoutPostNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutPostNestedInput
 }
@@ -1060,7 +1060,6 @@ export type PostUpdateWithoutLikesInput = {
 export type PostUncheckedUpdateWithoutLikesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1070,8 +1069,9 @@ export type PostUncheckedUpdateWithoutLikesInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
-  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutPostNestedInput
+  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
   shares?: Prisma.ShareUncheckedUpdateManyWithoutPostNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutPostNestedInput
 }
@@ -1079,7 +1079,6 @@ export type PostUncheckedUpdateWithoutLikesInput = {
 export type PostCreateWithoutBookmarksInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rootId?: string | null
@@ -1087,10 +1086,11 @@ export type PostCreateWithoutBookmarksInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
+  videoUrl?: string | null
+  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
   author: Prisma.UserCreateNestedOneWithoutPostsInput
   parent?: Prisma.PostCreateNestedOneWithoutRepliesInput
   replies?: Prisma.PostCreateNestedManyWithoutParentInput
-  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
   shares?: Prisma.ShareCreateNestedManyWithoutPostInput
   actions?: Prisma.UserActionCreateNestedManyWithoutPostInput
 }
@@ -1098,7 +1098,6 @@ export type PostCreateWithoutBookmarksInput = {
 export type PostUncheckedCreateWithoutBookmarksInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   authorId: string
@@ -1108,8 +1107,9 @@ export type PostUncheckedCreateWithoutBookmarksInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
-  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
+  videoUrl?: string | null
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutPostInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutPostInput
 }
@@ -1133,7 +1133,6 @@ export type PostUpdateToOneWithWhereWithoutBookmarksInput = {
 export type PostUpdateWithoutBookmarksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1141,10 +1140,11 @@ export type PostUpdateWithoutBookmarksInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   parent?: Prisma.PostUpdateOneWithoutRepliesNestedInput
   replies?: Prisma.PostUpdateManyWithoutParentNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
   shares?: Prisma.ShareUpdateManyWithoutPostNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutPostNestedInput
 }
@@ -1152,7 +1152,6 @@ export type PostUpdateWithoutBookmarksInput = {
 export type PostUncheckedUpdateWithoutBookmarksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1162,8 +1161,9 @@ export type PostUncheckedUpdateWithoutBookmarksInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
-  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
   shares?: Prisma.ShareUncheckedUpdateManyWithoutPostNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutPostNestedInput
 }
@@ -1171,7 +1171,6 @@ export type PostUncheckedUpdateWithoutBookmarksInput = {
 export type PostCreateWithoutSharesInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rootId?: string | null
@@ -1179,18 +1178,18 @@ export type PostCreateWithoutSharesInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
+  videoUrl?: string | null
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
+  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
   author: Prisma.UserCreateNestedOneWithoutPostsInput
   parent?: Prisma.PostCreateNestedOneWithoutRepliesInput
   replies?: Prisma.PostCreateNestedManyWithoutParentInput
-  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
-  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
   actions?: Prisma.UserActionCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutSharesInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   authorId: string
@@ -1200,9 +1199,10 @@ export type PostUncheckedCreateWithoutSharesInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
-  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  videoUrl?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutPostInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutPostInput
 }
 
@@ -1225,7 +1225,6 @@ export type PostUpdateToOneWithWhereWithoutSharesInput = {
 export type PostUpdateWithoutSharesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1233,18 +1232,18 @@ export type PostUpdateWithoutSharesInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   parent?: Prisma.PostUpdateOneWithoutRepliesNestedInput
   replies?: Prisma.PostUpdateManyWithoutParentNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
-  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutSharesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1254,16 +1253,16 @@ export type PostUncheckedUpdateWithoutSharesInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
-  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutPostNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateWithoutActionsInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rootId?: string | null
@@ -1271,18 +1270,18 @@ export type PostCreateWithoutActionsInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
+  videoUrl?: string | null
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
+  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
   author: Prisma.UserCreateNestedOneWithoutPostsInput
   parent?: Prisma.PostCreateNestedOneWithoutRepliesInput
   replies?: Prisma.PostCreateNestedManyWithoutParentInput
-  likes?: Prisma.LikeCreateNestedManyWithoutPostInput
-  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutPostInput
   shares?: Prisma.ShareCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutActionsInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   authorId: string
@@ -1292,9 +1291,10 @@ export type PostUncheckedCreateWithoutActionsInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
-  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  videoUrl?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutPostInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutPostInput
+  replies?: Prisma.PostUncheckedCreateNestedManyWithoutParentInput
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutPostInput
 }
 
@@ -1317,7 +1317,6 @@ export type PostUpdateToOneWithWhereWithoutActionsInput = {
 export type PostUpdateWithoutActionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1325,18 +1324,18 @@ export type PostUpdateWithoutActionsInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   parent?: Prisma.PostUpdateOneWithoutRepliesNestedInput
   replies?: Prisma.PostUpdateManyWithoutParentNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
-  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
   shares?: Prisma.ShareUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutActionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1346,16 +1345,16 @@ export type PostUncheckedUpdateWithoutActionsInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
-  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutPostNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
   shares?: Prisma.ShareUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateManyAuthorInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parentId?: string | null
@@ -1364,12 +1363,12 @@ export type PostCreateManyAuthorInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
+  videoUrl?: string | null
 }
 
 export type PostUpdateWithoutAuthorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1377,10 +1376,11 @@ export type PostUpdateWithoutAuthorInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
   parent?: Prisma.PostUpdateOneWithoutRepliesNestedInput
   replies?: Prisma.PostUpdateManyWithoutParentNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
-  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
   shares?: Prisma.ShareUpdateManyWithoutPostNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutPostNestedInput
 }
@@ -1388,7 +1388,6 @@ export type PostUpdateWithoutAuthorInput = {
 export type PostUncheckedUpdateWithoutAuthorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1397,9 +1396,10 @@ export type PostUncheckedUpdateWithoutAuthorInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
-  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutPostNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
   shares?: Prisma.ShareUncheckedUpdateManyWithoutPostNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutPostNestedInput
 }
@@ -1407,7 +1407,6 @@ export type PostUncheckedUpdateWithoutAuthorInput = {
 export type PostUncheckedUpdateManyWithoutAuthorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1416,12 +1415,12 @@ export type PostUncheckedUpdateManyWithoutAuthorInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PostCreateManyParentInput = {
   id?: string
   content: string
-  videoUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   authorId: string
@@ -1430,12 +1429,12 @@ export type PostCreateManyParentInput = {
   replyCount?: number
   shareCount?: number
   starCount?: number
+  videoUrl?: string | null
 }
 
 export type PostUpdateWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rootId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1443,10 +1442,11 @@ export type PostUpdateWithoutParentInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   replies?: Prisma.PostUpdateManyWithoutParentNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutPostNestedInput
-  bookmarks?: Prisma.BookmarkUpdateManyWithoutPostNestedInput
   shares?: Prisma.ShareUpdateManyWithoutPostNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutPostNestedInput
 }
@@ -1454,7 +1454,6 @@ export type PostUpdateWithoutParentInput = {
 export type PostUncheckedUpdateWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1463,9 +1462,10 @@ export type PostUncheckedUpdateWithoutParentInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
-  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutPostNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutPostNestedInput
+  replies?: Prisma.PostUncheckedUpdateManyWithoutParentNestedInput
   shares?: Prisma.ShareUncheckedUpdateManyWithoutPostNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutPostNestedInput
 }
@@ -1473,7 +1473,6 @@ export type PostUncheckedUpdateWithoutParentInput = {
 export type PostUncheckedUpdateManyWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1482,6 +1481,7 @@ export type PostUncheckedUpdateManyWithoutParentInput = {
   replyCount?: Prisma.IntFieldUpdateOperationsInput | number
   shareCount?: Prisma.IntFieldUpdateOperationsInput | number
   starCount?: Prisma.IntFieldUpdateOperationsInput | number
+  videoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1490,17 +1490,17 @@ export type PostUncheckedUpdateManyWithoutParentInput = {
  */
 
 export type PostCountOutputType = {
-  replies: number
-  likes: number
   bookmarks: number
+  likes: number
+  replies: number
   shares: number
   actions: number
 }
 
 export type PostCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  replies?: boolean | PostCountOutputTypeCountRepliesArgs
-  likes?: boolean | PostCountOutputTypeCountLikesArgs
   bookmarks?: boolean | PostCountOutputTypeCountBookmarksArgs
+  likes?: boolean | PostCountOutputTypeCountLikesArgs
+  replies?: boolean | PostCountOutputTypeCountRepliesArgs
   shares?: boolean | PostCountOutputTypeCountSharesArgs
   actions?: boolean | PostCountOutputTypeCountActionsArgs
 }
@@ -1518,8 +1518,8 @@ export type PostCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * PostCountOutputType without action
  */
-export type PostCountOutputTypeCountRepliesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PostWhereInput
+export type PostCountOutputTypeCountBookmarksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BookmarkWhereInput
 }
 
 /**
@@ -1532,8 +1532,8 @@ export type PostCountOutputTypeCountLikesArgs<ExtArgs extends runtime.Types.Exte
 /**
  * PostCountOutputType without action
  */
-export type PostCountOutputTypeCountBookmarksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.BookmarkWhereInput
+export type PostCountOutputTypeCountRepliesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PostWhereInput
 }
 
 /**
@@ -1554,7 +1554,6 @@ export type PostCountOutputTypeCountActionsArgs<ExtArgs extends runtime.Types.Ex
 export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   content?: boolean
-  videoUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   authorId?: boolean
@@ -1564,11 +1563,12 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   replyCount?: boolean
   shareCount?: boolean
   starCount?: boolean
+  videoUrl?: boolean
+  bookmarks?: boolean | Prisma.Post$bookmarksArgs<ExtArgs>
+  likes?: boolean | Prisma.Post$likesArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.Post$parentArgs<ExtArgs>
   replies?: boolean | Prisma.Post$repliesArgs<ExtArgs>
-  likes?: boolean | Prisma.Post$likesArgs<ExtArgs>
-  bookmarks?: boolean | Prisma.Post$bookmarksArgs<ExtArgs>
   shares?: boolean | Prisma.Post$sharesArgs<ExtArgs>
   actions?: boolean | Prisma.Post$actionsArgs<ExtArgs>
   _count?: boolean | Prisma.PostCountOutputTypeDefaultArgs<ExtArgs>
@@ -1577,7 +1577,6 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   content?: boolean
-  videoUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   authorId?: boolean
@@ -1587,6 +1586,7 @@ export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   replyCount?: boolean
   shareCount?: boolean
   starCount?: boolean
+  videoUrl?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.Post$parentArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
@@ -1594,7 +1594,6 @@ export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   content?: boolean
-  videoUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   authorId?: boolean
@@ -1604,6 +1603,7 @@ export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   replyCount?: boolean
   shareCount?: boolean
   starCount?: boolean
+  videoUrl?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.Post$parentArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
@@ -1611,7 +1611,6 @@ export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type PostSelectScalar = {
   id?: boolean
   content?: boolean
-  videoUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   authorId?: boolean
@@ -1621,15 +1620,16 @@ export type PostSelectScalar = {
   replyCount?: boolean
   shareCount?: boolean
   starCount?: boolean
+  videoUrl?: boolean
 }
 
-export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "videoUrl" | "createdAt" | "updatedAt" | "authorId" | "parentId" | "rootId" | "likeCount" | "replyCount" | "shareCount" | "starCount", ExtArgs["result"]["post"]>
+export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "createdAt" | "updatedAt" | "authorId" | "parentId" | "rootId" | "likeCount" | "replyCount" | "shareCount" | "starCount" | "videoUrl", ExtArgs["result"]["post"]>
 export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bookmarks?: boolean | Prisma.Post$bookmarksArgs<ExtArgs>
+  likes?: boolean | Prisma.Post$likesArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.Post$parentArgs<ExtArgs>
   replies?: boolean | Prisma.Post$repliesArgs<ExtArgs>
-  likes?: boolean | Prisma.Post$likesArgs<ExtArgs>
-  bookmarks?: boolean | Prisma.Post$bookmarksArgs<ExtArgs>
   shares?: boolean | Prisma.Post$sharesArgs<ExtArgs>
   actions?: boolean | Prisma.Post$actionsArgs<ExtArgs>
   _count?: boolean | Prisma.PostCountOutputTypeDefaultArgs<ExtArgs>
@@ -1646,18 +1646,17 @@ export type PostIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Post"
   objects: {
+    bookmarks: Prisma.$BookmarkPayload<ExtArgs>[]
+    likes: Prisma.$LikePayload<ExtArgs>[]
     author: Prisma.$UserPayload<ExtArgs>
     parent: Prisma.$PostPayload<ExtArgs> | null
     replies: Prisma.$PostPayload<ExtArgs>[]
-    likes: Prisma.$LikePayload<ExtArgs>[]
-    bookmarks: Prisma.$BookmarkPayload<ExtArgs>[]
     shares: Prisma.$SharePayload<ExtArgs>[]
     actions: Prisma.$UserActionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     content: string
-    videoUrl: string | null
     createdAt: Date
     updatedAt: Date
     authorId: string
@@ -1667,6 +1666,7 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     replyCount: number
     shareCount: number
     starCount: number
+    videoUrl: string | null
   }, ExtArgs["result"]["post"]>
   composites: {}
 }
@@ -2061,11 +2061,11 @@ readonly fields: PostFieldRefs;
  */
 export interface Prisma__PostClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  bookmarks<T extends Prisma.Post$bookmarksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  likes<T extends Prisma.Post$likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   author<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   parent<T extends Prisma.Post$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$parentArgs<ExtArgs>>): Prisma.Prisma__PostClient<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   replies<T extends Prisma.Post$repliesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  likes<T extends Prisma.Post$likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  bookmarks<T extends Prisma.Post$bookmarksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   shares<T extends Prisma.Post$sharesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$sharesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   actions<T extends Prisma.Post$actionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$actionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserActionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2099,7 +2099,6 @@ export interface Prisma__PostClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface PostFieldRefs {
   readonly id: Prisma.FieldRef<"Post", 'String'>
   readonly content: Prisma.FieldRef<"Post", 'String'>
-  readonly videoUrl: Prisma.FieldRef<"Post", 'String'>
   readonly createdAt: Prisma.FieldRef<"Post", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Post", 'DateTime'>
   readonly authorId: Prisma.FieldRef<"Post", 'String'>
@@ -2109,6 +2108,7 @@ export interface PostFieldRefs {
   readonly replyCount: Prisma.FieldRef<"Post", 'Int'>
   readonly shareCount: Prisma.FieldRef<"Post", 'Int'>
   readonly starCount: Prisma.FieldRef<"Post", 'Int'>
+  readonly videoUrl: Prisma.FieldRef<"Post", 'String'>
 }
     
 
@@ -2505,6 +2505,54 @@ export type PostDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * Post.bookmarks
+ */
+export type Post$bookmarksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Bookmark
+   */
+  select?: Prisma.BookmarkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Bookmark
+   */
+  omit?: Prisma.BookmarkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BookmarkInclude<ExtArgs> | null
+  where?: Prisma.BookmarkWhereInput
+  orderBy?: Prisma.BookmarkOrderByWithRelationInput | Prisma.BookmarkOrderByWithRelationInput[]
+  cursor?: Prisma.BookmarkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BookmarkScalarFieldEnum | Prisma.BookmarkScalarFieldEnum[]
+}
+
+/**
+ * Post.likes
+ */
+export type Post$likesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Like
+   */
+  select?: Prisma.LikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Like
+   */
+  omit?: Prisma.LikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LikeInclude<ExtArgs> | null
+  where?: Prisma.LikeWhereInput
+  orderBy?: Prisma.LikeOrderByWithRelationInput | Prisma.LikeOrderByWithRelationInput[]
+  cursor?: Prisma.LikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LikeScalarFieldEnum | Prisma.LikeScalarFieldEnum[]
+}
+
+/**
  * Post.parent
  */
 export type Post$parentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2545,54 +2593,6 @@ export type Post$repliesArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.PostScalarFieldEnum | Prisma.PostScalarFieldEnum[]
-}
-
-/**
- * Post.likes
- */
-export type Post$likesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Like
-   */
-  select?: Prisma.LikeSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Like
-   */
-  omit?: Prisma.LikeOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.LikeInclude<ExtArgs> | null
-  where?: Prisma.LikeWhereInput
-  orderBy?: Prisma.LikeOrderByWithRelationInput | Prisma.LikeOrderByWithRelationInput[]
-  cursor?: Prisma.LikeWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.LikeScalarFieldEnum | Prisma.LikeScalarFieldEnum[]
-}
-
-/**
- * Post.bookmarks
- */
-export type Post$bookmarksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Bookmark
-   */
-  select?: Prisma.BookmarkSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Bookmark
-   */
-  omit?: Prisma.BookmarkOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.BookmarkInclude<ExtArgs> | null
-  where?: Prisma.BookmarkWhereInput
-  orderBy?: Prisma.BookmarkOrderByWithRelationInput | Prisma.BookmarkOrderByWithRelationInput[]
-  cursor?: Prisma.BookmarkWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.BookmarkScalarFieldEnum | Prisma.BookmarkScalarFieldEnum[]
 }
 
 /**

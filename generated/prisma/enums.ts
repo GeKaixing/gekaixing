@@ -34,3 +34,14 @@ export const UserActionType = {
 } as const
 
 export type UserActionType = (typeof UserActionType)[keyof typeof UserActionType]
+
+
+export const SubscriptionStatus = {
+  FREE: 'FREE',
+  ACTIVE: 'ACTIVE',
+  GRACE: 'GRACE',
+  EXPIRED: 'EXPIRED',
+  CANCELED: 'CANCELED'
+} as const
+
+export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus]

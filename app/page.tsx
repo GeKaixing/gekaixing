@@ -10,11 +10,17 @@ type FeatureCard = {
   icon: typeof Zap
 }
 
+type FaqItem = {
+  key: "1" | "2" | "3" | "4"
+}
+
 const featureCards: FeatureCard[] = [
   { key: "realtime", icon: Zap },
   { key: "global", icon: Globe2 },
   { key: "trend", icon: Compass },
 ]
+
+const faqItems: FaqItem[] = [{ key: "1" }, { key: "2" }, { key: "3" }, { key: "4" }]
 
 export default async function Page(): Promise<React.JSX.Element> {
   const t = await getTranslations("NoirLanding")
@@ -144,6 +150,24 @@ export default async function Page(): Promise<React.JSX.Element> {
                   <span className="flex items-center gap-2"><Heart size={14} />2.1k</span>
                 </div>
               </article>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-zinc-200 bg-zinc-50 dark:border-white/10 dark:bg-[#070c14]">
+          <div className="mx-auto w-full max-w-[1200px] px-5 py-16 md:px-8">
+            <div className="mb-10 grid gap-5 md:grid-cols-2">
+              <h2 className="text-4xl font-black tracking-[-0.03em] md:text-5xl">{t("faq.title")}</h2>
+              <p className="max-w-[420px] justify-self-start text-sm leading-6 text-zinc-600 dark:text-zinc-300 md:justify-self-end">{t("faq.description")}</p>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              {faqItems.map((item: FaqItem) => (
+                <article key={item.key} className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-white/10 dark:bg-[#10151f]">
+                  <h3 className="mb-2 text-lg font-semibold tracking-tight">{t(`faq.items.${item.key}.question`)}</h3>
+                  <p className="text-sm leading-6 text-zinc-600 dark:text-zinc-300">{t(`faq.items.${item.key}.answer`)}</p>
+                </article>
+              ))}
             </div>
           </div>
         </section>

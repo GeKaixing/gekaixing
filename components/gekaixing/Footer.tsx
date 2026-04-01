@@ -6,10 +6,12 @@ import Ablout from './Ablout'
 import FollowCard from './FollowCard'
 import GkxAiSidebarServer from './GkxAiSidebarServer'
 import ShowOnGkx from './ShowOnGkx'
+import JobsFooterFilters from './JobsFooterFilters'
 
 export default async function Footer() {
     return (
         <div className='space-y-2'>
+            <JobsFooterFilters />
             <ShowOnGkx>
                 <GkxAiSidebarServer></GkxAiSidebarServer>
             </ShowOnGkx>

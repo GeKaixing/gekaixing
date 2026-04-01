@@ -29,6 +29,14 @@ type FeedPage = {
     }
 }
 
+function toRate(numerator: number, denominator: number): number {
+    if (denominator <= 0) {
+        return 0
+    }
+
+    return (numerator / denominator) * 100
+}
+
 function buildExcerpt(text: string): string {
     const plainText = text.replace(/\s+/g, ' ').trim()
     return plainText.slice(0, 120)
@@ -163,6 +171,48 @@ const getPost = async (id: string): Promise<FeedPost | null> => {
 
     if (!post) return null
 
+    const weekAgo = new Date()
+    weekAgo.setDate(weekAgo.getDate() - 7)
+
+    const [impressions, postClicks, repliesReceived, profileEnters] = await Promise.all([
+        prisma.userAction.count({
+            where: {
+                actionType: "FEED_IMPRESSION",
+                targetPostId: id,
+                createdAt: { gte: weekAgo },
+            },
+        }),
+        prisma.userAction.count({
+            where: {
+                actionType: "POST_CLICK",
+                targetPostId: id,
+                createdAt: { gte: weekAgo },
+                NOT: {
+                    metadata: {
+                        contains: "\"kind\":\"profile_enter\"",
+                    },
+                },
+            },
+        }),
+        prisma.userAction.count({
+            where: {
+                actionType: "REPLY_CREATE",
+                targetPostId: id,
+                createdAt: { gte: weekAgo },
+            },
+        }),
+        prisma.userAction.count({
+            where: {
+                actionType: "POST_CLICK",
+                targetPostId: id,
+                createdAt: { gte: weekAgo },
+                metadata: {
+                    contains: "\"kind\":\"profile_enter\"",
+                },
+            },
+        }),
+    ])
+
     const result: FeedPost = {
         id: post.id,
         content: post.content,
@@ -179,6 +229,15 @@ const getPost = async (id: string): Promise<FeedPost | null> => {
         star: post._count.bookmarks,
         share: post._count.shares,
         reply: post._count.replies,
+        metrics: {
+            impressions,
+            postClicks,
+            repliesReceived,
+            profileEnters,
+            postClickRate: toRate(postClicks, impressions),
+            replyRate: toRate(repliesReceived, impressions),
+            profileEnterRate: toRate(profileEnters, impressions),
+        },
 
         likedByMe: post.likes?.length > 0,
         bookmarkedByMe: post.bookmarks?.length > 0,

@@ -26,7 +26,6 @@ export type AggregateUser = {
 
 export type UserMinAggregateOutputType = {
   id: string | null
-  userid: string | null
   email: string | null
   name: string | null
   avatar: string | null
@@ -34,14 +33,18 @@ export type UserMinAggregateOutputType = {
   briefIntroduction: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  userid: string | null
   isPremium: boolean | null
   stripeCustomerId: string | null
   stripeSubId: string | null
+  subscriptionStatus: $Enums.SubscriptionStatus | null
+  premiumExpiresAt: Date | null
+  premiumGraceEndsAt: Date | null
+  stripePriceId: string | null
 }
 
 export type UserMaxAggregateOutputType = {
   id: string | null
-  userid: string | null
   email: string | null
   name: string | null
   avatar: string | null
@@ -49,14 +52,18 @@ export type UserMaxAggregateOutputType = {
   briefIntroduction: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  userid: string | null
   isPremium: boolean | null
   stripeCustomerId: string | null
   stripeSubId: string | null
+  subscriptionStatus: $Enums.SubscriptionStatus | null
+  premiumExpiresAt: Date | null
+  premiumGraceEndsAt: Date | null
+  stripePriceId: string | null
 }
 
 export type UserCountAggregateOutputType = {
   id: number
-  userid: number
   email: number
   name: number
   avatar: number
@@ -64,16 +71,20 @@ export type UserCountAggregateOutputType = {
   briefIntroduction: number
   createdAt: number
   updatedAt: number
+  userid: number
   isPremium: number
   stripeCustomerId: number
   stripeSubId: number
+  subscriptionStatus: number
+  premiumExpiresAt: number
+  premiumGraceEndsAt: number
+  stripePriceId: number
   _all: number
 }
 
 
 export type UserMinAggregateInputType = {
   id?: true
-  userid?: true
   email?: true
   name?: true
   avatar?: true
@@ -81,14 +92,18 @@ export type UserMinAggregateInputType = {
   briefIntroduction?: true
   createdAt?: true
   updatedAt?: true
+  userid?: true
   isPremium?: true
   stripeCustomerId?: true
   stripeSubId?: true
+  subscriptionStatus?: true
+  premiumExpiresAt?: true
+  premiumGraceEndsAt?: true
+  stripePriceId?: true
 }
 
 export type UserMaxAggregateInputType = {
   id?: true
-  userid?: true
   email?: true
   name?: true
   avatar?: true
@@ -96,14 +111,18 @@ export type UserMaxAggregateInputType = {
   briefIntroduction?: true
   createdAt?: true
   updatedAt?: true
+  userid?: true
   isPremium?: true
   stripeCustomerId?: true
   stripeSubId?: true
+  subscriptionStatus?: true
+  premiumExpiresAt?: true
+  premiumGraceEndsAt?: true
+  stripePriceId?: true
 }
 
 export type UserCountAggregateInputType = {
   id?: true
-  userid?: true
   email?: true
   name?: true
   avatar?: true
@@ -111,9 +130,14 @@ export type UserCountAggregateInputType = {
   briefIntroduction?: true
   createdAt?: true
   updatedAt?: true
+  userid?: true
   isPremium?: true
   stripeCustomerId?: true
   stripeSubId?: true
+  subscriptionStatus?: true
+  premiumExpiresAt?: true
+  premiumGraceEndsAt?: true
+  stripePriceId?: true
   _all?: true
 }
 
@@ -191,7 +215,6 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type UserGroupByOutputType = {
   id: string
-  userid: string
   email: string
   name: string | null
   avatar: string | null
@@ -199,9 +222,14 @@ export type UserGroupByOutputType = {
   briefIntroduction: string | null
   createdAt: Date
   updatedAt: Date
+  userid: string
   isPremium: boolean
   stripeCustomerId: string | null
   stripeSubId: string | null
+  subscriptionStatus: $Enums.SubscriptionStatus
+  premiumExpiresAt: Date | null
+  premiumGraceEndsAt: Date | null
+  stripePriceId: string | null
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -227,7 +255,6 @@ export type UserWhereInput = {
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.StringFilter<"User"> | string
-  userid?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringNullableFilter<"User"> | string | null
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
@@ -235,24 +262,29 @@ export type UserWhereInput = {
   briefIntroduction?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  userid?: Prisma.StringFilter<"User"> | string
   isPremium?: Prisma.BoolFilter<"User"> | boolean
   stripeCustomerId?: Prisma.StringNullableFilter<"User"> | string | null
   stripeSubId?: Prisma.StringNullableFilter<"User"> | string | null
-  posts?: Prisma.PostListRelationFilter
-  likes?: Prisma.LikeListRelationFilter
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFilter<"User"> | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  premiumGraceEndsAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  stripePriceId?: Prisma.StringNullableFilter<"User"> | string | null
   bookmarks?: Prisma.BookmarkListRelationFilter
-  shares?: Prisma.ShareListRelationFilter
-  actions?: Prisma.UserActionListRelationFilter
   conversationParticipants?: Prisma.ConversationParticipantListRelationFilter
   conversationReads?: Prisma.ConversationReadListRelationFilter
-  messages?: Prisma.MessageListRelationFilter
   following?: Prisma.FollowListRelationFilter
   followers?: Prisma.FollowListRelationFilter
+  likes?: Prisma.LikeListRelationFilter
+  messages?: Prisma.MessageListRelationFilter
+  posts?: Prisma.PostListRelationFilter
+  shares?: Prisma.ShareListRelationFilter
+  actions?: Prisma.UserActionListRelationFilter
+  jobPosts?: Prisma.JobPostingListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  userid?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -260,25 +292,31 @@ export type UserOrderByWithRelationInput = {
   briefIntroduction?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  userid?: Prisma.SortOrder
   isPremium?: Prisma.SortOrder
   stripeCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   stripeSubId?: Prisma.SortOrderInput | Prisma.SortOrder
-  posts?: Prisma.PostOrderByRelationAggregateInput
-  likes?: Prisma.LikeOrderByRelationAggregateInput
+  subscriptionStatus?: Prisma.SortOrder
+  premiumExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  premiumGraceEndsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripePriceId?: Prisma.SortOrderInput | Prisma.SortOrder
   bookmarks?: Prisma.BookmarkOrderByRelationAggregateInput
-  shares?: Prisma.ShareOrderByRelationAggregateInput
-  actions?: Prisma.UserActionOrderByRelationAggregateInput
   conversationParticipants?: Prisma.ConversationParticipantOrderByRelationAggregateInput
   conversationReads?: Prisma.ConversationReadOrderByRelationAggregateInput
-  messages?: Prisma.MessageOrderByRelationAggregateInput
   following?: Prisma.FollowOrderByRelationAggregateInput
   followers?: Prisma.FollowOrderByRelationAggregateInput
+  likes?: Prisma.LikeOrderByRelationAggregateInput
+  messages?: Prisma.MessageOrderByRelationAggregateInput
+  posts?: Prisma.PostOrderByRelationAggregateInput
+  shares?: Prisma.ShareOrderByRelationAggregateInput
+  actions?: Prisma.UserActionOrderByRelationAggregateInput
+  jobPosts?: Prisma.JobPostingOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  userid?: string
   email?: string
+  userid?: string
   stripeCustomerId?: string
   stripeSubId?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
@@ -291,21 +329,25 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   isPremium?: Prisma.BoolFilter<"User"> | boolean
-  posts?: Prisma.PostListRelationFilter
-  likes?: Prisma.LikeListRelationFilter
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFilter<"User"> | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  premiumGraceEndsAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  stripePriceId?: Prisma.StringNullableFilter<"User"> | string | null
   bookmarks?: Prisma.BookmarkListRelationFilter
-  shares?: Prisma.ShareListRelationFilter
-  actions?: Prisma.UserActionListRelationFilter
   conversationParticipants?: Prisma.ConversationParticipantListRelationFilter
   conversationReads?: Prisma.ConversationReadListRelationFilter
-  messages?: Prisma.MessageListRelationFilter
   following?: Prisma.FollowListRelationFilter
   followers?: Prisma.FollowListRelationFilter
-}, "id" | "userid" | "email" | "stripeCustomerId" | "stripeSubId">
+  likes?: Prisma.LikeListRelationFilter
+  messages?: Prisma.MessageListRelationFilter
+  posts?: Prisma.PostListRelationFilter
+  shares?: Prisma.ShareListRelationFilter
+  actions?: Prisma.UserActionListRelationFilter
+  jobPosts?: Prisma.JobPostingListRelationFilter
+}, "id" | "email" | "userid" | "stripeCustomerId" | "stripeSubId">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  userid?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -313,9 +355,14 @@ export type UserOrderByWithAggregationInput = {
   briefIntroduction?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  userid?: Prisma.SortOrder
   isPremium?: Prisma.SortOrder
   stripeCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   stripeSubId?: Prisma.SortOrderInput | Prisma.SortOrder
+  subscriptionStatus?: Prisma.SortOrder
+  premiumExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  premiumGraceEndsAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripePriceId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -326,7 +373,6 @@ export type UserScalarWhereWithAggregatesInput = {
   OR?: Prisma.UserScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
-  userid?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   avatar?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -334,14 +380,18 @@ export type UserScalarWhereWithAggregatesInput = {
   briefIntroduction?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  userid?: Prisma.StringWithAggregatesFilter<"User"> | string
   isPremium?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   stripeCustomerId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   stripeSubId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusWithAggregatesFilter<"User"> | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  premiumGraceEndsAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  stripePriceId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
 }
 
 export type UserCreateInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -349,24 +399,29 @@ export type UserCreateInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -374,24 +429,29 @@ export type UserUncheckedCreateInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadUncheckedCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -399,24 +459,29 @@ export type UserUpdateInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -424,24 +489,29 @@ export type UserUncheckedUpdateInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUncheckedUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateManyInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -449,14 +519,18 @@ export type UserCreateManyInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
 }
 
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -464,14 +538,18 @@ export type UserUpdateManyMutationInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -479,14 +557,18 @@ export type UserUncheckedUpdateManyInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  userid?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
@@ -494,14 +576,18 @@ export type UserCountOrderByAggregateInput = {
   briefIntroduction?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  userid?: Prisma.SortOrder
   isPremium?: Prisma.SortOrder
   stripeCustomerId?: Prisma.SortOrder
   stripeSubId?: Prisma.SortOrder
+  subscriptionStatus?: Prisma.SortOrder
+  premiumExpiresAt?: Prisma.SortOrder
+  premiumGraceEndsAt?: Prisma.SortOrder
+  stripePriceId?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  userid?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
@@ -509,14 +595,18 @@ export type UserMaxOrderByAggregateInput = {
   briefIntroduction?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  userid?: Prisma.SortOrder
   isPremium?: Prisma.SortOrder
   stripeCustomerId?: Prisma.SortOrder
   stripeSubId?: Prisma.SortOrder
+  subscriptionStatus?: Prisma.SortOrder
+  premiumExpiresAt?: Prisma.SortOrder
+  premiumGraceEndsAt?: Prisma.SortOrder
+  stripePriceId?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  userid?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
@@ -524,9 +614,14 @@ export type UserMinOrderByAggregateInput = {
   briefIntroduction?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  userid?: Prisma.SortOrder
   isPremium?: Prisma.SortOrder
   stripeCustomerId?: Prisma.SortOrder
   stripeSubId?: Prisma.SortOrder
+  subscriptionStatus?: Prisma.SortOrder
+  premiumExpiresAt?: Prisma.SortOrder
+  premiumGraceEndsAt?: Prisma.SortOrder
+  stripePriceId?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -548,6 +643,14 @@ export type DateTimeFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type EnumSubscriptionStatusFieldUpdateOperationsInput = {
+  set?: $Enums.SubscriptionStatus
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type UserCreateNestedOneWithoutFollowingInput = {
@@ -676,6 +779,20 @@ export type UserUpdateOneRequiredWithoutConversationReadsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutConversationReadsInput, Prisma.UserUpdateWithoutConversationReadsInput>, Prisma.UserUncheckedUpdateWithoutConversationReadsInput>
 }
 
+export type UserCreateNestedOneWithoutJobPostsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutJobPostsInput, Prisma.UserUncheckedCreateWithoutJobPostsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutJobPostsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutJobPostsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutJobPostsInput, Prisma.UserUncheckedCreateWithoutJobPostsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutJobPostsInput
+  upsert?: Prisma.UserUpsertWithoutJobPostsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutJobPostsInput, Prisma.UserUpdateWithoutJobPostsInput>, Prisma.UserUncheckedUpdateWithoutJobPostsInput>
+}
+
 export type UserCreateNestedOneWithoutActionsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutActionsInput, Prisma.UserUncheckedCreateWithoutActionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutActionsInput
@@ -692,7 +809,6 @@ export type UserUpdateOneRequiredWithoutActionsNestedInput = {
 
 export type UserCreateWithoutFollowingInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -700,23 +816,28 @@ export type UserCreateWithoutFollowingInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutFollowingInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -724,18 +845,24 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadUncheckedCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutFollowingInput = {
@@ -745,7 +872,6 @@ export type UserCreateOrConnectWithoutFollowingInput = {
 
 export type UserCreateWithoutFollowersInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -753,23 +879,28 @@ export type UserCreateWithoutFollowersInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
+  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutFollowersInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -777,18 +908,24 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadUncheckedCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutFollowersInput = {
@@ -809,7 +946,6 @@ export type UserUpdateToOneWithWhereWithoutFollowingInput = {
 
 export type UserUpdateWithoutFollowingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -817,23 +953,28 @@ export type UserUpdateWithoutFollowingInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -841,18 +982,24 @@ export type UserUncheckedUpdateWithoutFollowingInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUncheckedUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUpsertWithoutFollowersInput = {
@@ -868,7 +1015,6 @@ export type UserUpdateToOneWithWhereWithoutFollowersInput = {
 
 export type UserUpdateWithoutFollowersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -876,23 +1022,28 @@ export type UserUpdateWithoutFollowersInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -900,23 +1051,28 @@ export type UserUncheckedUpdateWithoutFollowersInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUncheckedUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutPostsInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -924,23 +1080,28 @@ export type UserCreateWithoutPostsInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutPostsInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -948,18 +1109,24 @@ export type UserUncheckedCreateWithoutPostsInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadUncheckedCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutPostsInput = {
@@ -980,7 +1147,6 @@ export type UserUpdateToOneWithWhereWithoutPostsInput = {
 
 export type UserUpdateWithoutPostsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -988,23 +1154,28 @@ export type UserUpdateWithoutPostsInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1012,23 +1183,28 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUncheckedUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutLikesInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -1036,23 +1212,28 @@ export type UserCreateWithoutLikesInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutLikesInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -1060,18 +1241,24 @@ export type UserUncheckedCreateWithoutLikesInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadUncheckedCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutLikesInput = {
@@ -1092,7 +1279,6 @@ export type UserUpdateToOneWithWhereWithoutLikesInput = {
 
 export type UserUpdateWithoutLikesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1100,23 +1286,28 @@ export type UserUpdateWithoutLikesInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLikesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1124,23 +1315,28 @@ export type UserUncheckedUpdateWithoutLikesInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUncheckedUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutBookmarksInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -1148,23 +1344,28 @@ export type UserCreateWithoutBookmarksInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   conversationParticipants?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutBookmarksInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -1172,18 +1373,24 @@ export type UserUncheckedCreateWithoutBookmarksInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   conversationParticipants?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadUncheckedCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutBookmarksInput = {
@@ -1204,7 +1411,6 @@ export type UserUpdateToOneWithWhereWithoutBookmarksInput = {
 
 export type UserUpdateWithoutBookmarksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1212,23 +1418,28 @@ export type UserUpdateWithoutBookmarksInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conversationParticipants?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBookmarksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1236,23 +1447,28 @@ export type UserUncheckedUpdateWithoutBookmarksInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conversationParticipants?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUncheckedUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutSharesInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -1260,23 +1476,28 @@ export type UserCreateWithoutSharesInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutSharesInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -1284,18 +1505,24 @@ export type UserUncheckedCreateWithoutSharesInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadUncheckedCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutSharesInput = {
@@ -1316,7 +1543,6 @@ export type UserUpdateToOneWithWhereWithoutSharesInput = {
 
 export type UserUpdateWithoutSharesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1324,23 +1550,28 @@ export type UserUpdateWithoutSharesInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSharesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1348,23 +1579,28 @@ export type UserUncheckedUpdateWithoutSharesInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUncheckedUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutConversationParticipantsInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -1372,23 +1608,28 @@ export type UserCreateWithoutConversationParticipantsInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutConversationParticipantsInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -1396,18 +1637,24 @@ export type UserUncheckedCreateWithoutConversationParticipantsInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadUncheckedCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutConversationParticipantsInput = {
@@ -1428,7 +1675,6 @@ export type UserUpdateToOneWithWhereWithoutConversationParticipantsInput = {
 
 export type UserUpdateWithoutConversationParticipantsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1436,23 +1682,28 @@ export type UserUpdateWithoutConversationParticipantsInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationParticipantsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1460,23 +1711,28 @@ export type UserUncheckedUpdateWithoutConversationParticipantsInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUncheckedUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutMessagesInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -1484,23 +1740,28 @@ export type UserCreateWithoutMessagesInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadCreateNestedManyWithoutUserInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutMessagesInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -1508,18 +1769,24 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadUncheckedCreateNestedManyWithoutUserInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutMessagesInput = {
@@ -1540,7 +1807,6 @@ export type UserUpdateToOneWithWhereWithoutMessagesInput = {
 
 export type UserUpdateWithoutMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1548,23 +1814,28 @@ export type UserUpdateWithoutMessagesInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUpdateManyWithoutUserNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1572,23 +1843,28 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUncheckedUpdateManyWithoutUserNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutConversationReadsInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -1596,23 +1872,28 @@ export type UserCreateWithoutConversationReadsInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutConversationReadsInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -1620,18 +1901,24 @@ export type UserUncheckedCreateWithoutConversationReadsInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
-  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutConversationReadsInput = {
@@ -1652,7 +1939,6 @@ export type UserUpdateToOneWithWhereWithoutConversationReadsInput = {
 
 export type UserUpdateWithoutConversationReadsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1660,23 +1946,28 @@ export type UserUpdateWithoutConversationReadsInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationReadsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1684,23 +1975,160 @@ export type UserUncheckedUpdateWithoutConversationReadsInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
-  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
+}
+
+export type UserCreateWithoutJobPostsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  avatar?: string | null
+  backgroundImage?: string | null
+  briefIntroduction?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userid?: string
+  isPremium?: boolean
+  stripeCustomerId?: string | null
+  stripeSubId?: string | null
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
+  conversationParticipants?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
+  conversationReads?: Prisma.ConversationReadCreateNestedManyWithoutUserInput
+  following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutJobPostsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  avatar?: string | null
+  backgroundImage?: string | null
+  briefIntroduction?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userid?: string
+  isPremium?: boolean
+  stripeCustomerId?: string | null
+  stripeSubId?: string | null
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
+  conversationParticipants?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+  conversationReads?: Prisma.ConversationReadUncheckedCreateNestedManyWithoutUserInput
+  following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutJobPostsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutJobPostsInput, Prisma.UserUncheckedCreateWithoutJobPostsInput>
+}
+
+export type UserUpsertWithoutJobPostsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutJobPostsInput, Prisma.UserUncheckedUpdateWithoutJobPostsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutJobPostsInput, Prisma.UserUncheckedCreateWithoutJobPostsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutJobPostsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutJobPostsInput, Prisma.UserUncheckedUpdateWithoutJobPostsInput>
+}
+
+export type UserUpdateWithoutJobPostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
+  conversationParticipants?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
+  conversationReads?: Prisma.ConversationReadUpdateManyWithoutUserNestedInput
+  following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutJobPostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
+  conversationParticipants?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+  conversationReads?: Prisma.ConversationReadUncheckedUpdateManyWithoutUserNestedInput
+  following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutActionsInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -1708,23 +2136,28 @@ export type UserCreateWithoutActionsInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutActionsInput = {
   id?: string
-  userid?: string
   email: string
   name?: string | null
   avatar?: string | null
@@ -1732,18 +2165,24 @@ export type UserUncheckedCreateWithoutActionsInput = {
   briefIntroduction?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userid?: string
   isPremium?: boolean
   stripeCustomerId?: string | null
   stripeSubId?: string | null
-  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
-  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
-  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
   conversationReads?: Prisma.ConversationReadUncheckedCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutActionsInput = {
@@ -1764,7 +2203,6 @@ export type UserUpdateToOneWithWhereWithoutActionsInput = {
 
 export type UserUpdateWithoutActionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1772,23 +2210,28 @@ export type UserUpdateWithoutActionsInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutActionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userid?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1796,18 +2239,24 @@ export type UserUncheckedUpdateWithoutActionsInput = {
   briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
   isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
-  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
-  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
   conversationParticipants?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
   conversationReads?: Prisma.ConversationReadUncheckedUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 
@@ -1816,29 +2265,31 @@ export type UserUncheckedUpdateWithoutActionsInput = {
  */
 
 export type UserCountOutputType = {
-  posts: number
-  likes: number
   bookmarks: number
-  shares: number
-  actions: number
   conversationParticipants: number
   conversationReads: number
-  messages: number
   following: number
   followers: number
+  likes: number
+  messages: number
+  posts: number
+  shares: number
+  actions: number
+  jobPosts: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  posts?: boolean | UserCountOutputTypeCountPostsArgs
-  likes?: boolean | UserCountOutputTypeCountLikesArgs
   bookmarks?: boolean | UserCountOutputTypeCountBookmarksArgs
-  shares?: boolean | UserCountOutputTypeCountSharesArgs
-  actions?: boolean | UserCountOutputTypeCountActionsArgs
   conversationParticipants?: boolean | UserCountOutputTypeCountConversationParticipantsArgs
   conversationReads?: boolean | UserCountOutputTypeCountConversationReadsArgs
-  messages?: boolean | UserCountOutputTypeCountMessagesArgs
   following?: boolean | UserCountOutputTypeCountFollowingArgs
   followers?: boolean | UserCountOutputTypeCountFollowersArgs
+  likes?: boolean | UserCountOutputTypeCountLikesArgs
+  messages?: boolean | UserCountOutputTypeCountMessagesArgs
+  posts?: boolean | UserCountOutputTypeCountPostsArgs
+  shares?: boolean | UserCountOutputTypeCountSharesArgs
+  actions?: boolean | UserCountOutputTypeCountActionsArgs
+  jobPosts?: boolean | UserCountOutputTypeCountJobPostsArgs
 }
 
 /**
@@ -1854,36 +2305,8 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PostWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.LikeWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
 export type UserCountOutputTypeCountBookmarksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.BookmarkWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountSharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ShareWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountActionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.UserActionWhereInput
 }
 
 /**
@@ -1903,13 +2326,6 @@ export type UserCountOutputTypeCountConversationReadsArgs<ExtArgs extends runtim
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MessageWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
 export type UserCountOutputTypeCountFollowingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.FollowWhereInput
 }
@@ -1921,10 +2337,51 @@ export type UserCountOutputTypeCountFollowersArgs<ExtArgs extends runtime.Types.
   where?: Prisma.FollowWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LikeWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MessageWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PostWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ShareWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountActionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserActionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountJobPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.JobPostingWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  userid?: boolean
   email?: boolean
   name?: boolean
   avatar?: boolean
@@ -1932,25 +2389,30 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   briefIntroduction?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  userid?: boolean
   isPremium?: boolean
   stripeCustomerId?: boolean
   stripeSubId?: boolean
-  posts?: boolean | Prisma.User$postsArgs<ExtArgs>
-  likes?: boolean | Prisma.User$likesArgs<ExtArgs>
+  subscriptionStatus?: boolean
+  premiumExpiresAt?: boolean
+  premiumGraceEndsAt?: boolean
+  stripePriceId?: boolean
   bookmarks?: boolean | Prisma.User$bookmarksArgs<ExtArgs>
-  shares?: boolean | Prisma.User$sharesArgs<ExtArgs>
-  actions?: boolean | Prisma.User$actionsArgs<ExtArgs>
   conversationParticipants?: boolean | Prisma.User$conversationParticipantsArgs<ExtArgs>
   conversationReads?: boolean | Prisma.User$conversationReadsArgs<ExtArgs>
-  messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   following?: boolean | Prisma.User$followingArgs<ExtArgs>
   followers?: boolean | Prisma.User$followersArgs<ExtArgs>
+  likes?: boolean | Prisma.User$likesArgs<ExtArgs>
+  messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
+  posts?: boolean | Prisma.User$postsArgs<ExtArgs>
+  shares?: boolean | Prisma.User$sharesArgs<ExtArgs>
+  actions?: boolean | Prisma.User$actionsArgs<ExtArgs>
+  jobPosts?: boolean | Prisma.User$jobPostsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  userid?: boolean
   email?: boolean
   name?: boolean
   avatar?: boolean
@@ -1958,14 +2420,18 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   briefIntroduction?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  userid?: boolean
   isPremium?: boolean
   stripeCustomerId?: boolean
   stripeSubId?: boolean
+  subscriptionStatus?: boolean
+  premiumExpiresAt?: boolean
+  premiumGraceEndsAt?: boolean
+  stripePriceId?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  userid?: boolean
   email?: boolean
   name?: boolean
   avatar?: boolean
@@ -1973,14 +2439,18 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   briefIntroduction?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  userid?: boolean
   isPremium?: boolean
   stripeCustomerId?: boolean
   stripeSubId?: boolean
+  subscriptionStatus?: boolean
+  premiumExpiresAt?: boolean
+  premiumGraceEndsAt?: boolean
+  stripePriceId?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
   id?: boolean
-  userid?: boolean
   email?: boolean
   name?: boolean
   avatar?: boolean
@@ -1988,23 +2458,29 @@ export type UserSelectScalar = {
   briefIntroduction?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  userid?: boolean
   isPremium?: boolean
   stripeCustomerId?: boolean
   stripeSubId?: boolean
+  subscriptionStatus?: boolean
+  premiumExpiresAt?: boolean
+  premiumGraceEndsAt?: boolean
+  stripePriceId?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userid" | "email" | "name" | "avatar" | "backgroundImage" | "briefIntroduction" | "createdAt" | "updatedAt" | "isPremium" | "stripeCustomerId" | "stripeSubId", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "avatar" | "backgroundImage" | "briefIntroduction" | "createdAt" | "updatedAt" | "userid" | "isPremium" | "stripeCustomerId" | "stripeSubId" | "subscriptionStatus" | "premiumExpiresAt" | "premiumGraceEndsAt" | "stripePriceId", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  posts?: boolean | Prisma.User$postsArgs<ExtArgs>
-  likes?: boolean | Prisma.User$likesArgs<ExtArgs>
   bookmarks?: boolean | Prisma.User$bookmarksArgs<ExtArgs>
-  shares?: boolean | Prisma.User$sharesArgs<ExtArgs>
-  actions?: boolean | Prisma.User$actionsArgs<ExtArgs>
   conversationParticipants?: boolean | Prisma.User$conversationParticipantsArgs<ExtArgs>
   conversationReads?: boolean | Prisma.User$conversationReadsArgs<ExtArgs>
-  messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   following?: boolean | Prisma.User$followingArgs<ExtArgs>
   followers?: boolean | Prisma.User$followersArgs<ExtArgs>
+  likes?: boolean | Prisma.User$likesArgs<ExtArgs>
+  messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
+  posts?: boolean | Prisma.User$postsArgs<ExtArgs>
+  shares?: boolean | Prisma.User$sharesArgs<ExtArgs>
+  actions?: boolean | Prisma.User$actionsArgs<ExtArgs>
+  jobPosts?: boolean | Prisma.User$jobPostsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2013,20 +2489,20 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    posts: Prisma.$PostPayload<ExtArgs>[]
-    likes: Prisma.$LikePayload<ExtArgs>[]
     bookmarks: Prisma.$BookmarkPayload<ExtArgs>[]
-    shares: Prisma.$SharePayload<ExtArgs>[]
-    actions: Prisma.$UserActionPayload<ExtArgs>[]
     conversationParticipants: Prisma.$ConversationParticipantPayload<ExtArgs>[]
     conversationReads: Prisma.$ConversationReadPayload<ExtArgs>[]
-    messages: Prisma.$MessagePayload<ExtArgs>[]
     following: Prisma.$FollowPayload<ExtArgs>[]
     followers: Prisma.$FollowPayload<ExtArgs>[]
+    likes: Prisma.$LikePayload<ExtArgs>[]
+    messages: Prisma.$MessagePayload<ExtArgs>[]
+    posts: Prisma.$PostPayload<ExtArgs>[]
+    shares: Prisma.$SharePayload<ExtArgs>[]
+    actions: Prisma.$UserActionPayload<ExtArgs>[]
+    jobPosts: Prisma.$JobPostingPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    userid: string
     email: string
     name: string | null
     avatar: string | null
@@ -2034,9 +2510,14 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     briefIntroduction: string | null
     createdAt: Date
     updatedAt: Date
+    userid: string
     isPremium: boolean
     stripeCustomerId: string | null
     stripeSubId: string | null
+    subscriptionStatus: $Enums.SubscriptionStatus
+    premiumExpiresAt: Date | null
+    premiumGraceEndsAt: Date | null
+    stripePriceId: string | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -2431,16 +2912,17 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  posts<T extends Prisma.User$postsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$postsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  likes<T extends Prisma.User$likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bookmarks<T extends Prisma.User$bookmarksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  shares<T extends Prisma.User$sharesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sharesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  actions<T extends Prisma.User$actionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$actionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserActionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   conversationParticipants<T extends Prisma.User$conversationParticipantsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$conversationParticipantsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   conversationReads<T extends Prisma.User$conversationReadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$conversationReadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationReadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  messages<T extends Prisma.User$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   following<T extends Prisma.User$followingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$followingArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   followers<T extends Prisma.User$followersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$followersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  likes<T extends Prisma.User$likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  messages<T extends Prisma.User$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  posts<T extends Prisma.User$postsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$postsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  shares<T extends Prisma.User$sharesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sharesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  actions<T extends Prisma.User$actionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$actionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserActionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  jobPosts<T extends Prisma.User$jobPostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$jobPostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JobPostingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2471,7 +2953,6 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
-  readonly userid: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly avatar: Prisma.FieldRef<"User", 'String'>
@@ -2479,9 +2960,14 @@ export interface UserFieldRefs {
   readonly briefIntroduction: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly userid: Prisma.FieldRef<"User", 'String'>
   readonly isPremium: Prisma.FieldRef<"User", 'Boolean'>
   readonly stripeCustomerId: Prisma.FieldRef<"User", 'String'>
   readonly stripeSubId: Prisma.FieldRef<"User", 'String'>
+  readonly subscriptionStatus: Prisma.FieldRef<"User", 'SubscriptionStatus'>
+  readonly premiumExpiresAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly premiumGraceEndsAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly stripePriceId: Prisma.FieldRef<"User", 'String'>
 }
     
 
@@ -2870,54 +3356,6 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.posts
- */
-export type User$postsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Post
-   */
-  select?: Prisma.PostSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Post
-   */
-  omit?: Prisma.PostOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PostInclude<ExtArgs> | null
-  where?: Prisma.PostWhereInput
-  orderBy?: Prisma.PostOrderByWithRelationInput | Prisma.PostOrderByWithRelationInput[]
-  cursor?: Prisma.PostWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.PostScalarFieldEnum | Prisma.PostScalarFieldEnum[]
-}
-
-/**
- * User.likes
- */
-export type User$likesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Like
-   */
-  select?: Prisma.LikeSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Like
-   */
-  omit?: Prisma.LikeOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.LikeInclude<ExtArgs> | null
-  where?: Prisma.LikeWhereInput
-  orderBy?: Prisma.LikeOrderByWithRelationInput | Prisma.LikeOrderByWithRelationInput[]
-  cursor?: Prisma.LikeWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.LikeScalarFieldEnum | Prisma.LikeScalarFieldEnum[]
-}
-
-/**
  * User.bookmarks
  */
 export type User$bookmarksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2939,54 +3377,6 @@ export type User$bookmarksArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.BookmarkScalarFieldEnum | Prisma.BookmarkScalarFieldEnum[]
-}
-
-/**
- * User.shares
- */
-export type User$sharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Share
-   */
-  select?: Prisma.ShareSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Share
-   */
-  omit?: Prisma.ShareOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ShareInclude<ExtArgs> | null
-  where?: Prisma.ShareWhereInput
-  orderBy?: Prisma.ShareOrderByWithRelationInput | Prisma.ShareOrderByWithRelationInput[]
-  cursor?: Prisma.ShareWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ShareScalarFieldEnum | Prisma.ShareScalarFieldEnum[]
-}
-
-/**
- * User.actions
- */
-export type User$actionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the UserAction
-   */
-  select?: Prisma.UserActionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the UserAction
-   */
-  omit?: Prisma.UserActionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserActionInclude<ExtArgs> | null
-  where?: Prisma.UserActionWhereInput
-  orderBy?: Prisma.UserActionOrderByWithRelationInput | Prisma.UserActionOrderByWithRelationInput[]
-  cursor?: Prisma.UserActionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.UserActionScalarFieldEnum | Prisma.UserActionScalarFieldEnum[]
 }
 
 /**
@@ -3038,30 +3428,6 @@ export type User$conversationReadsArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
- * User.messages
- */
-export type User$messagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Message
-   */
-  select?: Prisma.MessageSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Message
-   */
-  omit?: Prisma.MessageOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MessageInclude<ExtArgs> | null
-  where?: Prisma.MessageWhereInput
-  orderBy?: Prisma.MessageOrderByWithRelationInput | Prisma.MessageOrderByWithRelationInput[]
-  cursor?: Prisma.MessageWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
-}
-
-/**
  * User.following
  */
 export type User$followingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3107,6 +3473,150 @@ export type User$followersArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.FollowScalarFieldEnum | Prisma.FollowScalarFieldEnum[]
+}
+
+/**
+ * User.likes
+ */
+export type User$likesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Like
+   */
+  select?: Prisma.LikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Like
+   */
+  omit?: Prisma.LikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LikeInclude<ExtArgs> | null
+  where?: Prisma.LikeWhereInput
+  orderBy?: Prisma.LikeOrderByWithRelationInput | Prisma.LikeOrderByWithRelationInput[]
+  cursor?: Prisma.LikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LikeScalarFieldEnum | Prisma.LikeScalarFieldEnum[]
+}
+
+/**
+ * User.messages
+ */
+export type User$messagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Message
+   */
+  select?: Prisma.MessageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Message
+   */
+  omit?: Prisma.MessageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MessageInclude<ExtArgs> | null
+  where?: Prisma.MessageWhereInput
+  orderBy?: Prisma.MessageOrderByWithRelationInput | Prisma.MessageOrderByWithRelationInput[]
+  cursor?: Prisma.MessageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
+}
+
+/**
+ * User.posts
+ */
+export type User$postsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Post
+   */
+  select?: Prisma.PostSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Post
+   */
+  omit?: Prisma.PostOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PostInclude<ExtArgs> | null
+  where?: Prisma.PostWhereInput
+  orderBy?: Prisma.PostOrderByWithRelationInput | Prisma.PostOrderByWithRelationInput[]
+  cursor?: Prisma.PostWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PostScalarFieldEnum | Prisma.PostScalarFieldEnum[]
+}
+
+/**
+ * User.shares
+ */
+export type User$sharesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Share
+   */
+  select?: Prisma.ShareSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Share
+   */
+  omit?: Prisma.ShareOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ShareInclude<ExtArgs> | null
+  where?: Prisma.ShareWhereInput
+  orderBy?: Prisma.ShareOrderByWithRelationInput | Prisma.ShareOrderByWithRelationInput[]
+  cursor?: Prisma.ShareWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ShareScalarFieldEnum | Prisma.ShareScalarFieldEnum[]
+}
+
+/**
+ * User.actions
+ */
+export type User$actionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserAction
+   */
+  select?: Prisma.UserActionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserAction
+   */
+  omit?: Prisma.UserActionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserActionInclude<ExtArgs> | null
+  where?: Prisma.UserActionWhereInput
+  orderBy?: Prisma.UserActionOrderByWithRelationInput | Prisma.UserActionOrderByWithRelationInput[]
+  cursor?: Prisma.UserActionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserActionScalarFieldEnum | Prisma.UserActionScalarFieldEnum[]
+}
+
+/**
+ * User.jobPosts
+ */
+export type User$jobPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the JobPosting
+   */
+  select?: Prisma.JobPostingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the JobPosting
+   */
+  omit?: Prisma.JobPostingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JobPostingInclude<ExtArgs> | null
+  where?: Prisma.JobPostingWhereInput
+  orderBy?: Prisma.JobPostingOrderByWithRelationInput | Prisma.JobPostingOrderByWithRelationInput[]
+  cursor?: Prisma.JobPostingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.JobPostingScalarFieldEnum | Prisma.JobPostingScalarFieldEnum[]
 }
 
 /**

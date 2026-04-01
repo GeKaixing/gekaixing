@@ -174,8 +174,8 @@ export type ShareWhereInput = {
   userId?: Prisma.StringFilter<"Share"> | string
   postId?: Prisma.StringFilter<"Share"> | string
   createdAt?: Prisma.DateTimeFilter<"Share"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type ShareOrderByWithRelationInput = {
@@ -183,8 +183,8 @@ export type ShareOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   postId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
   post?: Prisma.PostOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type ShareWhereUniqueInput = Prisma.AtLeast<{
@@ -196,8 +196,8 @@ export type ShareWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringFilter<"Share"> | string
   postId?: Prisma.StringFilter<"Share"> | string
   createdAt?: Prisma.DateTimeFilter<"Share"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "userId_postId">
 
 export type ShareOrderByWithAggregationInput = {
@@ -223,8 +223,8 @@ export type ShareScalarWhereWithAggregatesInput = {
 export type ShareCreateInput = {
   id?: string
   createdAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutSharesInput
   post: Prisma.PostCreateNestedOneWithoutSharesInput
+  user: Prisma.UserCreateNestedOneWithoutSharesInput
 }
 
 export type ShareUncheckedCreateInput = {
@@ -237,8 +237,8 @@ export type ShareUncheckedCreateInput = {
 export type ShareUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutSharesNestedInput
   post?: Prisma.PostUpdateOneRequiredWithoutSharesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutSharesNestedInput
 }
 
 export type ShareUncheckedUpdateInput = {
@@ -528,8 +528,8 @@ export type ShareSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   userId?: boolean
   postId?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["share"]>
 
 export type ShareSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -537,8 +537,8 @@ export type ShareSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   userId?: boolean
   postId?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["share"]>
 
 export type ShareSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -546,8 +546,8 @@ export type ShareSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   userId?: boolean
   postId?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["share"]>
 
 export type ShareSelectScalar = {
@@ -559,23 +559,23 @@ export type ShareSelectScalar = {
 
 export type ShareOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "postId" | "createdAt", ExtArgs["result"]["share"]>
 export type ShareInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ShareIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ShareIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $SharePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Share"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
     post: Prisma.$PostPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -976,8 +976,8 @@ readonly fields: ShareFieldRefs;
  */
 export interface Prisma__ShareClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   post<T extends Prisma.PostDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PostDefaultArgs<ExtArgs>>): Prisma.Prisma__PostClient<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

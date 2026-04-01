@@ -174,8 +174,8 @@ export type BookmarkWhereInput = {
   userId?: Prisma.StringFilter<"Bookmark"> | string
   postId?: Prisma.StringFilter<"Bookmark"> | string
   createdAt?: Prisma.DateTimeFilter<"Bookmark"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type BookmarkOrderByWithRelationInput = {
@@ -183,8 +183,8 @@ export type BookmarkOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   postId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
   post?: Prisma.PostOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type BookmarkWhereUniqueInput = Prisma.AtLeast<{
@@ -196,8 +196,8 @@ export type BookmarkWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringFilter<"Bookmark"> | string
   postId?: Prisma.StringFilter<"Bookmark"> | string
   createdAt?: Prisma.DateTimeFilter<"Bookmark"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "userId_postId">
 
 export type BookmarkOrderByWithAggregationInput = {
@@ -223,8 +223,8 @@ export type BookmarkScalarWhereWithAggregatesInput = {
 export type BookmarkCreateInput = {
   id?: string
   createdAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutBookmarksInput
   post: Prisma.PostCreateNestedOneWithoutBookmarksInput
+  user: Prisma.UserCreateNestedOneWithoutBookmarksInput
 }
 
 export type BookmarkUncheckedCreateInput = {
@@ -237,8 +237,8 @@ export type BookmarkUncheckedCreateInput = {
 export type BookmarkUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutBookmarksNestedInput
   post?: Prisma.PostUpdateOneRequiredWithoutBookmarksNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutBookmarksNestedInput
 }
 
 export type BookmarkUncheckedUpdateInput = {
@@ -528,8 +528,8 @@ export type BookmarkSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   userId?: boolean
   postId?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bookmark"]>
 
 export type BookmarkSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -537,8 +537,8 @@ export type BookmarkSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   userId?: boolean
   postId?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bookmark"]>
 
 export type BookmarkSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -546,8 +546,8 @@ export type BookmarkSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   userId?: boolean
   postId?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bookmark"]>
 
 export type BookmarkSelectScalar = {
@@ -559,23 +559,23 @@ export type BookmarkSelectScalar = {
 
 export type BookmarkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "postId" | "createdAt", ExtArgs["result"]["bookmark"]>
 export type BookmarkInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type BookmarkIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type BookmarkIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $BookmarkPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Bookmark"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
     post: Prisma.$PostPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -976,8 +976,8 @@ readonly fields: BookmarkFieldRefs;
  */
 export interface Prisma__BookmarkClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   post<T extends Prisma.PostDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PostDefaultArgs<ExtArgs>>): Prisma.Prisma__PostClient<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

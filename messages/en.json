@@ -104,7 +104,8 @@
       "publish": "Post",
       "login": "Login",
       "logout": "Logout",
-      "copyProfileLink": "Copy profile link"
+      "copyProfileLink": "Copy profile link",
+      "jobs": "Jobs"
     },
     "Mobile": {
       "home": "Home",
@@ -519,6 +520,58 @@
       "notFoundDescription": "This post may have been removed or is not available.",
       "fallbackDescription": "Read this post and discussion replies.",
       "titleTemplate": "{authorName}'s post | Gekaixing"
+    },
+    "Jobs": {
+      "badge": "Career Hub",
+      "title": "Find your next role",
+      "subtitle": "Search jobs by keyword, location, company, and refine results with flexible filters.",
+      "resultsLabel": "Matching jobs",
+      "filters": {
+        "title": "Search filters",
+        "keyword": "Keyword",
+        "location": "Location",
+        "company": "Company",
+        "locationType": "Workplace type",
+        "seniority": "Seniority",
+        "employmentType": "Employment type",
+        "any": "All"
+      },
+      "placeholders": {
+        "keyword": "Search title, skills, or keywords",
+        "location": "Search city, country, or region",
+        "company": "Enter company name"
+      },
+      "locationTypes": {
+        "onsite": "On-site",
+        "remote": "Remote",
+        "hybrid": "Hybrid"
+      },
+      "seniority": {
+        "intern": "Intern",
+        "entry": "Entry level",
+        "junior": "Junior",
+        "mid": "Mid level",
+        "senior": "Senior",
+        "lead": "Lead",
+        "manager": "Manager",
+        "executive": "Executive"
+      },
+      "employmentTypes": {
+        "fullTime": "Full-time",
+        "fullTimeContract": "Full-time contract",
+        "partTime": "Part-time",
+        "contract": "Contract hire"
+      },
+      "actions": {
+        "search": "Search jobs",
+        "reset": "Reset",
+        "apply": "Apply now",
+        "clearFilters": "Clear all filters"
+      },
+      "empty": {
+        "title": "No jobs matched your filters",
+        "description": "Try broadening the keyword or removing a few filters to see more roles."
+      }
     }
   },
   "AuthCodeError": {
@@ -635,6 +688,22 @@
         "cancel": "Cancel",
         "confirm": "Confirm"
       }
+    },
+    "Cropped": {
+      "updateSuccess": "Updated successfully",
+      "updateFailed": "Update failed",
+      "uploadFailed": "Image upload failed",
+      "missingKey": "Gemini API key is not configured. Please configure it in Settings first.",
+      "quotaExceeded": "Gemini quota exceeded. Please retry later.",
+      "aiGenerateFailed": "AI avatar generation failed",
+      "aiGenerateFailedBackground": "AI background generation failed",
+      "aiGenerateSuccess": "AI avatar generated. You can crop and confirm now.",
+      "aiSectionTitle": "Generate avatar with AI",
+      "aiPromptPlaceholder": "Describe the avatar style you want",
+      "aiGenerateSuccessBackground": "AI background generated. You can crop and confirm now.",
+      "aiSectionTitleBackground": "Generate background with AI",
+      "aiPromptPlaceholderBackground": "Describe the background style you want",
+      "confirm": "Confirm"
     }
   },
   "Legal": {
@@ -860,6 +929,28 @@
       "accessibility": "Accessibility",
       "ads": "Ads Info",
       "copyright": "(c) 2026 Gekaixing, Inc."
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "description": "Four quick answers about setup, content, messaging, and security.",
+      "items": {
+        "1": {
+          "question": "How quickly can I launch this template?",
+          "answer": "You can run locally in minutes after setting environment variables and database credentials."
+        },
+        "2": {
+          "question": "Can I customize the social features?",
+          "answer": "Yes. Posts, replies, likes, sharing, profiles, and messaging are modular and ready to extend."
+        },
+        "3": {
+          "question": "Does it support multilingual content?",
+          "answer": "Yes. It uses next-intl, so you can add or modify locale files in the messages directory."
+        },
+        "4": {
+          "question": "What about authentication and data safety?",
+          "answer": "Supabase SSR auth and Prisma with PostgreSQL provide a reliable baseline for secure access and data consistency."
+        }
+      }
     }
   },
   "NoirPages": {
@@ -1019,7 +1110,24 @@
       "trendTitle": "My Content Action Trend",
       "trendDesc": "POST_CREATE and REPLY_CREATE by day",
       "trendLine": "Posts {posts} / Replies {replies}",
-      "noTrend": "No radar trend data"
+      "noTrend": "No radar trend data",
+      "hotPostsTitle": "Top posts in last 7 days",
+      "hotPostsDesc": "Your hottest posts ranked by engagement score",
+      "noHotPosts": "No hot posts yet",
+      "likes": "Likes {count}",
+      "replies": "Replies {count}",
+      "shares": "Shares {count}",
+      "hotScore": "Hot score {score}",
+      "aiTitle": "Local trend AI assistant",
+      "aiCardDesc": "Use Gemini + Google Search to find regional hotspots and get post ideas",
+      "aiDesc": "Generate local hotspot events, keywords, and ready-to-post drafts.",
+      "aiGenerate": "Analyze hotspots",
+      "aiLoading": "Analyzing...",
+      "aiFailed": "Failed to generate AI hotspot insights",
+      "aiRegion": "Region",
+      "aiKeywords": "Suggested keywords",
+      "aiHotspots": "Regional hotspot events",
+      "aiPostIdeas": "Post ideas"
     },
     "handles": {
       "stats": {
@@ -1041,20 +1149,62 @@
     },
     "talent": {
       "stats": {
-        "candidates": "Following Creator Candidates",
-        "highSignal": "High Signal Creators (50+)"
+        "totalJobPosts": "Total job posts",
+        "remoteJobPosts": "Remote job posts",
+        "hybridJobPosts": "Hybrid job posts"
       },
-      "title": "Creator Activity in My Following",
-      "desc": "Based only on creators I follow",
+      "title": "My posted jobs",
+      "desc": "Latest 50 jobs you published",
+      "publishTitle": "Publish a new job",
+      "publishDesc": "Fill in required fields to publish your hiring post",
+      "form": {
+        "title": "Job title",
+        "titlePlaceholder": "Enter the job title",
+        "company": "Company",
+        "companyPlaceholder": "Enter company name",
+        "description": "Job details",
+        "descriptionPlaceholder": "Describe responsibilities, requirements, and expectations",
+        "locationType": "Location type",
+        "locationTypePlaceholder": "Select location type",
+        "seniority": "Seniority",
+        "seniorityPlaceholder": "Select seniority",
+        "employmentType": "Employment type",
+        "employmentTypePlaceholder": "Select employment type",
+        "submit": "Publish job",
+        "submitting": "Publishing..."
+      },
+      "createSuccess": "Job posted successfully",
+      "createFailed": "Failed to post job",
       "table": {
-        "user": "User",
-        "posts": "Posts",
-        "replies": "Replies",
-        "likes": "Likes",
-        "shares": "Shares",
-        "score": "Score"
+        "title": "Title",
+        "company": "Company",
+        "locationType": "Location type",
+        "seniority": "Seniority",
+        "employmentType": "Employment type",
+        "time": "Posted at"
       },
-      "noData": "No creator candidates"
+      "locationType": {
+        "ONSITE": "On-site",
+        "REMOTE": "Remote",
+        "HYBRID": "Hybrid"
+      },
+      "seniority": {
+        "INTERN": "Intern",
+        "ENTRY": "Entry level",
+        "JUNIOR": "Junior",
+        "MID": "Mid level",
+        "SENIOR": "Senior",
+        "LEAD": "Lead",
+        "MANAGER": "Manager",
+        "EXECUTIVE": "Executive"
+      },
+      "employmentType": {
+        "FULL_TIME": "Full-time",
+        "FULL_TIME_CONTRACT": "Full-time contract",
+        "PART_TIME": "Part-time",
+        "CONTRACT": "Contract"
+      },
+      "noData": "No job posts yet"
     },
     "support": {
       "stats": {
@@ -1114,7 +1264,10 @@
       "engagementRate": "Engagement rate",
       "replies": "Replies",
       "posts": "Posts",
-      "growth": "Growth vs previous 7d"
+      "growth": "Growth vs previous 7d",
+      "postClickRate": "Post click-through rate",
+      "replyRate": "Reply rate",
+      "profileEnterRate": "Profile visit rate"
     }
   }
 }

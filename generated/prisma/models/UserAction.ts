@@ -240,8 +240,8 @@ export type UserActionWhereInput = {
   dwellMs?: Prisma.IntNullableFilter<"UserAction"> | number | null
   metadata?: Prisma.StringNullableFilter<"UserAction"> | string | null
   createdAt?: Prisma.DateTimeFilter<"UserAction"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   post?: Prisma.XOR<Prisma.PostNullableScalarRelationFilter, Prisma.PostWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type UserActionOrderByWithRelationInput = {
@@ -253,8 +253,8 @@ export type UserActionOrderByWithRelationInput = {
   dwellMs?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
   post?: Prisma.PostOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type UserActionWhereUniqueInput = Prisma.AtLeast<{
@@ -269,8 +269,8 @@ export type UserActionWhereUniqueInput = Prisma.AtLeast<{
   dwellMs?: Prisma.IntNullableFilter<"UserAction"> | number | null
   metadata?: Prisma.StringNullableFilter<"UserAction"> | string | null
   createdAt?: Prisma.DateTimeFilter<"UserAction"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   post?: Prisma.XOR<Prisma.PostNullableScalarRelationFilter, Prisma.PostWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type UserActionOrderByWithAggregationInput = {
@@ -310,8 +310,8 @@ export type UserActionCreateInput = {
   dwellMs?: number | null
   metadata?: string | null
   createdAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutActionsInput
   post?: Prisma.PostCreateNestedOneWithoutActionsInput
+  user: Prisma.UserCreateNestedOneWithoutActionsInput
 }
 
 export type UserActionUncheckedCreateInput = {
@@ -332,8 +332,8 @@ export type UserActionUpdateInput = {
   dwellMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   metadata?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutActionsNestedInput
   post?: Prisma.PostUpdateOneWithoutActionsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutActionsNestedInput
 }
 
 export type UserActionUncheckedUpdateInput = {
@@ -722,8 +722,8 @@ export type UserActionSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   dwellMs?: boolean
   metadata?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.UserAction$postArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userAction"]>
 
 export type UserActionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -735,8 +735,8 @@ export type UserActionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   dwellMs?: boolean
   metadata?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.UserAction$postArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userAction"]>
 
 export type UserActionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -748,8 +748,8 @@ export type UserActionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   dwellMs?: boolean
   metadata?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.UserAction$postArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userAction"]>
 
 export type UserActionSelectScalar = {
@@ -765,23 +765,23 @@ export type UserActionSelectScalar = {
 
 export type UserActionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "actionType" | "targetPostId" | "targetAuthorId" | "dwellMs" | "metadata" | "createdAt", ExtArgs["result"]["userAction"]>
 export type UserActionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.UserAction$postArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type UserActionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.UserAction$postArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type UserActionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.UserAction$postArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $UserActionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "UserAction"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
     post: Prisma.$PostPayload<ExtArgs> | null
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1186,8 +1186,8 @@ readonly fields: UserActionFieldRefs;
  */
 export interface Prisma__UserActionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   post<T extends Prisma.UserAction$postArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserAction$postArgs<ExtArgs>>): Prisma.Prisma__PostClient<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

@@ -16,6 +16,15 @@ export interface FeedPostItem {
   likedByMe: boolean;
   bookmarkedByMe: boolean;
   sharedByMe: boolean;
+  metrics?: {
+    impressions: number;
+    postClicks: number;
+    repliesReceived: number;
+    profileEnters: number;
+    postClickRate: number;
+    replyRate: number;
+    profileEnterRate: number;
+  };
 }
 
 export interface FeedPage {

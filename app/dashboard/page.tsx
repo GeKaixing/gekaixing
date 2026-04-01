@@ -32,6 +32,10 @@ function formatDate(date: Date, locale: string): string {
   }).format(date);
 }
 
+function formatRate(value: number): string {
+  return `${value.toFixed(2)}%`;
+}
+
 export default async function DashboardPage(): Promise<React.JSX.Element> {
   const locale = await getLocale();
   const { userId } = await getDashboardViewer();
@@ -41,7 +45,7 @@ export default async function DashboardPage(): Promise<React.JSX.Element> {
     getTranslations("Dashboard.common"),
     getTranslations("Dashboard.engagement"),
   ]);
-  const { summary, trend, recentPosts } = await getDashboardHomeData(userId);
+  const { summary, rates, trend, recentPosts } = await getDashboardHomeData(userId);
 
   return (
     <>
@@ -103,6 +107,36 @@ export default async function DashboardPage(): Promise<React.JSX.Element> {
         />
       </div>
 
+      <div className="grid grid-cols-1 gap-4 px-4 lg:grid-cols-3 lg:px-6">
+        <Card>
+          <CardHeader>
+            <CardDescription>{te("postClickRate")}</CardDescription>
+            <CardTitle>{formatRate(rates.postClickRate)}</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-muted-foreground">
+            {rates.postClicks} / {rates.impressions}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardDescription>{te("replyRate")}</CardDescription>
+            <CardTitle>{formatRate(rates.replyRate)}</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-muted-foreground">
+            {rates.repliesReceived} / {rates.impressions}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardDescription>{te("profileEnterRate")}</CardDescription>
+            <CardTitle>{formatRate(rates.profileEnterRate)}</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-muted-foreground">
+            {rates.profileEnters} / {rates.impressions}
+          </CardContent>
+        </Card>
+      </div>
+
       <div className="grid grid-cols-1 gap-4 px-4 lg:grid-cols-2 lg:px-6">
         <Card>
           <CardHeader>
@@ -148,10 +182,23 @@ export default async function DashboardPage(): Promise<React.JSX.Element> {
                         />
                       </TableCell>
                       <TableCell>
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                           <Badge variant="outline">{t("badge.likes", { count: item.likeCount })}</Badge>
                           <Badge variant="outline">{t("badge.replies", { count: item.replyCount })}</Badge>
                           <Badge variant="outline">{t("badge.shares", { count: item.shareCount })}</Badge>
+                          <Badge variant="secondary">
+                            {te("postClickRate")}: {formatRate(item.metrics.postClickRate)}
+                          </Badge>
+                          <Badge variant="secondary">
+                            {te("replyRate")}: {formatRate(item.metrics.replyRate)}
+                          </Badge>
+                          <Badge variant="secondary">
+                            {te("profileEnterRate")}: {formatRate(item.metrics.profileEnterRate)}
+                          </Badge>
+                        </div>
+                        <div className="mt-2 text-xs text-muted-foreground">
+                          {item.metrics.postClicks}/{item.metrics.impressions} | {item.metrics.repliesReceived}/
+                          {item.metrics.impressions} | {item.metrics.profileEnters}/{item.metrics.impressions}
                         </div>
                       </TableCell>
                       <TableCell className="text-right text-muted-foreground">{formatDate(item.createdAt, locale)}</TableCell>

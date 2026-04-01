@@ -63,6 +63,7 @@ export const ModelName = {
   ConversationRead: 'ConversationRead',
   ChatAISession: 'ChatAISession',
   ChatAIMessage: 'ChatAIMessage',
+  JobPosting: 'JobPosting',
   UserAction: 'UserAction'
 } as const
 
@@ -84,7 +85,6 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UserScalarFieldEnum = {
   id: 'id',
-  userid: 'userid',
   email: 'email',
   name: 'name',
   avatar: 'avatar',
@@ -92,9 +92,14 @@ export const UserScalarFieldEnum = {
   briefIntroduction: 'briefIntroduction',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  userid: 'userid',
   isPremium: 'isPremium',
   stripeCustomerId: 'stripeCustomerId',
-  stripeSubId: 'stripeSubId'
+  stripeSubId: 'stripeSubId',
+  subscriptionStatus: 'subscriptionStatus',
+  premiumExpiresAt: 'premiumExpiresAt',
+  premiumGraceEndsAt: 'premiumGraceEndsAt',
+  stripePriceId: 'stripePriceId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -115,7 +120,6 @@ export type FollowScalarFieldEnum = (typeof FollowScalarFieldEnum)[keyof typeof 
 export const PostScalarFieldEnum = {
   id: 'id',
   content: 'content',
-  videoUrl: 'videoUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   authorId: 'authorId',
@@ -124,7 +128,8 @@ export const PostScalarFieldEnum = {
   likeCount: 'likeCount',
   replyCount: 'replyCount',
   shareCount: 'shareCount',
-  starCount: 'starCount'
+  starCount: 'starCount',
+  videoUrl: 'videoUrl'
 } as const
 
 export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
@@ -189,9 +194,9 @@ export const MessageScalarFieldEnum = {
   id: 'id',
   conversationId: 'conversationId',
   senderId: 'senderId',
-  type: 'type',
   content: 'content',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  type: 'type'
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
@@ -230,6 +235,22 @@ export const ChatAIMessageScalarFieldEnum = {
 } as const
 
 export type ChatAIMessageScalarFieldEnum = (typeof ChatAIMessageScalarFieldEnum)[keyof typeof ChatAIMessageScalarFieldEnum]
+
+
+export const JobPostingScalarFieldEnum = {
+  id: 'id',
+  authorId: 'authorId',
+  title: 'title',
+  company: 'company',
+  description: 'description',
+  locationType: 'locationType',
+  seniority: 'seniority',
+  employmentType: 'employmentType',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type JobPostingScalarFieldEnum = (typeof JobPostingScalarFieldEnum)[keyof typeof JobPostingScalarFieldEnum]
 
 
 export const UserActionScalarFieldEnum = {

@@ -1,24 +1,7 @@
-﻿import { createClient } from "@/utils/supabase/server";
 import { prisma } from "@/lib/prisma";
+import { withTimeoutOrNull } from "@/lib/with-timeout";
+import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
-
-function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      reject(new Error(`Operation timed out after ${timeoutMs}ms`));
-    }, timeoutMs);
-
-    promise
-      .then((value) => {
-        clearTimeout(timeout);
-        resolve(value);
-      })
-      .catch((error: unknown) => {
-        clearTimeout(timeout);
-        reject(error);
-      });
-  });
-}
 
 export async function GET(request: Request): Promise<NextResponse> {
   const { searchParams, origin } = new URL(request.url);
@@ -44,7 +27,7 @@ export async function GET(request: Request): Promise<NextResponse> {
   const user = data.user;
 
   try {
-    await withTimeout(
+    const upsertResult = await withTimeoutOrNull(
       prisma.user.upsert({
         where: { id: user.id },
         update: {
@@ -59,8 +42,12 @@ export async function GET(request: Request): Promise<NextResponse> {
           avatar: user.user_metadata?.avatar_url ?? null,
         },
       }),
-      5000,
+      8000
     );
+
+    if (!upsertResult) {
+      console.warn("User sync timed out in auth callback.");
+    }
   } catch (upsertError) {
     console.error("Failed to sync user into Prisma:", upsertError);
   }

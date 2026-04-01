@@ -79,6 +79,11 @@ export type ChatAISession = Prisma.ChatAISessionModel
  */
 export type ChatAIMessage = Prisma.ChatAIMessageModel
 /**
+ * Model JobPosting
+ * 
+ */
+export type JobPosting = Prisma.JobPostingModel
+/**
  * Model UserAction
  * 
  */

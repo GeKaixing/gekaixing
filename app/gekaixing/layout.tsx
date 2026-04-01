@@ -1,8 +1,9 @@
-﻿import Footer from "@/components/gekaixing/Footer";
+import Footer from "@/components/gekaixing/Footer";
 import MobileFooter from "@/components/gekaixing/MobileFooter";
 import MobileHeader from "@/components/gekaixing/MobileHeader";
 import Sidebar from "@/components/gekaixing/Sidebar";
 import { prisma } from "@/lib/prisma";
+import { withTimeoutOrNull } from "@/lib/with-timeout";
 import { createClient } from "@/utils/supabase/server";
 import { getTranslations } from "next-intl/server";
 import type { ReactElement, ReactNode } from "react";
@@ -25,24 +26,6 @@ export interface userResult {
   };
 }
 
-function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      reject(new Error(`Operation timed out after ${timeoutMs}ms`));
-    }, timeoutMs);
-
-    promise
-      .then((value) => {
-        clearTimeout(timeout);
-        resolve(value);
-      })
-      .catch((error: unknown) => {
-        clearTimeout(timeout);
-        reject(error);
-      });
-  });
-}
-
 export default async function RootLayout({
   children,
 }: {
@@ -53,18 +36,17 @@ export default async function RootLayout({
   let userId: string | null = null;
 
   try {
-    const {
-      data: { user },
-    } = await withTimeout(supabase.auth.getUser(), 5000);
+    const authResult = await withTimeoutOrNull(supabase.auth.getUser(), 8000);
+    const user = authResult?.data.user ?? null;
     userId = user?.id ?? null;
-  } catch (error) {
-    console.error("Failed to resolve session user in gekaixing layout:", error);
+  } catch {
+    userId = null;
   }
 
   let userInfo: userResult | null = null;
   if (userId) {
     try {
-      userInfo = await withTimeout(
+      userInfo = await withTimeoutOrNull(
         prisma.user.findUnique({
           where: {
             id: userId,
@@ -78,27 +60,28 @@ export default async function RootLayout({
             },
           },
         }),
-        5000,
+        8000
       );
-    } catch (error) {
-      console.error("Failed to load profile in gekaixing layout:", error);
+    } catch {
+      userInfo = null;
     }
   }
 
   let mentionCount = 0;
   if (userInfo?.id) {
     try {
-      mentionCount = await withTimeout(
+      const mentionResult = await withTimeoutOrNull(
         prisma.post.count({
           where: {
             authorId: { not: userInfo.id },
             content: { contains: `@${userInfo.userid}`, mode: "insensitive" },
           },
         }),
-        5000,
+        8000
       );
-    } catch (error) {
-      console.error("Failed to count mentions in gekaixing layout:", error);
+      mentionCount = mentionResult ?? 0;
+    } catch {
+      mentionCount = 0;
     }
   }
 

@@ -278,6 +278,19 @@ async function getUserInfo(userId: string) {
     return user
 }
 
+async function getUserHiringStatus(userId: string): Promise<boolean> {
+    const hiringPost = await prisma.jobPosting.findFirst({
+        where: {
+            authorId: userId,
+        },
+        select: {
+            id: true,
+        },
+    })
+
+    return Boolean(hiringPost)
+}
+
 
 export default async function Page({ params }: { params: Promise<{ id: string[] }> }) {
     const t = await getTranslations("ImitationX.Profile")
@@ -301,7 +314,10 @@ export default async function Page({ params }: { params: Promise<{ id: string[] 
         getScopedFeed("user-bookmarks", userId, currentUser?.id),
     ])
 
-    const user = await getUserInfo(userId)
+    const [user, isHiring] = await Promise.all([
+        getUserInfo(userId),
+        getUserHiringStatus(userId),
+    ])
     const isOwner = currentUser?.id === user?.id
 
 
@@ -320,6 +336,7 @@ export default async function Page({ params }: { params: Promise<{ id: string[] 
                     following={user?._count.following}
                     isOwner={isOwner}
                     isPremium={user?.isPremium || false}
+                    isHiring={isHiring}
                 />
 
                 <Tabs defaultValue="post" className="w-full">

@@ -4,6 +4,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { prisma } from "@/lib/prisma";
+import { withTimeoutOrNull } from "@/lib/with-timeout";
 import { createClient } from "@/utils/supabase/server";
 
 type DashboardShellProps = {
@@ -14,24 +15,6 @@ const SIDEBAR_STYLE: React.CSSProperties = {
   "--sidebar-width": "calc(var(--spacing) * 72)",
   "--header-height": "calc(var(--spacing) * 12)",
 } as React.CSSProperties;
-
-function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      reject(new Error(`Operation timed out after ${timeoutMs}ms`));
-    }, timeoutMs);
-
-    promise
-      .then((value) => {
-        clearTimeout(timeout);
-        resolve(value);
-      })
-      .catch((error: unknown) => {
-        clearTimeout(timeout);
-        reject(error);
-      });
-  });
-}
 
 export default async function DashboardShell({ children }: DashboardShellProps): Promise<React.JSX.Element> {
   let currentUser:
@@ -44,12 +27,11 @@ export default async function DashboardShell({ children }: DashboardShellProps):
 
   try {
     const supabase = await createClient();
-    const {
-      data: { user },
-    } = await withTimeout(supabase.auth.getUser(), 5000);
+    const authResult = await withTimeoutOrNull(supabase.auth.getUser(), 8000);
+    const user = authResult?.data.user ?? null;
 
     if (user?.id) {
-      const profile = await withTimeout(
+      const profile = await withTimeoutOrNull(
         prisma.user.findUnique({
           where: { id: user.id },
           select: {
@@ -58,7 +40,7 @@ export default async function DashboardShell({ children }: DashboardShellProps):
             email: true,
           },
         }),
-        5000,
+        8000,
       );
 
       currentUser = {

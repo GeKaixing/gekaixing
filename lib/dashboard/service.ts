@@ -10,6 +10,7 @@ import type {
   DashboardConversationItem,
   DashboardHandleItem,
   DashboardHireTalentData,
+  DashboardJobPostItem,
   DashboardHomeData,
   DashboardPremiumUserItem,
   DashboardRadarData,
@@ -29,6 +30,15 @@ const DEFAULT_HOME_DATA: DashboardHomeData = {
     totalMessages: 0,
     weeklyNewUsers: 0,
     weeklyNewPosts: 0,
+  },
+  rates: {
+    impressions: 0,
+    postClicks: 0,
+    repliesReceived: 0,
+    profileEnters: 0,
+    postClickRate: 0,
+    replyRate: 0,
+    profileEnterRate: 0,
   },
   trend: [],
   recentPosts: [],
@@ -64,6 +74,14 @@ function toTrendMap(keys: string[]): Map<string, DashboardTrendPoint> {
   );
 }
 
+function toRate(numerator: number, denominator: number): number {
+  if (denominator <= 0) {
+    return 0;
+  }
+
+  return (numerator / denominator) * 100;
+}
+
 export const getDashboardHomeData = cache(async (userId: string | null): Promise<DashboardHomeData> => {
   if (!userId) {
     return DEFAULT_HOME_DATA;
@@ -81,6 +99,10 @@ export const getDashboardHomeData = cache(async (userId: string | null): Promise
       myMessages,
       weeklyReplies,
       weeklyPosts,
+      impressions,
+      postClicks,
+      repliesReceived,
+      profileEnters,
       recentPosts,
       recentPostRows,
     ] = await Promise.all([
@@ -91,6 +113,42 @@ export const getDashboardHomeData = cache(async (userId: string | null): Promise
       prisma.message.count({ where: { senderId: userId } }),
       prisma.post.count({ where: { authorId: userId, parentId: { not: null }, createdAt: { gte: weekAgo } } }),
       prisma.post.count({ where: { authorId: userId, parentId: null, createdAt: { gte: weekAgo } } }),
+      prisma.userAction.count({
+        where: {
+          actionType: "FEED_IMPRESSION",
+          targetAuthorId: userId,
+          createdAt: { gte: weekAgo },
+        },
+      }),
+      prisma.userAction.count({
+        where: {
+          actionType: "POST_CLICK",
+          targetAuthorId: userId,
+          createdAt: { gte: weekAgo },
+          NOT: {
+            metadata: {
+              contains: "\"kind\":\"profile_enter\"",
+            },
+          },
+        },
+      }),
+      prisma.userAction.count({
+        where: {
+          actionType: "REPLY_CREATE",
+          targetAuthorId: userId,
+          createdAt: { gte: weekAgo },
+        },
+      }),
+      prisma.userAction.count({
+        where: {
+          actionType: "POST_CLICK",
+          targetAuthorId: userId,
+          createdAt: { gte: weekAgo },
+          metadata: {
+            contains: "\"kind\":\"profile_enter\"",
+          },
+        },
+      }),
       prisma.post.findMany({
         where: { authorId: userId, parentId: null },
         orderBy: { createdAt: "desc" },
@@ -140,6 +198,114 @@ export const getDashboardHomeData = cache(async (userId: string | null): Promise
       }
     });
 
+    const recentPostIds = recentPosts.map((item) => item.id);
+    const [
+      impressionByPostRows,
+      postClickByPostRows,
+      profileEnterByPostRows,
+      replyByPostRows,
+    ] = recentPostIds.length
+      ? await Promise.all([
+          prisma.userAction.groupBy({
+            by: ["targetPostId"],
+            where: {
+              actionType: "FEED_IMPRESSION",
+              targetAuthorId: userId,
+              targetPostId: { in: recentPostIds },
+              createdAt: { gte: weekAgo },
+            },
+            _count: {
+              _all: true,
+            },
+          }),
+          prisma.userAction.groupBy({
+            by: ["targetPostId"],
+            where: {
+              actionType: "POST_CLICK",
+              targetAuthorId: userId,
+              targetPostId: { in: recentPostIds },
+              createdAt: { gte: weekAgo },
+              NOT: {
+                metadata: {
+                  contains: "\"kind\":\"profile_enter\"",
+                },
+              },
+            },
+            _count: {
+              _all: true,
+            },
+          }),
+          prisma.userAction.groupBy({
+            by: ["targetPostId"],
+            where: {
+              actionType: "POST_CLICK",
+              targetAuthorId: userId,
+              targetPostId: { in: recentPostIds },
+              createdAt: { gte: weekAgo },
+              metadata: {
+                contains: "\"kind\":\"profile_enter\"",
+              },
+            },
+            _count: {
+              _all: true,
+            },
+          }),
+          prisma.userAction.groupBy({
+            by: ["targetPostId"],
+            where: {
+              actionType: "REPLY_CREATE",
+              targetAuthorId: userId,
+              targetPostId: { in: recentPostIds },
+              createdAt: { gte: weekAgo },
+            },
+            _count: {
+              _all: true,
+            },
+          }),
+        ])
+      : [[], [], [], []];
+
+    const impressionsByPost = new Map(
+      impressionByPostRows
+        .filter((item): item is { targetPostId: string; _count: { _all: number } } => !!item.targetPostId)
+        .map((item) => [item.targetPostId, item._count._all])
+    );
+    const postClicksByPost = new Map(
+      postClickByPostRows
+        .filter((item): item is { targetPostId: string; _count: { _all: number } } => !!item.targetPostId)
+        .map((item) => [item.targetPostId, item._count._all])
+    );
+    const profileEntersByPost = new Map(
+      profileEnterByPostRows
+        .filter((item): item is { targetPostId: string; _count: { _all: number } } => !!item.targetPostId)
+        .map((item) => [item.targetPostId, item._count._all])
+    );
+    const repliesByPost = new Map(
+      replyByPostRows
+        .filter((item): item is { targetPostId: string; _count: { _all: number } } => !!item.targetPostId)
+        .map((item) => [item.targetPostId, item._count._all])
+    );
+
+    const recentPostsWithMetrics = recentPosts.map((item) => {
+      const itemImpressions = impressionsByPost.get(item.id) ?? 0;
+      const itemPostClicks = postClicksByPost.get(item.id) ?? 0;
+      const itemReplies = repliesByPost.get(item.id) ?? 0;
+      const itemProfileEnters = profileEntersByPost.get(item.id) ?? 0;
+
+      return {
+        ...item,
+        metrics: {
+          impressions: itemImpressions,
+          postClicks: itemPostClicks,
+          repliesReceived: itemReplies,
+          profileEnters: itemProfileEnters,
+          postClickRate: toRate(itemPostClicks, itemImpressions),
+          replyRate: toRate(itemReplies, itemImpressions),
+          profileEnterRate: toRate(itemProfileEnters, itemImpressions),
+        },
+      };
+    });
+
     return {
       summary: {
         totalUsers: followingCount,
@@ -150,8 +316,17 @@ export const getDashboardHomeData = cache(async (userId: string | null): Promise
         weeklyNewUsers: weeklyPosts,
         weeklyNewPosts: weeklyReplies,
       },
+      rates: {
+        impressions,
+        postClicks,
+        repliesReceived,
+        profileEnters,
+        postClickRate: toRate(postClicks, impressions),
+        replyRate: toRate(repliesReceived, impressions),
+        profileEnterRate: toRate(profileEnters, impressions),
+      },
       trend: keys.map((key) => trendMap.get(key) as DashboardTrendPoint),
-      recentPosts,
+      recentPosts: recentPostsWithMetrics,
     };
   } catch (error) {
     console.error("Failed to get dashboard home data:", error);
@@ -249,11 +424,15 @@ export const getDashboardRadarData = cache(async (userId: string | null): Promis
     return {
       actionSummary: [],
       trend: [],
+      hotPosts: [],
     };
   }
 
   try {
-    const [actionCounts, recentActions] = await Promise.all([
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
+    const [actionCounts, recentActions, recentPosts] = await Promise.all([
       Promise.all(
         ACTION_TYPES.map(async (actionType) => {
           const count = await prisma.userAction.count({ where: { userId, actionType } });
@@ -272,6 +451,22 @@ export const getDashboardRadarData = cache(async (userId: string | null): Promis
           actionType: true,
           createdAt: true,
         },
+      }),
+      prisma.post.findMany({
+        where: {
+          authorId: userId,
+          parentId: null,
+          createdAt: { gte: weekAgo },
+        },
+        select: {
+          id: true,
+          content: true,
+          createdAt: true,
+          likeCount: true,
+          replyCount: true,
+          shareCount: true,
+        },
+        take: 50,
       }),
     ]);
 
@@ -301,6 +496,14 @@ export const getDashboardRadarData = cache(async (userId: string | null): Promis
       .sort((left, right) => right.count - left.count)
       .filter((item) => item.count > 0);
 
+    const hotPosts = recentPosts
+      .map((post) => ({
+        ...post,
+        hotScore: post.likeCount * 3 + post.replyCount * 4 + post.shareCount * 5,
+      }))
+      .sort((left, right) => right.hotScore - left.hotScore || right.createdAt.getTime() - left.createdAt.getTime())
+      .slice(0, 5);
+
     return {
       actionSummary,
       trend: keys.map((key) => {
@@ -312,12 +515,14 @@ export const getDashboardRadarData = cache(async (userId: string | null): Promis
           replies: value?.replyCreate ?? 0,
         };
       }),
+      hotPosts,
     };
   } catch (error) {
     console.error("Failed to get dashboard radar data:", error);
     return {
       actionSummary: [],
       trend: [],
+      hotPosts: [],
     };
   }
 });
@@ -398,133 +603,51 @@ export const getDashboardHireTalentData = cache(async (userId: string | null): P
   if (!userId) {
     return {
       summary: {
-        activeCreators: 0,
-        highSignalCreators: 0,
+        totalJobPosts: 0,
+        remoteJobPosts: 0,
+        hybridJobPosts: 0,
       },
-      talents: [],
+      jobPosts: [],
     };
   }
 
   try {
-    const followingRows = await prisma.follow.findMany({
+    const rows = await prisma.jobPosting.findMany({
       where: {
-        followerId: userId,
-        status: "FOLLOWING",
+        authorId: userId,
       },
-      select: {
-        followingId: true,
-      },
+      orderBy: { createdAt: "desc" },
+      take: 50,
     });
 
-    const authorIds = followingRows.map((item) => item.followingId);
-
-    if (!authorIds.length) {
-      return {
-        summary: {
-          activeCreators: 0,
-          highSignalCreators: 0,
-        },
-        talents: [],
-      };
-    }
-
-    const postRows = await prisma.post.findMany({
-      where: {
-        authorId: { in: authorIds },
-      },
-      select: {
-        authorId: true,
-        parentId: true,
-        likeCount: true,
-        replyCount: true,
-        shareCount: true,
-      },
-    });
-
-    const perAuthor = new Map<
-      string,
-      {
-        postCount: number;
-        replyCount: number;
-        likeCount: number;
-        shareCount: number;
-      }
-    >();
-
-    postRows.forEach((item) => {
-      const base = perAuthor.get(item.authorId) ?? {
-        postCount: 0,
-        replyCount: 0,
-        likeCount: 0,
-        shareCount: 0,
-      };
-
-      if (item.parentId) {
-        base.replyCount += 1;
-      } else {
-        base.postCount += 1;
-      }
-
-      base.likeCount += item.likeCount;
-      base.shareCount += item.shareCount;
-      perAuthor.set(item.authorId, base);
-    });
-
-    const users = await prisma.user.findMany({
-      where: { id: { in: [...perAuthor.keys()] } },
-      select: {
-        id: true,
-        userid: true,
-        name: true,
-      },
-    });
-
-    const userMap = new Map(users.map((item) => [item.id, item]));
-
-    const talents: DashboardTalentItem[] = [...perAuthor.entries()]
-      .map(([authorId, metrics]) => {
-        const user = userMap.get(authorId);
-
-        if (!user) {
-          return null;
-        }
-
-        const score =
-          metrics.postCount * 2 +
-          metrics.replyCount +
-          metrics.likeCount * 3 +
-          metrics.shareCount * 4;
-
-        return {
-          authorId,
-          userid: user.userid,
-          name: user.name,
-          postCount: metrics.postCount,
-          replyCount: metrics.replyCount,
-          likeCount: metrics.likeCount,
-          shareCount: metrics.shareCount,
-          score,
-        };
-      })
-      .filter((item): item is DashboardTalentItem => item !== null)
-      .sort((left, right) => right.score - left.score)
-      .slice(0, 20);
+    const jobPosts: DashboardJobPostItem[] = rows.map((item) => ({
+      id: item.id,
+      title: item.title,
+      company: item.company,
+      description: item.description,
+      locationType: item.locationType,
+      seniority: item.seniority,
+      employmentType: item.employmentType,
+      createdAt: item.createdAt,
+    }));
 
     return {
       summary: {
-        activeCreators: talents.length,
-        highSignalCreators: talents.filter((item) => item.score >= 50).length,
+        totalJobPosts: jobPosts.length,
+        remoteJobPosts: jobPosts.filter((item) => item.locationType === "REMOTE").length,
+        hybridJobPosts: jobPosts.filter((item) => item.locationType === "HYBRID").length,
       },
-      talents,
+      jobPosts,
     };
   } catch (error) {
     console.error("Failed to get dashboard hire talent data:", error);
     return {
       summary: {
-        activeCreators: 0,
-        highSignalCreators: 0,
+        totalJobPosts: 0,
+        remoteJobPosts: 0,
+        hybridJobPosts: 0,
       },
-      talents: [],
+      jobPosts: [],
     };
   }
 });

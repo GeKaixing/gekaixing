@@ -21,6 +21,15 @@ export interface DashboardRecentPost {
   likeCount: number;
   replyCount: number;
   shareCount: number;
+  metrics: {
+    impressions: number;
+    postClicks: number;
+    repliesReceived: number;
+    profileEnters: number;
+    postClickRate: number;
+    replyRate: number;
+    profileEnterRate: number;
+  };
   author: {
     name: string | null;
     userid: string;
@@ -46,6 +55,16 @@ export interface DashboardUserActionItem {
   count: number;
 }
 
+export interface DashboardHotPostItem {
+  id: string;
+  content: string;
+  createdAt: Date;
+  likeCount: number;
+  replyCount: number;
+  shareCount: number;
+  hotScore: number;
+}
+
 export interface DashboardHandleItem {
   id: string;
   userid: string;
@@ -65,6 +84,17 @@ export interface DashboardTalentItem {
   likeCount: number;
   shareCount: number;
   score: number;
+}
+
+export interface DashboardJobPostItem {
+  id: string;
+  title: string;
+  company: string;
+  description: string;
+  locationType: string;
+  seniority: string;
+  employmentType: string;
+  createdAt: Date;
 }
 
 export interface DashboardConversationItem {
@@ -101,6 +131,15 @@ export interface DashboardActionLogItem {
 
 export interface DashboardHomeData {
   summary: DashboardSummary;
+  rates: {
+    impressions: number;
+    postClicks: number;
+    repliesReceived: number;
+    profileEnters: number;
+    postClickRate: number;
+    replyRate: number;
+    profileEnterRate: number;
+  };
   trend: DashboardTrendPoint[];
   recentPosts: DashboardRecentPost[];
 }
@@ -118,6 +157,7 @@ export interface DashboardAffiliationsData {
 export interface DashboardRadarData {
   actionSummary: DashboardUserActionItem[];
   trend: DashboardTrendPoint[];
+  hotPosts: DashboardHotPostItem[];
 }
 
 export interface DashboardAcquireHandlesData {
@@ -131,10 +171,11 @@ export interface DashboardAcquireHandlesData {
 
 export interface DashboardHireTalentData {
   summary: {
-    activeCreators: number;
-    highSignalCreators: number;
+    totalJobPosts: number;
+    remoteJobPosts: number;
+    hybridJobPosts: number;
   };
-  talents: DashboardTalentItem[];
+  jobPosts: DashboardJobPostItem[];
 }
 
 export interface DashboardSupportData {

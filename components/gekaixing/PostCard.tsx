@@ -18,6 +18,7 @@ import { Post } from "@/app/gekaixing/page"
 import { postStore } from "@/store/post"
 import { replyStore } from "@/store/reply"
 import { useRouter } from "next/navigation"
+import { useTranslations } from "next-intl"
 import { getMentionHrefFromTarget, renderMentionHtml } from "@/utils/function/mention"
 
 export default function PostCard({
@@ -34,8 +35,10 @@ export default function PostCard({
     share,
     likedByMe,
     bookmarkedByMe,
+    metrics,
     isPremium
 }: Post) {
+    const te = useTranslations("Dashboard.engagement")
     const router = useRouter()
     const [liked, setLiked] = useState(likedByMe)
     const [bookmarked, setBookmarked] = useState(bookmarkedByMe)
@@ -59,6 +62,7 @@ export default function PostCard({
     const hasEmbeddedYouTubeNode = React.useMemo(() => {
         return content.includes("data-youtube-embed") || content.includes("<iframe")
     }, [content])
+    const formatRate = (value: number): string => `${value.toFixed(2)}%`
 
     const syncInteractionToStore = (patch: Partial<Post>): void => {
         const postState = postStore.getState()
@@ -206,7 +210,33 @@ export default function PostCard({
             return
         }
 
+        void trackInteraction("POST_CLICK")
         router.push(`/gekaixing/status/${id}`)
+    }
+
+    const trackInteraction = async (actionType: "POST_CLICK" | "PROFILE_ENTER"): Promise<void> => {
+        try {
+            await fetch("/api/post/interaction", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    postId: id,
+                    targetAuthorId: user_id,
+                    actionType,
+                    source: "post_card",
+                }),
+                keepalive: true,
+            })
+        } catch (error) {
+            console.warn("Failed to track post interaction:", error)
+        }
+    }
+
+    const handleProfileClick = (event: React.MouseEvent<HTMLDivElement>): void => {
+        event.preventDefault()
+        event.stopPropagation()
+        void trackInteraction("PROFILE_ENTER")
+        router.push(`/gekaixing/user/${user_id}`)
     }
 
     return (
@@ -214,7 +244,7 @@ export default function PostCard({
             <CardHeader>
                 <div className="flex items-center gap-3">
                     <CardTitle>
-                        <Avatar>
+                        <Avatar onClick={handleProfileClick}>
                             <AvatarImage src={user_avatar || ''} />
                             <AvatarFallback>
                                 {user_name?.[0]?.toUpperCase()}
@@ -222,7 +252,7 @@ export default function PostCard({
                         </Avatar>
                     </CardTitle>
 
-                    <div className="flex flex-col">
+                    <div className="flex flex-col cursor-pointer" onClick={handleProfileClick}>
                         <CardDescription className="font-semibold text-foreground flex items-center">
                             {user_name}
                             {isPremium && <ShieldCheck className="w-4 h-4 text-blue-500" />}
@@ -251,6 +281,18 @@ export default function PostCard({
                                 referrerPolicy="strict-origin-when-cross-origin"
                                 allowFullScreen
                             />
+                        </div>
+                    </div>
+                ) : null}
+                {metrics ? (
+                    <div className="mt-3 rounded-lg border border-border p-3 text-xs text-muted-foreground">
+                        <div className="flex flex-wrap gap-3">
+                            <span>{te("postClickRate")}: {formatRate(metrics.postClickRate)}</span>
+                            <span>{te("replyRate")}: {formatRate(metrics.replyRate)}</span>
+                            <span>{te("profileEnterRate")}: {formatRate(metrics.profileEnterRate)}</span>
+                        </div>
+                        <div className="mt-2">
+                            {metrics.postClicks}/{metrics.impressions} | {metrics.repliesReceived}/{metrics.impressions} | {metrics.profileEnters}/{metrics.impressions}
                         </div>
                     </div>
                 ) : null}

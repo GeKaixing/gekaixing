@@ -104,7 +104,8 @@
       "publish": "发布",
       "login": "登录",
       "logout": "登出",
-      "copyProfileLink": "复制连接"
+      "copyProfileLink": "复制连接",
+      "jobs": "职位"
     },
     "Mobile": {
       "home": "主页",
@@ -519,6 +520,58 @@
       "notFoundDescription": "该帖子可能已被删除或不可见。",
       "fallbackDescription": "查看这条帖子内容与评论讨论。",
       "titleTemplate": "{authorName} 的帖子 | Gekaixing"
+    },
+    "Jobs": {
+      "badge": "职位中心",
+      "title": "搜索下一份工作",
+      "subtitle": "支持按关键词、位置、公司搜索，并通过多组筛选快速缩小结果范围。",
+      "resultsLabel": "匹配职位",
+      "filters": {
+        "title": "筛选条件",
+        "keyword": "关键词",
+        "location": "位置",
+        "company": "公司",
+        "locationType": "位置类型",
+        "seniority": "资历",
+        "employmentType": "就业类型",
+        "any": "全部"
+      },
+      "placeholders": {
+        "keyword": "搜索职位名称、技能或关键词",
+        "location": "搜索城市、国家或地区",
+        "company": "输入公司名字"
+      },
+      "locationTypes": {
+        "onsite": "现场",
+        "remote": "远程",
+        "hybrid": "混合"
+      },
+      "seniority": {
+        "intern": "实习生",
+        "entry": "入门级",
+        "junior": "初级",
+        "mid": "中级",
+        "senior": "高级",
+        "lead": "销售线索",
+        "manager": "经理",
+        "executive": "管理人员"
+      },
+      "employmentTypes": {
+        "fullTime": "全职",
+        "fullTimeContract": "全职合同",
+        "partTime": "兼职",
+        "contract": "合同聘用"
+      },
+      "actions": {
+        "search": "搜索职位",
+        "reset": "重置",
+        "apply": "立即申请",
+        "clearFilters": "清除全部筛选"
+      },
+      "empty": {
+        "title": "没有符合条件的职位",
+        "description": "可以尝试放宽关键词或减少筛选条件，查看更多机会。"
+      }
     }
   },
   "AuthCodeError": {
@@ -635,6 +688,22 @@
         "cancel": "取消",
         "confirm": "确认"
       }
+    },
+    "Cropped": {
+      "updateSuccess": "更新成功",
+      "updateFailed": "更新失败",
+      "uploadFailed": "上传图片失败",
+      "missingKey": "未配置 Gemini API Key，请先前往设置页配置。",
+      "quotaExceeded": "Gemini 配额不足，请稍后重试。",
+      "aiGenerateFailed": "AI 头像生成失败",
+      "aiGenerateFailedBackground": "AI 背景图生成失败",
+      "aiGenerateSuccess": "AI 头像生成成功，请裁剪后确认。",
+      "aiSectionTitle": "AI 生成头像",
+      "aiPromptPlaceholder": "请输入你想要的头像风格描述",
+      "aiGenerateSuccessBackground": "AI 背景图生成成功，请裁剪后确认。",
+      "aiSectionTitleBackground": "AI 生成背景图",
+      "aiPromptPlaceholderBackground": "请输入你想要的背景风格描述",
+      "confirm": "确认"
     }
   },
   "Legal": {
@@ -860,6 +929,28 @@
       "accessibility": "辅助功能",
       "ads": "更多",
       "copyright": "(c) 2026 Gekaixing, Inc."
+    },
+    "faq": {
+      "title": "常见问题",
+      "description": "这里整理了关于部署、功能扩展、多语言和安全能力的 4 个快速解答。",
+      "items": {
+        "1": {
+          "question": "这个模板多久可以跑起来？",
+          "answer": "配置好环境变量和数据库后，通常几分钟内就可以在本地启动。"
+        },
+        "2": {
+          "question": "社交功能可以按业务二次开发吗？",
+          "answer": "可以。帖子、回复、点赞、分享、个人主页和私信模块都可以按需扩展。"
+        },
+        "3": {
+          "question": "支持多语言吗？",
+          "answer": "支持。项目使用 next-intl，你可以直接在 messages 目录维护和新增语言文案。"
+        },
+        "4": {
+          "question": "登录和数据安全怎么保障？",
+          "answer": "默认基于 Supabase SSR 认证和 Prisma + PostgreSQL，提供稳定的鉴权与数据一致性基础。"
+        }
+      }
     }
   },
   "NoirPages": {
@@ -1019,7 +1110,24 @@
       "trendTitle": "我的内容行为趋势",
       "trendDesc": "统计 POST_CREATE 与 REPLY_CREATE",
       "trendLine": "发帖 {posts} / 回复 {replies}",
-      "noTrend": "暂无雷达趋势数据"
+      "noTrend": "暂无雷达趋势数据",
+      "hotPostsTitle": "近 7 天最火帖子",
+      "hotPostsDesc": "按互动热度排序的最热内容",
+      "noHotPosts": "暂无热门帖子",
+      "likes": "点赞 {count}",
+      "replies": "回复 {count}",
+      "shares": "转发 {count}",
+      "hotScore": "热度分 {score}",
+      "aiTitle": "本地热点 AI 助手",
+      "aiCardDesc": "使用 Gemini + Google Search 按地区分析热点事件并生成发帖建议",
+      "aiDesc": "生成你所在地区的热点事件、关键词与可直接发布的帖子草稿。",
+      "aiGenerate": "分析热点",
+      "aiLoading": "分析中...",
+      "aiFailed": "AI 热点分析失败",
+      "aiRegion": "地区",
+      "aiKeywords": "建议关键词",
+      "aiHotspots": "地区热点事件",
+      "aiPostIdeas": "发帖建议"
     },
     "handles": {
       "stats": {
@@ -1041,20 +1149,62 @@
     },
     "talent": {
       "stats": {
-        "candidates": "关注创作者候选",
-        "highSignal": "高信号创作者（50+）"
+        "totalJobPosts": "岗位总数",
+        "remoteJobPosts": "远程岗位数",
+        "hybridJobPosts": "混合岗位数"
       },
-      "title": "我关注的创作者活跃榜",
-      "desc": "仅基于我关注对象的内容与互动表现",
+      "title": "我发布的岗位",
+      "desc": "展示你最近发布的 50 条岗位",
+      "publishTitle": "发布新岗位",
+      "publishDesc": "填写必填信息后即可发布招聘岗位",
+      "form": {
+        "title": "岗位名称",
+        "titlePlaceholder": "请输入岗位名称",
+        "company": "公司",
+        "companyPlaceholder": "请输入公司名称",
+        "description": "详细内容",
+        "descriptionPlaceholder": "请输入岗位职责、任职要求和其他说明",
+        "locationType": "位置类型",
+        "locationTypePlaceholder": "请选择位置类型",
+        "seniority": "资历",
+        "seniorityPlaceholder": "请选择资历",
+        "employmentType": "就业类型",
+        "employmentTypePlaceholder": "请选择就业类型",
+        "submit": "发布岗位",
+        "submitting": "发布中..."
+      },
+      "createSuccess": "岗位发布成功",
+      "createFailed": "岗位发布失败",
       "table": {
-        "user": "用户",
-        "posts": "主帖",
-        "replies": "回复",
-        "likes": "点赞",
-        "shares": "转发",
-        "score": "综合分"
+        "title": "岗位",
+        "company": "公司",
+        "locationType": "位置类型",
+        "seniority": "资历",
+        "employmentType": "就业类型",
+        "time": "发布时间"
       },
-      "noData": "暂无可评估人才"
+      "locationType": {
+        "ONSITE": "现场",
+        "REMOTE": "远程",
+        "HYBRID": "混合"
+      },
+      "seniority": {
+        "INTERN": "实习生",
+        "ENTRY": "入门级",
+        "JUNIOR": "初级",
+        "MID": "中级",
+        "SENIOR": "高级",
+        "LEAD": "销售线索",
+        "MANAGER": "经理",
+        "EXECUTIVE": "管理人员"
+      },
+      "employmentType": {
+        "FULL_TIME": "全职",
+        "FULL_TIME_CONTRACT": "全职合同",
+        "PART_TIME": "兼职",
+        "CONTRACT": "合同聘用"
+      },
+      "noData": "暂无岗位数据"
     },
     "support": {
       "stats": {
@@ -1114,7 +1264,10 @@
       "engagementRate": "互动率",
       "replies": "回复数",
       "posts": "发帖数",
-      "growth": "较上一个 7 天增长"
+      "growth": "较上一个 7 天增长",
+      "postClickRate": "帖子点击率",
+      "replyRate": "回复率",
+      "profileEnterRate": "进入个人主页率"
     }
   }
 }

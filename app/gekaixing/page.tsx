@@ -2,6 +2,7 @@ import PostStore from "@/components/gekaixing/PostStore";
 import { getHomeFeed } from "@/lib/feed/service";
 import type { FeedPage, FeedPostItem as Post } from "@/lib/feed/types";
 import { prisma } from "@/lib/prisma";
+import { withTimeoutOrNull } from "@/lib/with-timeout";
 import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -17,42 +18,29 @@ const EMPTY_FEED: FeedPage = {
   },
 };
 
-function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      reject(new Error(`Operation timed out after ${timeoutMs}ms`));
-    }, timeoutMs);
-
-    promise
-      .then((value) => {
-        clearTimeout(timeout);
-        resolve(value);
-      })
-      .catch((error: unknown) => {
-        clearTimeout(timeout);
-        reject(error);
-      });
-  });
-}
-
 async function getFeed(limit: number = 20): Promise<FeedPage> {
   let userId: string | null = null;
 
   try {
     const supabase = await createClient();
-    const {
-      data: { user },
-    } = await withTimeout(supabase.auth.getUser(), 5000);
+    const authResult = await withTimeoutOrNull(supabase.auth.getUser(), 8000);
+    const user = authResult?.data.user ?? null;
     userId = user?.id ?? null;
 
-    return await withTimeout(
+    const feed = await withTimeoutOrNull(
       getHomeFeed({
         userId,
         cursor: null,
         limit,
       }),
-      8000,
+      8000
     );
+
+    if (feed) {
+      return feed;
+    }
+
+    return getFallbackFeed(userId, limit);
   } catch (error) {
     console.error("Failed to load gekaixing feed:", error);
     return getFallbackFeed(userId, limit);
@@ -61,7 +49,7 @@ async function getFeed(limit: number = 20): Promise<FeedPage> {
 
 async function getFallbackFeed(userId: string | null, limit: number): Promise<FeedPage> {
   try {
-    const rows = await withTimeout(
+    const rows = await withTimeoutOrNull(
       prisma.post.findMany({
         where: { parentId: null },
         orderBy: { createdAt: "desc" },
@@ -104,8 +92,12 @@ async function getFallbackFeed(userId: string | null, limit: number): Promise<Fe
             : false,
         },
       }),
-      8000,
+      8000
     );
+
+    if (!rows) {
+      return EMPTY_FEED;
+    }
 
     return {
       data: rows.map((post) => ({

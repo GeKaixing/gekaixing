@@ -7,274 +7,211 @@ datasource db {
   provider = "postgresql"
 }
 
-//////////////////////////////////////////////////////
-// 用户
-//////////////////////////////////////////////////////
-
 model User {
-  id                String   @id @default(uuid())
-  userid            String   @unique @default(uuid())
-  email             String   @unique
-  name              String?
-  avatar            String?
-  backgroundImage   String?
-  briefIntroduction String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  // 发布内容
-  posts Post[]
-
-  // 互动
-  likes     Like[]
-  bookmarks Bookmark[]
-  shares    Share[]
-  actions   UserAction[]
-
-  // 聊天
+  id                       String                    @id @default(uuid())
+  email                    String                    @unique
+  name                     String?
+  avatar                   String?
+  backgroundImage          String?
+  briefIntroduction        String?
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
+  userid                   String                    @unique @default(uuid())
+  isPremium                Boolean                   @default(false)
+  stripeCustomerId         String?                   @unique
+  stripeSubId              String?                   @unique
+  subscriptionStatus       SubscriptionStatus        @default(FREE)
+  premiumExpiresAt         DateTime?
+  premiumGraceEndsAt       DateTime?
+  stripePriceId            String?
+  bookmarks                Bookmark[]
   conversationParticipants ConversationParticipant[]
   conversationReads        ConversationRead[]
+  following                Follow[]                  @relation("Following")
+  followers                Follow[]                  @relation("Followers")
+  likes                    Like[]
   messages                 Message[]                 @relation("SentMessages")
-
-  // ⭐ 关注系统
-  following Follow[] @relation("Following") // 我关注的人
-  followers Follow[] @relation("Followers") // 关注我的人
-
- // stripe
-  isPremium         Boolean  @default(false)
-  stripeCustomerId  String?  @unique
-  stripeSubId       String?  @unique
+  posts                    Post[]
+  shares                   Share[]
+  actions                  UserAction[]
+  jobPosts                 JobPosting[]
 }
 
-//////////////////////////////////////////////////////
-// 关注 ✓ 已关注 ✓ 回关 ✓ 互相关注
-//////////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////
 model Follow {
-  id String @id @default(uuid())
-
+  id          String       @id @default(uuid())
   followerId  String
   followingId String
-
-  status FollowStatus @default(FOLLOWING)
-  muted  Boolean      @default(false)
-
-  createdAt DateTime @default(now())
-
-  follower  User @relation("Following", fields: [followerId], references: [id])
-  following User @relation("Followers", fields: [followingId], references: [id])
+  status      FollowStatus @default(FOLLOWING)
+  muted       Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  follower    User         @relation("Following", fields: [followerId], references: [id])
+  following   User         @relation("Followers", fields: [followingId], references: [id])
 
   @@unique([followerId, followingId])
 }
 
-enum FollowStatus {
-  FOLLOWING
-  BLOCKED
-  REQUESTED
-}
-
-//////////////////////////////////////////////////////
-// 帖子（支持递归评论）
-//////////////////////////////////////////////////////
-
 model Post {
-  id        String   @id @default(cuid())
-  content   String   @db.Text
-  videoUrl  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String       @id @default(cuid())
+  content    String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  authorId   String
+  parentId   String?
+  rootId     String?
+  likeCount  Int          @default(0)
+  replyCount Int          @default(0)
+  shareCount Int          @default(0)
+  starCount  Int          @default(0)
+  videoUrl   String?
+  bookmarks  Bookmark[]
+  likes      Like[]
+  author     User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parent     Post?        @relation("PostToPost", fields: [parentId], references: [id], onDelete: Cascade)
+  replies    Post[]       @relation("PostToPost")
+  shares     Share[]
+  actions    UserAction[]
 
-  authorId String
-  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
-
-  // 递归评论结构
-  parentId String?
-  parent   Post?   @relation("PostToPost", fields: [parentId], references: [id], onDelete: Cascade)
-  replies  Post[]  @relation("PostToPost")
-
-  // 根帖 id（话题聚合）
-  rootId String?
-
-  // 冗余计数（高性能）
-  likeCount  Int @default(0)
-  replyCount Int @default(0)
-  shareCount Int @default(0)
-  starCount  Int @default(0)
-
-  // 互动关系
-  likes     Like[]
-  bookmarks Bookmark[]
-  shares    Share[]
-  actions   UserAction[]
-
-  // 索引优化
   @@index([parentId])
   @@index([rootId, createdAt])
   @@index([authorId])
 }
-
-//////////////////////////////////////////////////////
-// 点赞
-//////////////////////////////////////////////////////
 
 model Like {
   id        String   @id @default(cuid())
   userId    String
   postId    String
   createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, postId])
   @@index([userId])
   @@index([postId])
 }
-
-//////////////////////////////////////////////////////
-// 收藏
-//////////////////////////////////////////////////////
 
 model Bookmark {
   id        String   @id @default(cuid())
   userId    String
   postId    String
   createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, postId])
   @@index([userId])
   @@index([postId])
 }
-
-//////////////////////////////////////////////////////
-// 分享
-//////////////////////////////////////////////////////
 
 model Share {
   id        String   @id @default(cuid())
   userId    String
   postId    String
   createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
-
-  // 如果不允许重复分享就保留
   @@unique([userId, postId])
   @@index([userId])
   @@index([postId])
 }
 
-//////////////////////////////////////////////////////
-// 会话（支持私聊 & 群聊）
-//////////////////////////////////////////////////////
-
 model Conversation {
-  id        String   @id @default(uuid())
-  isGroup   Boolean  @default(false)
-  name      String?
-  avatar    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // 聊天优化字段
+  id            String                    @id @default(uuid())
+  isGroup       Boolean                   @default(false)
+  name          String?
+  avatar        String?
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
   lastMessage   String?
   lastMessageAt DateTime?
-  messageCount  Int       @default(0) // 🔥 用于 unread O(1)
-
-  participants ConversationParticipant[]
-  messages     Message[]
-  readStates   ConversationRead[]
+  messageCount  Int                       @default(0)
+  participants  ConversationParticipant[]
+  readStates    ConversationRead[]
+  messages      Message[]
 
   @@index([lastMessageAt])
 }
 
-//////////////////////////////////////////////////////
-// 会话参与者
-//////////////////////////////////////////////////////
-
 model ConversationParticipant {
-  id             String   @id @default(uuid())
+  id             String       @id @default(uuid())
   conversationId String
   userId         String
-  joinedAt       DateTime @default(now())
-
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  joinedAt       DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([conversationId, userId])
   @@index([userId])
   @@index([conversationId])
 }
 
-//////////////////////////////////////////////////////
-// 消息
-//////////////////////////////////////////////////////
-
 model Message {
-  id             String @id @default(cuid())
+  id             String       @id @default(cuid())
   conversationId String
   senderId       String
-
-  type    String  @default("text") // text | image | file | system
-  content String? @db.Text
-
-  createdAt DateTime @default(now())
-
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  sender       User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  content        String?
+  createdAt      DateTime     @default(now())
+  type           String       @default("text")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
 
   @@index([conversationId, createdAt])
   @@index([senderId])
 }
 
-//////////////////////////////////////////////////////
-// 未读状态（O(1) 未读计算）
-//////////////////////////////////////////////////////
-
 model ConversationRead {
-  id             String @id @default(uuid())
-  conversationId String
-  userId         String
-
-  lastReadMessageCount Int      @default(0) // 🔥 关键优化
-  updatedAt            DateTime @updatedAt
-
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                   String       @id @default(uuid())
+  conversationId       String
+  userId               String
+  lastReadMessageCount Int          @default(0)
+  updatedAt            DateTime     @updatedAt
+  conversation         Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user                 User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([conversationId, userId])
   @@index([userId])
 }
 
 model ChatAISession {
-  id        String   @id @default(cuid())
+  id        String          @id @default(cuid())
   userId    String
-  title     String   @default("新对话")
-  tokenUsed Int      @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  messages ChatAIMessage[]
+  title     String          @default("新对话")
+  tokenUsed Int             @default(0)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  messages  ChatAIMessage[]
 
   @@index([userId])
 }
 
 model ChatAIMessage {
-  id        String   @id @default(cuid())
+  id        String        @id @default(cuid())
   sessionId String
   role      String
-  content   String   @db.Text
-  tokens    Int      @default(0)
-
-  createdAt DateTime @default(now())
-
-  session ChatAISession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  content   String
+  tokens    Int           @default(0)
+  createdAt DateTime      @default(now())
+  session   ChatAISession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
   @@index([sessionId, createdAt])
+}
+
+model JobPosting {
+  id             String   @id @default(cuid())
+  authorId       String
+  title          String
+  company        String
+  description    String   @default("") @db.Text
+  locationType   String
+  seniority      String
+  employmentType String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  author         User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([authorId, createdAt])
 }
 
 model UserAction {
@@ -286,14 +223,19 @@ model UserAction {
   dwellMs        Int?
   metadata       String?
   createdAt      DateTime       @default(now())
-
-  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post Post? @relation(fields: [targetPostId], references: [id], onDelete: Cascade)
+  post           Post?          @relation(fields: [targetPostId], references: [id], onDelete: Cascade)
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
   @@index([targetAuthorId, createdAt])
   @@index([targetPostId, createdAt])
   @@index([actionType, createdAt])
+}
+
+enum FollowStatus {
+  FOLLOWING
+  BLOCKED
+  REQUESTED
 }
 
 enum UserActionType {
@@ -309,4 +251,12 @@ enum UserActionType {
   UNFOLLOW
   POST_CLICK
   DWELL
+}
+
+enum SubscriptionStatus {
+  FREE
+  ACTIVE
+  GRACE
+  EXPIRED
+  CANCELED
 }

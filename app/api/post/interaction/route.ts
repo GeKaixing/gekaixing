@@ -88,8 +88,9 @@ export async function POST(req: NextRequest) {
     const body = (await req.json()) as {
       postId?: string
       targetAuthorId?: string
-      actionType?: 'POST_CLICK' | 'DWELL'
+      actionType?: 'POST_CLICK' | 'DWELL' | 'PROFILE_ENTER'
       dwellMs?: number
+      source?: string
     }
 
     if (!body.postId || !body.actionType) {
@@ -97,12 +98,20 @@ export async function POST(req: NextRequest) {
     }
 
     const actionType = body.actionType === 'DWELL' ? UserActionType.DWELL : UserActionType.POST_CLICK
+    const metadata =
+      body.actionType === 'PROFILE_ENTER'
+        ? JSON.stringify({ kind: 'profile_enter', source: body.source ?? 'unknown' })
+        : body.actionType === 'POST_CLICK'
+          ? JSON.stringify({ kind: 'post_click', source: body.source ?? 'unknown' })
+          : null
+
     await logUserAction({
       userId: user.id,
       actionType,
       targetPostId: body.postId,
       targetAuthorId: body.targetAuthorId ?? null,
       dwellMs: body.actionType === 'DWELL' ? body.dwellMs ?? null : null,
+      metadata,
     })
 
     return NextResponse.json({ success: true })

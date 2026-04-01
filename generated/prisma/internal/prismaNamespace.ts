@@ -396,6 +396,7 @@ export const ModelName = {
   ConversationRead: 'ConversationRead',
   ChatAISession: 'ChatAISession',
   ChatAIMessage: 'ChatAIMessage',
+  JobPosting: 'JobPosting',
   UserAction: 'UserAction'
 } as const
 
@@ -412,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "follow" | "post" | "like" | "bookmark" | "share" | "conversation" | "conversationParticipant" | "message" | "conversationRead" | "chatAISession" | "chatAIMessage" | "userAction"
+    modelProps: "user" | "follow" | "post" | "like" | "bookmark" | "share" | "conversation" | "conversationParticipant" | "message" | "conversationRead" | "chatAISession" | "chatAIMessage" | "jobPosting" | "userAction"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1304,6 +1305,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    JobPosting: {
+      payload: Prisma.$JobPostingPayload<ExtArgs>
+      fields: Prisma.JobPostingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.JobPostingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobPostingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.JobPostingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobPostingPayload>
+        }
+        findFirst: {
+          args: Prisma.JobPostingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobPostingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.JobPostingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobPostingPayload>
+        }
+        findMany: {
+          args: Prisma.JobPostingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobPostingPayload>[]
+        }
+        create: {
+          args: Prisma.JobPostingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobPostingPayload>
+        }
+        createMany: {
+          args: Prisma.JobPostingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.JobPostingCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobPostingPayload>[]
+        }
+        delete: {
+          args: Prisma.JobPostingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobPostingPayload>
+        }
+        update: {
+          args: Prisma.JobPostingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobPostingPayload>
+        }
+        deleteMany: {
+          args: Prisma.JobPostingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.JobPostingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.JobPostingUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobPostingPayload>[]
+        }
+        upsert: {
+          args: Prisma.JobPostingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobPostingPayload>
+        }
+        aggregate: {
+          args: Prisma.JobPostingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateJobPosting>
+        }
+        groupBy: {
+          args: Prisma.JobPostingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JobPostingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.JobPostingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JobPostingCountAggregateOutputType> | number
+        }
+      }
+    }
     UserAction: {
       payload: Prisma.$UserActionPayload<ExtArgs>
       fields: Prisma.UserActionFieldRefs
@@ -1419,7 +1494,6 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UserScalarFieldEnum = {
   id: 'id',
-  userid: 'userid',
   email: 'email',
   name: 'name',
   avatar: 'avatar',
@@ -1427,9 +1501,14 @@ export const UserScalarFieldEnum = {
   briefIntroduction: 'briefIntroduction',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  userid: 'userid',
   isPremium: 'isPremium',
   stripeCustomerId: 'stripeCustomerId',
-  stripeSubId: 'stripeSubId'
+  stripeSubId: 'stripeSubId',
+  subscriptionStatus: 'subscriptionStatus',
+  premiumExpiresAt: 'premiumExpiresAt',
+  premiumGraceEndsAt: 'premiumGraceEndsAt',
+  stripePriceId: 'stripePriceId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1450,7 +1529,6 @@ export type FollowScalarFieldEnum = (typeof FollowScalarFieldEnum)[keyof typeof 
 export const PostScalarFieldEnum = {
   id: 'id',
   content: 'content',
-  videoUrl: 'videoUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   authorId: 'authorId',
@@ -1459,7 +1537,8 @@ export const PostScalarFieldEnum = {
   likeCount: 'likeCount',
   replyCount: 'replyCount',
   shareCount: 'shareCount',
-  starCount: 'starCount'
+  starCount: 'starCount',
+  videoUrl: 'videoUrl'
 } as const
 
 export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
@@ -1524,9 +1603,9 @@ export const MessageScalarFieldEnum = {
   id: 'id',
   conversationId: 'conversationId',
   senderId: 'senderId',
-  type: 'type',
   content: 'content',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  type: 'type'
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
@@ -1565,6 +1644,22 @@ export const ChatAIMessageScalarFieldEnum = {
 } as const
 
 export type ChatAIMessageScalarFieldEnum = (typeof ChatAIMessageScalarFieldEnum)[keyof typeof ChatAIMessageScalarFieldEnum]
+
+
+export const JobPostingScalarFieldEnum = {
+  id: 'id',
+  authorId: 'authorId',
+  title: 'title',
+  company: 'company',
+  description: 'description',
+  locationType: 'locationType',
+  seniority: 'seniority',
+  employmentType: 'employmentType',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type JobPostingScalarFieldEnum = (typeof JobPostingScalarFieldEnum)[keyof typeof JobPostingScalarFieldEnum]
 
 
 export const UserActionScalarFieldEnum = {
@@ -1643,6 +1738,20 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'SubscriptionStatus'
+ */
+export type EnumSubscriptionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SubscriptionStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'SubscriptionStatus[]'
+ */
+export type ListEnumSubscriptionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SubscriptionStatus[]'>
     
 
 
@@ -1808,6 +1917,7 @@ export type GlobalOmitConfig = {
   conversationRead?: Prisma.ConversationReadOmit
   chatAISession?: Prisma.ChatAISessionOmit
   chatAIMessage?: Prisma.ChatAIMessageOmit
+  jobPosting?: Prisma.JobPostingOmit
   userAction?: Prisma.UserActionOmit
 }
 

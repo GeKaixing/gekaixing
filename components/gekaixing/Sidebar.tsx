@@ -1,7 +1,7 @@
 'use client'
 import { userStore } from "@/store/user";
 import { postModalStore } from "@/store/postModal";
-import { MessageSquare, House, LogIn, Settings, Users, Search, RailSymbol, CircleEllipsis, Heart, Bookmark, Feather, User as UserIcon, ShieldCheck, Bell } from "lucide-react";
+import { MessageSquare, House, LogIn, Settings, Users, Search, RailSymbol, CircleEllipsis, Heart, Bookmark, Feather, User as UserIcon, ShieldCheck, Bell, BriefcaseBusiness } from "lucide-react";
 import Link from "next/link";
 import {
     DropdownMenu,
@@ -110,6 +110,10 @@ export default function Sidebar({ user, mentionCount = 0 }: { user: userResult |
                                             {mentionCount > 99 ? "99+" : mentionCount}
                                         </span>
                                     ) : null}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onSelect={handleMoreMenuSelect("/gekaixing/jobs")} className="flex items-center gap-2 cursor-pointer">
+                                    <BriefcaseBusiness className="w-4 h-4" />
+                                    <span>{t("jobs")}</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
