@@ -171,6 +171,11 @@ useEffect(() => {
         }),
       })
 
+      if (!res.ok) {
+        const errorText = (await res.text()).trim()
+        throw new Error(errorText || "AI service unavailable")
+      }
+
       if (!res.body) throw new Error("No response body")
 
       const reader = res.body.getReader()
@@ -215,10 +220,15 @@ useEffect(() => {
     } catch (error) {
       console.error(error)
 
+      const errorMessage = error instanceof Error ? error.message : ""
+      const fallbackMessage = errorMessage.includes("Gemini API key is not configured")
+        ? "请先到 设置 > 账号 配置 Gemini API Key（/gekaixing/settings/account）"
+        : t("errorRetry")
+
       setMessages((prev) =>
         prev.map((msg) =>
             msg.id === assistantId
-            ? { ...msg, content: t("errorRetry") }
+            ? { ...msg, content: fallbackMessage }
             : msg
         )
       )

@@ -1,5 +1,4 @@
-import { streamGLM } from "@/lib/ai";
-import type { GLMMessage } from "@/lib/ai";
+import { GoogleGenAI } from "@google/genai";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest } from "next/server";
@@ -7,18 +6,36 @@ import { NextRequest } from "next/server";
 const GKX_SYSTEM_PROMPT =
   "You are GKX, a concise and practical AI assistant. When users ask who you are, you must identify yourself as GKX.";
 
+type ChatMessage = {
+  role: "system" | "user" | "assistant";
+  content: string;
+};
+
+function mapMessagesForGemini(messages: ChatMessage[]): Array<{
+  role: "user" | "model";
+  parts: Array<{ text: string }>;
+}> {
+  return messages
+    .filter((message) => message.role !== "system" && message.content.trim().length > 0)
+    .map((message) => ({
+      role: message.role === "assistant" ? "model" : "user",
+      parts: [{ text: message.content }],
+    }));
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as {
-      messages?: GLMMessage[]
-      sessionId?: string
+      messages?: ChatMessage[];
+      sessionId?: string;
     };
 
     const { messages, sessionId } = body;
-    const supabse = await createClient();
+    const supabase = await createClient();
     const {
       data: { user },
-    } = await supabse.auth.getUser();
+    } = await supabase.auth.getUser();
+
     const userId = user?.id;
     if (!userId) {
       return new Response("Unauthorized", { status: 401 });
@@ -28,7 +45,6 @@ export async function POST(req: NextRequest) {
       return new Response("messages required", { status: 400 });
     }
 
-    // ⭐ 没 sessionId → 自动创建
     let currentSessionId = sessionId;
 
     if (!currentSessionId) {
@@ -41,7 +57,6 @@ export async function POST(req: NextRequest) {
       currentSessionId = session.id;
     }
 
-    // ⭐ session 不存在 → 自动创建（防止外键错误）
     await prisma.chatAISession.upsert({
       where: { id: currentSessionId },
       create: {
@@ -51,7 +66,6 @@ export async function POST(req: NextRequest) {
       update: {},
     });
 
-    // ===== 保存 user message =====
     const lastUserMessage = messages[messages.length - 1];
 
     if (lastUserMessage?.role === "user") {
@@ -65,76 +79,45 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const glmMessages: GLMMessage[] = [
-      {
-        role: "system",
-        content: GKX_SYSTEM_PROMPT,
-      },
-      ...messages,
-    ];
+    const geminiApiKey =
+      typeof user.user_metadata?.gemini_api_key === "string"
+        ? user.user_metadata.gemini_api_key.trim()
+        : "";
 
-    const glmResponse = await streamGLM(glmMessages);
-    if (!glmResponse.ok || !glmResponse.body) {
-      const errorText = await glmResponse.text();
-      console.error("GLM request failed:", errorText);
-      return new Response("AI service unavailable", { status: 502 });
+    if (!geminiApiKey) {
+      return new Response(
+        "Gemini API key is not configured. Please go to /gekaixing/settings/account to set it.",
+        { status: 503 }
+      );
     }
 
-    const encoder = new TextEncoder();
-    const decoder = new TextDecoder();
+    const geminiClient = new GoogleGenAI({ apiKey: geminiApiKey });
+    const geminiMessages = mapMessagesForGemini(messages);
 
+    const encoder = new TextEncoder();
     let fullText = "";
-    let buffer = "";
 
     const stream = new ReadableStream({
       async start(controller) {
         try {
-          const reader = glmResponse.body?.getReader();
-          if (!reader) {
-            throw new Error("Missing GLM stream reader");
-          }
+          const result = await geminiClient.models.generateContentStream({
+            model: "gemini-2.5-flash",
+            contents: geminiMessages,
+            config: {
+              systemInstruction: GKX_SYSTEM_PROMPT,
+              temperature: 0.7,
+              maxOutputTokens: 1024,
+            },
+          });
 
-          const pushChunkText = (payload: string): void => {
-            if (!payload || payload === "[DONE]") return;
-
-            try {
-              const parsed = JSON.parse(payload) as {
-                choices?: Array<{ delta?: { content?: string } }>
-              };
-              const chunkText = parsed.choices?.[0]?.delta?.content;
-
-              if (typeof chunkText === "string" && chunkText.length > 0) {
-                fullText += chunkText;
-                controller.enqueue(encoder.encode(chunkText));
-              }
-            } catch (parseError) {
-              console.error("Failed to parse GLM SSE chunk:", parseError);
-            }
-          };
-
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            buffer += decoder.decode(value, { stream: true });
-            const lines = buffer.split("\n");
-            buffer = lines.pop() ?? "";
-
-            for (const line of lines) {
-              const trimmedLine = line.trim();
-              if (!trimmedLine.startsWith("data:")) continue;
-
-              const payload = trimmedLine.slice(5).trim();
-              pushChunkText(payload);
+          for await (const chunk of result) {
+            const chunkText = chunk.text ?? "";
+            if (chunkText.length > 0) {
+              fullText += chunkText;
+              controller.enqueue(encoder.encode(chunkText));
             }
           }
 
-          const tail = buffer.trim();
-          if (tail.startsWith("data:")) {
-            pushChunkText(tail.slice(5).trim());
-          }
-
-          // ===== 保存 assistant message =====
           await prisma.chatAIMessage.create({
             data: {
               id: crypto.randomUUID(),
@@ -146,7 +129,7 @@ export async function POST(req: NextRequest) {
 
           controller.close();
         } catch (streamError) {
-          console.error(streamError);
+          console.error("Gemini stream failed:", streamError);
           controller.error(streamError);
         }
       },
@@ -155,7 +138,7 @@ export async function POST(req: NextRequest) {
     return new Response(stream, {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
-        "X-Session-Id": currentSessionId, // ⭐ 返回 sessionId 给前端
+        "X-Session-Id": currentSessionId,
       },
     });
   } catch (error) {
