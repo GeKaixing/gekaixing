@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DEFAULT_GEMINI_MODEL, GEMINI_MODEL_OPTIONS, normalizeGeminiModel } from "@/lib/gemini-model";
 import { createClient } from "@/utils/supabase/client";
 import SettingAccountLi from "./SettingAccountLi";
 import Spin from "./Spin";
@@ -38,6 +40,8 @@ type SettingGeminiKeyText = {
   dialogTitle: string;
   dialogDescription: string;
   inputPlaceholder: string;
+  modelLabel: string;
+  modelPlaceholder: string;
   clearHint: string;
   saveButton: string;
   noKeyText: string;
@@ -55,6 +59,8 @@ function getText(locale: string): SettingGeminiKeyText {
       dialogTitle: "Gemini API Key",
       dialogDescription: "配置你自己的 Gemini Key，用于 AI 发帖和会话标题生成。",
       inputPlaceholder: "请输入 Gemini Key（例如 AIzaSy...）",
+      modelLabel: "Gemini 模型",
+      modelPlaceholder: "请选择模型",
       clearHint: "输入框留空并保存即可清空当前 Key。",
       saveButton: "保存",
       noKeyText: "我没有key",
@@ -72,6 +78,8 @@ function getText(locale: string): SettingGeminiKeyText {
     dialogDescription:
       "Save your own Gemini key for AI post generation and chat title generation.",
     inputPlaceholder: "Enter Gemini key (for example AIzaSy...)",
+    modelLabel: "Gemini Model",
+    modelPlaceholder: "Choose model",
     clearHint: "Leave blank and save to clear your key.",
     saveButton: "Save",
     noKeyText: "I don't have a key",
@@ -85,6 +93,8 @@ export default function SettingGeminiKey() {
   const [loading, setLoading] = useState(false);
   const [keyInput, setKeyInput] = useState("");
   const [savedKey, setSavedKey] = useState("");
+  const [savedModel, setSavedModel] = useState(DEFAULT_GEMINI_MODEL);
+  const [modelInput, setModelInput] = useState(DEFAULT_GEMINI_MODEL);
 
   useEffect(() => {
     const init = async (): Promise<void> => {
@@ -97,8 +107,10 @@ export default function SettingGeminiKey() {
         typeof user?.user_metadata?.gemini_api_key === "string"
           ? user.user_metadata.gemini_api_key
           : "";
+      const storedModel = normalizeGeminiModel(user?.user_metadata?.gemini_model);
 
       setSavedKey(storedKey);
+      setSavedModel(storedModel);
     };
 
     void init();
@@ -120,15 +132,19 @@ export default function SettingGeminiKey() {
       typeof user.user_metadata?.gemini_api_key === "string"
         ? user.user_metadata.gemini_api_key
         : "";
+    const storedModel = normalizeGeminiModel(user.user_metadata?.gemini_model);
 
     setSavedKey(storedKey);
     setKeyInput(storedKey);
+    setSavedModel(storedModel);
+    setModelInput(storedModel);
   }
 
   async function saveGeminiKey(): Promise<void> {
     setLoading(true);
     try {
       const value = keyInput.trim();
+      const selectedModel = normalizeGeminiModel(modelInput);
       const supabase = createClient();
       const {
         data: { user },
@@ -149,6 +165,7 @@ export default function SettingGeminiKey() {
       } else {
         delete nextMetadata.gemini_api_key;
       }
+      nextMetadata.gemini_model = selectedModel;
 
       const { data, error } = await supabase.auth.updateUser({
         data: nextMetadata,
@@ -163,9 +180,12 @@ export default function SettingGeminiKey() {
         typeof data.user?.user_metadata?.gemini_api_key === "string"
           ? data.user.user_metadata.gemini_api_key
           : "";
+      const nextStoredModel = normalizeGeminiModel(data.user?.user_metadata?.gemini_model);
 
       setSavedKey(nextStoredKey);
       setKeyInput(nextStoredKey);
+      setSavedModel(nextStoredModel);
+      setModelInput(nextStoredModel);
       toast.success(nextStoredKey ? text.saved : text.cleared);
       setOpen(false);
     } finally {
@@ -187,7 +207,7 @@ export default function SettingGeminiKey() {
         <button type="button" className="w-full text-left">
           <SettingAccountLi
             icon={<KeyRound />}
-            text={`${text.keyLabel}${savedKey ? ` (${maskApiKey(savedKey, text.configured)})` : ""}`}
+            text={`${text.keyLabel}${savedKey ? ` (${maskApiKey(savedKey, text.configured)})` : ""} · ${savedModel}`}
           />
         </button>
       </DialogTrigger>
@@ -218,6 +238,21 @@ export default function SettingGeminiKey() {
           <p className="text-xs text-muted-foreground">
             {text.clearHint}
           </p>
+          <div className="space-y-2">
+            <p className="text-sm font-medium">{text.modelLabel}</p>
+            <Select value={modelInput} onValueChange={(value) => setModelInput(normalizeGeminiModel(value))}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={text.modelPlaceholder} />
+              </SelectTrigger>
+              <SelectContent>
+                {GEMINI_MODEL_OPTIONS.map((model) => (
+                  <SelectItem key={model} value={model}>
+                    {model}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <Button
             type="button"
             className="bg-black text-white"

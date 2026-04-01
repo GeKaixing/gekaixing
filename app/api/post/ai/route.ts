@@ -1,4 +1,5 @@
 import { generateGeminiText } from "@/lib/gemini";
+import { getGeminiModelCandidates, normalizeGeminiModel } from "@/lib/gemini-model";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
@@ -130,6 +131,8 @@ export async function POST(request: Request): Promise<Response> {
       typeof user.user_metadata?.gemini_api_key === "string"
         ? user.user_metadata.gemini_api_key.trim()
         : "";
+    const geminiModel = normalizeGeminiModel(user.user_metadata?.gemini_model);
+    const modelCandidates = getGeminiModelCandidates(geminiModel);
 
     if (!geminiApiKey) {
       return NextResponse.json(
@@ -144,6 +147,8 @@ export async function POST(request: Request): Promise<Response> {
     try {
       const { text, model } = await generateGeminiText({
         apiKey: geminiApiKey,
+        preferredModel: geminiModel,
+        modelCandidates,
         prompt: promptText,
         temperature: 0.85,
         maxOutputTokens: 220,

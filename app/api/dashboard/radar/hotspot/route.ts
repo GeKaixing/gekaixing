@@ -1,6 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
 
+import { getGeminiModelCandidates, normalizeGeminiModel } from "@/lib/gemini-model";
 import { createClient } from "@/utils/supabase/server";
 
 interface RadarHotspot {
@@ -145,6 +146,8 @@ export async function POST(request: Request): Promise<Response> {
       typeof user.user_metadata?.gemini_api_key === "string"
         ? user.user_metadata.gemini_api_key.trim()
         : "";
+    const geminiModel = normalizeGeminiModel(user.user_metadata?.gemini_model);
+    const modelCandidates = getGeminiModelCandidates(geminiModel);
 
     if (!geminiApiKey) {
       return NextResponse.json(
@@ -160,18 +163,34 @@ export async function POST(request: Request): Promise<Response> {
     const ai = new GoogleGenAI({ apiKey: geminiApiKey });
 
     try {
-      const result = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: buildPrompt(region),
-        config: {
-          temperature: 0.6,
-          maxOutputTokens: 1500,
-          tools: [{ googleSearch: {} }],
-        },
-      });
+      let text = "";
+      let lastGenerateError: unknown = null;
 
-      const text = (result.text ?? "").trim();
+      for (const candidateModel of modelCandidates) {
+        try {
+          const result = await ai.models.generateContent({
+            model: candidateModel,
+            contents: buildPrompt(region),
+            config: {
+              temperature: 0.6,
+              maxOutputTokens: 1500,
+              tools: [{ googleSearch: {} }],
+            },
+          });
+
+          text = (result.text ?? "").trim();
+          if (text) {
+            break;
+          }
+        } catch (candidateError) {
+          lastGenerateError = candidateError;
+        }
+      }
+
       if (!text) {
+        if (lastGenerateError instanceof Error) {
+          throw lastGenerateError;
+        }
         throw new Error("Gemini returned empty content");
       }
 
@@ -202,4 +221,3 @@ export async function POST(request: Request): Promise<Response> {
     return NextResponse.json({ error: message, success: false }, { status: 500 });
   }
 }
-

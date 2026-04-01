@@ -1,16 +1,20 @@
 import { GoogleGenAI } from "@google/genai";
+import { DEFAULT_GEMINI_MODEL, type GeminiModel, normalizeGeminiModel } from "@/lib/gemini-model";
+
 export async function generateGeminiText({
   apiKey,
   prompt,
   temperature = 0.7,
   maxOutputTokens = 256,
-
+  modelCandidates,
+  preferredModel,
 }: {
   apiKey: string;
   prompt: string;
   temperature?: number;
   maxOutputTokens?: number;
-  modelCandidates?: readonly string[];
+  modelCandidates?: readonly GeminiModel[];
+  preferredModel?: GeminiModel;
 }): Promise<{ text: string; model: string }> {
   const normalizedApiKey = apiKey.trim();
   if (!normalizedApiKey) {
@@ -19,10 +23,17 @@ export async function generateGeminiText({
 
   const geminiClient = new GoogleGenAI({ apiKey: normalizedApiKey });
   let lastError = "Unknown Gemini error";
+  const candidates = modelCandidates && modelCandidates.length
+    ? modelCandidates
+    : [preferredModel ?? DEFAULT_GEMINI_MODEL];
+  const dedupedCandidates = Array.from(
+    new Set(candidates.map((model) => normalizeGeminiModel(model)))
+  );
 
+  for (const model of dedupedCandidates) {
     try {
       const result = await geminiClient.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model,
         contents: prompt,
         config: {
           temperature,
@@ -35,11 +46,11 @@ export async function generateGeminiText({
         throw new Error("Gemini returned empty content");
       }
 
-      return { text, model: "gemini-3-flash-preview" };
+      return { text, model };
     } catch (error) {
       lastError = error instanceof Error ? error.message : "Unknown Gemini error";
     }
-
+  }
 
   throw new Error(`Gemini failed: ${lastError}`);
 }

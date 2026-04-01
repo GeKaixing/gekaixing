@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import { getGeminiModelCandidates, normalizeGeminiModel } from "@/lib/gemini-model";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest } from "next/server";
@@ -83,6 +84,8 @@ export async function POST(req: NextRequest) {
       typeof user.user_metadata?.gemini_api_key === "string"
         ? user.user_metadata.gemini_api_key.trim()
         : "";
+    const geminiModel = normalizeGeminiModel(user.user_metadata?.gemini_model);
+    const modelCandidates = getGeminiModelCandidates(geminiModel);
 
     if (!geminiApiKey) {
       return new Response(
@@ -100,22 +103,37 @@ export async function POST(req: NextRequest) {
     const stream = new ReadableStream({
       async start(controller) {
         try {
-          const result = await geminiClient.models.generateContentStream({
-            model: "gemini-2.5-flash",
-            contents: geminiMessages,
-            config: {
-              systemInstruction: GKX_SYSTEM_PROMPT,
-              temperature: 0.7,
-              maxOutputTokens: 1024,
-            },
-          });
+          let streamWorked = false;
+          let lastStreamError: unknown = null;
 
-          for await (const chunk of result) {
-            const chunkText = chunk.text ?? "";
-            if (chunkText.length > 0) {
-              fullText += chunkText;
-              controller.enqueue(encoder.encode(chunkText));
+          for (const candidateModel of modelCandidates) {
+            try {
+              const result = await geminiClient.models.generateContentStream({
+                model: candidateModel,
+                contents: geminiMessages,
+                config: {
+                  systemInstruction: GKX_SYSTEM_PROMPT,
+                  temperature: 0.7,
+                  maxOutputTokens: 1024,
+                },
+              });
+
+              for await (const chunk of result) {
+                const chunkText = chunk.text ?? "";
+                if (chunkText.length > 0) {
+                  fullText += chunkText;
+                  controller.enqueue(encoder.encode(chunkText));
+                }
+              }
+              streamWorked = true;
+              break;
+            } catch (candidateError) {
+              lastStreamError = candidateError;
             }
+          }
+
+          if (!streamWorked) {
+            throw lastStreamError instanceof Error ? lastStreamError : new Error("Gemini stream failed");
           }
 
           await prisma.chatAIMessage.create({

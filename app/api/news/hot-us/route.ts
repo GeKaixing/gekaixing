@@ -1,6 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { NextResponse } from "next/server";
 
+import { getGeminiModelCandidates, normalizeGeminiModel } from "@/lib/gemini-model";
 import { createClient } from "@/utils/supabase/server";
 
 interface HotNewsItem {
@@ -162,16 +163,19 @@ export async function GET(request: Request): Promise<Response> {
 
     const supabase = await createClient();
     let userGeminiApiKey = "";
+    let geminiModel = normalizeGeminiModel(undefined);
     try {
       const {
         data: { user },
       } = await supabase.auth.getUser();
       userGeminiApiKey =
         typeof user?.user_metadata?.gemini_api_key === "string" ? user.user_metadata.gemini_api_key.trim() : "";
+      geminiModel = normalizeGeminiModel(user?.user_metadata?.gemini_model);
     } catch {
       userGeminiApiKey = "";
     }
     const geminiApiKey = userGeminiApiKey;
+    const modelCandidates = getGeminiModelCandidates(geminiModel);
 
     if (!geminiApiKey) {
       return NextResponse.json(
@@ -186,20 +190,36 @@ export async function GET(request: Request): Promise<Response> {
     const ai = new GoogleGenAI({ apiKey: geminiApiKey });
 
     try {
-      const result = await ai.models.generateContent({
-        model: "Gemini 2.5 Flash",
-        contents: buildPrompt(category),
-        config: {
-          temperature: 0.4,
-          maxOutputTokens: 2500,
-          tools: [{ googleSearch: {} }],
-          responseMimeType: "application/json",
-          responseSchema: getNewsResponseSchema(),
-        },
-      });
+      let text = "";
+      let lastGenerateError: unknown = null;
 
-      const text = (result.text ?? "").trim();
+      for (const candidateModel of modelCandidates) {
+        try {
+          const result = await ai.models.generateContent({
+            model: candidateModel,
+            contents: buildPrompt(category),
+            config: {
+              temperature: 0.4,
+              maxOutputTokens: 2500,
+              tools: [{ googleSearch: {} }],
+              responseMimeType: "application/json",
+              responseSchema: getNewsResponseSchema(),
+            },
+          });
+
+          text = (result.text ?? "").trim();
+          if (text) {
+            break;
+          }
+        } catch (candidateError) {
+          lastGenerateError = candidateError;
+        }
+      }
+
       if (!text) {
+        if (lastGenerateError instanceof Error) {
+          throw lastGenerateError;
+        }
         throw new Error("Gemini returned empty content");
       }
 
