@@ -4,7 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner"
 import { Analytics } from "@vercel/analytics/next"
 import { NextIntlClientProvider } from 'next-intl';
-import { getLocale } from 'next-intl/server'; 
+import { getLocale, getMessages } from 'next-intl/server'; 
 import { ThemeProvider } from "@/components/providers/theme-provider";
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,19 +27,20 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const locale = await getLocale();
+  const messages = await getMessages();
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <NextIntlClientProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children}
             <Analytics></Analytics>
             <Toaster position="top-center" richColors />
-          </NextIntlClientProvider>
-        </ThemeProvider>
+          </ThemeProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

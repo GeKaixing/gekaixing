@@ -13,7 +13,7 @@ import { Ellipsis } from 'lucide-react'
 import { copyToClipboard } from "@/utils/function/copyToClipboard";
 import SidebarAvatar from "./SidebarAvatar";
 import EditPost from "./EditPost";
-import { userResult } from "@/app/gekaixing/layout";
+import type { userResult } from "@/app/gekaixing/layout";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

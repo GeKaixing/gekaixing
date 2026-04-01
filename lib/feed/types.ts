@@ -1,6 +1,7 @@
 export interface FeedPostItem {
   id: string;
   content: string;
+  videoUrl: string | null;
   createdAt: Date;
   user_id: string;
   user_name: string | null;

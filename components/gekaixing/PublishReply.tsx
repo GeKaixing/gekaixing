@@ -11,6 +11,7 @@ import { postStore } from "@/store/post"
 import clsx from "clsx"
 import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { extractYouTubeEmbedUrl } from "@/utils/function/extractYouTubeEmbedUrl"
 
 async function publishReply(payload: {
     user_id: string
@@ -112,6 +113,7 @@ export default function PublishReply({
         const optimisticReply = {
             id: tempId,
             content: replyInput,
+            videoUrl: extractYouTubeEmbedUrl(replyInput),
             createdAt: new Date(),
 
             user_id: userId,

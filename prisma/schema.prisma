@@ -79,6 +79,7 @@ enum FollowStatus {
 model Post {
   id        String   @id @default(cuid())
   content   String   @db.Text
+  videoUrl  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

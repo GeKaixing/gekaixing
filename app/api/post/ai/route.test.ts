@@ -11,7 +11,6 @@ vi.mock("@/utils/supabase/server", () => ({
 }));
 
 vi.mock("@/lib/gemini", () => ({
-  hasGeminiApiKey: vi.fn(() => false),
   generateGeminiText: vi.fn(),
 }));
 
@@ -22,7 +21,7 @@ describe("POST /api/post/ai", () => {
     getUserMock.mockReset();
     getUserMock.mockResolvedValue({
       data: {
-        user: { id: "user-1" },
+        user: { id: "user-1", user_metadata: {} },
       },
     });
   });
@@ -47,7 +46,7 @@ describe("POST /api/post/ai", () => {
 
     expect(response.status).toBe(503);
     expect(payload.success).toBe(false);
-    expect(payload.error).toBe("Gemini API key is not configured");
+    expect(payload.error).toBe("Gemini API key is not configured in your Settings");
     expect(payload.content).toBeUndefined();
     expect(payload.source).toBeUndefined();
   });

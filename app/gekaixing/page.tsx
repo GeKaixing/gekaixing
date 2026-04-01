@@ -111,6 +111,7 @@ async function getFallbackFeed(userId: string | null, limit: number): Promise<Fe
       data: rows.map((post) => ({
         id: post.id,
         content: post.content,
+        videoUrl: post.videoUrl ?? null,
         createdAt: post.createdAt,
         user_id: post.author.id,
         user_name: post.author.name,

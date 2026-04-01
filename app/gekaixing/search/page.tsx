@@ -31,7 +31,8 @@ export default async function Page({
                         user_email: string,
                         user_avatar: string,
                         user_userid: string,
-                        content: string
+                        content: string,
+                        videoUrl: string | null,
                         like: number,
                         star: number,
                         reply_count: number,
@@ -45,6 +46,7 @@ export default async function Page({
                             user_avatar={items.user_avatar}
                             user_userid={items.user_userid}
                             content={items.content}
+                            videoUrl={items.videoUrl}
                             createdAt={new Date()}
                             like={items.like}
                             star={items.star}

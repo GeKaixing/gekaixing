@@ -115,6 +115,7 @@ export type FollowScalarFieldEnum = (typeof FollowScalarFieldEnum)[keyof typeof 
 export const PostScalarFieldEnum = {
   id: 'id',
   content: 'content',
+  videoUrl: 'videoUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   authorId: 'authorId',

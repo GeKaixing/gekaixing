@@ -178,6 +178,16 @@ export default function EditPost({ onClose }: EditPostProps) {
     onClose?.()
   }
 
+  function hasPublishableContent(content: Content): boolean {
+    if (typeof content !== "string") {
+      return false
+    }
+
+    const plainText = content.replace(/<[^>]*>/g, " ").replace(/\s+/g, "").trim()
+    const hasYouTubeNode = content.includes("data-youtube-embed")
+    return plainText.length > 0 || hasYouTubeNode
+  }
+
   async function publish() {
     if (!id) {
       setLogin(true)
@@ -203,6 +213,7 @@ export default function EditPost({ onClose }: EditPostProps) {
         user_avatar,
         user_userid: userid,
         content: value as string,
+        videoUrl: data.data[0]["videoUrl"] ?? null,
         createdAt: new Date(),
         isPremium: false,
         like: 0,
@@ -275,6 +286,7 @@ export default function EditPost({ onClose }: EditPostProps) {
             value={value}
             onChange={setValue}
             onEditorReady={setEditor}
+            canPublish={hasPublishableContent(value)}
             className="!max-w-[622px] w-full"
             editorContentClassName="p-5"
             output="html"

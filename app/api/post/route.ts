@@ -4,6 +4,8 @@ import { logUserAction } from "@/lib/feed/actions";
 import { invalidateAuthorAudienceFeed, invalidateUserHomeFeed } from "@/lib/feed/service";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
+import { extractYouTubeEmbedUrl } from "@/utils/function/extractYouTubeEmbedUrl";
+import { createClient } from "@/utils/supabase/server";
 
 function transformPost(post: any) {
   return {
@@ -14,6 +16,7 @@ function transformPost(post: any) {
     user_avatar: post.author?.avatar || "",
     user_userid: post.author?.userid || "",
     content: post.content,
+    videoUrl: post.videoUrl ?? null,
     like: post.likeCount || 0,
     star: 0,
     reply_count: post.replyCount || post._count?.replies || 0,
@@ -53,6 +56,7 @@ export async function GET(request: Request) {
         user_avatar: post.author?.avatar || "",
         user_userid: post.author?.userid || "",
         content: post.content,
+        videoUrl: post.videoUrl ?? null,
         like: post._count?.likes || 0,
         star: post._count?.bookmarks || 0,
         reply_count: post._count?.replies || 0,
@@ -94,6 +98,7 @@ export async function GET(request: Request) {
           user_avatar: post.author?.avatar || "",
           user_userid: post.author?.userid || "",
           content: post.content,
+          videoUrl: post.videoUrl ?? null,
           like: post._count?.likes || 0,
           star: post._count?.bookmarks || 0,
           reply_count: post._count?.replies || 0,
@@ -106,6 +111,7 @@ export async function GET(request: Request) {
             user_avatar: reply.author?.avatar || "",
             user_userid: reply.author?.userid || "",
             content: reply.content,
+            videoUrl: reply.videoUrl ?? null,
             like: reply._count?.likes || 0,
             star: reply._count?.bookmarks || 0,
             reply_count: reply._count?.replies || 0,
@@ -140,6 +146,7 @@ export async function GET(request: Request) {
       user_avatar: post.author?.avatar || "",
       user_userid: post.author?.userid || "",
       content: post.content,
+      videoUrl: post.videoUrl ?? null,
       like: post._count?.likes || 0,
       star: post._count?.bookmarks || 0,
       reply_count: post._count?.replies || 0,
@@ -157,12 +164,24 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const { user_id, content, parentId, rootId } = await request.json();
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { content, parentId, rootId, videoUrl: inputVideoUrl } = await request.json();
+    const containsEmbeddedYouTube = typeof content === "string" && content.includes("data-youtube-embed");
+    const videoUrl = containsEmbeddedYouTube ? null : inputVideoUrl ?? extractYouTubeEmbedUrl(content);
 
     const post = await prisma.post.create({
       data: {
         content,
-        authorId: user_id,
+        videoUrl,
+        authorId: user.id,
         parentId: parentId ?? null,
         rootId: rootId ?? null,
       },
@@ -173,28 +192,29 @@ export async function POST(request: Request) {
 
     revalidatePath("/gekaixing");
     if (!parentId) {
-      await invalidateAuthorAudienceFeed(user_id);
+      await invalidateAuthorAudienceFeed(user.id);
       await logUserAction({
-        userId: user_id,
+        userId: user.id,
         actionType: UserActionType.POST_CREATE,
         targetPostId: post.id,
-        targetAuthorId: user_id,
+        targetAuthorId: user.id,
       });
     } else {
-      await invalidateUserHomeFeed(user_id);
+      await invalidateUserHomeFeed(user.id);
       await logUserAction({
-        userId: user_id,
+        userId: user.id,
         actionType: UserActionType.REPLY_CREATE,
         targetPostId: post.id,
-        targetAuthorId: user_id,
+        targetAuthorId: user.id,
       });
     }
 
     return NextResponse.json({ data: [transformPost(post)], success: true });
   } catch (error: any) {
+    console.error("POST /api/post failed:", error);
     return NextResponse.json(
       { error: error.message },
-      { status: 401 }
+      { status: 500 }
     );
   }
 }

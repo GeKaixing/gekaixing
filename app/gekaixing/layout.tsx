@@ -4,6 +4,7 @@ import MobileHeader from "@/components/gekaixing/MobileHeader";
 import Sidebar from "@/components/gekaixing/Sidebar";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
+import { getTranslations } from "next-intl/server";
 import type { ReactElement, ReactNode } from "react";
 import "highlight.js/styles/github-dark.css";
 
@@ -47,6 +48,7 @@ export default async function RootLayout({
 }: {
   children: ReactNode;
 }): Promise<ReactElement> {
+  const mobileT = await getTranslations("ImitationX.Mobile");
   const supabase = await createClient();
   let userId: string | null = null;
 
@@ -102,7 +104,16 @@ export default async function RootLayout({
 
   return (
     <div className="min-h-screen">
-      <MobileHeader user={userInfo} />
+      <MobileHeader
+        user={userInfo}
+        labels={{
+          home: mobileT("home"),
+          search: mobileT("search"),
+          settings: mobileT("settings"),
+          login: mobileT("login"),
+          publish: mobileT("publish"),
+        }}
+      />
       <div className="flex justify-center w-full mx-auto min-h-screen">
         <header className="hidden sm:flex w-[88px] lg:w-[275px] shrink-0 sticky top-0 h-screen transition-all duration-200">
           <Sidebar user={userInfo} mentionCount={mentionCount} />
@@ -112,7 +123,14 @@ export default async function RootLayout({
           <Footer />
         </footer>
       </div>
-      <MobileFooter id={userId ?? undefined} />
+      <MobileFooter
+        id={userId ?? undefined}
+        labels={{
+          home: mobileT("home"),
+          search: mobileT("search"),
+          mine: mobileT("mine"),
+        }}
+      />
     </div>
   );
 }

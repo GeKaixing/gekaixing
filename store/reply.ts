@@ -3,6 +3,7 @@ import { create } from 'zustand'
 export type ReplyItem = {
   id: string
   content: string
+  videoUrl: string | null
   createdAt: Date
 
   user_id: string

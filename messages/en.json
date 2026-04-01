@@ -139,6 +139,7 @@
       "title": "Settings",
       "account": "Account",
       "theme": "Theme",
+      "dashboard": "Dashboard",
       "language": "Language",
       "help": "Help Center",
       "about": "About"
@@ -847,7 +848,6 @@
     },
     "cta": {
       "title": "Ready to change the channel?",
-
       "description": "Stop scrolling and start connecting. Gekaixing is where the conversation gets deeper.",
       "button": "Sign Up for Gekaixing"
     },
@@ -946,6 +946,175 @@
       "tos": "Terms of Service",
       "privacy": "Privacy Policy",
       "cookies": "Cookie Policy"
+    }
+  },
+  "Dashboard": {
+    "nav": {
+      "businessHome": "Business Home",
+      "affiliations": "Affiliations",
+      "radarIntelligence": "Radar Intelligence",
+      "acquireHandles": "Acquire Handles",
+      "hireTalent": "Hire Talent",
+      "vipSupport": "VIP Support",
+      "billing": "Billing",
+      "settings": "Settings",
+      "brand": "Gekaixing Premium Business",
+      "fallbackTitle": "Dashboard"
+    },
+    "common": {
+      "anonymousUser": "Anonymous User",
+      "noData": "No data available",
+      "premium": "Premium",
+      "standard": "Standard",
+      "ready": "Ready",
+      "missing": "Missing"
+    },
+    "home": {
+      "stats": {
+        "totalUsers": "Following",
+        "premiumUsers": "Followers",
+        "postsReplies": "My Posts / Replies",
+        "weeklyAdded": "This Week Posts / Replies"
+      },
+      "trendTitle": "Post Trend (Last 14 Days)",
+      "trendDesc": "Daily totals for root posts and replies",
+      "trendLine": "Posts {posts} / Replies {replies}",
+      "noTrend": "No trend data",
+      "recentTitle": "Recent Activity",
+      "recentDesc": "My latest root posts",
+      "table": {
+        "author": "Author",
+        "content": "Content",
+        "engagement": "Engagement",
+        "time": "Time"
+      },
+      "badge": {
+        "likes": "Like {count}",
+        "replies": "Reply {count}",
+        "shares": "Share {count}"
+      },
+      "noPosts": "No post data"
+    },
+    "affiliations": {
+      "stats": {
+        "totalLinks": "My Relationships",
+        "following": "Following",
+        "requested": "Requested",
+        "blocked": "Blocked"
+      },
+      "title": "My Relationship Changes",
+      "desc": "Only relationships related to me",
+      "table": {
+        "initiator": "Initiator",
+        "target": "Target User",
+        "status": "Status",
+        "time": "Time"
+      },
+      "noData": "No affiliation data"
+    },
+    "radar": {
+      "actionTitle": "My Action Heatmap",
+      "actionDesc": "Only my actions on the platform",
+      "noActions": "No action data",
+      "trendTitle": "My Content Action Trend",
+      "trendDesc": "POST_CREATE and REPLY_CREATE by day",
+      "trendLine": "Posts {posts} / Replies {replies}",
+      "noTrend": "No radar trend data"
+    },
+    "handles": {
+      "stats": {
+        "totalUsers": "People I Follow",
+        "premiumUsers": "Premium in Following",
+        "activeCreators": "Active Creators (5+ posts)"
+      },
+      "title": "Accounts I Follow",
+      "desc": "User list based on my following graph",
+      "table": {
+        "handle": "Handle",
+        "user": "User",
+        "posts": "Posts",
+        "followers": "Followers",
+        "tier": "Tier",
+        "joinedAt": "Joined"
+      },
+      "noData": "No handle data"
+    },
+    "talent": {
+      "stats": {
+        "candidates": "Following Creator Candidates",
+        "highSignal": "High Signal Creators (50+)"
+      },
+      "title": "Creator Activity in My Following",
+      "desc": "Based only on creators I follow",
+      "table": {
+        "user": "User",
+        "posts": "Posts",
+        "replies": "Replies",
+        "likes": "Likes",
+        "shares": "Shares",
+        "score": "Score"
+      },
+      "noData": "No creator candidates"
+    },
+    "support": {
+      "stats": {
+        "totalConversations": "My Conversations",
+        "active48h": "Active in My 48h",
+        "stalled": "My Follow-up Queue"
+      },
+      "title": "VIP Conversation Board",
+      "desc": "Ordered by latest update time",
+      "table": {
+        "conversation": "Conversation",
+        "participants": "Participants",
+        "messages": "Messages",
+        "updatedAt": "Updated"
+      },
+      "group": "Group Conversation",
+      "direct": "Direct Conversation",
+      "noParticipants": "No participants",
+      "noData": "No conversation data"
+    },
+    "billing": {
+      "stats": {
+        "totalUsers": "My Account",
+        "premiumUsers": "My Premium Status",
+        "premiumRate": "Premium Coverage",
+        "newPremium7d": "Started in Last 7 Days"
+      },
+      "title": "My Premium Details",
+      "desc": "Data for current signed-in account only",
+      "table": {
+        "user": "User",
+        "handle": "Handle",
+        "posts": "Posts",
+        "openedAt": "Opened At"
+      },
+      "noData": "No premium billing data"
+    },
+    "settings": {
+      "stats": {
+        "totalLogs": "My Total Action Logs",
+        "logsToday": "My Actions Today",
+        "env": "Session Status"
+      },
+      "title": "My Recent System Actions",
+      "desc": "Recent actions for current account only",
+      "table": {
+        "action": "Action",
+        "user": "User",
+        "targetPost": "Target Post",
+        "time": "Time"
+      },
+      "noData": "No system logs"
+    },
+    "engagement": {
+      "title": "Your account engagement over last 7 days",
+      "impressions": "Impressions",
+      "engagementRate": "Engagement rate",
+      "replies": "Replies",
+      "posts": "Posts",
+      "growth": "Growth vs previous 7d"
     }
   }
 }

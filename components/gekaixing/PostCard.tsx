@@ -27,6 +27,7 @@ export default function PostCard({
     user_avatar,
     user_userid,
     content,
+    videoUrl,
     like,
     star,
     reply,
@@ -55,6 +56,9 @@ export default function PostCard({
     }, [bookmarkedByMe, like, likedByMe, share, star])
 
     const contentWithMentions = React.useMemo(() => renderMentionHtml(content), [content])
+    const hasEmbeddedYouTubeNode = React.useMemo(() => {
+        return content.includes("data-youtube-embed") || content.includes("<iframe")
+    }, [content])
 
     const syncInteractionToStore = (patch: Partial<Post>): void => {
         const postState = postStore.getState()
@@ -236,6 +240,20 @@ export default function PostCard({
 
             <CardContent>
                 <div onClick={handleContentClick} dangerouslySetInnerHTML={{ __html: contentWithMentions }} />
+                {videoUrl && !hasEmbeddedYouTubeNode ? (
+                    <div className="mt-3 overflow-hidden rounded-xl border border-border">
+                        <div className="aspect-video w-full">
+                            <iframe
+                                src={videoUrl}
+                                title="YouTube video"
+                                className="h-full w-full"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerPolicy="strict-origin-when-cross-origin"
+                                allowFullScreen
+                            />
+                        </div>
+                    </div>
+                ) : null}
             </CardContent>
 
             <CardFooter>

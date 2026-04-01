@@ -183,6 +183,7 @@ async function getScopedFeed(scope: FeedScope, targetId: string, viewerId: strin
             select: {
                 id: true,
                 content: true,
+                videoUrl: true,
                 createdAt: true,
                 likeCount: true,
                 starCount: true,
@@ -226,6 +227,7 @@ async function getScopedFeed(scope: FeedScope, targetId: string, viewerId: strin
             data: posts.map((post) => ({
                 id: post.id,
                 content: post.content,
+                videoUrl: post.videoUrl ?? null,
                 createdAt: post.createdAt,
                 user_id: post.author.id,
                 user_name: post.author.name,

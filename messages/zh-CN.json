@@ -141,7 +141,8 @@
       "theme": "主题",
       "language": "语言偏好",
       "help": "帮助中心",
-      "about": "关于"
+      "about": "关于",
+      "dashboard": "仪表盘"
     },
     "Theme": {
       "title": "主题",
@@ -945,6 +946,175 @@
       "tos": "服务条款",
       "privacy": "隐私政策",
       "cookies": "Cookie 使用政策"
+    }
+  },
+  "Dashboard": {
+    "nav": {
+      "businessHome": "业务首页",
+      "affiliations": "关系管理",
+      "radarIntelligence": "雷达洞察",
+      "acquireHandles": "句柄获取",
+      "hireTalent": "人才招募",
+      "vipSupport": "VIP 支持",
+      "billing": "账单中心",
+      "settings": "系统设置",
+      "brand": "Gekaixing 高级业务台",
+      "fallbackTitle": "数据看板"
+    },
+    "common": {
+      "anonymousUser": "匿名用户",
+      "noData": "暂无数据",
+      "premium": "高级版",
+      "standard": "标准版",
+      "ready": "已就绪",
+      "missing": "缺失"
+    },
+    "home": {
+      "stats": {
+        "totalUsers": "我的关注",
+        "premiumUsers": "关注我的人",
+        "postsReplies": "我的主帖 / 回复",
+        "weeklyAdded": "本周发帖 / 回复"
+      },
+      "trendTitle": "近 14 天发帖趋势",
+      "trendDesc": "按天统计主帖与回复",
+      "trendLine": "主帖 {posts} / 回复 {replies}",
+      "noTrend": "暂无趋势数据",
+      "recentTitle": "最新动态",
+      "recentDesc": "我最近发布的主帖",
+      "table": {
+        "author": "作者",
+        "content": "内容",
+        "engagement": "互动",
+        "time": "时间"
+      },
+      "badge": {
+        "likes": "赞 {count}",
+        "replies": "评 {count}",
+        "shares": "转 {count}"
+      },
+      "noPosts": "暂无帖子数据"
+    },
+    "affiliations": {
+      "stats": {
+        "totalLinks": "我的关系总数",
+        "following": "关注中",
+        "requested": "待确认",
+        "blocked": "已屏蔽"
+      },
+      "title": "我的关系变更",
+      "desc": "仅展示与你有关的关注关系",
+      "table": {
+        "initiator": "发起方",
+        "target": "目标用户",
+        "status": "状态",
+        "time": "时间"
+      },
+      "noData": "暂无关系数据"
+    },
+    "radar": {
+      "actionTitle": "我的行为热度",
+      "actionDesc": "仅统计我在平台上的操作行为",
+      "noActions": "暂无行为数据",
+      "trendTitle": "我的内容行为趋势",
+      "trendDesc": "统计 POST_CREATE 与 REPLY_CREATE",
+      "trendLine": "发帖 {posts} / 回复 {replies}",
+      "noTrend": "暂无雷达趋势数据"
+    },
+    "handles": {
+      "stats": {
+        "totalUsers": "我关注的人",
+        "premiumUsers": "其中高级用户",
+        "activeCreators": "活跃创作者（5 帖+）"
+      },
+      "title": "我关注的用户",
+      "desc": "基于我关注关系的用户清单",
+      "table": {
+        "handle": "句柄",
+        "user": "用户",
+        "posts": "帖子",
+        "followers": "粉丝",
+        "tier": "等级",
+        "joinedAt": "注册时间"
+      },
+      "noData": "暂无句柄数据"
+    },
+    "talent": {
+      "stats": {
+        "candidates": "关注创作者候选",
+        "highSignal": "高信号创作者（50+）"
+      },
+      "title": "我关注的创作者活跃榜",
+      "desc": "仅基于我关注对象的内容与互动表现",
+      "table": {
+        "user": "用户",
+        "posts": "主帖",
+        "replies": "回复",
+        "likes": "点赞",
+        "shares": "转发",
+        "score": "综合分"
+      },
+      "noData": "暂无可评估人才"
+    },
+    "support": {
+      "stats": {
+        "totalConversations": "我的会话总量",
+        "active48h": "我近 48 小时活跃会话",
+        "stalled": "我待跟进会话"
+      },
+      "title": "VIP 会话看板",
+      "desc": "按最近更新时间排序",
+      "table": {
+        "conversation": "会话",
+        "participants": "参与用户",
+        "messages": "消息数",
+        "updatedAt": "更新时间"
+      },
+      "group": "群组会话",
+      "direct": "私聊会话",
+      "noParticipants": "无参与者",
+      "noData": "暂无会话数据"
+    },
+    "billing": {
+      "stats": {
+        "totalUsers": "我的账号",
+        "premiumUsers": "我的会员状态",
+        "premiumRate": "会员覆盖率",
+        "newPremium7d": "7 天内新开通"
+      },
+      "title": "我的会员明细",
+      "desc": "仅展示当前登录账号的会员数据",
+      "table": {
+        "user": "用户",
+        "handle": "句柄",
+        "posts": "帖子数",
+        "openedAt": "开通时间"
+      },
+      "noData": "暂无账单数据"
+    },
+    "settings": {
+      "stats": {
+        "totalLogs": "我的行为日志总量",
+        "logsToday": "我今日行为数",
+        "env": "登录状态"
+      },
+      "title": "我的系统行为日志",
+      "desc": "仅展示当前账号最近行为记录",
+      "table": {
+        "action": "行为",
+        "user": "用户",
+        "targetPost": "目标帖子",
+        "time": "时间"
+      },
+      "noData": "暂无系统日志"
+    },
+    "engagement": {
+      "title": "近 7 天账号互动表现",
+      "impressions": "曝光量",
+      "engagementRate": "互动率",
+      "replies": "回复数",
+      "posts": "发帖数",
+      "growth": "较上一个 7 天增长"
     }
   }
 }

@@ -260,6 +260,7 @@ export default function PostList({
             user_avatar={item.user_avatar || ""}
             user_userid={item.user_userid}
             content={item.content}
+            videoUrl={item.videoUrl}
             like={item.like}
             star={item.star}
             reply={item.reply}

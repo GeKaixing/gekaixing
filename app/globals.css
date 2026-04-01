@@ -126,3 +126,37 @@
     @apply text-blue-500 font-semibold cursor-pointer no-underline hover:underline;
   }
 }
+
+@layer components {
+  .dashboard-mono {
+    --chart-1: oklch(0.3 0 0);
+    --chart-2: oklch(0.42 0 0);
+    --chart-3: oklch(0.54 0 0);
+    --chart-4: oklch(0.66 0 0);
+    --chart-5: oklch(0.78 0 0);
+  }
+
+  .dark .dashboard-mono {
+    --chart-1: oklch(0.92 0 0);
+    --chart-2: oklch(0.8 0 0);
+    --chart-3: oklch(0.68 0 0);
+    --chart-4: oklch(0.56 0 0);
+    --chart-5: oklch(0.44 0 0);
+  }
+
+  .dashboard-mono [data-slot="sidebar-wrapper"] {
+    background: linear-gradient(to bottom, oklch(0.98 0 0), oklch(0.94 0 0));
+  }
+
+  .dark .dashboard-mono [data-slot="sidebar-wrapper"] {
+    background: linear-gradient(to bottom, oklch(0.16 0 0), oklch(0.12 0 0));
+  }
+
+  .dashboard-mono [data-slot="sidebar-inset"] {
+    border: 1px solid oklch(0.88 0 0);
+  }
+
+  .dark .dashboard-mono [data-slot="sidebar-inset"] {
+    border: 1px solid oklch(0.32 0 0);
+  }
+}

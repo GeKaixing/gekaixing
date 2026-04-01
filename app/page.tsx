@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import CookieConsent from "@/components/gekaixing/CookieConsent"
 import { Compass, Globe2, Heart, MessageSquare, Repeat2, Zap } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -174,6 +175,8 @@ export default async function Page(): Promise<React.JSX.Element> {
           <p className="text-zinc-500 dark:text-zinc-500">{t("footer.copyright")}</p>
         </div>
       </footer>
+
+      <CookieConsent />
     </div>
   )
 }

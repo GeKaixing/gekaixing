@@ -1,4 +1,4 @@
-import { generateGeminiText, hasGeminiApiKey } from "@/lib/gemini";
+import { generateGeminiText } from "@/lib/gemini";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
@@ -55,11 +55,15 @@ export async function POST(request: Request): Promise<Response> {
     const prompt = cleanPrompt(body.prompt);
     const locale: "zh-CN" | "en" = body.locale === "zh-CN" ? "zh-CN" : "en";
     const promptText = buildPromptText(prompt, locale);
+    const geminiApiKey =
+      typeof user.user_metadata?.gemini_api_key === "string"
+        ? user.user_metadata.gemini_api_key.trim()
+        : "";
 
-    if (!hasGeminiApiKey()) {
+    if (!geminiApiKey) {
       return NextResponse.json(
         {
-          error: "Gemini API key is not configured",
+          error: "Gemini API key is not configured in your Settings",
           success: false,
         },
         { status: 503 }
@@ -68,6 +72,7 @@ export async function POST(request: Request): Promise<Response> {
 
     try {
       const { text, model } = await generateGeminiText({
+        apiKey: geminiApiKey,
         prompt: promptText,
         temperature: 0.85,
         maxOutputTokens: 220,

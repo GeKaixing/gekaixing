@@ -3,7 +3,7 @@ import ArrowLeftBack from '@/components/gekaixing/ArrowLeftBack'
 import SettingLi from '@/components/gekaixing/SettingLi'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { userStore } from '@/store/user'
-import { Info, User,HandHelping, Palette, Languages } from 'lucide-react'
+import { Info, User, HandHelping, Palette, Languages,Gauge } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
 export default function Page() {
@@ -38,7 +38,7 @@ export default function Page() {
           href='/gekaixing/settings/language'
         ></SettingLi>
         <SettingLi
-          icon={<HandHelping/>}
+          icon={<HandHelping />}
           text={t("help")}
           href='/gekaixing/help'
         ></SettingLi>
@@ -46,6 +46,11 @@ export default function Page() {
           icon={<Info></Info>}
           text={t("about")}
           href='/about'
+        ></SettingLi>
+        <SettingLi
+          icon={<Gauge></Gauge>}
+          text={t("dashboard")}
+          href='/dashboard'
         ></SettingLi>
       </ul>
 

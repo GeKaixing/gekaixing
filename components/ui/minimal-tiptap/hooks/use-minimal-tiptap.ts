@@ -14,6 +14,7 @@ import {
   UnsetAllMarks,
   ResetMarksOnEnter,
   FileHandler,
+  YouTube,
 } from "../extensions"
 import { cn } from "@/lib/utils"
 import { fileToBase64, getOutput, randomId } from "../utils"
@@ -193,6 +194,7 @@ const createExtensions = ({
     HorizontalRule,
     ResetMarksOnEnter,
     CodeBlockLowlight,
+    YouTube,
     Placeholder.configure({ placeholder: () => placeholder }),
   ])
 }

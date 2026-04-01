@@ -20,6 +20,7 @@ import Spin from "@/components/gekaixing/Spin"
 import { Fragment } from "@tiptap/pm/model"
 import { useTranslations } from "next-intl"
 import { useLocale } from "next-intl"
+import { ReactNode } from "react"
 
 export interface MinimalTiptapProps
   extends Omit<UseMinimalTiptapEditorProps, "onUpdate"> {
@@ -28,6 +29,8 @@ export interface MinimalTiptapProps
   onEditorReady?: (editor: Editor | null) => void
   onAiGenerate?: () => void
   aiGenerating?: boolean
+  canPublish?: boolean
+  contentAfterEditor?: ReactNode
   className?: string
   editorContentClassName?: string
 }
@@ -36,18 +39,20 @@ const Toolbar = ({
   editor,
   publish,
   value,
+  canPublish,
   onAiGenerate,
   aiGenerating = false,
 }: {
   editor: Editor
   publish?: () => void
   value: Content | undefined | string
+  canPublish?: boolean
   onAiGenerate?: () => void
   aiGenerating?: boolean
 }) => {
 const t = useTranslations('EditPost')
   const locale = useLocale()
-  const hasContent = typeof value === "string" ? value.trim().length !== 0 : false
+  const hasContent = canPublish ?? (typeof value === "string" ? value.trim().length !== 0 : false)
   const aiButtonLabel = aiGenerating
     ? locale === "zh-CN"
       ? "生成中..."
@@ -123,6 +128,8 @@ export const MinimalTiptapEditor = ({
   onEditorReady,
   onAiGenerate,
   aiGenerating,
+  canPublish,
+  contentAfterEditor,
   className,
   editorContentClassName,
   ...props
@@ -165,6 +172,7 @@ export const MinimalTiptapEditor = ({
         editor={editor}
         className={cn("minimal-tiptap-editor", editorContentClassName)}
       />
+      {contentAfterEditor}
       {status ?
         <div className="flex justify-center">
           <Spin></Spin>
@@ -173,6 +181,7 @@ export const MinimalTiptapEditor = ({
           editor={editor}
           publish={publish}
           value={value}
+          canPublish={canPublish}
           onAiGenerate={onAiGenerate}
           aiGenerating={aiGenerating}
         />}

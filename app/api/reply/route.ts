@@ -4,6 +4,7 @@ import { logUserAction } from "@/lib/feed/actions";
 import { invalidateUserHomeFeed } from "@/lib/feed/service";
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { extractYouTubeEmbedUrl } from "@/utils/function/extractYouTubeEmbedUrl";
 
 
 // ---------------- POST 创建回复 ----------------
@@ -19,6 +20,7 @@ export async function POST(request: Request) {
     }
 
     const { content, post_id, reply_id } = await request.json();
+    const videoUrl = extractYouTubeEmbedUrl(content);
 
     // rootId 规则：
     // - 回复主帖：rootId = post_id, parentId = post_id
@@ -44,6 +46,7 @@ export async function POST(request: Request) {
     const reply = await prisma.post.create({
       data: {
         content,
+        videoUrl,
         authorId: user.id,
         parentId,
         rootId,
