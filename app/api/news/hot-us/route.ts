@@ -187,7 +187,7 @@ export async function GET(request: Request): Promise<Response> {
 
     try {
       const result = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model: "Gemini 2.5 Flash",
         contents: buildPrompt(category),
         config: {
           temperature: 0.4,
