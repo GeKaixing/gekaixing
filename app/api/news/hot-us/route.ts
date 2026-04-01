@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import { NextResponse } from "next/server";
 
 import { createClient } from "@/utils/supabase/server";
@@ -54,6 +54,28 @@ function parseNewsResult(text: string, category: NewsCategory): HotNewsItem[] {
     : [];
 
   return list.map((item) => ({ ...item, category }));
+}
+
+function getNewsResponseSchema() {
+  return {
+    type: Type.OBJECT,
+    properties: {
+      news: {
+        type: Type.ARRAY,
+        items: {
+          type: Type.OBJECT,
+          properties: {
+            title: { type: Type.STRING },
+            summary: { type: Type.STRING },
+            source_name: { type: Type.STRING },
+            url: { type: Type.STRING },
+          },
+          required: ["title", "summary", "source_name", "url"],
+        },
+      },
+    },
+    required: ["news"],
+  };
 }
 
 function getUsDateText(): string {
@@ -139,22 +161,22 @@ export async function GET(request: Request): Promise<Response> {
         : "us";
 
     const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized", success: false }, { status: 401 });
+    let userGeminiApiKey = "";
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      userGeminiApiKey =
+        typeof user?.user_metadata?.gemini_api_key === "string" ? user.user_metadata.gemini_api_key.trim() : "";
+    } catch {
+      userGeminiApiKey = "";
     }
-
-    const userGeminiApiKey =
-      typeof user.user_metadata?.gemini_api_key === "string" ? user.user_metadata.gemini_api_key.trim() : "";
-    const geminiApiKey = userGeminiApiKey || process.env.GEMINI_API_KEY || "";
+    const geminiApiKey = userGeminiApiKey;
 
     if (!geminiApiKey) {
       return NextResponse.json(
         {
-          error: "Gemini API key is not configured in your Settings",
+          error: "Gemini API key is not configured in your Settings (environment key is disabled)",
           success: false,
         },
         { status: 503 }
@@ -165,12 +187,14 @@ export async function GET(request: Request): Promise<Response> {
 
     try {
       const result = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-3-flash-preview",
         contents: buildPrompt(category),
         config: {
           temperature: 0.4,
           maxOutputTokens: 2500,
           tools: [{ googleSearch: {} }],
+          responseMimeType: "application/json",
+          responseSchema: getNewsResponseSchema(),
         },
       });
 
@@ -180,7 +204,7 @@ export async function GET(request: Request): Promise<Response> {
       }
 
       const news = parseNewsResult(text, category);
-      if (news.length < 10) {
+      if (news.length === 0) {
         throw new Error("Gemini returned incomplete news result");
       }
 
