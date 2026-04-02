@@ -1,9 +1,11 @@
-﻿import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import Link from "next/link";
 
 import { DashboardEngagementPanel } from "@/components/dashboard/dashboard-engagement-panel";
 import { TrendPill } from "@/components/dashboard/trend-pill";
 import { DashboardTrendChart } from "@/components/dashboard/dashboard-trend-chart";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   CardAction,
   Card,
@@ -36,7 +38,27 @@ function formatRate(value: number): string {
   return `${value.toFixed(2)}%`;
 }
 
-export default async function DashboardPage(): Promise<React.JSX.Element> {
+function computeRate(numerator: number, denominator: number): number {
+  if (denominator <= 0) {
+    return 0;
+  }
+
+  return (numerator / denominator) * 100;
+}
+
+type DashboardPageSearchParams = {
+  metricMode?: string | string[];
+};
+
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<DashboardPageSearchParams>;
+}): Promise<React.JSX.Element> {
+  const params = await searchParams;
+  const selectedModeRaw = Array.isArray(params.metricMode) ? params.metricMode[0] : params.metricMode;
+  const selectedMode = selectedModeRaw === "pv" ? "pv" : "uv";
+  const uvMode = selectedMode === "uv";
   const locale = await getLocale();
   const { userId } = await getDashboardViewer();
 
@@ -45,7 +67,12 @@ export default async function DashboardPage(): Promise<React.JSX.Element> {
     getTranslations("Dashboard.common"),
     getTranslations("Dashboard.engagement"),
   ]);
+
   const { summary, rates, trend, recentPosts } = await getDashboardHomeData(userId);
+
+  const formatMetricPair = (uvValue: number, uvBase: number, pvValue: number, pvBase: number): string => {
+    return uvMode ? `UV ${uvValue}/${uvBase}` : `PV ${pvValue}/${pvBase}`;
+  };
 
   return (
     <>
@@ -107,32 +134,49 @@ export default async function DashboardPage(): Promise<React.JSX.Element> {
         />
       </div>
 
+      <div className="flex justify-end px-4 lg:px-6">
+        <div className="inline-flex items-center gap-2 rounded-md border p-1">
+          <Button asChild size="sm" variant={uvMode ? "default" : "outline"}>
+            <Link href="/dashboard?metricMode=uv">UV</Link>
+          </Button>
+          <Button asChild size="sm" variant={uvMode ? "outline" : "default"}>
+            <Link href="/dashboard?metricMode=pv">PV</Link>
+          </Button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 gap-4 px-4 lg:grid-cols-3 lg:px-6">
         <Card>
           <CardHeader>
             <CardDescription>{te("postClickRate")}</CardDescription>
-            <CardTitle>{formatRate(rates.postClickRate)}</CardTitle>
+            <CardTitle>
+              {formatRate(uvMode ? rates.postClickRate : computeRate(rates.postClicksPv, rates.impressionsPv))}
+            </CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            {rates.postClicks} / {rates.impressions}
+            {formatMetricPair(rates.postClicks, rates.impressions, rates.postClicksPv, rates.impressionsPv)}
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
             <CardDescription>{te("replyRate")}</CardDescription>
-            <CardTitle>{formatRate(rates.replyRate)}</CardTitle>
+            <CardTitle>
+              {formatRate(uvMode ? rates.replyRate : computeRate(rates.repliesReceivedPv, rates.impressionsPv))}
+            </CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            {rates.repliesReceived} / {rates.impressions}
+            {formatMetricPair(rates.repliesReceived, rates.impressions, rates.repliesReceivedPv, rates.impressionsPv)}
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
             <CardDescription>{te("profileEnterRate")}</CardDescription>
-            <CardTitle>{formatRate(rates.profileEnterRate)}</CardTitle>
+            <CardTitle>
+              {formatRate(uvMode ? rates.profileEnterRate : computeRate(rates.profileEntersPv, rates.impressionsPv))}
+            </CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            {rates.profileEnters} / {rates.impressions}
+            {formatMetricPair(rates.profileEnters, rates.impressions, rates.profileEntersPv, rates.impressionsPv)}
           </CardContent>
         </Card>
       </div>
@@ -187,18 +231,23 @@ export default async function DashboardPage(): Promise<React.JSX.Element> {
                           <Badge variant="outline">{t("badge.replies", { count: item.replyCount })}</Badge>
                           <Badge variant="outline">{t("badge.shares", { count: item.shareCount })}</Badge>
                           <Badge variant="secondary">
-                            {te("postClickRate")}: {formatRate(item.metrics.postClickRate)}
+                            {te("postClickRate")}: {formatRate(uvMode ? item.metrics.postClickRate : computeRate(item.metrics.postClicksPv, item.metrics.impressionsPv))}
                           </Badge>
                           <Badge variant="secondary">
-                            {te("replyRate")}: {formatRate(item.metrics.replyRate)}
+                            {te("replyRate")}: {formatRate(uvMode ? item.metrics.replyRate : computeRate(item.metrics.repliesReceivedPv, item.metrics.impressionsPv))}
                           </Badge>
                           <Badge variant="secondary">
-                            {te("profileEnterRate")}: {formatRate(item.metrics.profileEnterRate)}
+                            {te("profileEnterRate")}: {formatRate(uvMode ? item.metrics.profileEnterRate : computeRate(item.metrics.profileEntersPv, item.metrics.impressionsPv))}
                           </Badge>
                         </div>
                         <div className="mt-2 text-xs text-muted-foreground">
-                          {item.metrics.postClicks}/{item.metrics.impressions} | {item.metrics.repliesReceived}/
-                          {item.metrics.impressions} | {item.metrics.profileEnters}/{item.metrics.impressions}
+                          {formatMetricPair(item.metrics.postClicks, item.metrics.impressions, item.metrics.postClicksPv, item.metrics.impressionsPv)}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {formatMetricPair(item.metrics.repliesReceived, item.metrics.impressions, item.metrics.repliesReceivedPv, item.metrics.impressionsPv)}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {formatMetricPair(item.metrics.profileEnters, item.metrics.impressions, item.metrics.profileEntersPv, item.metrics.impressionsPv)}
                         </div>
                       </TableCell>
                       <TableCell className="text-right text-muted-foreground">{formatDate(item.createdAt, locale)}</TableCell>

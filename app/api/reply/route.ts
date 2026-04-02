@@ -6,6 +6,10 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { extractYouTubeEmbedUrl } from "@/utils/function/extractYouTubeEmbedUrl";
 
+function toErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : "Unknown error";
+}
+
 
 // ---------------- POST 创建回复 ----------------
 export async function POST(request: Request) {
@@ -88,11 +92,12 @@ export async function POST(request: Request) {
       actionType: UserActionType.REPLY_CREATE,
       targetPostId: post_id ?? parentId,
       targetAuthorId: parentPost?.authorId ?? null,
+      metadata: JSON.stringify({ kind: "reply_create", source: "reply_box" }),
     });
 
     return NextResponse.json({ data: reply, success: true });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ error: toErrorMessage(error) }, { status: 500 });
   }
 }
 
@@ -145,8 +150,8 @@ export async function DELETE(request: Request) {
     ]);
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ error: toErrorMessage(error) }, { status: 500 });
   }
 }
 
@@ -233,7 +238,7 @@ export async function GET(request: Request) {
     });
 
     return NextResponse.json({ data: replies, success: true });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ error: toErrorMessage(error) }, { status: 500 });
   }
 }

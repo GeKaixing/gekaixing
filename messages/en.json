@@ -1164,7 +1164,75 @@
         "replies": "Reply {count}",
         "shares": "Share {count}"
       },
-      "noPosts": "No post data"
+      "noPosts": "No post data",
+      "earlyStage": {
+        "activeTitle": "Active Users (P0)",
+        "newUsersToday": "New users today {count}",
+        "retentionTitle": "Retention (P0)",
+        "retentionDesc": "D1 / D7 based on latest completed cohorts",
+        "interactionTitle": "Avg Interactions per Active User (7d, P0)",
+        "interactionDesc": "{interactions} interactions in 7d / {users} active users",
+        "dauTrendTitle": "DAU Trend (14d)",
+        "dauTrendDesc": "Daily unique active users",
+        "retentionHeatmapTitle": "Cohort Retention Heatmap",
+        "retentionHeatmapDesc": "D1 / D7 for latest 14 completed cohorts",
+        "cohortDate": "Cohort Date",
+        "cohortWeek": "Cohort Week",
+        "cohortUsers": "Cohort Size",
+        "dayCohort": "Daily Cohort",
+        "weekCohort": "Weekly Cohort"
+      },
+      "segmentation": {
+        "trafficTitle": "Traffic Source Breakdown (Last 7 Days)",
+        "trafficDesc": "Split impressions, clicks, replies, and profile visits by source",
+        "funnelTitle": "Funnel Breakdown (Last 7 Days)",
+        "funnelDesc": "Conversion path from impression to click, profile visit, follow, and reply",
+        "audienceTitle": "Audience Breakdown (Last 7 Days)",
+        "audienceDesc": "Split engagement by new/returning users, follower relationship, and premium tier",
+        "contentTitle": "Content Breakdown (Last 7 Days)",
+        "contentDesc": "Post volume and conversion rate by content type",
+        "cols": {
+          "segment": "Segment",
+          "users": "Users",
+          "events": "Events",
+          "conversion": "Conversion From Prev",
+          "posts": "Posts"
+        },
+        "source": {
+          "home": "Home Feed",
+          "user-posts": "Profile Posts",
+          "user-replies": "Profile Replies",
+          "user-liked": "Profile Likes",
+          "user-bookmarks": "Profile Bookmarks",
+          "status-replies": "Status Reply Feed",
+          "feed_card": "Feed Card",
+          "status_page": "Status Page",
+          "reply_box": "Reply Box",
+          "unknown": "Unknown Source"
+        },
+        "funnel": {
+          "impression": "Impression",
+          "post_click": "Post Click",
+          "profile_enter": "Profile Visit",
+          "follow": "Follow",
+          "reply": "Reply"
+        },
+        "audience": {
+          "new_users": "New Users",
+          "returning_users": "Returning Users",
+          "followers": "Followers",
+          "non_followers": "Non-followers",
+          "premium_users": "Premium Users",
+          "standard_users": "Standard Users"
+        },
+        "content": {
+          "video_post": "Video Posts",
+          "audio_post": "Audio Posts",
+          "mixed_media": "Mixed Media Posts",
+          "short_text": "Short Text Posts",
+          "long_text": "Long Text Posts"
+        }
+      }
     },
     "affiliations": {
       "stats": {

@@ -1164,7 +1164,75 @@
         "replies": "评 {count}",
         "shares": "转 {count}"
       },
-      "noPosts": "暂无帖子数据"
+      "noPosts": "暂无帖子数据",
+      "earlyStage": {
+        "activeTitle": "活跃用户（P0）",
+        "newUsersToday": "今日新增用户 {count}",
+        "retentionTitle": "留存率（P0）",
+        "retentionDesc": "基于最近完整 cohort 的 D1 / D7 留存",
+        "interactionTitle": "7日人均互动数（P0）",
+        "interactionDesc": "近7天互动 {interactions} 次 / 活跃用户 {users} 人",
+        "dauTrendTitle": "14天 DAU 趋势",
+        "dauTrendDesc": "按天去重活跃用户",
+        "retentionHeatmapTitle": "Cohort 留存热力",
+        "retentionHeatmapDesc": "最近14个完整 cohort 的 D1 / D7",
+        "cohortDate": "Cohort 日期",
+        "cohortWeek": "Cohort 周",
+        "cohortUsers": "Cohort 人数",
+        "dayCohort": "日 Cohort",
+        "weekCohort": "周 Cohort"
+      },
+      "segmentation": {
+        "trafficTitle": "流量来源分层（近 7 天）",
+        "trafficDesc": "按来源拆分曝光、点击、回复、进主页",
+        "funnelTitle": "漏斗分层（近 7 天）",
+        "funnelDesc": "曝光到点击、进主页、关注、回复的转化链路",
+        "audienceTitle": "人群分层（近 7 天）",
+        "audienceDesc": "按新老用户、粉丝关系、会员等级拆分互动表现",
+        "contentTitle": "内容分层（近 7 天）",
+        "contentDesc": "按内容类型统计帖子量与互动转化率",
+        "cols": {
+          "segment": "分层",
+          "users": "人数",
+          "events": "事件数",
+          "conversion": "上一步转化",
+          "posts": "帖子数"
+        },
+        "source": {
+          "home": "首页信息流",
+          "user-posts": "用户主页-帖子",
+          "user-replies": "用户主页-回复",
+          "user-liked": "用户主页-喜欢",
+          "user-bookmarks": "用户主页-收藏",
+          "status-replies": "帖子详情-回复流",
+          "feed_card": "帖子卡片",
+          "status_page": "帖子详情页",
+          "reply_box": "回复输入框",
+          "unknown": "未标记来源"
+        },
+        "funnel": {
+          "impression": "曝光",
+          "post_click": "帖子点击",
+          "profile_enter": "进入主页",
+          "follow": "关注",
+          "reply": "回复"
+        },
+        "audience": {
+          "new_users": "新用户",
+          "returning_users": "老用户",
+          "followers": "已关注你的人",
+          "non_followers": "未关注你的人",
+          "premium_users": "会员用户",
+          "standard_users": "普通用户"
+        },
+        "content": {
+          "video_post": "视频帖子",
+          "audio_post": "音频帖子",
+          "mixed_media": "混合媒体帖子",
+          "short_text": "短文本帖子",
+          "long_text": "长文本帖子"
+        }
+      }
     },
     "affiliations": {
       "stats": {

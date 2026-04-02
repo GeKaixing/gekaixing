@@ -26,6 +26,10 @@ export interface DashboardRecentPost {
     postClicks: number;
     repliesReceived: number;
     profileEnters: number;
+    impressionsPv: number;
+    postClicksPv: number;
+    repliesReceivedPv: number;
+    profileEntersPv: number;
     postClickRate: number;
     replyRate: number;
     profileEnterRate: number;
@@ -131,17 +135,99 @@ export interface DashboardActionLogItem {
 
 export interface DashboardHomeData {
   summary: DashboardSummary;
+  coreMetrics: {
+    dau: number;
+    wau: number;
+    mau: number;
+    newUsersToday: number;
+    d1Retention: number;
+    d7Retention: number;
+    avgInteractionsPerActiveUser7d: number;
+    interactions7d: number;
+    activeUsers7d: number;
+  };
+  dauTrend: DashboardDauTrendPoint[];
+  retentionCohorts: DashboardRetentionCohortItem[];
+  retentionWeeklyCohorts: DashboardRetentionCohortItem[];
   rates: {
     impressions: number;
     postClicks: number;
     repliesReceived: number;
     profileEnters: number;
+    impressionsPv: number;
+    postClicksPv: number;
+    repliesReceivedPv: number;
+    profileEntersPv: number;
     postClickRate: number;
     replyRate: number;
     profileEnterRate: number;
   };
   trend: DashboardTrendPoint[];
   recentPosts: DashboardRecentPost[];
+  trafficSources: DashboardTrafficSourceItem[];
+  funnel: DashboardFunnelItem[];
+  audienceSegments: DashboardAudienceSegmentItem[];
+  contentSegments: DashboardContentSegmentItem[];
+}
+
+export interface DashboardDauTrendPoint {
+  date: string;
+  dau: number;
+}
+
+export interface DashboardRetentionCohortItem {
+  cohortDate: string;
+  users: number;
+  d1Retention: number;
+  d7Retention: number;
+}
+
+export interface DashboardTrafficSourceItem {
+  source: string;
+  impressions: number;
+  postClicks: number;
+  repliesReceived: number;
+  profileEnters: number;
+  impressionsPv: number;
+  postClicksPv: number;
+  repliesReceivedPv: number;
+  profileEntersPv: number;
+}
+
+export interface DashboardFunnelItem {
+  step: string;
+  users: number;
+  events: number;
+  conversionFromPrev: number;
+}
+
+export interface DashboardAudienceSegmentItem {
+  segment: string;
+  users: number;
+  impressions: number;
+  postClicks: number;
+  repliesReceived: number;
+  profileEnters: number;
+  impressionsPv: number;
+  postClicksPv: number;
+  repliesReceivedPv: number;
+  profileEntersPv: number;
+}
+
+export interface DashboardContentSegmentItem {
+  segment: string;
+  posts: number;
+  impressions: number;
+  postClicks: number;
+  repliesReceived: number;
+  profileEnters: number;
+  impressionsPv: number;
+  postClicksPv: number;
+  repliesReceivedPv: number;
+  profileEntersPv: number;
+  postClickRate: number;
+  replyRate: number;
+  profileEnterRate: number;
 }
 
 export interface DashboardAffiliationsData {

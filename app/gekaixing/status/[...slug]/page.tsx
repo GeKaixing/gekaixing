@@ -5,6 +5,8 @@ import PublishReply from '@/components/gekaixing/PublishReply'
 import Reply from '@/components/gekaixing/Reply'
 import StatusStore from '@/components/gekaixing/StatusStore'
 import { prisma } from '@/lib/prisma'
+import { UserActionType } from "@/generated/prisma/enums";
+import { logUserAction } from "@/lib/feed/actions";
 import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
@@ -170,6 +172,16 @@ const getPost = async (id: string): Promise<FeedPost | null> => {
     })
 
     if (!post) return null
+
+    if (userId && userId !== post.author.id) {
+        await logUserAction({
+            userId,
+            actionType: UserActionType.FEED_IMPRESSION,
+            targetPostId: id,
+            targetAuthorId: post.author.id,
+            metadata: JSON.stringify({ kind: "feed_impression", source: "status_page" }),
+        })
+    }
 
     const weekAgo = new Date()
     weekAgo.setDate(weekAgo.getDate() - 7)

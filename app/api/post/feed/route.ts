@@ -87,13 +87,14 @@ export async function GET(req: NextRequest) {
         limit,
       });
       if (userId) {
-        void Promise.all(
+        await Promise.allSettled(
           feed.data.slice(0, 20).map((post) =>
             logUserAction({
               userId,
               actionType: UserActionType.FEED_IMPRESSION,
               targetPostId: post.id,
               targetAuthorId: post.user_id,
+              metadata: JSON.stringify({ kind: "feed_impression", source: scope }),
             })
           )
         );
@@ -186,6 +187,20 @@ export async function GET(req: NextRequest) {
       bookmarkedByMe: post.bookmarks?.length > 0,
       sharedByMe: post.shares?.length > 0,
     }));
+
+    if (userId) {
+      await Promise.allSettled(
+        result.slice(0, 20).map((post) =>
+          logUserAction({
+            userId,
+            actionType: UserActionType.FEED_IMPRESSION,
+            targetPostId: post.id,
+            targetAuthorId: post.user_id,
+            metadata: JSON.stringify({ kind: "feed_impression", source: scope }),
+          })
+        )
+      );
+    }
 
     return NextResponse.json({
       data: result,
