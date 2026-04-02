@@ -1,112 +1,166 @@
-# Gekaixing
+# Gekaixing / 个开心
 
-Next.js 16 + TypeScript 的社交平台项目，支持发帖、回复、点赞、收藏、分享、用户资料、关注关系、私聊入口，以及 AI 对话与多语言界面。
+[![Next.js](https://img.shields.io/badge/Next.js-16.1.6-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-7.x-2D3748)](https://www.prisma.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-## Features
+A production-ready social platform template built with Next.js, Prisma, Supabase, and modern frontend tooling.  
+一个可直接二次开发的社交平台模板，基于 Next.js、Prisma、Supabase 与现代前端技术栈。
 
-- Social feed: posts / replies / likes / bookmarks / shares
-- User profile: avatar、简介、资料编辑
-- Relationship graph: followers / following / recommended users
-- I18n: `zh-CN` / `en`（`next-intl`）
-- AI chat: 基于 Vercel AI SDK（OpenAI / Google）
-- Payment hooks: Stripe checkout + webhook
-- Storage & auth: Supabase SSR client
+## Table of Contents / 目录
 
-## Tech Stack
+- [Overview / 项目概览](#overview--项目概览)
+- [Demo Screenshots / 页面截图](#demo-screenshots--页面截图)
+- [Architecture / 架构图](#architecture--架构图)
+- [Features / 功能列表](#features--功能列表)
+- [Tech Stack / 技术栈](#tech-stack--技术栈)
+- [Project Structure / 目录结构](#project-structure--目录结构)
+- [Quick Start / 快速开始](#quick-start--快速开始)
+- [Environment Variables / 环境变量](#environment-variables--环境变量)
+- [Scripts / 常用命令](#scripts--常用命令)
+- [Analytics & Dashboard / 数据看板](#analytics--dashboard--数据看板)
+- [Roadmap / 路线图](#roadmap--路线图)
+- [FAQ / 常见问题](#faq--常见问题)
+- [Troubleshooting / 排障](#troubleshooting--排障)
+- [Contributing / 贡献指南](#contributing--贡献指南)
+- [Security / 安全](#security--安全)
+- [License / 许可证](#license--许可证)
 
-- Framework: Next.js 16.1.6 (App Router)
-- Language: TypeScript (strict)
-- Styling: Tailwind CSS v4 + shadcn/ui
-- DB: PostgreSQL + Prisma 7
-- State: Zustand
-- Form: React Hook Form + Zod
-- I18n: next-intl
+## Overview / 项目概览
 
-## Project Structure
+- Social core: posts, replies, likes, bookmarks, shares, follow graph, messaging  
+  社交核心：发帖、回复、点赞、收藏、转发、关注关系、私信
+- AI hooks: AI chat and content-assist endpoints (Vercel AI SDK compatible)  
+  AI 能力：AI 对话与内容辅助接口（兼容 Vercel AI SDK）
+- i18n: Chinese and English (`next-intl`)  
+  国际化：中英文双语（`next-intl`）
+- Analytics dashboard: UV/PV, funnel segmentation, cohort retention, DAU/WAU/MAU  
+  数据看板：UV/PV、漏斗分层、cohort 留存、DAU/WAU/MAU
 
-```text
-app/                 Next.js App Router pages and API routes
-components/          UI components (shadcn + business components)
-lib/                 shared libs (prisma, stripe, utils)
-store/               Zustand stores
-messages/            i18n dictionaries (en / zh-CN)
-utils/               helper functions and Supabase clients
-prisma/              schema and migrations
+## Demo Screenshots / 页面截图
+
+### Feed / 信息流
+![Feed](docs/screenshots/feed.png)
+
+### Dashboard Home / 业务首页
+![Dashboard Home](docs/screenshots/dashboard-home.png)
+
+### VIP Support Analytics / 深度分析页
+![VIP Support](docs/screenshots/dashboard-vip-support.png)
+
+### Profile / 个人主页
+![Profile](docs/screenshots/profile.png)
+
+Screenshots are stored in `docs/screenshots/`.  
+截图统一放在 `docs/screenshots/` 目录。
+
+## Architecture / 架构图
+
+```mermaid
+flowchart LR
+  A["Next.js App Router"] --> B["API Routes"]
+  B --> C["Prisma Service Layer"]
+  C --> D["PostgreSQL"]
+
+  A --> E["Supabase SSR Auth"]
+  A --> F["Zustand Client State"]
+  A --> G["next-intl"]
+
+  B --> H["Analytics Events (user_action)"]
+  H --> I["Dashboard Aggregations"]
 ```
 
-## Requirements
+## Features / 功能列表
 
-- Node.js >= 20
-- npm >= 10
-- PostgreSQL (local or hosted)
-- Supabase project (Auth + Storage)
+### Social / 社交
+- Post creation / editing / deletion
+- Reply threads
+- Like / bookmark / share
+- Follow / unfollow
+- User profile and relationship graph
+- Messaging entry and conversation views
 
-## Quick Start
+### AI / AI
+- Chat routes and streaming-ready integration points
+- AI-assisted generation hooks for content workflows
+
+### Dashboard / 看板
+- Lightweight business home (`/dashboard`)
+- Deep analytics module (`/dashboard/vip-support`)
+- Cohort retention (daily/weekly)
+- Traffic source / funnel / audience / content segmentation
+
+## Tech Stack / 技术栈
+
+- Framework: Next.js 16.1.6 (App Router)
+- Language: TypeScript (strict mode)
+- Styling: Tailwind CSS v4 + shadcn/ui
+- Database: PostgreSQL + Prisma 7.x
+- Auth/Storage: Supabase SSR
+- State: Zustand
+- Forms: React Hook Form + Zod
+- i18n: next-intl
+
+## Project Structure / 目录结构
+
+```text
+app/                 App Router pages and API routes
+components/          UI and business components
+lib/                 services and shared utilities
+store/               Zustand stores
+messages/            i18n dictionaries (zh-CN / en)
+utils/               helper utilities
+prisma/              schema and migrations
+generated/           generated Prisma client
+```
+
+## Quick Start / 快速开始
 
 ```bash
-# 1) install dependencies
+# 1) Install dependencies
 npm install
 
-# 2) configure env
-# create .env.local and fill required variables
+# 2) Configure env
+cp .env.example .env.local
 
-# 3) generate prisma client
+# 3) Generate Prisma client
 npx prisma generate
 
-# 4) push schema
+# 4) Sync schema (dev)
 npx prisma db push
 
-# 5) (optional) init storage buckets
-npm run init:storage
-
-# 6) start dev server
+# 5) Run dev server
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Environment Variables
+## Environment Variables / 环境变量
 
-以下变量按功能分组，至少需要配置核心组。
-
-Core:
+Required (minimum) / 最低必需：
 
 - `DATABASE_URL`
-- `NEXT_PUBLIC_URL` (or `NEXT_PUBLIC_APP_URL`)
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
-
-Supabase (server/admin actions):
-
 - `NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY`
 
-AI (optional):
+Optional / 可选：
 
-- `GLM_API_KEY`
+- `NEXT_PUBLIC_URL` or `NEXT_PUBLIC_APP_URL`
 - `GOOGLE_GENERATIVE_AI_API_KEY`
+- `GLM_API_KEY`
+- `NOTION_TOKEN`, `NOTION_DATABASE_ID`
+- `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`
 
-Notion (optional):
-
-- `NOTION_TOKEN`
-- `NOTION_DATABASE_ID`
-
-Stripe (optional premium flow):
-
-- `STRIPE_SECRET_KEY`
-- `STRIPE_WEBHOOK_SECRET`
-
-Note:
-
-- 当前代码中存在多个 Supabase 变量别名（如 `...PUBLISHABLE_DEFAULT_KEY`、`...SERVICE_ROLE`）。建议统一到一套命名并在代码中收敛。
-
-## Available Scripts
+## Scripts / 常用命令
 
 ```bash
-npm run dev          # start dev server (turbopack)
-npm run build        # production build
-npm run start        # run production server
-npm run lint         # run eslint
-npm run init:storage # initialize Supabase storage buckets
+npm run dev            # start dev server
+npm run build          # build for production
+npm run start          # start production server
+npm run lint           # run eslint
+npx tsc --noEmit       # type-check only
 ```
 
 Prisma:
@@ -118,30 +172,77 @@ npx prisma migrate dev
 npx prisma studio
 ```
 
-## Deployment
+## Analytics & Dashboard / 数据看板
 
-- 推荐 Vercel 部署（Next.js 原生支持）
-- 生产环境需完整配置数据库、Supabase、Stripe（如启用支付）
-- 首次部署后执行 `prisma db push` 或迁移流程
+### Routes / 页面
+- `/dashboard`: lightweight business overview（轻量总览）
+- `/dashboard/vip-support`: deep analytics workspace（深度分析工作台）
 
-## Contributing
+### Current tracked signals / 当前埋点
+- `FEED_IMPRESSION`
+- `POST_CLICK`
+- `PROFILE_ENTER` (stored as `POST_CLICK` + metadata)
+- `REPLY_CREATE`
+- `POST_LIKE`
+- `POST_SHARE`
+- `POST_BOOKMARK`
+- `FOLLOW`
 
-欢迎 PR 和 Issue。
+### Notes / 说明
+- UV/PV switch supported in dashboard modules.
+- Cohort view supports daily and weekly aggregation.
 
-1. Fork 本仓库并创建分支
-2. 保持 TypeScript 严格类型，不使用 `any`
-3. 提交前运行：
+## Roadmap / 路线图
+
+- [x] Core social interactions
+- [x] Multilingual UI
+- [x] Analytics dashboard (UV/PV + cohort + segmentation)
+- [ ] Real-time notifications
+- [ ] Full-text search and ranking improvements
+- [ ] Recommender model experimentation workspace
+- [ ] E2E testing suite
+
+## FAQ / 常见问题
+
+### 1) Why dashboard data looks stale?
+- Ensure your env points to the expected database.
+- Verify event writes in `user_action`.
+
+### 2) Why retention is zero for some cohorts?
+- Small cohort size or missing activity in the measured day can yield 0%.
+- Weekly mode is usually more stable than daily mode.
+
+### 3) How to add a new analytics metric?
+- Add event logging in route/component.
+- Extend aggregation in `lib/dashboard/service.ts`.
+- Add types in `lib/dashboard/types.ts` and render in dashboard page.
+
+## Troubleshooting / 排障
+
+- Type errors:
+  - Run `npx tsc --noEmit`
+- Prisma/client mismatch:
+  - Run `npx prisma generate`
+- Schema mismatch:
+  - Run `npx prisma db push` in development
+- Auth issues:
+  - Verify Supabase keys and callback URL configuration
+
+## Contributing / 贡献指南
+
+1. Create a feature branch.
+2. Keep changes scoped and typed.
+3. Run checks before PR:
    - `npm run lint`
    - `npx tsc --noEmit`
-4. 提交 PR，说明变更动机与影响范围
+4. Include context, impact, and screenshots (for UI changes).
 
-## Security
+## Security / 安全
 
-- 不要提交 `.env.local` 或任何密钥
-- 若发现安全问题，请通过私下渠道联系维护者，不要公开披露细节
+- Never commit secrets (`.env.local`, API keys).
+- Rotate leaked keys immediately.
+- For vulnerabilities, contact maintainers privately first.
 
-## License
+## License / 许可证
 
-MIT License. See `/LICENSE`.
-
-> 当前 `LICENSE` 中的 `Copyright (c) [year] [fullname]` 仍是占位符，开源前请替换为真实信息。
+MIT. See [LICENSE](./LICENSE).
