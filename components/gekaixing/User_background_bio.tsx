@@ -38,24 +38,24 @@ export default function User_background_bio({
   return (
     <>
       <div>
-        <Avatar className="absolute size-36 -translate-y-1/2">
+        <Avatar className="absolute size-24 -translate-y-1/2 border-4 border-background sm:size-36">
           <AvatarImage src={avatar || ""} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </div>
-      <div className="flex">
+      <div className="flex min-h-10 items-center">
         <div className="w-full" />
         {isOwner ? <UserEditDialog /> : <div className="h-9" />}
       </div>
 
-      <div className="h-10 w-full" />
-      <div className="mb-2 flex items-center gap-2 text-2xl font-bold">
-        {name}
-        <div>{isPremium && <ShieldCheck className="h-4 w-4 text-blue-500" />}</div>
+      <div className="h-7 w-full sm:h-10" />
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <span className="max-w-full break-words text-xl font-bold sm:text-2xl">{name}</span>
+        {isPremium && <ShieldCheck className="h-4 w-4 text-blue-500" />}
         {isHiring && viewedUserId ? (
           <Link
             href={`/gekaixing/jobs?authorId=${viewedUserId}`}
-            className="text-sm font-semibold text-[#1D9BF0] hover:underline"
+            className="rounded-full bg-[#1D9BF0]/10 px-2 py-0.5 text-xs font-semibold text-[#1D9BF0] hover:underline sm:text-sm"
           >
             我们正在招人
           </Link>
@@ -63,23 +63,23 @@ export default function User_background_bio({
       </div>
 
       {briefIntroduction ? (
-        <div className="text-sm">{briefIntroduction}</div>
+        <div className="text-sm leading-6">{briefIntroduction}</div>
       ) : (
-        <div className="text-sm">还没有介绍自己</div>
+        <div className="text-sm text-muted-foreground">还没有介绍自己</div>
       )}
 
-      <div className="cursor-pointer gap-2 text-sm flex">
-        <Link href={`/gekaixing/following/${relationUserid}`} className="flex hover:underline">
+      <div className="mt-2 flex cursor-pointer gap-4 text-sm">
+        <Link href={`/gekaixing/following/${relationUserid}`} className="flex items-center gap-1 hover:underline">
           <div className="font-bold">{following}</div>
-          正在关注
+          <span className="text-muted-foreground">正在关注</span>
         </Link>
-        <Link href={`/gekaixing/following/${relationUserid}`} className="flex hover:underline">
+        <Link href={`/gekaixing/following/${relationUserid}`} className="flex items-center gap-1 hover:underline">
           <div className="font-bold">{followers}</div>
-          关注者
+          <span className="text-muted-foreground">关注者</span>
         </Link>
       </div>
 
-      <div className="h-5 w-full" />
+      <div className="h-3 w-full sm:h-5" />
     </>
   )
 }

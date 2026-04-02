@@ -6,15 +6,15 @@ export async function LoginFooter() {
   const t = await getTranslations("Account.Footer")
 
   return (
-    <div className="w-full flex justify-center items-end absolute bottom-2 left-0">
-      <div className="flex h-5 items-center space-x-4 text-sm">
-        <Link href={'/about'}>{t("about")}</Link>
+    <div className="w-full px-4 pb-4 sm:pb-6">
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-3 text-xs sm:text-sm">
+        <Link href={'/about'} className="hover:underline">{t("about")}</Link>
         <Separator orientation="vertical" />
-        <Link href={'/tos'}>{t("termsOfService")}</Link>
+        <Link href={'/tos'} className="hover:underline">{t("termsOfService")}</Link>
         <Separator orientation="vertical" />
-        <Link href={'/privacy'}>{t("privacyPolicy")}</Link>
+        <Link href={'/privacy'} className="hover:underline">{t("privacyPolicy")}</Link>
         <Separator orientation="vertical" />
-        <Link href={'/cookies'}>{t("cookiePolicy")}</Link>
+        <Link href={'/cookies'} className="hover:underline">{t("cookiePolicy")}</Link>
       </div>
     </div>
   )

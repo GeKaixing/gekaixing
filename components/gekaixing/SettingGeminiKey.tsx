@@ -42,6 +42,7 @@ type SettingGeminiKeyText = {
   inputPlaceholder: string;
   modelLabel: string;
   modelPlaceholder: string;
+  modelHint: string;
   clearHint: string;
   saveButton: string;
   noKeyText: string;
@@ -61,6 +62,7 @@ function getText(locale: string): SettingGeminiKeyText {
       inputPlaceholder: "请输入 Gemini Key（例如 AIzaSy...）",
       modelLabel: "Gemini 模型",
       modelPlaceholder: "请选择模型",
+      modelHint: "部分模型可能不支持所有能力，系统会自动回退到可用模型。",
       clearHint: "输入框留空并保存即可清空当前 Key。",
       saveButton: "保存",
       noKeyText: "我没有key",
@@ -80,6 +82,7 @@ function getText(locale: string): SettingGeminiKeyText {
     inputPlaceholder: "Enter Gemini key (for example AIzaSy...)",
     modelLabel: "Gemini Model",
     modelPlaceholder: "Choose model",
+    modelHint: "Some models may not support all features; fallback will be applied automatically.",
     clearHint: "Leave blank and save to clear your key.",
     saveButton: "Save",
     noKeyText: "I don't have a key",
@@ -95,6 +98,8 @@ export default function SettingGeminiKey() {
   const [savedKey, setSavedKey] = useState("");
   const [savedModel, setSavedModel] = useState(DEFAULT_GEMINI_MODEL);
   const [modelInput, setModelInput] = useState(DEFAULT_GEMINI_MODEL);
+
+  const compactModelLabel = savedModel.replace(/^gemini-/, "");
 
   useEffect(() => {
     const init = async (): Promise<void> => {
@@ -207,30 +212,31 @@ export default function SettingGeminiKey() {
         <button type="button" className="w-full text-left">
           <SettingAccountLi
             icon={<KeyRound />}
-            text={`${text.keyLabel}${savedKey ? ` (${maskApiKey(savedKey, text.configured)})` : ""} · ${savedModel}`}
+            text={`${text.keyLabel}${savedKey ? ` (${maskApiKey(savedKey, text.configured)})` : ""} · ${compactModelLabel}`}
           />
         </button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
+      <DialogContent className="max-h-[85vh] w-[calc(100vw-1.5rem)] overflow-y-auto sm:max-w-lg">
+        <DialogHeader className="space-y-2">
           <DialogTitle>{text.dialogTitle}</DialogTitle>
           <DialogDescription>{text.dialogDescription}</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-3">
-          <div className="flex items-center gap-3">
+        <div className="space-y-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <Input
               type="password"
               placeholder={text.inputPlaceholder}
               value={keyInput}
               onChange={(event) => setKeyInput(event.target.value)}
               disabled={loading}
+              className="w-full"
             />
             <Link
               href="https://aistudio.google.com/api-keys"
               target="_blank"
               rel="noopener noreferrer"
-              className="shrink-0 text-sm text-blue-600 hover:underline"
+              className="shrink-0 text-sm text-blue-600 hover:underline sm:text-xs"
             >
               {text.noKeyText}
             </Link>
@@ -252,10 +258,11 @@ export default function SettingGeminiKey() {
                 ))}
               </SelectContent>
             </Select>
+            <p className="text-xs text-muted-foreground">{text.modelHint}</p>
           </div>
           <Button
             type="button"
-            className="bg-black text-white"
+            className="w-full bg-black text-white"
             onClick={() => {
               void saveGeminiKey();
             }}

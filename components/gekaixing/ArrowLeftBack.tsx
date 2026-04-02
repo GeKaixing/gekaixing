@@ -2,8 +2,9 @@
 import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
-export default function ArrowLeftBack({ className, children, name='返回' }: {
+export default function ArrowLeftBack({ className, children, name='返回', href = '/gekaixing' }: {
     name?: string,
+    href?: string,
     className?: string,
     children?: React.ReactNode
 }) {
@@ -17,7 +18,7 @@ export default function ArrowLeftBack({ className, children, name='返回' }: {
                 <ArrowLeft
                     className={className}
                     onClick={() => {
-                        router.replace('/gekaixing')
+                        router.replace(href)
                     }} />
                 {/* <ArrowLeft className="w-5 h-5" /> */}
             </div>

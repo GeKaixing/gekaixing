@@ -14,7 +14,7 @@ export default function page() {
   const { email } = userStore()
   return (
     <div>
-      <ArrowLeftBack></ArrowLeftBack>
+      <ArrowLeftBack href="/gekaixing/settings"></ArrowLeftBack>
       <ul className='flex flex-col gap-6'>
         <SettingAccountLi icon={<Mail></Mail>} text={email} icon2={<ShieldCheck className="text-blue-400" ></ShieldCheck>}></SettingAccountLi>
         <SettingEmail></SettingEmail>

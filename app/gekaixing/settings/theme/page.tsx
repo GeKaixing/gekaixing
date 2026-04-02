@@ -39,7 +39,7 @@ export default function Page() {
 
   return (
     <div>
-      <ArrowLeftBack name={t("title")} />
+      <ArrowLeftBack name={t("title")} href="/gekaixing/settings" />
       <div className="px-4 py-3 space-y-3">
         {themeOptions.map((option) => {
           const isActive = mounted && activeTheme === option.key

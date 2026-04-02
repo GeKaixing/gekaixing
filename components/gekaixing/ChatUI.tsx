@@ -294,12 +294,12 @@ useEffect(() => {
   }
 
   return (
-    <div className="flex flex-col h-full w-full">
+    <div className="flex min-h-[calc(100dvh-3.5rem)] w-full flex-col">
       <div className="border-b px-6 py-4 font-semibold">
         {t("assistantTitle")}
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 py-6">
+      <div className="flex-1 overflow-y-auto px-4 py-6 pb-28 sm:pb-6">
         {messages.length === 0 && <EmptyState text={t("emptyState")} />}
 
         {messages.map((msg) => (
@@ -314,7 +314,7 @@ useEffect(() => {
         <div ref={bottomRef} />
       </div>
 
-      <div className="border-t p-4">
+      <div className="fixed bottom-[57px] left-0 right-0 z-30 border-t bg-background/95 p-4 backdrop-blur sm:static sm:z-auto sm:bg-background sm:p-4">
         <div className="flex gap-2">
           <textarea
             value={input}

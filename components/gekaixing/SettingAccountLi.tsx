@@ -1,11 +1,10 @@
 import clsx from 'clsx';
 import { ChevronRight } from 'lucide-react'
-import Link from 'next/link'
 import React from 'react'
 
 export default function SettingAccountLi({
     icon,
-    icon2 = <ChevronRight className="text-gray-400 hover:text-black" />,
+    icon2 = <ChevronRight className="h-4 w-4 text-muted-foreground" />,
     text,
     className
 }: {
@@ -17,7 +16,7 @@ export default function SettingAccountLi({
     return (
         <li
             className={clsx(
-                "w-full px-6 py-2 hover:bg-gray-200 flex justify-between items-center",
+                "flex w-full items-center justify-between rounded-xl px-6 py-2 text-foreground transition-colors hover:bg-muted/70",
                 className
             )}
         >

@@ -65,7 +65,7 @@ export default function NEWs({ url }: { url: string }) {
   }, [url]);
 
   if (loading) {
-    return <div className="rounded-2xl border p-3 text-sm text-muted-foreground">加载中...</div>;
+    return <div className="rounded-2xl border p-3 text-sm text-muted-foreground">正在加载新闻...</div>;
   }
 
   if (error) {
@@ -77,18 +77,21 @@ export default function NEWs({ url }: { url: string }) {
   }
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-2">
       {data.map((item, index) => (
         <Link
           href={item.url}
           key={`${item.url}-${index}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex flex-col justify-start rounded-2xl p-2 py-2 transition-colors hover:bg-muted/60"
+          className="flex min-h-24 flex-col justify-start rounded-2xl border border-transparent p-3 transition-colors hover:border-border hover:bg-muted/60"
         >
-          <span className="text-base font-semibold text-foreground">{item.source_name}</span>
-          <span className="text-foreground">{item.title}</span>
-          <span className="line-clamp-2 text-sm text-muted-foreground">{item.summary ?? item.author ?? ""}</span>
+          <div className="mb-1 flex items-center justify-between gap-2">
+            <span className="line-clamp-1 text-sm font-semibold text-foreground sm:text-base">{item.source_name}</span>
+            <span className="shrink-0 text-xs text-muted-foreground">#{index + 1}</span>
+          </div>
+          <span className="line-clamp-2 text-sm text-foreground sm:text-base">{item.title}</span>
+          <span className="mt-1 line-clamp-2 text-xs text-muted-foreground sm:text-sm">{item.summary ?? item.author ?? ""}</span>
         </Link>
       ))}
     </div>

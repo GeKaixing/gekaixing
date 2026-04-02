@@ -33,17 +33,17 @@ export default function LoginDialog() {
             <DialogTrigger asChild >
 
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-[85vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>{t('title')}</DialogTitle>
                     <DialogDescription className='sr-only'>{t('title')}</DialogDescription>
                 </DialogHeader>
-                <div className='flex flex-col justify-center items-center'>
+                <div className='mx-auto flex w-full max-w-sm flex-col items-stretch'>
                     <GoogleButton></GoogleButton>
                     <Separator className='mb-6 mt-4' />
                     <LoginForm></LoginForm>
-                    <Button className='mt-6' onClick={() => { router.push('/account/password_reset') }}>{t('forgotPassword')}</Button>
-                    <span className='mt-4'>{t('noAccount')}
+                    <Button className='mt-6 w-full' onClick={() => { router.push('/account/password_reset') }}>{t('forgotPassword')}</Button>
+                    <span className='mt-4 text-center text-sm'>{t('noAccount')}
                         <Link href={'/account/signup'} className='text-blue-500 '>{t('signup')}</Link>
                     </span>
                 </div>

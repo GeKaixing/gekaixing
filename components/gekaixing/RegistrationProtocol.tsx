@@ -6,10 +6,10 @@ export default async function RegistrationProtocol() {
     const t = await getTranslations('Account.RegistrationProtocol')
 
     return (
-        <div className='w-2xs max-w-2xs text-[11px] text-muted-foreground break-words whitespace-normal'>
+        <div className='w-full max-w-sm text-[11px] text-muted-foreground break-words whitespace-normal'>
             <Link
                 href={'/account/signup'}
-                className='mb-4 flex h-9 w-2xs items-center justify-center rounded-2xl bg-primary text-primary-foreground transition-opacity hover:opacity-90'
+                className='mb-4 flex h-10 w-full items-center justify-center rounded-2xl bg-primary text-primary-foreground transition-opacity hover:opacity-90'
             >
                 {t('createAccount')}
             </Link>

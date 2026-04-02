@@ -30,12 +30,12 @@ export default function SignupDialog() {
         <Dialog open={open} onOpenChange={setOpen}  >
             <DialogTrigger asChild>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-[85vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>{t("title")}</DialogTitle>
                     <DialogDescription className='sr-only'>{t("title")}</DialogDescription>
                 </DialogHeader>
-                <div className='flex flex-col justify-center items-center'>
+                <div className='mx-auto flex w-full max-w-sm flex-col items-stretch'>
                     <GoogleButton></GoogleButton>
                     <Separator className='mb-6 mt-4' />
                     <SignupForm></SignupForm>

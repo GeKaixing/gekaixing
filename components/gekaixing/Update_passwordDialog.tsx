@@ -48,14 +48,14 @@ export default function Update_passwordDialog() {
             <DialogTrigger asChild>
 
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-[85vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>更新你的密码</DialogTitle>
                     <DialogDescription>输入你的新密码</DialogDescription>
                 </DialogHeader>
-                <div className='flex flex-col justify-center items-center gap-6'>
+                <div className='mx-auto flex w-full max-w-sm flex-col items-stretch gap-4'>
                     <Input type='password' placeholder="请新密码" value={password} onChange={(e) => setPassword(e.target.value)}></Input>
-                    <Button className=''
+                    <Button className='w-full'
                         onClick={ update_password}
                     >确认</Button>
                 </div>

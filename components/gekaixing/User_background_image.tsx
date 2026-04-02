@@ -6,7 +6,7 @@ export default function User_background_image({
   backgroundImage: string | null | undefined
 }) {
   return (
-    <div className="relative w-full h-[200px] bg-gray-400 overflow-hidden">
+    <div className="relative h-[140px] w-full overflow-hidden bg-gray-400 sm:h-[200px]">
       {backgroundImage && (
         <img
           src={backgroundImage}

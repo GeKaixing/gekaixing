@@ -46,12 +46,22 @@ function ExploreTabs() {
 
   return (
     <Tabs defaultValue="ToutiaoHot" className="mt-2 w-full">
-      <TabsList className="flex w-full justify-between bg-muted/60">
-        <TabsTrigger value="ToutiaoHot">今日头条</TabsTrigger>
-        <TabsTrigger value="us">美国</TabsTrigger>
-        <TabsTrigger value="tech">科技</TabsTrigger>
-        <TabsTrigger value="sports">体育</TabsTrigger>
-        <TabsTrigger value="entertainment">娱乐</TabsTrigger>
+      <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto bg-muted/60 p-1">
+        <TabsTrigger value="ToutiaoHot" className="shrink-0 rounded-full px-3 py-1.5 text-xs sm:text-sm">
+          今日头条
+        </TabsTrigger>
+        <TabsTrigger value="us" className="shrink-0 rounded-full px-3 py-1.5 text-xs sm:text-sm">
+          美国
+        </TabsTrigger>
+        <TabsTrigger value="tech" className="shrink-0 rounded-full px-3 py-1.5 text-xs sm:text-sm">
+          科技
+        </TabsTrigger>
+        <TabsTrigger value="sports" className="shrink-0 rounded-full px-3 py-1.5 text-xs sm:text-sm">
+          体育
+        </TabsTrigger>
+        <TabsTrigger value="entertainment" className="shrink-0 rounded-full px-3 py-1.5 text-xs sm:text-sm">
+          娱乐
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="ToutiaoHot" className="mt-3">
         {data.length !== 0 &&
@@ -61,10 +71,10 @@ function ExploreTabs() {
               key={idx}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col justify-start rounded-2xl p-2 py-1 transition-colors hover:bg-muted/60"
+              className="flex min-h-20 flex-col justify-start rounded-2xl border border-transparent p-3 transition-colors hover:border-border hover:bg-muted/60"
             >
-              <span className="text-foreground">{item.title}</span>
-              <div className="flex items-center gap-1 text-muted-foreground">
+              <span className="line-clamp-2 text-sm text-foreground sm:text-base">{item.title}</span>
+              <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground sm:text-sm">
                 <ChartNoAxesColumn className="h-4 w-4" /> <span>{item.hot_value}</span>
               </div>
             </Link>

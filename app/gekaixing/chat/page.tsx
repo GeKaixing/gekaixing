@@ -342,7 +342,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex h-full flex-col bg-background">
+    <div className="flex min-h-[calc(100dvh-3.5rem)] flex-col bg-background">
       <ArrowLeftBack name={t("title")} />
 
       <div className="relative border-b bg-background/95 backdrop-blur">
@@ -425,7 +425,7 @@ export default function ChatPage() {
               </div>
             </div>
 
-            <div className="flex-1 space-y-4 overflow-y-auto bg-[linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--muted)/0.35)_100%)] p-4">
+            <div className="flex-1 space-y-4 overflow-y-auto bg-[linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--muted)/0.35)_100%)] p-4 pb-28 sm:pb-4">
               {messages.length === 0 ? (
                 <div className="flex h-full items-center justify-center">
                   <div className="rounded-2xl border border-border bg-background/80 px-4 py-3 text-center text-sm text-muted-foreground shadow-sm backdrop-blur">
@@ -475,7 +475,7 @@ export default function ChatPage() {
               <div ref={messagesEndRef} />
             </div>
 
-            <div className="shrink-0 border-t bg-background p-3">
+            <div className="fixed bottom-[57px] left-0 right-0 z-30 shrink-0 border-t bg-background/95 p-3 backdrop-blur sm:static sm:z-auto sm:bg-background sm:p-3">
               <div className="flex items-center gap-2 rounded-full border border-border bg-muted/30 p-1">
                 <Input
                   placeholder={t("sendTo", { name: selectedContact.name })}

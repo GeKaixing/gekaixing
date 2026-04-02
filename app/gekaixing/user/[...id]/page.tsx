@@ -324,10 +324,12 @@ export default async function Page({ params }: { params: Promise<{ id: string[] 
 
 
     return (
-        <div >
-            <div className='h-16'> <ArrowLeftBack></ArrowLeftBack></div>
+        <div className="pb-20 sm:pb-0">
+            <div className="h-14 sm:h-16">
+                <ArrowLeftBack></ArrowLeftBack>
+            </div>
             <User_background_image backgroundImage={user?.backgroundImage} />
-            <div className='px-4'>
+            <div className='px-3 sm:px-4'>
 
                 <User_background_bio
                     viewedUserId={user?.id}
@@ -343,14 +345,14 @@ export default async function Page({ params }: { params: Promise<{ id: string[] 
                 />
 
                 <Tabs defaultValue="post" className="w-full">
-                    <TabsList className='w-full'>
-                        <TabsTrigger value="post">{t("tabs.posts")}</TabsTrigger>
-                        <TabsTrigger value="reply">{t("tabs.replies")}</TabsTrigger>
+                    <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto p-1">
+                        <TabsTrigger value="post" className="shrink-0 rounded-full px-3 py-1.5 text-xs sm:text-sm">{t("tabs.posts")}</TabsTrigger>
+                        <TabsTrigger value="reply" className="shrink-0 rounded-full px-3 py-1.5 text-xs sm:text-sm">{t("tabs.replies")}</TabsTrigger>
                         {/* <TabsTrigger value="article">文章</TabsTrigger>*/}
-                        <TabsTrigger value="like">{t("tabs.likes")}</TabsTrigger>
-                        <TabsTrigger value="bookmark">{t("tabs.bookmarks")}</TabsTrigger>
+                        <TabsTrigger value="like" className="shrink-0 rounded-full px-3 py-1.5 text-xs sm:text-sm">{t("tabs.likes")}</TabsTrigger>
+                        <TabsTrigger value="bookmark" className="shrink-0 rounded-full px-3 py-1.5 text-xs sm:text-sm">{t("tabs.bookmarks")}</TabsTrigger>
                     </TabsList>
-                    <TabsContent value="post" className='flex flex-col gap-6'>
+                    <TabsContent value="post" className='mt-2 flex flex-col gap-6'>
                         <PostStore
                             data={postsPage.data}
                             nextCursor={postsPage.page.nextCursor}
@@ -358,7 +360,7 @@ export default async function Page({ params }: { params: Promise<{ id: string[] 
                             feedQuery={{ scope: "user-posts", targetId: userId }}
                         />
                     </TabsContent>
-                    <TabsContent value="reply" className='flex flex-col gap-6'>
+                    <TabsContent value="reply" className='mt-2 flex flex-col gap-6'>
                         <PostStore
                             data={repliesPage.data}
                             nextCursor={repliesPage.page.nextCursor}
@@ -367,7 +369,7 @@ export default async function Page({ params }: { params: Promise<{ id: string[] 
                         />
                     </TabsContent>
                     {/* <TabsContent value="article" className='flex flex-col gap-6'>    <PostCard></PostCard></TabsContent>*/}
-                    <TabsContent value="like" className='flex flex-col gap-6'>
+                    <TabsContent value="like" className='mt-2 flex flex-col gap-6'>
                         <PostStore
                             data={likedPage.data}
                             nextCursor={likedPage.page.nextCursor}
@@ -375,7 +377,7 @@ export default async function Page({ params }: { params: Promise<{ id: string[] 
                             feedQuery={{ scope: "user-liked", targetId: userId }}
                         />
                     </TabsContent>
-                    <TabsContent value="bookmark" className='flex flex-col gap-6'>
+                    <TabsContent value="bookmark" className='mt-2 flex flex-col gap-6'>
                         <PostStore
                             data={bookmarkPage.data}
                             nextCursor={bookmarkPage.page.nextCursor}

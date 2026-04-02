@@ -89,6 +89,7 @@ export default async function RootLayout({
     <div className="min-h-screen">
       <MobileHeader
         user={userInfo}
+        mentionCount={mentionCount}
         labels={{
           home: mobileT("home"),
           search: mobileT("search"),
