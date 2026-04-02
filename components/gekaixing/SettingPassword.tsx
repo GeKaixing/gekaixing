@@ -27,16 +27,18 @@ import Spin from './Spin'
 import { LoginFetch } from './LoginForm'
 import { userStore } from '@/store/user'
 import NewPassword from './NewPassword'
+import { useTranslations } from 'next-intl'
 
-const formSchema = z.object({
-    password: z.string().min(6, {
-        message: "密码必须至少包含6个字符。",
-    }),
-})
 export default function SettingPassword() {
+    const t = useTranslations('Account.SettingPassword')
     const [status, setStatus] = useState(false)
     const { email } = userStore()
     const [isopen, setOpen] = useState(false)
+    const formSchema = z.object({
+        password: z.string().min(6, {
+            message: t('validation.passwordMin'),
+        }),
+    })
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -65,12 +67,12 @@ export default function SettingPassword() {
 
             <Dialog>
                 <DialogTrigger>
-                    <SettingAccountLi icon={<Lock />} text={'更改密码'}></SettingAccountLi>
+                    <SettingAccountLi icon={<Lock />} text={t('entry')}></SettingAccountLi>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>
-                            确认你的密码
+                            {t('title')}
                         </DialogTitle>
                         <DialogDescription className='hidden'>
                         </DialogDescription>
@@ -81,7 +83,7 @@ export default function SettingPassword() {
                                     name="password"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>请输入你的密码以获取。</FormLabel>
+                                            <FormLabel>{t('passwordLabel')}</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     disabled={status}
@@ -99,7 +101,7 @@ export default function SettingPassword() {
                                     className='bg-black text-white'
                                     disabled={status}
                                 >
-                                    {status ? <Spin></Spin> : '提交'}
+                                    {status ? <Spin></Spin> : t('submit')}
                                 </Button>
                             </form>
                         </Form>

@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { ShieldCheck } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import { userStore } from "@/store/user"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
@@ -32,6 +33,7 @@ export default function User_background_bio({
   isOwner = false,
   isHiring = false,
 }: UserBackgroundBioProps) {
+  const t = useTranslations("ImitationX.Profile")
   const { userid: loginUserid } = userStore()
   const relationUserid = viewedUserid || loginUserid
 
@@ -57,7 +59,7 @@ export default function User_background_bio({
             href={`/gekaixing/jobs?authorId=${viewedUserId}`}
             className="rounded-full bg-[#1D9BF0]/10 px-2 py-0.5 text-xs font-semibold text-[#1D9BF0] hover:underline sm:text-sm"
           >
-            我们正在招人
+            {t("labels.hiring")}
           </Link>
         ) : null}
       </div>
@@ -65,17 +67,17 @@ export default function User_background_bio({
       {briefIntroduction ? (
         <div className="text-sm leading-6">{briefIntroduction}</div>
       ) : (
-        <div className="text-sm text-muted-foreground">还没有介绍自己</div>
+        <div className="text-sm text-muted-foreground">{t("labels.noBio")}</div>
       )}
 
       <div className="mt-2 flex cursor-pointer gap-4 text-sm">
         <Link href={`/gekaixing/following/${relationUserid}`} className="flex items-center gap-1 hover:underline">
           <div className="font-bold">{following}</div>
-          <span className="text-muted-foreground">正在关注</span>
+          <span className="text-muted-foreground">{t("labels.following")}</span>
         </Link>
         <Link href={`/gekaixing/following/${relationUserid}`} className="flex items-center gap-1 hover:underline">
           <div className="font-bold">{followers}</div>
-          <span className="text-muted-foreground">关注者</span>
+          <span className="text-muted-foreground">{t("labels.followers")}</span>
         </Link>
       </div>
 

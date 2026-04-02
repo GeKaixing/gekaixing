@@ -3,6 +3,7 @@ import { AtSign } from "lucide-react"
 import { getLocale, getTranslations } from "next-intl/server"
 
 import ArrowLeftBack from "@/components/gekaixing/ArrowLeftBack"
+import NotificationsSeenTracker from "@/components/gekaixing/NotificationsSeenTracker"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { prisma } from "@/lib/prisma"
 import { createClient } from "@/utils/supabase/server"
@@ -166,6 +167,7 @@ export default async function NotificationsPage() {
 
   return (
     <div className="min-h-screen">
+      <NotificationsSeenTracker />
       <ArrowLeftBack name={t("title")} />
 
       <div className="border-b border-border px-4 pb-3">

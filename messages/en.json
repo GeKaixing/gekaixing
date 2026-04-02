@@ -179,7 +179,14 @@
       "publish": "Post"
     },
     "Explore": {
-      "title": "Explore"
+      "title": "Explore",
+      "tabs": {
+        "toutiao": "Trending",
+        "us": "US",
+        "tech": "Tech",
+        "sports": "Sports",
+        "entertainment": "Entertainment"
+      }
     },
     "Feed": {
       "loading": "Loading...",
@@ -198,6 +205,40 @@
         "replies": "Replies",
         "likes": "Likes",
         "bookmarks": "Bookmarks"
+      },
+      "labels": {
+        "hiring": "We're hiring",
+        "noBio": "No bio yet",
+        "following": "Following",
+        "followers": "Followers"
+      }
+    },
+    "FollowCard": {
+      "loading": "Loading...",
+      "noBio": "No bio yet",
+      "following": "Following",
+      "follow": "Follow",
+      "notFound": "No data found"
+    },
+    "PostDropdown": {
+      "menu": {
+        "reportPost": "Report post",
+        "deletePost": "Delete post",
+        "directMessage": "Message user",
+        "followUser": "Follow user",
+        "copyLink": "Copy link",
+        "viewUser": "View user"
+      },
+      "confirm": {
+        "title": "Please confirm",
+        "description": "Are you sure you want to delete this post? This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Confirm"
+      },
+      "toast": {
+        "deleteSuccess": "Deleted successfully",
+        "deleteFailedRollback": "Delete failed, rollback applied",
+        "reportThanks": "Thanks for your feedback"
       }
     },
     "Help": {
@@ -649,6 +690,34 @@
       "title": "Change Email",
       "newEmailLabel": "Enter your new email address.",
       "submit": "Submit"
+    },
+    "SettingPassword": {
+      "validation": {
+        "passwordMin": "Password must be at least 6 characters."
+      },
+      "entry": "Change Password",
+      "title": "Confirm your password",
+      "passwordLabel": "Please enter your password.",
+      "submit": "Submit"
+    },
+    "SettingDeleteAccount": {
+      "validation": {
+        "passwordMin": "Password must be at least 6 characters."
+      },
+      "entry": "Delete Account",
+      "firstDialog": {
+        "title": "Delete account",
+        "description": "Deleting your account is irreversible and all data will be lost. Please verify it's you.",
+        "passwordLabel": "Please enter your password.",
+        "submit": "Submit"
+      },
+      "secondDialog": {
+        "title": "Delete account",
+        "description": "Password verified. Are you sure you want to delete this account? This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "failed": "Delete failed"
+      }
     },
     "UserEditDialog": {
       "validation": {

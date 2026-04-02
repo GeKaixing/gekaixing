@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { ShieldCheck, UserCheck, UserPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useTranslations } from "next-intl";
 
 function getID(pathname: string): string | null {
     const pathSegments = pathname.split("/").filter(Boolean);
@@ -34,6 +35,7 @@ interface PostData {
 }
 
 export default function FollowCard() {
+    const t = useTranslations("ImitationX.FollowCard")
     const pathname = usePathname();
     const [result, setResult] = useState<PostData | null>(null);
     const [loading, setLoading] = useState(true);
@@ -109,7 +111,7 @@ export default function FollowCard() {
     return (
         <Card className="p-4 border rounded-lg">
             {loading ? (
-                <div className="text-sm text-muted-foreground">加载中...</div>
+                <div className="text-sm text-muted-foreground">{t("loading")}</div>
             ) : result ? (
                 <div className="flex items-start justify-between gap-2">
                     <Avatar onClick={() => router.push(`/gekaixing/user/${result.author.id}`)} className="w-12 h-12 shrink-0">
@@ -131,7 +133,7 @@ export default function FollowCard() {
                         </p>
 
                         <p className="text-sm mt-1 truncate  max-w-[140px]">
-                            {result.author.briefIntroduction || '还没有介绍自己'}
+                            {result.author.briefIntroduction || t("noBio")}
                         </p>
                     </div>
 
@@ -149,18 +151,18 @@ export default function FollowCard() {
                         {result.author.isFollowing ? (
                             <>
                                 <UserCheck className="w-4 h-4 mr-1" />
-                                已关注
+                                {t("following")}
                             </>
                         ) : (
                             <>
                                 <UserPlus className="w-4 h-4 mr-1" />
-                                关注
+                                {t("follow")}
                             </>
                         )}
                     </Button>
                 </div>
             ) : (
-                <div className="text-sm text-muted-foreground">未找到数据</div>
+                <div className="text-sm text-muted-foreground">{t("notFound")}</div>
             )}
         </Card>
     );

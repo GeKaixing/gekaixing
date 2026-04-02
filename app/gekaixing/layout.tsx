@@ -5,6 +5,8 @@ import Sidebar from "@/components/gekaixing/Sidebar";
 import { prisma } from "@/lib/prisma";
 import { withTimeoutOrNull } from "@/lib/with-timeout";
 import { createClient } from "@/utils/supabase/server";
+import { Prisma } from "@/generated/prisma/client";
+import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import type { ReactElement, ReactNode } from "react";
 import "highlight.js/styles/github-dark.css";
@@ -24,6 +26,17 @@ export interface userResult {
     followers: number;
     following: number;
   };
+}
+
+const NOTIFICATIONS_LAST_SEEN_COOKIE = "gkx_notifications_last_seen_at";
+
+function parseSeenAt(raw: string | undefined): Date | null {
+  if (!raw) {
+    return null;
+  }
+
+  const date = new Date(raw);
+  return Number.isNaN(date.getTime()) ? null : date;
 }
 
 export default async function RootLayout({
@@ -70,12 +83,19 @@ export default async function RootLayout({
   let mentionCount = 0;
   if (userInfo?.id) {
     try {
+      const cookieStore = await cookies();
+      const lastSeenAt = parseSeenAt(cookieStore.get(NOTIFICATIONS_LAST_SEEN_COOKIE)?.value);
+      const mentionWhere: Prisma.PostWhereInput = {
+        authorId: { not: userInfo.id },
+        content: { contains: `@${userInfo.userid}`, mode: "insensitive" },
+      };
+      if (lastSeenAt) {
+        mentionWhere.createdAt = { gt: lastSeenAt };
+      }
+
       const mentionResult = await withTimeoutOrNull(
         prisma.post.count({
-          where: {
-            authorId: { not: userInfo.id },
-            content: { contains: `@${userInfo.userid}`, mode: "insensitive" },
-          },
+          where: mentionWhere,
         }),
         8000
       );

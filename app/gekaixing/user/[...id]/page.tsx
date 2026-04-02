@@ -6,12 +6,12 @@ import { Post } from '../../page'
 import PostStore from '@/components/gekaixing/PostStore'
 import User_background_image from '@/components/gekaixing/User_background_image'
 import User_background_bio from '@/components/gekaixing/User_background_bio'
-import { revalidatePath } from 'next/cache'
 import type { Metadata } from 'next'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { createClient } from "@/utils/supabase/server"
 import { Prisma } from '@/generated/prisma/client'
 import { notFound } from 'next/navigation'
+import { withTimeoutOrNull } from '@/lib/with-timeout'
 
 const PROFILE_LIST_LIMIT = 20
 type FeedScope = "user-posts" | "user-replies" | "user-liked" | "user-bookmarks"
@@ -21,6 +21,15 @@ type FeedPage = {
     page: {
         nextCursor: string | null
         hasMore: boolean
+    }
+}
+
+async function safeDbQuery<T>(label: string, query: () => Promise<T>, timeoutMs: number): Promise<T | null> {
+    try {
+        return await withTimeoutOrNull(query(), timeoutMs)
+    } catch (error) {
+        console.error(`${label} failed:`, error)
+        return null
     }
 }
 
@@ -41,15 +50,19 @@ function buildBioDescription(text: string | null): string {
 }
 
 async function resolveUserIdentifier(identifier: string): Promise<{ id: string; userid: string } | null> {
-    const user = await prisma.user.findFirst({
-        where: {
-            OR: [{ id: identifier }, { userid: identifier }, { name: identifier }],
-        },
-        select: {
-            id: true,
-            userid: true,
-        },
-    })
+    const user = await safeDbQuery(
+        "resolveUserIdentifier",
+        () => prisma.user.findFirst({
+            where: {
+                OR: [{ id: identifier }, { userid: identifier }, { name: identifier }],
+            },
+            select: {
+                id: true,
+                userid: true,
+            },
+        }),
+        8000
+    )
 
     if (!user) {
         return null
@@ -84,16 +97,20 @@ export async function generateMetadata({
         }
     }
 
-    const user = await prisma.user.findUnique({
-        where: { id: resolvedUser.id },
-        select: {
-            id: true,
-            name: true,
-            userid: true,
-            briefIntroduction: true,
-            avatar: true,
-        },
-    })
+    const user = await safeDbQuery(
+        "generateMetadata.user.findUnique",
+        () => prisma.user.findUnique({
+            where: { id: resolvedUser.id },
+            select: {
+                id: true,
+                name: true,
+                userid: true,
+                briefIntroduction: true,
+                avatar: true,
+            },
+        }),
+        8000
+    )
 
     if (!user) {
         return {
@@ -176,49 +193,63 @@ function buildWhere(scope: FeedScope, targetId: string): Prisma.PostWhereInput {
 
 async function getScopedFeed(scope: FeedScope, targetId: string, viewerId: string | undefined): Promise<FeedPage> {
     try {
-        const rows = await prisma.post.findMany({
-            where: buildWhere(scope, targetId),
-            orderBy: [{ createdAt: "desc" }, { id: "desc" }],
-            take: PROFILE_LIST_LIMIT + 1,
-            select: {
-                id: true,
-                content: true,
-                videoUrl: true,
-                audioUrl: true,
-                createdAt: true,
-                likeCount: true,
-                starCount: true,
-                shareCount: true,
-                replyCount: true,
-                author: {
-                    select: {
-                        id: true,
-                        userid: true,
-                        name: true,
-                        avatar: true,
-                        isPremium: true,
+        const rows = await safeDbQuery(
+            `getScopedFeed:${scope}`,
+            () => prisma.post.findMany({
+                where: buildWhere(scope, targetId),
+                orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+                take: PROFILE_LIST_LIMIT + 1,
+                select: {
+                    id: true,
+                    content: true,
+                    videoUrl: true,
+                    audioUrl: true,
+                    createdAt: true,
+                    likeCount: true,
+                    starCount: true,
+                    shareCount: true,
+                    replyCount: true,
+                    author: {
+                        select: {
+                            id: true,
+                            userid: true,
+                            name: true,
+                            avatar: true,
+                            isPremium: true,
+                        },
                     },
+                    likes: viewerId
+                        ? {
+                            where: { userId: viewerId },
+                            select: { id: true },
+                        }
+                        : false,
+                    bookmarks: viewerId
+                        ? {
+                            where: { userId: viewerId },
+                            select: { id: true },
+                        }
+                        : false,
+                    shares: viewerId
+                        ? {
+                            where: { userId: viewerId },
+                            select: { id: true },
+                        }
+                        : false,
                 },
-                likes: viewerId
-                    ? {
-                        where: { userId: viewerId },
-                        select: { id: true },
-                    }
-                    : false,
-                bookmarks: viewerId
-                    ? {
-                        where: { userId: viewerId },
-                        select: { id: true },
-                    }
-                    : false,
-                shares: viewerId
-                    ? {
-                        where: { userId: viewerId },
-                        select: { id: true },
-                    }
-                    : false,
-            },
-        })
+            }),
+            10000
+        )
+
+        if (!rows) {
+            return {
+                data: [],
+                page: {
+                    nextCursor: null,
+                    hasMore: false,
+                },
+            }
+        }
 
         const hasMore = rows.length > PROFILE_LIST_LIMIT
         const posts = hasMore ? rows.slice(0, PROFILE_LIST_LIMIT) : rows
@@ -264,31 +295,38 @@ async function getScopedFeed(scope: FeedScope, targetId: string, viewerId: strin
 
 
 async function getUserInfo(userId: string) {
-    const user = await prisma.user.findUnique({
-        where: {
-            id: userId,
-        },
-        include: {
-            _count: {
-                select: {
-                    followers: true,
-                    following: true,
+    return safeDbQuery(
+        "getUserInfo",
+        () => prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+            include: {
+                _count: {
+                    select: {
+                        followers: true,
+                        following: true,
+                    },
                 },
             },
-        },
-    })
-    return user
+        }),
+        8000
+    )
 }
 
 async function getUserHiringStatus(userId: string): Promise<boolean> {
-    const hiringPost = await prisma.jobPosting.findFirst({
-        where: {
-            authorId: userId,
-        },
-        select: {
-            id: true,
-        },
-    })
+    const hiringPost = await safeDbQuery(
+        "getUserHiringStatus",
+        () => prisma.jobPosting.findFirst({
+            where: {
+                authorId: userId,
+            },
+            select: {
+                id: true,
+            },
+        }),
+        8000
+    )
 
     return Boolean(hiringPost)
 }
@@ -309,17 +347,24 @@ export default async function Page({ params }: { params: Promise<{ id: string[] 
 
     const userId = resolvedUser.id
 
-    const [postsPage, repliesPage, likedPage, bookmarkPage] = await Promise.all([
+    const [postsResult, repliesResult, likedResult, bookmarkResult] = await Promise.allSettled([
         getScopedFeed("user-posts", userId, currentUser?.id),
         getScopedFeed("user-replies", userId, currentUser?.id),
         getScopedFeed("user-liked", userId, currentUser?.id),
         getScopedFeed("user-bookmarks", userId, currentUser?.id),
     ])
+    const emptyFeed: FeedPage = { data: [], page: { nextCursor: null, hasMore: false } }
+    const postsPage = postsResult.status === "fulfilled" ? postsResult.value : emptyFeed
+    const repliesPage = repliesResult.status === "fulfilled" ? repliesResult.value : emptyFeed
+    const likedPage = likedResult.status === "fulfilled" ? likedResult.value : emptyFeed
+    const bookmarkPage = bookmarkResult.status === "fulfilled" ? bookmarkResult.value : emptyFeed
 
-    const [user, isHiring] = await Promise.all([
+    const [userResult, hiringResult] = await Promise.allSettled([
         getUserInfo(userId),
         getUserHiringStatus(userId),
     ])
+    const user = userResult.status === "fulfilled" ? userResult.value : null
+    const isHiring = hiringResult.status === "fulfilled" ? hiringResult.value : false
     const isOwner = currentUser?.id === user?.id
 
 

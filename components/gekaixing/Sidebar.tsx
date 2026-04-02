@@ -15,14 +15,16 @@ import SidebarAvatar from "./SidebarAvatar";
 import EditPost from "./EditPost";
 import type { userResult } from "@/app/gekaixing/layout";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Sidebar({ user, mentionCount = 0 }: { user: userResult | null, mentionCount?: number }) {
     const t = useTranslations("ImitationX.Sidebar");
     const router = useRouter();
+    const pathname = usePathname();
     const [isMoreOpen, setIsMoreOpen] = useState(false)
     const { openModal } = postModalStore()
+    const displayMentionCount = pathname === "/gekaixing/notifications" ? 0 : mentionCount
 
     useEffect(() => {
         userStore.setState({
@@ -105,9 +107,9 @@ export default function Sidebar({ user, mentionCount = 0 }: { user: userResult |
                                 <DropdownMenuItem onSelect={handleMoreMenuSelect("/gekaixing/notifications")} className="flex items-center gap-2 cursor-pointer">
                                     <Bell className="w-4 h-4" />
                                     <span>{t("notifications")}</span>
-                                    {mentionCount > 0 ? (
+                                    {displayMentionCount > 0 ? (
                                         <span className="ml-auto min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-center text-xs font-semibold text-primary-foreground">
-                                            {mentionCount > 99 ? "99+" : mentionCount}
+                                            {displayMentionCount > 99 ? "99+" : displayMentionCount}
                                         </span>
                                     ) : null}
                                 </DropdownMenuItem>

@@ -21,6 +21,7 @@ import z from 'zod'
 import { LoginFetch } from './LoginForm'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import { useTranslations } from 'next-intl'
 
 export async function DeleteAccountFetch(id: string) {
     const result = await fetch('/api/user', {
@@ -35,17 +36,17 @@ export async function DeleteAccountFetch(id: string) {
     return result
 }
 
-const formSchema = z.object({
-    password: z.string().min(6, {
-        message: "密码必须至少包含6个字符。",
-    }),
-})
-
 export default function SettingDeleteAccount() {
+    const t = useTranslations('Account.SettingDeleteAccount')
     const [status, setStatus] = useState(false);
     const [isopen, setOpen] = useState(false);
     const [settingDeleteAccountOpen, setSettingDeleteAccountOpen] = useState(false)
     const { email } = userStore();
+    const formSchema = z.object({
+        password: z.string().min(6, {
+            message: t('validation.passwordMin'),
+        }),
+    })
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -74,15 +75,15 @@ export default function SettingDeleteAccount() {
         <>
             <Dialog open={settingDeleteAccountOpen} onOpenChange={setSettingDeleteAccountOpen}>
                 <DialogTrigger>
-                    <SettingAccountLi className='text-red-500 ' icon={<Trash />} text={'删除账户'}></SettingAccountLi>
+                    <SettingAccountLi className='text-red-500 ' icon={<Trash />} text={t('entry')}></SettingAccountLi>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>
-                            删除账户
+                            {t('firstDialog.title')}
                         </DialogTitle>
                         <DialogDescription>
-                            删除账户不可逆,您将失去所有数据,确认是您本人
+                            {t('firstDialog.description')}
                         </DialogDescription>
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -91,7 +92,7 @@ export default function SettingDeleteAccount() {
                                     name="password"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>请输入你的密码以获取。</FormLabel>
+                                            <FormLabel>{t('firstDialog.passwordLabel')}</FormLabel>
                                             <FormControl>
                                                 <Input
                                                     disabled={status}
@@ -109,23 +110,37 @@ export default function SettingDeleteAccount() {
                                     className='bg-black text-white'
                                     disabled={status}
                                 >
-                                    {status ? <Spin></Spin> : '提交'}
+                                    {status ? <Spin></Spin> : t('firstDialog.submit')}
                                 </Button>
                             </form>
                         </Form>
                     </DialogHeader>
                 </DialogContent>
             </Dialog>
-            <EnterDeleteAccountDialog isopen={isopen} setOpen={setOpen} setSettingDeleteAccountOpen={setSettingDeleteAccountOpen}></EnterDeleteAccountDialog>
+            <EnterDeleteAccountDialog
+                isopen={isopen}
+                setOpen={setOpen}
+                setSettingDeleteAccountOpen={setSettingDeleteAccountOpen}
+                title={t('secondDialog.title')}
+                description={t('secondDialog.description')}
+                cancel={t('secondDialog.cancel')}
+                confirm={t('secondDialog.confirm')}
+                failed={t('secondDialog.failed')}
+            />
         </>
 
     )
 }
 
-function EnterDeleteAccountDialog({ isopen, setOpen, setSettingDeleteAccountOpen }: {
+function EnterDeleteAccountDialog({ isopen, setOpen, setSettingDeleteAccountOpen, title, description, cancel, confirm, failed }: {
     isopen: boolean;
     setOpen: (b: boolean) => void;
     setSettingDeleteAccountOpen: (b: boolean) => void;
+    title: string;
+    description: string;
+    cancel: string;
+    confirm: string;
+    failed: string;
 }) {
     const { id } = userStore()
     const router = useRouter()
@@ -139,7 +154,7 @@ function EnterDeleteAccountDialog({ isopen, setOpen, setSettingDeleteAccountOpen
 
             router.replace("/account")
         } else {
-            toast.error('删除失败')
+            toast.error(failed)
         }
         setStatus(false)
     }
@@ -149,18 +164,18 @@ function EnterDeleteAccountDialog({ isopen, setOpen, setSettingDeleteAccountOpen
         <DialogContent>
             <DialogHeader>
                 <DialogTitle>
-                    删除账户
+                    {title}
                 </DialogTitle>
                 <DialogDescription>
-                    你已经通过密码认证,确认删除您的账户吗,您的数据将遗失,不可恢复。
+                    {description}
                 </DialogDescription>
                 {status ?
                     <div className='w-full flex justify-center items-center'>
                         <Spin />
                     </div> :
                     <DialogFooter>
-                        <Button onClick={() => { setOpen(false); setSettingDeleteAccountOpen(false) }}>取消   </Button>
-                        <Button className='bg-red-500' onClick={enter}> 确认</Button>
+                        <Button onClick={() => { setOpen(false); setSettingDeleteAccountOpen(false) }}>{cancel}</Button>
+                        <Button className='bg-red-500' onClick={enter}>{confirm}</Button>
                     </DialogFooter>}
 
             </DialogHeader>

@@ -179,7 +179,14 @@
       "publish": "发布"
     },
     "Explore": {
-      "title": "探索"
+      "title": "探索",
+      "tabs": {
+        "toutiao": "今日头条",
+        "us": "美国",
+        "tech": "科技",
+        "sports": "体育",
+        "entertainment": "娱乐"
+      }
     },
     "Feed": {
       "loading": "加载中...",
@@ -198,6 +205,40 @@
         "replies": "回复",
         "likes": "喜欢",
         "bookmarks": "收藏"
+      },
+      "labels": {
+        "hiring": "我们正在招人",
+        "noBio": "还没有介绍自己",
+        "following": "正在关注",
+        "followers": "关注者"
+      }
+    },
+    "FollowCard": {
+      "loading": "加载中...",
+      "noBio": "还没有介绍自己",
+      "following": "已关注",
+      "follow": "关注",
+      "notFound": "未找到数据"
+    },
+    "PostDropdown": {
+      "menu": {
+        "reportPost": "举报帖子",
+        "deletePost": "删除帖子",
+        "directMessage": "私聊用户",
+        "followUser": "关注用户",
+        "copyLink": "复制链接",
+        "viewUser": "查看用户"
+      },
+      "confirm": {
+        "title": "请确认",
+        "description": "您确认删除帖子吗？该操作不可逆。",
+        "cancel": "取消",
+        "confirm": "确认"
+      },
+      "toast": {
+        "deleteSuccess": "删除成功",
+        "deleteFailedRollback": "删除失败，已回滚",
+        "reportThanks": "感谢您的反馈"
       }
     },
     "Help": {
@@ -649,6 +690,34 @@
       "title": "更改电子邮箱",
       "newEmailLabel": "请输入你的新电子邮箱地址。",
       "submit": "提交"
+    },
+    "SettingPassword": {
+      "validation": {
+        "passwordMin": "密码必须至少包含6个字符。"
+      },
+      "entry": "更改密码",
+      "title": "确认你的密码",
+      "passwordLabel": "请输入你的密码。",
+      "submit": "提交"
+    },
+    "SettingDeleteAccount": {
+      "validation": {
+        "passwordMin": "密码必须至少包含6个字符。"
+      },
+      "entry": "删除账户",
+      "firstDialog": {
+        "title": "删除账户",
+        "description": "删除账户不可逆，您将失去所有数据，请确认是您本人操作。",
+        "passwordLabel": "请输入你的密码。",
+        "submit": "提交"
+      },
+      "secondDialog": {
+        "title": "删除账户",
+        "description": "你已经通过密码认证，确认删除账户吗？您的数据将遗失，且不可恢复。",
+        "cancel": "取消",
+        "confirm": "确认",
+        "failed": "删除失败"
+      }
     },
     "UserEditDialog": {
       "validation": {

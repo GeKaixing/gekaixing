@@ -50,12 +50,13 @@ export default function MobileHeader({
   const pathname = usePathname();
   const isExplore = pathname === "/gekaixing/explore";
   const isNotifications = pathname === "/gekaixing/notifications";
+  const displayMentionCount = isNotifications ? 0 : mentionCount;
 
   return (
     <div className="sm:hidden">
       <div className="fixed top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur">
         <div className="flex h-14 items-center justify-between px-4">
-          <MobileDrawer user={user} labels={labels} mentionCount={mentionCount} />
+          <MobileDrawer user={user} labels={labels} mentionCount={displayMentionCount} />
           <Link href="/gekaixing" className="inline-flex items-center">
             <Image src="/logo.svg" width={24} height={12} alt="logo" className="dark:hidden" />
             <Image src="/logo-white.svg" width={24} height={12} alt="logo white" className="hidden dark:block" />
@@ -81,9 +82,9 @@ export default function MobileHeader({
                 aria-label="Notifications"
               >
                 <Bell className="h-5 w-5" />
-                {mentionCount > 0 ? (
+                {displayMentionCount > 0 ? (
                   <span className="absolute -right-0.5 -top-0.5 min-w-4 rounded-full bg-primary px-1 text-center text-[10px] font-semibold text-primary-foreground">
-                    {mentionCount > 99 ? "99+" : mentionCount}
+                    {displayMentionCount > 99 ? "99+" : displayMentionCount}
                   </span>
                 ) : null}
               </Link>

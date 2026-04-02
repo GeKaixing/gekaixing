@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ChartNoAxesColumn } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -26,6 +27,7 @@ export async function ToutiaoHotGTE() {
 
 export default
 function ExploreTabs() {
+  const t = useTranslations("ImitationX.Explore");
   const [data, setData] = useState<ToutiaoHotItem[]>([]);
 
   useEffect(() => {
@@ -48,19 +50,19 @@ function ExploreTabs() {
     <Tabs defaultValue="ToutiaoHot" className="mt-2 w-full">
       <TabsList className="h-auto w-full justify-start gap-2 overflow-x-auto bg-muted/60 p-1">
         <TabsTrigger value="ToutiaoHot" className="shrink-0 rounded-full px-3 py-1.5 text-xs sm:text-sm">
-          今日头条
+          {t("tabs.toutiao")}
         </TabsTrigger>
         <TabsTrigger value="us" className="shrink-0 rounded-full px-3 py-1.5 text-xs sm:text-sm">
-          美国
+          {t("tabs.us")}
         </TabsTrigger>
         <TabsTrigger value="tech" className="shrink-0 rounded-full px-3 py-1.5 text-xs sm:text-sm">
-          科技
+          {t("tabs.tech")}
         </TabsTrigger>
         <TabsTrigger value="sports" className="shrink-0 rounded-full px-3 py-1.5 text-xs sm:text-sm">
-          体育
+          {t("tabs.sports")}
         </TabsTrigger>
         <TabsTrigger value="entertainment" className="shrink-0 rounded-full px-3 py-1.5 text-xs sm:text-sm">
-          娱乐
+          {t("tabs.entertainment")}
         </TabsTrigger>
       </TabsList>
       <TabsContent value="ToutiaoHot" className="mt-3">

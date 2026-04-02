@@ -29,6 +29,7 @@ import { postStore } from '@/store/post'
 import { replyStore } from '@/store/reply'
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 
 async function deletePost(id: string) {
@@ -53,6 +54,7 @@ async function deleteReply(id: string) {
 }
 export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type = 'post', content }: { reply_id?: string | null, post_id?: string, content: string; id: string, user_id: string, type?: string }) {
     const user = userStore()
+    const t = useTranslations("ImitationX.PostDropdown")
     const isCurrentUser = user.id === user_id; // Check if the post belongs to
     const [isopen, setOpen] = useState(false)
     const [AlertDialogOpen, setAlertDialogOpen] = useState(false)
@@ -68,7 +70,7 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
 
             // 🧹 2. 乐观更新 UI
             replyStore.getState().removeReply(id)
-            toast.success('删除成功')
+            toast.success(t("toast.deleteSuccess"))
             // 🔨 3. 请求后端删除
             result = await deleteReply(id)
 
@@ -90,7 +92,7 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
                 if (deletedPost) {
                     replyStore.getState().addReply(deletedPost)
                 }
-                toast.error('删除失败,回滚。')
+                toast.error(t("toast.deleteFailedRollback"))
             }
 
         } else {
@@ -101,7 +103,7 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
             // 🧹 2. 乐观更新 UI
             postStore.getState().deletePost(id)
 
-            toast.success('删除成功')
+            toast.success(t("toast.deleteSuccess"))
             // 🔨 3. 请求后端删除
             result = await deletePost(id)
 
@@ -123,14 +125,14 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
                 if (deletedPost) {
                     postStore.getState().addPost(deletedPost)
                 }
-                toast.error('删除失败,回滚')
+                toast.error(t("toast.deleteFailedRollback"))
             }
         }
     }
 
 
     function report() {
-        toast.success('感谢您的反馈')
+        toast.success(t("toast.reportThanks"))
     }
 
     function CopyLink() {
@@ -148,41 +150,65 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
                 <Ellipsis />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <DropdownMenuItem onClick={report}>举报帖子</DropdownMenuItem>
+                <DropdownMenuItem onClick={report}>{t("menu.reportPost")}</DropdownMenuItem>
                 {isCurrentUser && <DropdownMenuItem
                     onClick={() => setAlertDialogOpen(true)}
-                >删除帖子</DropdownMenuItem>}
+                >{t("menu.deletePost")}</DropdownMenuItem>}
                 {userStore.getState().id && userStore.getState().id !== user_id && (
                     <DropdownMenuItem onClick={() => router.push(`/gekaixing/chat?userId=${user_id}`)}>
-                        私聊用户
+                        {t("menu.directMessage")}
                     </DropdownMenuItem>
                 )}
-                {userStore.getState().id && <DropdownMenuItem>关注用户</DropdownMenuItem>}
-                <DropdownMenuItem onClick={CopyLink}>复制连接</DropdownMenuItem>
+                {userStore.getState().id && <DropdownMenuItem>{t("menu.followUser")}</DropdownMenuItem>}
+                <DropdownMenuItem onClick={CopyLink}>{t("menu.copyLink")}</DropdownMenuItem>
                 <DropdownMenuItem >
-                    <Link href={`/gekaixing/user/${user_id}`}>查看用户</Link>
+                    <Link href={`/gekaixing/user/${user_id}`}>{t("menu.viewUser")}</Link>
                 </DropdownMenuItem>
             </DropdownMenuContent>
-            <DeleteAlertDialog isopen={AlertDialogOpen} setOpen={setAlertDialogOpen} deleteHandler={deleteHandler}></DeleteAlertDialog>
+            <DeleteAlertDialog
+                isopen={AlertDialogOpen}
+                setOpen={setAlertDialogOpen}
+                deleteHandler={deleteHandler}
+                title={t("confirm.title")}
+                description={t("confirm.description")}
+                cancel={t("confirm.cancel")}
+                confirm={t("confirm.confirm")}
+            />
 
         </DropdownMenu>
     )
 }
 
-function DeleteAlertDialog({ isopen, setOpen, deleteHandler }: { deleteHandler: () => void, isopen: boolean, setOpen: (open: boolean) => void }) {
+function DeleteAlertDialog({
+    isopen,
+    setOpen,
+    deleteHandler,
+    title,
+    description,
+    cancel,
+    confirm,
+}: {
+    deleteHandler: () => void
+    isopen: boolean
+    setOpen: (open: boolean) => void
+    title: string
+    description: string
+    cancel: string
+    confirm: string
+}) {
 
     return <AlertDialog open={isopen} onOpenChange={setOpen}>
 
         <AlertDialogContent>
             <AlertDialogHeader>
-                <AlertDialogTitle>您去确认吗？</AlertDialogTitle>
+                <AlertDialogTitle>{title}</AlertDialogTitle>
                 <AlertDialogDescription>
-                    您确认删除帖子吗?操作不可逆
+                    {description}
                 </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-                <AlertDialogCancel>取消</AlertDialogCancel>
-                <AlertDialogAction onClick={deleteHandler}>确认</AlertDialogAction>
+                <AlertDialogCancel>{cancel}</AlertDialogCancel>
+                <AlertDialogAction onClick={deleteHandler}>{confirm}</AlertDialogAction>
             </AlertDialogFooter>
         </AlertDialogContent>
     </AlertDialog>
