@@ -3,7 +3,7 @@ import { getHomeFeed } from "@/lib/feed/service";
 import type { FeedPage, FeedPostItem as Post } from "@/lib/feed/types";
 import { prisma } from "@/lib/prisma";
 import { withTimeoutOrNull } from "@/lib/with-timeout";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 
 export const dynamic = "force-dynamic";
 

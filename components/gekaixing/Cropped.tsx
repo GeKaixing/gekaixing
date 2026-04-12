@@ -17,10 +17,10 @@ import Spin from "./Spin"
 import clsx from "clsx"
 import { toast } from "sonner"
 import { userStore } from "@/store/user"
-import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
 import { Sparkles } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { uploadFileToLocalStorage } from "@/utils/function/storage"
 
 export default function Cropped({
   open,
@@ -53,7 +53,6 @@ export default function Cropped({
   const [aiLoading, setAiLoading] = useState(false)
   const [aiPrompt, setAiPrompt] = useState("")
   const [isButton, setButton] = useState(false)
-  const supabase = createClient()
   const router = useRouter()
 
   useEffect(() => {
@@ -89,18 +88,13 @@ export default function Cropped({
   }
 
   async function uploadImage(file: File) {
-    const userId = userStore.getState().id || "anonymous"
+    const userId = userStore.getState().id || "anonymous";
     const filePath = `${type}/${userId}.png`
-
-    const { error } = await supabase.storage.from("images").upload(filePath, file, {
-      cacheControl: "3600",
-      upsert: true,
-    })
-
-    if (error) throw error
-
-    const { data } = supabase.storage.from("images").getPublicUrl(filePath)
-    return `${data.publicUrl}?t=${Date.now()}`
+    const uploadedUrl = await uploadFileToLocalStorage(file, "images", filePath);
+    if (!uploadedUrl) {
+      throw new Error("Upload failed");
+    }
+    return `${uploadedUrl}?t=${Date.now()}`;
   }
 
   const handleUpload = async () => {

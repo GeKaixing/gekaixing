@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/auth-compat/client";
 
 import Button from "./Button";
 
@@ -15,7 +15,7 @@ export default function GoogleButton() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/gekaixing`,
       },
     });
 

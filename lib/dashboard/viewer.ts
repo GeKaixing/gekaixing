@@ -1,5 +1,5 @@
 import { withTimeoutOrNull } from "@/lib/with-timeout";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 
 export async function getDashboardViewer(): Promise<{ userId: string | null }> {
   try {

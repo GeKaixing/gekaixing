@@ -1,7 +1,7 @@
 import { generateGeminiText } from "@/lib/gemini";
 import { getGeminiModelCandidates, normalizeGeminiModel, type GeminiModel } from "@/lib/gemini-model";
 import { prisma } from "@/lib/prisma";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 import { NextResponse } from "next/server";
 
 const DEFAULT_TITLE = "新对话";

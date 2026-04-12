@@ -22,18 +22,17 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { Content, Editor } from "@tiptap/react"
 import { MinimalTiptapEditor } from "../ui/minimal-tiptap"
 import { post_imagesStore } from "@/store/post_images"
-import { createClient } from "@/utils/supabase/client"
 import { userStore } from "@/store/user"
 import { toast } from "sonner"
 import { findUnusedUrls } from "@/utils/function/findUnusedUrls"
-import { deleteUnusedImages } from "@/utils/function/deleteUnusedImages"
+import { deleteFilesFromLocalStorage } from "@/utils/function/storage"
 import { postStore } from "@/store/post"
 import { postModalStore } from "@/store/postModal"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { useTranslations } from "next-intl"
 import { useLocale } from "next-intl"
 import { useRouter } from "next/navigation"
-import { uploadMediaToSupabase } from "@/utils/function/uploadMediaToSupabase"
+import { uploadFileToLocalStorage } from "@/utils/function/storage"
 import { Loader2, Music2, Video } from "lucide-react"
 import { ToolbarButton } from "../ui/minimal-tiptap/components/toolbar-button"
 
@@ -166,7 +165,6 @@ export default function EditPost({ onClose }: EditPostProps) {
   const wasOpenRef = useRef<boolean>(false)
 
   const { poset_images } = post_imagesStore()
-  const supabase = createClient()
   const { email, id, user_avatar, name, userid } = userStore()
 
   const bucketName = "images"
@@ -189,12 +187,11 @@ export default function EditPost({ onClose }: EditPostProps) {
       poset_images.forEach((image) => {
         const filePath = image.split("/images/")[1]
 
-        supabase.storage
-          .from(bucketName)
-          .remove([filePath])
-          .catch((error) => {
+        void deleteFilesFromLocalStorage(bucketName, [filePath]).then(({ error }) => {
+          if (error) {
             console.error("删除图片失败:", error)
-          })
+          }
+        })
       })
     }
     if (!saved) {
@@ -260,7 +257,7 @@ export default function EditPost({ onClose }: EditPostProps) {
     }
 
     try {
-      const { error } = await supabase.storage.from(mediaBucketName).remove([filePath])
+      const { error } = await deleteFilesFromLocalStorage(mediaBucketName, [filePath])
       if (error) {
         console.error("删除媒体失败:", error)
       }
@@ -321,7 +318,7 @@ export default function EditPost({ onClose }: EditPostProps) {
     }
 
     try {
-      const uploadedUrl = await uploadMediaToSupabase(file, "post-media", type)
+      const uploadedUrl = await uploadFileToLocalStorage(file, "post-media", type)
       if (!uploadedUrl) {
         toast.error(t("mediaUploadFailed"))
         return
@@ -554,7 +551,7 @@ export default function EditPost({ onClose }: EditPostProps) {
     }
 
     if (unusedPictures.length !== 0) {
-      await deleteUnusedImages("images", unusedPictures)
+      await deleteFilesFromLocalStorage("images", unusedPictures)
     }
   }
 

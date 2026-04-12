@@ -8,7 +8,7 @@ import User_background_image from '@/components/gekaixing/User_background_image'
 import User_background_bio from '@/components/gekaixing/User_background_bio'
 import type { Metadata } from 'next'
 import { getLocale, getTranslations } from 'next-intl/server'
-import { createClient } from "@/utils/supabase/server"
+import { createClient } from "@/utils/auth-compat/server"
 import { Prisma } from '@/generated/prisma/client'
 import { notFound } from 'next/navigation'
 import { withTimeoutOrNull } from '@/lib/with-timeout'

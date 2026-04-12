@@ -1,7 +1,7 @@
 import ArrowLeftBack from '@/components/gekaixing/ArrowLeftBack'
 import PostStore from '@/components/gekaixing/PostStore'
 import { prisma } from '@/lib/prisma'
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@/utils/auth-compat/server'
 import { getTranslations } from 'next-intl/server'
 import { Search } from 'lucide-react'
 import type { ReactElement } from 'react'

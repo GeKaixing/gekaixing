@@ -23,7 +23,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { deleteUnusedImages } from '@/utils/function/deleteUnusedImages'
+import { deleteFilesFromLocalStorage } from '@/utils/function/storage'
 import { findUrls } from '@/utils/function/findUrls'
 import { postStore } from '@/store/post'
 import { replyStore } from '@/store/reply'
@@ -84,7 +84,7 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
                 }
                 const UrlsArray = findUrls(content)
                 if (UrlsArray.length !== 0) {
-                    const { data: UrlsArrayData, error: UrlsArrayError } = await deleteUnusedImages('post-image', UrlsArray)
+                    const { data: UrlsArrayData, error: UrlsArrayError } = await deleteFilesFromLocalStorage('post-image', UrlsArray)
                     
                 }
             } else {
@@ -113,7 +113,7 @@ export default function PostDropdownMenu({ post_id, id, reply_id, user_id, type 
 
                 const UrlsArray = findUrls(content)
                 if (UrlsArray.length !== 0) {
-                    const { data: UrlsArrayData, error: UrlsArrayError } = await deleteUnusedImages('post-image', UrlsArray)
+                    const { data: UrlsArrayData, error: UrlsArrayError } = await deleteFilesFromLocalStorage('post-image', UrlsArray)
                   
                 }
                 if (pathName.includes('/gekaixing/status')) {

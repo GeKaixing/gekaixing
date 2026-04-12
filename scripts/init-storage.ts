@@ -1,44 +1,24 @@
-import { createClient } from '@supabase/supabase-js'
-import dotenv from 'dotenv'
+import { mkdir } from 'node:fs/promises'
+import path from 'node:path'
 
-dotenv.config()
+const STORAGE_BUCKETS = ['images', 'post-image', 'post-media'] as const
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY!
-)
+async function initStorage(): Promise<void> {
+  console.log('checking local storage directories...')
 
-async function initStorage() {
-  console.log('🔍 checking buckets...')
+  const baseDir = path.join(process.cwd(), 'public', 'uploads')
+  await mkdir(baseDir, { recursive: true })
 
-  const { data: buckets, error } = await supabase.storage.listBuckets()
-
-  if (error) {
-    console.error('❌ list bucket error:', error.message)
-    process.exit(1)
+  for (const bucket of STORAGE_BUCKETS) {
+    const bucketDir = path.join(baseDir, bucket)
+    await mkdir(bucketDir, { recursive: true })
+    console.log(`ready: ${bucketDir}`)
   }
 
-  const exists = buckets?.some(b => b.name === 'images')
-
-  if (exists) {
-    console.log('✅ images bucket already exists')
-    process.exit(0)
-  }
-
-  console.log('🚀 creating images bucket...')
-
-  const { error: createError } = await supabase.storage.createBucket('images', {
-    public: true,
-    allowedMimeTypes: ['image/png', 'image/jpeg', 'image/webp'],
-    fileSizeLimit: 20 * 1024 * 1024,
-  })
-
-  if (createError) {
-    console.error('❌ create bucket error:', createError.message)
-    process.exit(1)
-  }
-
-  console.log('🎉 images bucket created!')
+  console.log('local storage initialized')
 }
 
-initStorage()
+void initStorage().catch((error: unknown) => {
+  console.error('failed to initialize local storage:', error)
+  process.exit(1)
+})

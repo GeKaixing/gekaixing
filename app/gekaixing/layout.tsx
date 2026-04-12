@@ -4,7 +4,7 @@ import MobileHeader from "@/components/gekaixing/MobileHeader";
 import Sidebar from "@/components/gekaixing/Sidebar";
 import { prisma } from "@/lib/prisma";
 import { withTimeoutOrNull } from "@/lib/with-timeout";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 import { Prisma } from "@/generated/prisma/client";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";

@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils"
 import { fileToBase64, getOutput, randomId } from "../utils"
 import { useThrottle } from "../hooks/use-throttle"
 import { toast } from "sonner"
-import { uploadImageToSupabase } from "@/utils/function/uploadImageToSupabase"
+import { uploadFileToLocalStorage } from "@/utils/function/storage"
 import { post_imagesStore } from "@/store/post_images"
 
 export interface UseMinimalTiptapEditorProps extends UseEditorOptions {
@@ -94,7 +94,7 @@ const createExtensions = ({
       allowBase64: true,
       uploadFn: async (file) => {
 
-        const url = await uploadImageToSupabase(file, "post-image")
+        const url = await uploadFileToLocalStorage(file, "post-image", "uploads")
 
         if (url) {
           poset_images.push(url)

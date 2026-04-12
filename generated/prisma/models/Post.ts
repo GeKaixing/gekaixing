@@ -664,14 +664,6 @@ export type PostUncheckedCreateNestedManyWithoutParentInput = {
   connect?: Prisma.PostWhereUniqueInput | Prisma.PostWhereUniqueInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type PostUpdateOneWithoutRepliesNestedInput = {
   create?: Prisma.XOR<Prisma.PostCreateWithoutRepliesInput, Prisma.PostUncheckedCreateWithoutRepliesInput>
   connectOrCreate?: Prisma.PostCreateOrConnectWithoutRepliesInput

@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { getGeminiModelCandidates, normalizeGeminiModel } from "@/lib/gemini-model";
 import { prisma } from "@/lib/prisma";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 import { NextRequest } from "next/server";
 
 const GKX_SYSTEM_PROMPT =
@@ -11,6 +11,31 @@ type ChatMessage = {
   role: "system" | "user" | "assistant";
   content: string;
 };
+
+function mapGeminiStreamError(error: unknown): string {
+  const message = error instanceof Error ? error.message.toLowerCase() : "gemini stream failed";
+
+  if (
+    message.includes("fetch failed") ||
+    message.includes("network error") ||
+    message.includes("econnrefused") ||
+    message.includes("enotfound") ||
+    message.includes("timed out") ||
+    message.includes("connect timeout")
+  ) {
+    return "Gemini network is currently unreachable. Please retry later.";
+  }
+
+  if (message.includes("api key") || message.includes("permission denied")) {
+    return "Gemini API key is invalid or unauthorized. Please update it in Settings.";
+  }
+
+  if (message.includes("quota") || message.includes("rate limit") || message.includes("resource exhausted")) {
+    return "Gemini quota exceeded or rate limited. Please try again later.";
+  }
+
+  return "Gemini request failed. Please retry in a moment.";
+}
 
 function mapMessagesForGemini(messages: ChatMessage[]): Array<{
   role: "user" | "model";
@@ -148,7 +173,9 @@ export async function POST(req: NextRequest) {
           controller.close();
         } catch (streamError) {
           console.error("Gemini stream failed:", streamError);
-          controller.error(streamError);
+          const fallback = mapGeminiStreamError(streamError);
+          controller.enqueue(encoder.encode(fallback));
+          controller.close();
         }
       },
     });

@@ -10,6 +10,8 @@ datasource db {
 model User {
   id                       String                    @id @default(uuid())
   email                    String                    @unique
+  emailVerifiedAt          DateTime?
+  passwordHash             String?
   name                     String?
   avatar                   String?
   backgroundImage          String?
@@ -35,6 +37,38 @@ model User {
   shares                   Share[]
   actions                  UserAction[]
   jobPosts                 JobPosting[]
+  settings                 UserSettings?
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  email     String
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([email, expiresAt])
+}
+
+model UserSettings {
+  userId       String   @id
+  geminiApiKey String?
+  geminiModel  String?
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model StripeWebhookEvent {
+  id           String   @id
+  type         String
+  status       String   @default("PROCESSING")
+  attemptCount Int      @default(1)
+  lastError    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([status, updatedAt])
 }
 
 /// ///////////////////////////////////////////////////

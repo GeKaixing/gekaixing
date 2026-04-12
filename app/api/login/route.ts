@@ -1,21 +1,71 @@
-// app/api/login/route.ts
-import { createClient } from "@/utils/supabase/server";
+import { compare } from "bcryptjs";
 import { NextResponse } from "next/server";
 
+import { prisma } from "@/lib/prisma";
+
+interface LoginBody {
+  email: string;
+  password: string;
+}
+
 export async function POST(request: Request) {
-  const supabase = await createClient();
-  const { email, password } = await request.json();
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-  console.log(error);
-  if (error) {
+  try {
+    const body = (await request.json()) as LoginBody;
+    const { email, password } = body;
+
+    if (!email || !password) {
+      return NextResponse.json(
+        { success: false, error: "Email and password are required" },
+        { status: 400 },
+      );
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        emailVerifiedAt: true,
+        passwordHash: true,
+      },
+    });
+
+    if (!user?.passwordHash) {
+      return NextResponse.json(
+        { success: false, error: "Invalid credentials" },
+        { status: 401 },
+      );
+    }
+
+    if (!user.emailVerifiedAt) {
+      return NextResponse.json(
+        { success: false, error: "Email is not verified" },
+        { status: 403 },
+      );
+    }
+
+    const valid = await compare(password, user.passwordHash);
+    if (!valid) {
+      return NextResponse.json(
+        { success: false, error: "Invalid credentials" },
+        { status: 401 },
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
+    });
+  } catch (error) {
+    console.error("Login verification failed:", error);
     return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 401 },
+      { success: false, error: "Internal Server Error" },
+      { status: 500 },
     );
   }
-
-  return NextResponse.json({ success: true, user: data.user });
 }

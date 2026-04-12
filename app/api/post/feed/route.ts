@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { UserActionType } from "@/generated/prisma/enums";
 import { logUserAction } from "@/lib/feed/actions";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 import { Prisma } from "@/generated/prisma/client";
 import { getHomeFeed } from "@/lib/feed/service";
 

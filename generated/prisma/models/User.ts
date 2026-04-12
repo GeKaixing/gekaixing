@@ -27,6 +27,8 @@ export type AggregateUser = {
 export type UserMinAggregateOutputType = {
   id: string | null
   email: string | null
+  emailVerifiedAt: Date | null
+  passwordHash: string | null
   name: string | null
   avatar: string | null
   backgroundImage: string | null
@@ -46,6 +48,8 @@ export type UserMinAggregateOutputType = {
 export type UserMaxAggregateOutputType = {
   id: string | null
   email: string | null
+  emailVerifiedAt: Date | null
+  passwordHash: string | null
   name: string | null
   avatar: string | null
   backgroundImage: string | null
@@ -65,6 +69,8 @@ export type UserMaxAggregateOutputType = {
 export type UserCountAggregateOutputType = {
   id: number
   email: number
+  emailVerifiedAt: number
+  passwordHash: number
   name: number
   avatar: number
   backgroundImage: number
@@ -86,6 +92,8 @@ export type UserCountAggregateOutputType = {
 export type UserMinAggregateInputType = {
   id?: true
   email?: true
+  emailVerifiedAt?: true
+  passwordHash?: true
   name?: true
   avatar?: true
   backgroundImage?: true
@@ -105,6 +113,8 @@ export type UserMinAggregateInputType = {
 export type UserMaxAggregateInputType = {
   id?: true
   email?: true
+  emailVerifiedAt?: true
+  passwordHash?: true
   name?: true
   avatar?: true
   backgroundImage?: true
@@ -124,6 +134,8 @@ export type UserMaxAggregateInputType = {
 export type UserCountAggregateInputType = {
   id?: true
   email?: true
+  emailVerifiedAt?: true
+  passwordHash?: true
   name?: true
   avatar?: true
   backgroundImage?: true
@@ -216,6 +228,8 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type UserGroupByOutputType = {
   id: string
   email: string
+  emailVerifiedAt: Date | null
+  passwordHash: string | null
   name: string | null
   avatar: string | null
   backgroundImage: string | null
@@ -256,6 +270,8 @@ export type UserWhereInput = {
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
+  emailVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
   name?: Prisma.StringNullableFilter<"User"> | string | null
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
   backgroundImage?: Prisma.StringNullableFilter<"User"> | string | null
@@ -281,11 +297,14 @@ export type UserWhereInput = {
   shares?: Prisma.ShareListRelationFilter
   actions?: Prisma.UserActionListRelationFilter
   jobPosts?: Prisma.JobPostingListRelationFilter
+  settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   backgroundImage?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -311,6 +330,7 @@ export type UserOrderByWithRelationInput = {
   shares?: Prisma.ShareOrderByRelationAggregateInput
   actions?: Prisma.UserActionOrderByRelationAggregateInput
   jobPosts?: Prisma.JobPostingOrderByRelationAggregateInput
+  settings?: Prisma.UserSettingsOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -322,6 +342,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
+  emailVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
   name?: Prisma.StringNullableFilter<"User"> | string | null
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
   backgroundImage?: Prisma.StringNullableFilter<"User"> | string | null
@@ -344,11 +366,14 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   shares?: Prisma.ShareListRelationFilter
   actions?: Prisma.UserActionListRelationFilter
   jobPosts?: Prisma.JobPostingListRelationFilter
+  settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
 }, "id" | "email" | "userid" | "stripeCustomerId" | "stripeSubId">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   backgroundImage?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -374,6 +399,8 @@ export type UserScalarWhereWithAggregatesInput = {
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
+  emailVerifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  passwordHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   avatar?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   backgroundImage?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -393,6 +420,8 @@ export type UserScalarWhereWithAggregatesInput = {
 export type UserCreateInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -418,11 +447,14 @@ export type UserCreateInput = {
   shares?: Prisma.ShareCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -448,11 +480,14 @@ export type UserUncheckedCreateInput = {
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -478,11 +513,14 @@ export type UserUpdateInput = {
   shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -508,11 +546,14 @@ export type UserUncheckedUpdateInput = {
   shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -532,6 +573,8 @@ export type UserCreateManyInput = {
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -551,6 +594,8 @@ export type UserUpdateManyMutationInput = {
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -570,6 +615,8 @@ export type UserUncheckedUpdateManyInput = {
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrder
   name?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   backgroundImage?: Prisma.SortOrder
@@ -589,6 +636,8 @@ export type UserCountOrderByAggregateInput = {
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrder
   name?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   backgroundImage?: Prisma.SortOrder
@@ -608,6 +657,8 @@ export type UserMaxOrderByAggregateInput = {
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  emailVerifiedAt?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrder
   name?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   backgroundImage?: Prisma.SortOrder
@@ -633,6 +684,10 @@ export type StringFieldUpdateOperationsInput = {
   set?: string
 }
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
@@ -649,8 +704,18 @@ export type EnumSubscriptionStatusFieldUpdateOperationsInput = {
   set?: $Enums.SubscriptionStatus
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
+export type UserCreateNestedOneWithoutSettingsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSettingsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSettingsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSettingsInput
+  upsert?: Prisma.UserUpsertWithoutSettingsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSettingsInput, Prisma.UserUpdateWithoutSettingsInput>, Prisma.UserUncheckedUpdateWithoutSettingsInput>
 }
 
 export type UserCreateNestedOneWithoutFollowingInput = {
@@ -807,9 +872,155 @@ export type UserUpdateOneRequiredWithoutActionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutActionsInput, Prisma.UserUpdateWithoutActionsInput>, Prisma.UserUncheckedUpdateWithoutActionsInput>
 }
 
+export type UserCreateWithoutSettingsInput = {
+  id?: string
+  email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
+  name?: string | null
+  avatar?: string | null
+  backgroundImage?: string | null
+  briefIntroduction?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userid?: string
+  isPremium?: boolean
+  stripeCustomerId?: string | null
+  stripeSubId?: string | null
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
+  conversationParticipants?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
+  conversationReads?: Prisma.ConversationReadCreateNestedManyWithoutUserInput
+  following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
+}
+
+export type UserUncheckedCreateWithoutSettingsInput = {
+  id?: string
+  email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
+  name?: string | null
+  avatar?: string | null
+  backgroundImage?: string | null
+  briefIntroduction?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userid?: string
+  isPremium?: boolean
+  stripeCustomerId?: string | null
+  stripeSubId?: string | null
+  subscriptionStatus?: $Enums.SubscriptionStatus
+  premiumExpiresAt?: Date | string | null
+  premiumGraceEndsAt?: Date | string | null
+  stripePriceId?: string | null
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
+  conversationParticipants?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+  conversationReads?: Prisma.ConversationReadUncheckedCreateNestedManyWithoutUserInput
+  following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
+  actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
+  jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
+}
+
+export type UserCreateOrConnectWithoutSettingsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
+}
+
+export type UserUpsertWithoutSettingsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSettingsInput, Prisma.UserUncheckedUpdateWithoutSettingsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSettingsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSettingsInput, Prisma.UserUncheckedUpdateWithoutSettingsInput>
+}
+
+export type UserUpdateWithoutSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
+  conversationParticipants?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
+  conversationReads?: Prisma.ConversationReadUpdateManyWithoutUserNestedInput
+  following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  briefIntroduction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userid?: Prisma.StringFieldUpdateOperationsInput | string
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriptionStatus?: Prisma.EnumSubscriptionStatusFieldUpdateOperationsInput | $Enums.SubscriptionStatus
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  premiumGraceEndsAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
+  conversationParticipants?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+  conversationReads?: Prisma.ConversationReadUncheckedUpdateManyWithoutUserNestedInput
+  following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
+  actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
+  jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
+}
+
 export type UserCreateWithoutFollowingInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -834,11 +1045,14 @@ export type UserCreateWithoutFollowingInput = {
   shares?: Prisma.ShareCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFollowingInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -863,6 +1077,7 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFollowingInput = {
@@ -873,6 +1088,8 @@ export type UserCreateOrConnectWithoutFollowingInput = {
 export type UserCreateWithoutFollowersInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -897,11 +1114,14 @@ export type UserCreateWithoutFollowersInput = {
   shares?: Prisma.ShareCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFollowersInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -926,6 +1146,7 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFollowersInput = {
@@ -947,6 +1168,8 @@ export type UserUpdateToOneWithWhereWithoutFollowingInput = {
 export type UserUpdateWithoutFollowingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -971,11 +1194,14 @@ export type UserUpdateWithoutFollowingInput = {
   shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1000,6 +1226,7 @@ export type UserUncheckedUpdateWithoutFollowingInput = {
   shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutFollowersInput = {
@@ -1016,6 +1243,8 @@ export type UserUpdateToOneWithWhereWithoutFollowersInput = {
 export type UserUpdateWithoutFollowersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1040,11 +1269,14 @@ export type UserUpdateWithoutFollowersInput = {
   shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1069,11 +1301,14 @@ export type UserUncheckedUpdateWithoutFollowersInput = {
   shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPostsInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -1098,11 +1333,14 @@ export type UserCreateWithoutPostsInput = {
   shares?: Prisma.ShareCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPostsInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -1127,6 +1365,7 @@ export type UserUncheckedCreateWithoutPostsInput = {
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPostsInput = {
@@ -1148,6 +1387,8 @@ export type UserUpdateToOneWithWhereWithoutPostsInput = {
 export type UserUpdateWithoutPostsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1172,11 +1413,14 @@ export type UserUpdateWithoutPostsInput = {
   shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1201,11 +1445,14 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLikesInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -1230,11 +1477,14 @@ export type UserCreateWithoutLikesInput = {
   shares?: Prisma.ShareCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLikesInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -1259,6 +1509,7 @@ export type UserUncheckedCreateWithoutLikesInput = {
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLikesInput = {
@@ -1280,6 +1531,8 @@ export type UserUpdateToOneWithWhereWithoutLikesInput = {
 export type UserUpdateWithoutLikesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1304,11 +1557,14 @@ export type UserUpdateWithoutLikesInput = {
   shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLikesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1333,11 +1589,14 @@ export type UserUncheckedUpdateWithoutLikesInput = {
   shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBookmarksInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -1362,11 +1621,14 @@ export type UserCreateWithoutBookmarksInput = {
   shares?: Prisma.ShareCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBookmarksInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -1391,6 +1653,7 @@ export type UserUncheckedCreateWithoutBookmarksInput = {
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBookmarksInput = {
@@ -1412,6 +1675,8 @@ export type UserUpdateToOneWithWhereWithoutBookmarksInput = {
 export type UserUpdateWithoutBookmarksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1436,11 +1701,14 @@ export type UserUpdateWithoutBookmarksInput = {
   shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBookmarksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1465,11 +1733,14 @@ export type UserUncheckedUpdateWithoutBookmarksInput = {
   shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSharesInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -1494,11 +1765,14 @@ export type UserCreateWithoutSharesInput = {
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSharesInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -1523,6 +1797,7 @@ export type UserUncheckedCreateWithoutSharesInput = {
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSharesInput = {
@@ -1544,6 +1819,8 @@ export type UserUpdateToOneWithWhereWithoutSharesInput = {
 export type UserUpdateWithoutSharesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1568,11 +1845,14 @@ export type UserUpdateWithoutSharesInput = {
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSharesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1597,11 +1877,14 @@ export type UserUncheckedUpdateWithoutSharesInput = {
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutConversationParticipantsInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -1626,11 +1909,14 @@ export type UserCreateWithoutConversationParticipantsInput = {
   shares?: Prisma.ShareCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConversationParticipantsInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -1655,6 +1941,7 @@ export type UserUncheckedCreateWithoutConversationParticipantsInput = {
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConversationParticipantsInput = {
@@ -1676,6 +1963,8 @@ export type UserUpdateToOneWithWhereWithoutConversationParticipantsInput = {
 export type UserUpdateWithoutConversationParticipantsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1700,11 +1989,14 @@ export type UserUpdateWithoutConversationParticipantsInput = {
   shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationParticipantsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1729,11 +2021,14 @@ export type UserUncheckedUpdateWithoutConversationParticipantsInput = {
   shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMessagesInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -1758,11 +2053,14 @@ export type UserCreateWithoutMessagesInput = {
   shares?: Prisma.ShareCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMessagesInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -1787,6 +2085,7 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMessagesInput = {
@@ -1808,6 +2107,8 @@ export type UserUpdateToOneWithWhereWithoutMessagesInput = {
 export type UserUpdateWithoutMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1832,11 +2133,14 @@ export type UserUpdateWithoutMessagesInput = {
   shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1861,11 +2165,14 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutConversationReadsInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -1890,11 +2197,14 @@ export type UserCreateWithoutConversationReadsInput = {
   shares?: Prisma.ShareCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConversationReadsInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -1919,6 +2229,7 @@ export type UserUncheckedCreateWithoutConversationReadsInput = {
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConversationReadsInput = {
@@ -1940,6 +2251,8 @@ export type UserUpdateToOneWithWhereWithoutConversationReadsInput = {
 export type UserUpdateWithoutConversationReadsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1964,11 +2277,14 @@ export type UserUpdateWithoutConversationReadsInput = {
   shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationReadsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1993,11 +2309,14 @@ export type UserUncheckedUpdateWithoutConversationReadsInput = {
   shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutJobPostsInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -2022,11 +2341,14 @@ export type UserCreateWithoutJobPostsInput = {
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   shares?: Prisma.ShareCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutJobPostsInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -2051,6 +2373,7 @@ export type UserUncheckedCreateWithoutJobPostsInput = {
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
   actions?: Prisma.UserActionUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutJobPostsInput = {
@@ -2072,6 +2395,8 @@ export type UserUpdateToOneWithWhereWithoutJobPostsInput = {
 export type UserUpdateWithoutJobPostsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2096,11 +2421,14 @@ export type UserUpdateWithoutJobPostsInput = {
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutJobPostsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2125,11 +2453,14 @@ export type UserUncheckedUpdateWithoutJobPostsInput = {
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
   actions?: Prisma.UserActionUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutActionsInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -2154,11 +2485,14 @@ export type UserCreateWithoutActionsInput = {
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   shares?: Prisma.ShareCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutActionsInput = {
   id?: string
   email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
   name?: string | null
   avatar?: string | null
   backgroundImage?: string | null
@@ -2183,6 +2517,7 @@ export type UserUncheckedCreateWithoutActionsInput = {
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   shares?: Prisma.ShareUncheckedCreateNestedManyWithoutUserInput
   jobPosts?: Prisma.JobPostingUncheckedCreateNestedManyWithoutAuthorInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutActionsInput = {
@@ -2204,6 +2539,8 @@ export type UserUpdateToOneWithWhereWithoutActionsInput = {
 export type UserUpdateWithoutActionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2228,11 +2565,14 @@ export type UserUpdateWithoutActionsInput = {
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   shares?: Prisma.ShareUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutActionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backgroundImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2257,6 +2597,7 @@ export type UserUncheckedUpdateWithoutActionsInput = {
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   shares?: Prisma.ShareUncheckedUpdateManyWithoutUserNestedInput
   jobPosts?: Prisma.JobPostingUncheckedUpdateManyWithoutAuthorNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 
@@ -2383,6 +2724,8 @@ export type UserCountOutputTypeCountJobPostsArgs<ExtArgs extends runtime.Types.E
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
+  emailVerifiedAt?: boolean
+  passwordHash?: boolean
   name?: boolean
   avatar?: boolean
   backgroundImage?: boolean
@@ -2408,12 +2751,15 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   shares?: boolean | Prisma.User$sharesArgs<ExtArgs>
   actions?: boolean | Prisma.User$actionsArgs<ExtArgs>
   jobPosts?: boolean | Prisma.User$jobPostsArgs<ExtArgs>
+  settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
+  emailVerifiedAt?: boolean
+  passwordHash?: boolean
   name?: boolean
   avatar?: boolean
   backgroundImage?: boolean
@@ -2433,6 +2779,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
+  emailVerifiedAt?: boolean
+  passwordHash?: boolean
   name?: boolean
   avatar?: boolean
   backgroundImage?: boolean
@@ -2452,6 +2800,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type UserSelectScalar = {
   id?: boolean
   email?: boolean
+  emailVerifiedAt?: boolean
+  passwordHash?: boolean
   name?: boolean
   avatar?: boolean
   backgroundImage?: boolean
@@ -2468,7 +2818,7 @@ export type UserSelectScalar = {
   stripePriceId?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "avatar" | "backgroundImage" | "briefIntroduction" | "createdAt" | "updatedAt" | "userid" | "isPremium" | "stripeCustomerId" | "stripeSubId" | "subscriptionStatus" | "premiumExpiresAt" | "premiumGraceEndsAt" | "stripePriceId", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "emailVerifiedAt" | "passwordHash" | "name" | "avatar" | "backgroundImage" | "briefIntroduction" | "createdAt" | "updatedAt" | "userid" | "isPremium" | "stripeCustomerId" | "stripeSubId" | "subscriptionStatus" | "premiumExpiresAt" | "premiumGraceEndsAt" | "stripePriceId", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bookmarks?: boolean | Prisma.User$bookmarksArgs<ExtArgs>
   conversationParticipants?: boolean | Prisma.User$conversationParticipantsArgs<ExtArgs>
@@ -2481,6 +2831,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   shares?: boolean | Prisma.User$sharesArgs<ExtArgs>
   actions?: boolean | Prisma.User$actionsArgs<ExtArgs>
   jobPosts?: boolean | Prisma.User$jobPostsArgs<ExtArgs>
+  settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2500,10 +2851,13 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     shares: Prisma.$SharePayload<ExtArgs>[]
     actions: Prisma.$UserActionPayload<ExtArgs>[]
     jobPosts: Prisma.$JobPostingPayload<ExtArgs>[]
+    settings: Prisma.$UserSettingsPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     email: string
+    emailVerifiedAt: Date | null
+    passwordHash: string | null
     name: string | null
     avatar: string | null
     backgroundImage: string | null
@@ -2923,6 +3277,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   shares<T extends Prisma.User$sharesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sharesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   actions<T extends Prisma.User$actionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$actionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserActionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   jobPosts<T extends Prisma.User$jobPostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$jobPostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JobPostingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  settings<T extends Prisma.User$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$settingsArgs<ExtArgs>>): Prisma.Prisma__UserSettingsClient<runtime.Types.Result.GetResult<Prisma.$UserSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2954,6 +3309,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
+  readonly emailVerifiedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly passwordHash: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly avatar: Prisma.FieldRef<"User", 'String'>
   readonly backgroundImage: Prisma.FieldRef<"User", 'String'>
@@ -3617,6 +3974,25 @@ export type User$jobPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.JobPostingScalarFieldEnum | Prisma.JobPostingScalarFieldEnum[]
+}
+
+/**
+ * User.settings
+ */
+export type User$settingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserSettings
+   */
+  select?: Prisma.UserSettingsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserSettings
+   */
+  omit?: Prisma.UserSettingsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserSettingsInclude<ExtArgs> | null
+  where?: Prisma.UserSettingsWhereInput
 }
 
 /**

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 import { prisma } from "@/lib/prisma";
 import { UserActionType } from "@/generated/prisma/enums";
 import { logUserAction } from "@/lib/feed/actions";

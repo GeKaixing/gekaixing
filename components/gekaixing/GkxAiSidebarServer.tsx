@@ -1,6 +1,6 @@
 "use server"
 
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 import GkxAiSidebar from "./GkxAiSidebar";
 import { prisma } from "@/lib/prisma";
 

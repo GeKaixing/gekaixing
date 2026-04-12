@@ -1,6 +1,6 @@
 
 
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 import ArrowLeftBack from "./ArrowLeftBack";
 import Link from "next/link";
 import PostRetreatClient from "./PostRetreatClient";

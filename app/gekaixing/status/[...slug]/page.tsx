@@ -7,7 +7,7 @@ import StatusStore from '@/components/gekaixing/StatusStore'
 import { prisma } from '@/lib/prisma'
 import { UserActionType } from "@/generated/prisma/enums";
 import { logUserAction } from "@/lib/feed/actions";
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@/utils/auth-compat/server'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import type { Post } from '../../page'

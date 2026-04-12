@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DEFAULT_GEMINI_MODEL, GEMINI_MODEL_OPTIONS, normalizeGeminiModel } from "@/lib/gemini-model";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/auth-compat/client";
 import SettingAccountLi from "./SettingAccountLi";
 import Spin from "./Spin";
 
@@ -44,6 +44,8 @@ type SettingGeminiKeyText = {
   modelPlaceholder: string;
   modelHint: string;
   clearHint: string;
+  lastUpdatedLabel: string;
+  neverUpdated: string;
   saveButton: string;
   noKeyText: string;
 };
@@ -54,16 +56,18 @@ function getText(locale: string): SettingGeminiKeyText {
       configured: "已配置",
       loginFirst: "请先登录",
       saveFailed: "保存失败",
-      saved: "Gemini Key 已保存",
-      cleared: "Gemini Key 已清空",
+      saved: "Gemini Key 已保存到本地 PostgreSQL",
+      cleared: "Gemini Key 已从本地 PostgreSQL 清空",
       keyLabel: "Gemini API Key",
       dialogTitle: "Gemini API Key",
-      dialogDescription: "配置你自己的 Gemini Key，用于 AI 发帖和会话标题生成。",
+      dialogDescription: "配置你自己的 Gemini Key，用于 AI 发帖和会话标题生成。配置会保存到本地 PostgreSQL。",
       inputPlaceholder: "请输入 Gemini Key（例如 AIzaSy...）",
       modelLabel: "Gemini 模型",
       modelPlaceholder: "请选择模型",
       modelHint: "部分模型可能不支持所有能力，系统会自动回退到可用模型。",
       clearHint: "输入框留空并保存即可清空当前 Key。",
+      lastUpdatedLabel: "最近更新时间",
+      neverUpdated: "尚未更新",
       saveButton: "保存",
       noKeyText: "我没有key",
     };
@@ -73,20 +77,35 @@ function getText(locale: string): SettingGeminiKeyText {
     configured: "Configured",
     loginFirst: "Please login first",
     saveFailed: "Save failed",
-    saved: "Gemini key saved",
-    cleared: "Gemini key cleared",
+    saved: "Gemini key saved to local PostgreSQL",
+    cleared: "Gemini key cleared from local PostgreSQL",
     keyLabel: "Gemini API Key",
     dialogTitle: "Gemini API Key",
     dialogDescription:
-      "Save your own Gemini key for AI post generation and chat title generation.",
+      "Save your own Gemini key for AI post generation and chat title generation. Settings are stored in local PostgreSQL.",
     inputPlaceholder: "Enter Gemini key (for example AIzaSy...)",
     modelLabel: "Gemini Model",
     modelPlaceholder: "Choose model",
     modelHint: "Some models may not support all features; fallback will be applied automatically.",
     clearHint: "Leave blank and save to clear your key.",
+    lastUpdatedLabel: "Last updated",
+    neverUpdated: "Not updated yet",
     saveButton: "Save",
     noKeyText: "I don't have a key",
   };
+}
+
+function formatUpdatedAt(value: string | null, locale: string, fallback: string): string {
+  if (!value) {
+    return fallback;
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return fallback;
+  }
+
+  return date.toLocaleString(locale);
 }
 
 export default function SettingGeminiKey() {
@@ -98,6 +117,7 @@ export default function SettingGeminiKey() {
   const [savedKey, setSavedKey] = useState("");
   const [savedModel, setSavedModel] = useState(DEFAULT_GEMINI_MODEL);
   const [modelInput, setModelInput] = useState(DEFAULT_GEMINI_MODEL);
+  const [savedUpdatedAt, setSavedUpdatedAt] = useState<string | null>(null);
 
   const compactModelLabel = savedModel.replace(/^gemini-/, "");
 
@@ -113,9 +133,14 @@ export default function SettingGeminiKey() {
           ? user.user_metadata.gemini_api_key
           : "";
       const storedModel = normalizeGeminiModel(user?.user_metadata?.gemini_model);
+      const storedUpdatedAt =
+        typeof user?.user_metadata?.gemini_updated_at === "string"
+          ? user.user_metadata.gemini_updated_at
+          : null;
 
       setSavedKey(storedKey);
       setSavedModel(storedModel);
+      setSavedUpdatedAt(storedUpdatedAt);
     };
 
     void init();
@@ -138,11 +163,16 @@ export default function SettingGeminiKey() {
         ? user.user_metadata.gemini_api_key
         : "";
     const storedModel = normalizeGeminiModel(user.user_metadata?.gemini_model);
+    const storedUpdatedAt =
+      typeof user.user_metadata?.gemini_updated_at === "string"
+        ? user.user_metadata.gemini_updated_at
+        : null;
 
     setSavedKey(storedKey);
     setKeyInput(storedKey);
     setSavedModel(storedModel);
     setModelInput(storedModel);
+    setSavedUpdatedAt(storedUpdatedAt);
   }
 
   async function saveGeminiKey(): Promise<void> {
@@ -186,11 +216,16 @@ export default function SettingGeminiKey() {
           ? data.user.user_metadata.gemini_api_key
           : "";
       const nextStoredModel = normalizeGeminiModel(data.user?.user_metadata?.gemini_model);
+      const nextUpdatedAt =
+        typeof data.user?.user_metadata?.gemini_updated_at === "string"
+          ? data.user.user_metadata.gemini_updated_at
+          : null;
 
       setSavedKey(nextStoredKey);
       setKeyInput(nextStoredKey);
       setSavedModel(nextStoredModel);
       setModelInput(nextStoredModel);
+      setSavedUpdatedAt(nextUpdatedAt);
       toast.success(nextStoredKey ? text.saved : text.cleared);
       setOpen(false);
     } finally {
@@ -260,6 +295,9 @@ export default function SettingGeminiKey() {
             </Select>
             <p className="text-xs text-muted-foreground">{text.modelHint}</p>
           </div>
+          <p className="text-xs text-muted-foreground">
+            {text.lastUpdatedLabel}: {formatUpdatedAt(savedUpdatedAt, locale, text.neverUpdated)}
+          </p>
           <Button
             type="button"
             className="w-full bg-black text-white"

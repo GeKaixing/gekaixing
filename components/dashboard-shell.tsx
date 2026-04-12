@@ -7,7 +7,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { DASHBOARD_NAV_ITEMS, type DashboardNavKey } from "@/lib/dashboard/navigation";
 import { prisma } from "@/lib/prisma";
 import { withTimeoutOrNull } from "@/lib/with-timeout";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 
 type DashboardShellProps = {
   children: React.ReactNode;

@@ -1,5 +1,5 @@
 import ChatUI from "@/components/gekaixing/ChatUI";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 
 export default async function Page() {
   const supabase = await createClient()

@@ -6,7 +6,7 @@ import ArrowLeftBack from "@/components/gekaixing/ArrowLeftBack"
 import NotificationsSeenTracker from "@/components/gekaixing/NotificationsSeenTracker"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { prisma } from "@/lib/prisma"
-import { createClient } from "@/utils/supabase/server"
+import { createClient } from "@/utils/auth-compat/server"
 
 type MentionNotification = {
   id: string

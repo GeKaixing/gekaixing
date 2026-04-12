@@ -1,6 +1,6 @@
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 import { NextResponse } from "next/server";
-import { createClient as createClientROLE } from "@supabase/supabase-js";
+
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
@@ -105,18 +105,24 @@ export async function PATCH(request: Request) {
 }
 
 export async function DELETE(req: Request) {
-  const supabaseAdmin = createClientROLE(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE!,
-  );
-  const body = await req.json();
-  const { userId } = body;
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
 
-  const { error } = await supabaseAdmin.auth.admin.deleteUser(userId);
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error || !user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const body = (await req.json()) as { userId?: string };
+  if (!body.userId || body.userId !== user.id) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  await prisma.user.delete({
+    where: { id: user.id },
+  });
 
   return NextResponse.json({ success: true });
 }

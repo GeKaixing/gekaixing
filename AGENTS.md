@@ -1,204 +1,145 @@
 # AGENTS.md - Coding Guidelines for gekaixing
 
-Next.js 16.1.6 social platform with TypeScript, Tailwind CSS v4, Prisma, Supabase. Features: posts, replies, likes, sharing, user profiles, messaging.
+This repository is now a hybrid architecture:
+- Frontend/BFF: Next.js 16 + TypeScript + Tailwind CSS v4
+- Backend services: Go (Gin + Ent + gRPC)
+- Database: local PostgreSQL
+- Cache: Redis (go-redis)
+- Auth: Auth.js (JWT, unique user identifier: user.id)
+- Logging: Zap
+- Config: Viper
+- Infra: Docker + Kubernetes
 
-## Tech Stack
+## Core Principles
 
-- **Framework**: Next.js 16.1.6 with App Router
-- **Language**: TypeScript (strict mode)
-- **Styling**: Tailwind CSS v4, shadcn/ui components (new-york style)
-- **Database**: PostgreSQL with Prisma 7.3 (PostgreSQL adapter)
-- **Auth/Storage**: Supabase (SSR client)
-- **State**: Zustand 5.x
-- **Forms**: React Hook Form + Zod
-- **i18n**: next-intl
-- **AI**: Vercel AI SDK (OpenAI/Google models)
+- Complete migrations in one pass on this branch; avoid compatibility half-states.
+- Do not reintroduce Supabase dependencies (auth, storage, realtime, query APIs).
+- Keep `user.id` as the canonical identity across Next.js, Go services, JWT claims, and DB relations.
+- Prefer explicit types, predictable errors, and testable boundaries.
+
+## Tech Stack (Current)
+
+### Web / Frontend
+- Next.js 16.1.6 (App Router)
+- TypeScript (strict)
+- Tailwind CSS v4
+- shadcn/ui (new-york)
+- Zustand
+- React Hook Form + Zod
+- next-intl
+
+### Auth
+- Auth.js
+- JWT session strategy
+- HS256 signing/verification for internal JWT helpers
+
+### Data
+- PostgreSQL (local)
+- Prisma used by Next.js side
+- Ent used by Go backend side
+
+### Backend (Go)
+- Gin (HTTP)
+- gRPC (RPC)
+- go-redis (cache)
+- Zap (logging)
+- Viper (configuration)
+
+### Infra
+- Docker images + docker-compose for local orchestration
+- Kubernetes manifests for deployment
 
 ## Commands
 
 ```bash
-# Development & Build
-npm run dev              # Start dev server with Turbopack (port 3000)
-npm run build            # Build for production (runs typecheck + lint)
-npm run start            # Start production server
+# Frontend/BFF
+npm run dev
+npm run build
+npm run start
+npm run lint
+npx tsc --noEmit
+npm run test
 
-# Code Quality
-npm run lint             # Run ESLint on entire codebase
-npm run lint -- --fix    # Run ESLint with auto-fix
-npx tsc --noEmit         # TypeScript type checking only
+# Prisma (Next.js side)
+npx prisma generate
+npx prisma migrate dev
+npx prisma db push
 
-# Prisma commands
-npx prisma generate      # Generate Prisma client
-npx prisma db push       # Push schema to database
-npx prisma studio        # Open Prisma database GUI
-npx prisma migrate dev   # Create migration
+# Go backend
+cd backend-go && go test ./...
+cd backend-go && go run ./cmd/api
+cd backend-go && go run ./cmd/grpc
 ```
 
-No unit tests exist.
+## Auth and Identity Rules
 
-## Code Style
+- Auth must go through Auth.js routes and session APIs.
+- JWT payloads must use `user.id` as the stable subject identifier.
+- Never use email as primary join key in business logic.
+- Any auth/profile update endpoint must validate ownership from session user id.
 
-### TypeScript
-- Strict mode enabled
-- Explicit return types and parameter types required
-- Interfaces for object shapes, types for unions/primitives
-- Never use `any`, `@ts-ignore`, or `@ts-expect-error`
+## Storage Rules
 
-```typescript
-interface Post {
-  id: string;
-  content: string;
-  like: number;
-}
+- Use local/object storage API endpoints under `app/api/storage/*`.
+- Public URL shape is `/uploads/<bucket>/<path>`.
+- Do not use legacy Supabase storage helpers.
 
-export function fetchPosts(postId: string): Promise<Post> {
-  // implementation
-}
+## API and Error Handling
+
+- Route handlers must return structured JSON (`success`, `error`, `data` where applicable).
+- Use `try/catch` for async boundaries.
+- Never swallow errors; log with context.
+- Prefer 400/401/403/404/409/500 with clear semantics.
+
+## TypeScript Standards
+
+- Strict mode assumptions always on.
+- No `any`, no `@ts-ignore`, no `@ts-expect-error`.
+- Explicit parameter and return types for exported functions.
+- Keep imports grouped: external, internal aliases, local.
+
+## Go Standards
+
+- Use context-aware APIs (`context.Context`) for IO operations.
+- Keep Gin handler layer thin; move business logic to internal services.
+- Ent schema is source of truth on Go side.
+- Add table-driven tests for service and transport logic.
+
+## Database Conventions
+
+- PostgreSQL naming: snake_case for tables/columns.
+- Keep migration files deterministic and idempotent where possible.
+- For cross-stack changes (Prisma + Ent), update both schemas in same PR.
+
+## Testing Requirements
+
+- Add or update tests for all behavior changes.
+- Minimum checks before finishing work:
+  - `npx tsc --noEmit`
+  - `npm run test`
+  - `cd backend-go && go test ./...`
+
+## File Organization
+
+```text
+app/                    # Next.js routes and APIs
+components/             # UI components
+lib/                    # shared TS libs (auth, prisma, helpers)
+utils/                  # compatibility and utility helpers
+prisma/                 # Prisma schema and migrations
+backend-go/             # Go services (Gin, Ent, gRPC)
+deploy/                 # Docker/K8s manifests
 ```
 
-### Imports
-Three groups: external libs, components, utils. Use `@/*` path aliases.
+## Security and Config
 
-```typescript
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { createClient } from '@/utils/supabase/client';
-```
+- Never commit real secrets.
+- Use `.env.local` / environment variables for local runtime.
+- Required variables must be documented in `.env.example`.
+- If package download is blocked, prefer mainland mirrors (npm/go proxy) as fallback.
 
-### Components
-- Client: `"use client"` at top
-- PascalCase names, default exports
-- Define props type inline with component
+## Migration Guardrails
 
-```typescript
-"use client";
-import { Button } from '@/components/ui/button';
-
-type PostCardProps = { 
-  id: string; 
-  content: string; 
-  onLike?: () => void;
-};
-
-export default function PostCard({ id, content, onLike }: PostCardProps) {
-  // implementation
-}
-```
-
-### State Management (Zustand)
-Define interfaces, use functional updates. Store names without 'use' prefix.
-
-```typescript
-import { create } from 'zustand';
-
-interface PostStore { 
-  posts: Post[]; 
-  addPost: (post: Post) => void; 
-}
-
-export const postStore = create<PostStore>((set) => ({
-  posts: [],
-  addPost: (post) => set((state) => ({ 
-    posts: [post, ...state.posts] 
-  })),
-}));
-```
-
-### Database (Prisma)
-All exports from `lib/prisma.ts`. Handle async with try/catch.
-
-```typescript
-import { prisma } from '@/lib/prisma';
-
-export async function getPost(id: string) {
-  try { 
-    return await prisma.post.findUnique({ where: { id } }); 
-  } catch (error) { 
-    console.error('Failed to fetch post:', error); 
-    return null; 
-  }
-}
-```
-
-### Supabase
-- Client: `createClient()` from `@/utils/supabase/client`
-- Server: `createServerClient()` from `@supabase/ssr`
-
-### Styling (Tailwind CSS v4)
-Use `cn()` helper. Follow shadcn/ui conventions (`new-york` style).
-
-```typescript
-import { cn } from '@/lib/utils';
-<div className={cn("base", cond && "conditional", className)} />
-```
-
-### Error Handling
-Try/catch for async. Log errors with context. Never use empty catch blocks.
-
-```typescript
-try { 
-  if (error) throw error; 
-  return data; 
-} catch (error) { 
-  console.error('Failed:', error); 
-  return []; 
-}
-```
-
-### API Routes
-Use `app/api/`. Return proper NextResponse.
-
-```typescript
-import { NextResponse } from 'next/server';
-
-export async function GET() { 
-  return NextResponse.json(data); 
-}
-```
-
-### Naming Conventions
-
-| Type | Convention |
-|------|------------|
-| Variables/Functions | camelCase |
-| Components/Types | PascalCase |
-| Constants | SCREAMING_SNAKE_CASE |
-| Files | PascalCase (components), kebab-case (utils) |
-| DB Tables | snake_case (Prisma) |
-| Zustand Stores | *Store suffix (e.g., postStore, userStore) |
-
-### File Organization
-```
-├── app/               # Next.js App Router
-├── components/
-│   ├── ui/           # shadcn/ui components
-│   ├── gekaixing/    # Custom components
-│   └── kibo-ui/      # Third-party UI
-├── lib/              # prisma.ts, utils.ts, notion.ts
-├── store/            # Zustand stores
-├── messages/         # i18n translations
-├── utils/            # Helpers (supabase client)
-├── prisma/           # Schema
-└── public/           # Static
-```
-
-### Environment Variables
-Never commit `.env.local`. Required:
-- `DATABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-
-### i18n (next-intl)
-Translations in `messages/` directory. Use `useTranslations` hook in components.
-
-### ESLint Configuration
-Extends: `next/core-web-vitals`, `next/typescript`
-Override: `@typescript-eslint/no-unused-vars` is disabled
-
-### Best Practices
-- React Server Components by default, client only when needed
-- Single responsibility, extract complex logic to hooks
-- No comments unless explaining complex logic
-- Always handle async errors
-- Use proper TypeScript types everywhere
+- Remove legacy naming when practical (`supabase`-prefixed helpers, old adapters).
+- Keep compatibility shims minimal and clearly temporary.
+- Any remaining shim should fail safely and guide callers to the new path.

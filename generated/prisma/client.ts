@@ -45,6 +45,21 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
+ * Model EmailVerificationToken
+ * 
+ */
+export type EmailVerificationToken = Prisma.EmailVerificationTokenModel
+/**
+ * Model UserSettings
+ * 
+ */
+export type UserSettings = Prisma.UserSettingsModel
+/**
+ * Model StripeWebhookEvent
+ * 
+ */
+export type StripeWebhookEvent = Prisma.StripeWebhookEventModel
+/**
  * Model Follow
  * ///////////////////////////////////////////////////
  * ///////////////////////////////////////////////////

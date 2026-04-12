@@ -22,7 +22,7 @@ import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { createClient } from '@/utils/supabase/client'
+import { createClient } from '@/utils/auth-compat/client'
 import { toast } from 'sonner'
 import Spin from './Spin'
 import { userStore } from '@/store/user'

@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: gekaixing
+resources:
+  - ../../base
+images:
+  - name: ghcr.io/kaixing/gekaixing-backend-api
+    newTag: dev
+  - name: ghcr.io/kaixing/gekaixing-backend-grpc
+    newTag: dev
+  - name: ghcr.io/kaixing/gekaixing-frontend
+    newTag: dev

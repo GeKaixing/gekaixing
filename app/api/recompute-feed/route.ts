@@ -1,5 +1,5 @@
 import { recomputeAndCacheHomeFeed } from "@/lib/feed/service";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {

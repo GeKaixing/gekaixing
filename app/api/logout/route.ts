@@ -1,14 +1,15 @@
-import { createClient } from "@/utils/supabase/server"
-import { NextResponse } from "next/server"
+import { NextResponse } from "next/server";
 
 export async function POST() {
-    const supabase = await createClient()
-    
-    const { error } = await supabase.auth.signOut()
-
-    if (error) {
-        return NextResponse.json({ error: error.message }, { status: 401 })
-    }
-
-    return NextResponse.json({ success: true })
+  const response = NextResponse.json({ success: true });
+  response.cookies.set("next-auth.session-token", "", {
+    expires: new Date(0),
+    path: "/",
+  });
+  response.cookies.set("__Secure-next-auth.session-token", "", {
+    expires: new Date(0),
+    path: "/",
+    secure: true,
+  });
+  return response;
 }

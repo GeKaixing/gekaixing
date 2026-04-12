@@ -2,7 +2,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { NextResponse } from "next/server";
 
 import { getGeminiModelCandidates, normalizeGeminiModel } from "@/lib/gemini-model";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 
 interface HotNewsItem {
   title: string;

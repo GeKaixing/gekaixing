@@ -2,7 +2,7 @@ import PostRetreat from '@/components/gekaixing/PostRetreat'
 import PostStore from '@/components/gekaixing/PostStore'
 import PublishReply from '@/components/gekaixing/PublishReply'
 import Reply from '@/components/gekaixing/Reply'
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@/utils/auth-compat/server'
 
 export default async function Page({ params }: { params: Promise<{ id: string[] }> }) {
   const { id } = await params;

@@ -15,6 +15,7 @@ import SidebarAvatar from "./SidebarAvatar";
 import EditPost from "./EditPost";
 import type { userResult } from "@/app/gekaixing/layout";
 import { useTranslations } from "next-intl";
+import { signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -173,8 +174,7 @@ export default function Sidebar({ user, mentionCount = 0 }: { user: userResult |
 }
 
 async function logoutfetch() {
-    const result = await fetch('/api/logout', { method: 'POST' })
-    return result
+    await signOut({ redirect: false })
 }
 
 export function SidebarDropdownMenu() {

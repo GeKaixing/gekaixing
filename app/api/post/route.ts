@@ -5,7 +5,7 @@ import { invalidateAuthorAudienceFeed, invalidateUserHomeFeed } from "@/lib/feed
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { extractYouTubeEmbedUrl } from "@/utils/function/extractYouTubeEmbedUrl";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 
 function transformPost(post: any) {
   return {

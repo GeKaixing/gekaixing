@@ -6,11 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { Send, ChevronLeft, ChevronRight } from "lucide-react";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/auth-compat/client";
 import ArrowLeftBack from "@/components/gekaixing/ArrowLeftBack";
 import { useSearchParams } from "next/navigation";
-import { User } from "@supabase/supabase-js";
 import { useLocale, useTranslations } from "next-intl";
+
+type AuthUser = {
+  id: string;
+  email?: string | null;
+  user_metadata?: Record<string, unknown>;
+};
 
 interface Contact {
   id: string;
@@ -59,7 +64,7 @@ export default function ChatPage() {
   const [selectedContactId, setSelectedContactId] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -193,52 +198,17 @@ export default function ChatPage() {
   }, [messages, scrollToBottom]);
 
   useEffect(() => {
-    if (!currentUser?.id) {
+    if (!selectedContactId) {
       return;
     }
 
-    const channel = supabase
-      .channel(`chat-room-${selectedContactId || "global"}`)
-      .on("broadcast", { event: "new-message" }, (payload) => {
-        const newMessage = payload.payload as RealtimeMessage;
+    const timer = setInterval(() => {
+      void fetchMessages(selectedContactId);
+      void fetchConversations();
+    }, 3000);
 
-        if (newMessage.conversationId === selectedContactId) {
-          setMessages((prev) => {
-            if (prev.some((m) => m.id === newMessage.id)) {
-              return prev;
-            }
-
-            const formattedMessage: Message = {
-              id: newMessage.id,
-              senderId: newMessage.senderId,
-              conversationId: newMessage.conversationId,
-              content: newMessage.content,
-              createdAt: newMessage.createdAt,
-              isMe: newMessage.senderId === currentUser.id,
-            };
-
-            return [...prev, formattedMessage];
-          });
-        } else {
-          setContacts((prev) =>
-            prev.map((c) =>
-              c.id === newMessage.conversationId
-                ? { ...c, unreadCount: c.unreadCount + 1, lastMessage: newMessage.content }
-                : c
-            )
-          );
-        }
-      })
-      .subscribe((status) => {
-        if (status === "CHANNEL_ERROR") {
-          console.error("Chat channel error occurred");
-        }
-      });
-
-    return () => {
-      channel.unsubscribe();
-    };
-  }, [currentUser?.id, selectedContactId, supabase]);
+    return () => clearInterval(timer);
+  }, [fetchConversations, fetchMessages, selectedContactId]);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || !selectedContactId) {
@@ -280,17 +250,6 @@ export default function ChatPage() {
           )
         );
 
-        await supabase.channel(`chat-room-${selectedContactId}`).send({
-          type: "broadcast",
-          event: "new-message",
-          payload: {
-            id: savedMessage.id,
-            senderId: savedMessage.senderId,
-            conversationId: savedMessage.conversationId,
-            content: savedMessage.content,
-            createdAt: savedMessage.createdAt,
-          },
-        });
       } else {
         setMessages((prev) => prev.filter((m) => m.id !== tempId));
       }

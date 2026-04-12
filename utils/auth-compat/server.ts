@@ -1,0 +1,292 @@
+import { hash } from "bcryptjs";
+
+import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
+
+type CompatUserMetadata = {
+  name?: string;
+  avatar_url?: string;
+  user_avatar?: string;
+  gemini_api_key?: string;
+  gemini_model?: string;
+  gemini_updated_at?: string;
+};
+
+type CompatUser = {
+  id: string;
+  email: string;
+  user_metadata: CompatUserMetadata;
+};
+
+type AuthResult = {
+  data: { user: CompatUser | null };
+  error: Error | null;
+};
+
+type UpdateUserPayload = {
+  email?: string;
+  password?: string;
+  data?: Record<string, unknown>;
+};
+
+function buildUserMetadata(avatar: string | null, name: string | null): CompatUserMetadata {
+  const metadata: CompatUserMetadata = {};
+
+  if (typeof avatar === "string" && avatar.length > 0) {
+    metadata.avatar_url = avatar;
+    metadata.user_avatar = avatar;
+  }
+  if (typeof name === "string" && name.length > 0) {
+    metadata.name = name;
+  }
+
+  return metadata;
+}
+
+type GeminiSettingsRow = {
+  geminiApiKey: string | null;
+  geminiModel: string | null;
+  updatedAt: Date | null;
+};
+
+async function getGeminiSettings(userId: string): Promise<GeminiSettingsRow | null> {
+  const rows = await prisma.$queryRaw<GeminiSettingsRow[]>`
+    SELECT "geminiApiKey", "geminiModel", "updatedAt"
+    FROM "UserSettings"
+    WHERE "userId" = ${userId}
+    LIMIT 1
+  `;
+
+  return rows[0] ?? null;
+}
+
+async function upsertGeminiSettings(
+  userId: string,
+  settings: { geminiApiKey?: string | null; geminiModel?: string | null },
+): Promise<void> {
+  if (Object.keys(settings).length === 0) {
+    return;
+  }
+
+  const existing = await getGeminiSettings(userId);
+  const nextKey = settings.geminiApiKey ?? existing?.geminiApiKey ?? null;
+  const nextModel = settings.geminiModel ?? existing?.geminiModel ?? null;
+
+  await prisma.$executeRaw`
+    INSERT INTO "UserSettings" ("userId", "geminiApiKey", "geminiModel", "updatedAt")
+    VALUES (${userId}, ${nextKey}, ${nextModel}, NOW())
+    ON CONFLICT ("userId")
+    DO UPDATE SET
+      "geminiApiKey" = EXCLUDED."geminiApiKey",
+      "geminiModel" = EXCLUDED."geminiModel",
+      "updatedAt" = NOW()
+  `;
+}
+
+async function resolveCurrentUser(): Promise<CompatUser | null> {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    return null;
+  }
+
+  const dbUser = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      avatar: true,
+    },
+  });
+
+  if (!dbUser) {
+    return null;
+  }
+
+  const settings = await getGeminiSettings(userId);
+
+  return {
+    id: dbUser.id,
+    email: dbUser.email,
+    user_metadata: {
+      ...buildUserMetadata(dbUser.avatar, dbUser.name),
+      ...(settings?.geminiApiKey ? { gemini_api_key: settings.geminiApiKey } : {}),
+      ...(settings?.geminiModel ? { gemini_model: settings.geminiModel } : {}),
+      ...(settings?.updatedAt ? { gemini_updated_at: settings.updatedAt.toISOString() } : {}),
+    },
+  };
+}
+
+async function updateCurrentUser(payload: UpdateUserPayload): Promise<AuthResult> {
+  try {
+    const currentUser = await resolveCurrentUser();
+    if (!currentUser) {
+      return {
+        data: { user: null },
+        error: new Error("Unauthorized"),
+      };
+    }
+
+    const updateData: {
+      email?: string;
+      passwordHash?: string;
+    } = {};
+    const settingsUpdate: {
+      geminiApiKey?: string | null;
+      geminiModel?: string | null;
+    } = {};
+
+    if (typeof payload.email === "string" && payload.email.length > 0) {
+      updateData.email = payload.email;
+    }
+
+    if (typeof payload.password === "string" && payload.password.length >= 6) {
+      updateData.passwordHash = await hash(payload.password, 12);
+    }
+
+    if (payload.data && typeof payload.data === "object" && !Array.isArray(payload.data)) {
+      if ("gemini_api_key" in payload.data) {
+        const key = payload.data.gemini_api_key;
+        settingsUpdate.geminiApiKey = typeof key === "string" && key.length > 0 ? key : null;
+      }
+      if ("gemini_model" in payload.data) {
+        const model = payload.data.gemini_model;
+        settingsUpdate.geminiModel = typeof model === "string" && model.length > 0 ? model : null;
+      }
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: currentUser.id },
+      data: updateData,
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        avatar: true,
+      },
+    });
+
+    await upsertGeminiSettings(currentUser.id, settingsUpdate);
+    const refreshedSettings = await getGeminiSettings(currentUser.id);
+
+    return {
+      data: {
+        user: {
+          id: updatedUser.id,
+          email: updatedUser.email,
+          user_metadata: {
+            ...buildUserMetadata(updatedUser.avatar, updatedUser.name),
+            ...(refreshedSettings?.geminiApiKey ? { gemini_api_key: refreshedSettings.geminiApiKey } : {}),
+            ...(refreshedSettings?.geminiModel ? { gemini_model: refreshedSettings.geminiModel } : {}),
+            ...(refreshedSettings?.updatedAt ? { gemini_updated_at: refreshedSettings.updatedAt.toISOString() } : {}),
+          },
+        },
+      },
+      error: null,
+    };
+  } catch (error) {
+    return {
+      data: { user: null },
+      error: error instanceof Error ? error : new Error("Failed to update user"),
+    };
+  }
+}
+
+function createUnsupportedQueryBuilder() {
+  const result = { data: [] as unknown[], error: null as Error | null };
+
+  const builder: {
+    select: (...args: unknown[]) => typeof builder;
+    insert: (...args: unknown[]) => typeof builder;
+    update: (...args: unknown[]) => typeof builder;
+    delete: (...args: unknown[]) => typeof builder;
+    eq: (...args: unknown[]) => typeof builder;
+    neq: (...args: unknown[]) => typeof builder;
+    ilike: (...args: unknown[]) => typeof builder;
+    order: (...args: unknown[]) => typeof builder;
+    limit: (...args: unknown[]) => typeof builder;
+    range: (...args: unknown[]) => typeof builder;
+    single: () => Promise<{ data: null; error: Error }>;
+    then: (resolve: (value: { data: unknown[]; error: Error | null }) => unknown) => Promise<unknown>;
+  } = {
+    select: () => builder,
+    insert: () => builder,
+    update: () => builder,
+    delete: () => builder,
+    eq: () => builder,
+    neq: () => builder,
+    ilike: () => builder,
+    order: () => builder,
+    limit: () => builder,
+    range: () => builder,
+    single: async () => ({
+      data: null,
+      error: new Error("Supabase query API is disabled in local Auth.js mode"),
+    }),
+    then: async (resolve) => resolve(result),
+  };
+
+  return builder;
+}
+
+export async function createClient() {
+  return {
+    auth: {
+      getUser: async (): Promise<AuthResult> => {
+        try {
+          const user = await resolveCurrentUser();
+          return {
+            data: { user },
+            error: null,
+          };
+        } catch (error) {
+          return {
+            data: { user: null },
+            error: error instanceof Error ? error : new Error("Failed to get user"),
+          };
+        }
+      },
+      updateUser: async (payload: UpdateUserPayload, _options?: unknown): Promise<AuthResult> => {
+        return await updateCurrentUser(payload);
+      },
+      resetPasswordForEmail: async (): Promise<{ data: null; error: Error }> => {
+        return {
+          data: null,
+          error: new Error("Password reset email flow is not enabled in local Auth.js mode"),
+        };
+      },
+      exchangeCodeForSession: async (): Promise<{ data: { user: null }; error: Error }> => {
+        return {
+          data: { user: null },
+          error: new Error("OAuth code exchange is not available in this local auth mode"),
+        };
+      },
+      signInWithPassword: async (): Promise<{ data: null; error: Error }> => {
+        return {
+          data: null,
+          error: new Error("Use Auth.js credentials signIn on client"),
+        };
+      },
+      signUp: async (): Promise<{ data: { user: null }; error: Error }> => {
+        return {
+          data: { user: null },
+          error: new Error("Use /api/signup for user registration"),
+        };
+      },
+      signOut: async (): Promise<{ error: null }> => {
+        return { error: null };
+      },
+      getClaims: async (): Promise<{ data: { claims: Record<string, unknown> | null }; error: null }> => {
+        const user = await resolveCurrentUser();
+        return {
+          data: {
+            claims: user ? { sub: user.id, email: user.email } : null,
+          },
+          error: null,
+        };
+      },
+    },
+    from: (_table: string) => createUnsupportedQueryBuilder(),
+  };
+}

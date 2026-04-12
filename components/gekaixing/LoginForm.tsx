@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import z from 'zod'
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
+import { signIn } from 'next-auth/react'
 export async function LoginFetch(email: string, password: string) {
     const result = await fetch('/api/login', {
         method: 'POST',
@@ -48,25 +49,16 @@ export default function LoginForm() {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setStatus(true)
+        const result = await signIn("credentials", {
+            email: values.email,
+            password: values.password,
+            redirect: false,
+        })
 
-        const result = await LoginFetch(values.email, values.password)
-    
-        const text = await result.text()
-
-        let data;
-        try {
-            data = JSON.parse(text)
-        } catch {
-            toast.error(t('serverError'))
-            console.error("Non-JSON response:", text)
-            setStatus(false)
-            return
-        }
-
-        if (data.success) {
+        if (!result?.error) {
             router.replace("/gekaixing")
         } else {
-            toast.error(data.error || t('loginFailed'))
+            toast.error(t('loginFailed'))
         }
         setStatus(false)
     }

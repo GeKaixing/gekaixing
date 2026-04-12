@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { EMPLOYMENT_TYPES, LOCATION_TYPES, SENIORITY_LEVELS, type CreateJobPostingBody } from "@/lib/dashboard/job-posting";
 import { prisma } from "@/lib/prisma";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/auth-compat/server";
 
 function cleanText(value?: string, maxLength: number = 120): string {
   return (value ?? "").replace(/\s+/g, " ").trim().slice(0, maxLength);

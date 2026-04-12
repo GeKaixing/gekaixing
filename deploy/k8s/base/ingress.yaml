@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gkx-ingress
+  namespace: gekaixing
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: gekaixing.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: gkx-frontend
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: gkx-backend-api
+                port:
+                  number: 80

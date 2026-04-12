@@ -1,49 +1,106 @@
-import { createClient } from "@/utils/supabase/server";
-import { prisma } from "@/lib/prisma";
+import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
+
+import { createVerificationToken, hashVerificationToken } from "@/lib/auth/email-verification";
+import { sendVerificationEmail } from "@/lib/auth/mailer";
+import { prisma } from "@/lib/prisma";
+
+interface SignupBody {
+  email: string;
+  password: string;
+  name?: string | null;
+  avatar?: string | null;
+}
+
+function getBaseUrl(): string {
+  return (
+    process.env.NEXTAUTH_URL ??
+    process.env.NEXT_PUBLIC_APP_URL ??
+    process.env.NEXT_PUBLIC_URL ??
+    "http://localhost:3000"
+  );
+}
+
+function buildVerifyLink(baseUrl: string, token: string): string {
+  const normalized = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+  return `${normalized}/api/auth/verify-email?token=${encodeURIComponent(token)}`;
+}
 
 export async function POST(request: Request) {
   try {
-    const supabase = await createClient();
-    const { email, password, name, avatar } = await request.json();
+    const body = (await request.json()) as SignupBody;
+    const email = body.email?.trim().toLowerCase();
+    const { password, name, avatar } = body;
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_URL}/auth/confirm`,
-      },
-    });
-
-    if (error || !data.user) {
+    if (!email || !password || password.length < 6) {
       return NextResponse.json(
-        { error: error?.message ?? "Signup failed" },
-        { status: 401 }
+        { success: false, error: "Invalid email or password" },
+        { status: 400 },
       );
     }
 
-    // ✅ 用 id 做 upsert（最安全）
-    await prisma.user.upsert({
-      where: { id: data.user.id },
-      update: {
-        // 如果未来想更新 name / avatar 可以写这里
-      },
-      create: {
-        id: data.user.id,
-        userid: `user_${data.user.id.slice(0, 8)}`,
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+      select: { id: true, emailVerifiedAt: true },
+    });
+
+    const passwordHash = await hash(password, 12);
+
+    if (existingUser?.emailVerifiedAt) {
+      return NextResponse.json(
+        { success: false, error: "Email already registered" },
+        { status: 409 },
+      );
+    }
+
+    if (existingUser && !existingUser.emailVerifiedAt) {
+      await prisma.user.update({
+        where: { id: existingUser.id },
+        data: {
+          passwordHash,
+          name: name ?? "anonymity",
+          avatar: avatar ?? null,
+        },
+      });
+    } else {
+      await prisma.user.create({
+        data: {
+          email,
+          passwordHash,
+          userid: `user_${crypto.randomUUID().slice(0, 8)}`,
+          name: name ?? "anonymity",
+          avatar: avatar ?? null,
+          emailVerifiedAt: null,
+        },
+      });
+    }
+
+    await prisma.emailVerificationToken.deleteMany({
+      where: {
         email,
-        name: name ?? "anonymity",
-        avatar: avatar ?? null,
+        usedAt: null,
       },
     });
 
-    return NextResponse.json({ success: true });
+    const { token, expiresAt } = await createVerificationToken(email);
+    const tokenHash = hashVerificationToken(token);
+    await prisma.emailVerificationToken.create({
+      data: {
+        email,
+        tokenHash,
+        expiresAt,
+      },
+    });
 
-  } catch (e) {
-    console.error(e);
+    const verifyLink = buildVerifyLink(getBaseUrl(), token);
+    await sendVerificationEmail({ to: email, verifyLink });
+
+    return NextResponse.json({ success: true, verificationSent: true });
+  } catch (error) {
+    console.error("Signup failed:", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
+      { success: false, error: "Internal Server Error" },
+      { status: 500 },
     );
   }
 }

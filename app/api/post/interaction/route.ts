@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { UserActionType } from '@/generated/prisma/enums'
 import { logUserAction } from '@/lib/feed/actions'
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@/utils/auth-compat/server'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(req: NextRequest) {
